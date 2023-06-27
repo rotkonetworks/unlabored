@@ -1,0 +1,94 @@
+# Standards: 0.2
+---
+- name: Ensure group {{ ethereum_user }} exists
+  ansible.builtin.group:
+    name: "{{ ethereum_user }}"
+    state: present
+    system: True
+
+- name: Ensure user {{ ethereum_user }} exists
+  ansible.builtin.user:
+    append: True
+    comment: Ethereum service user
+    create_home: True
+    group: "{{ ethereum_user }}"
+    groups: sudo
+    home: "{{ ethereum_base }}"
+    name: "{{ ethereum_user }}"
+    shell: "{{ default_shell }}"
+    state: present
+    system: True
+
+- name: Ensure required directories exists
+  ansible.builtin.file:
+    path: "{{ item }}"
+    owner: "{{ ethereum_user }}"
+    group: "{{ ethereum_user }}"
+    mode: '0775'
+    state: directory
+  with_items:
+    - "{{ ethereum_base }}"
+    - "{{ ethereum_storage_path }}"
+    - "{{ ethereum_config_path }}"
+    - "{{ ethereum_config_path }}/ethash"
+
+- name: Create jwtsecret file
+  become: True
+  become_user: "{{ ethereum_user }}"
+  ansible.builtin.shell:
+    cmd: |
+      set -o pipefail
+      echo 0x$(openssl rand -hex 32 | tr -d "\n") > {{ ethereum_jwtsecret_file }}
+    creates: "{{ ethereum_jwtsecret_file }}"
+
+- name: Install ethereum v{{ ethereum_version }}
+  ansible.builtin.unarchive:
+    src: "{{ ethereum_download_url }}"
+    dest: "{{ ethereum_base }}"
+    remote_src: True
+    owner: "{{ ethereum_user }}"
+    group: "{{ ethereum_user }}"
+    creates: "{{ ethereum_base }}/geth-linux-{{ ethereum_arch }}-{{ ethereum_version }}"
+  register: ethereum_install
+  when:
+    - ansible_local['noderole']['node']['pinned'] != "True"
+    - ansible_local['noderole']['node']['version'] != ethereum_version
+  notify:
+    - Symlink Ethereum release
+    - Add Service Pinned Status
+    - Stop Ethereum
+    - Systemd daemon-reload
+    - Start Ethereum
+    - Add Ethereum service version
+
+- name: Copy Ethereum systemd service to a host
+  ansible.builtin.template:
+    src: ethereum.service.template
+    dest: /etc/systemd/system/ethereum.service
+    owner: "root"
+    group: "root"
+    mode: '0644'
+  register: ethereum_service
+  notify:
+    - Stop Ethereum
+    - Systemd daemon-reload
+    - Start Ethereum
+
+- name: Provide configuration file for Ethereum
+  ansible.builtin.template:
+    src: config.toml.template
+    dest: "{{ ethereum_config_path }}/config.toml"
+    owner: "{{ ethereum_user }}"
+    group: "{{ ethereum_user }}"
+    mode: '0644'
+  register: ethereum_config
+  notify:
+    - Stop Ethereum
+    - Systemd daemon-reload
+    - Start Ethereum
+
+- name: Install lighthouse of node configs require it.
+  ansible.builtin.include_role:
+    name: setup_install_lighthouse
+  when: ethereum_syncmode != "light"
+...

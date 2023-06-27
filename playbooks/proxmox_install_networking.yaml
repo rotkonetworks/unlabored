@@ -1,0 +1,8 @@
+# Standards: 0.2
+---
+- name: Proxmox node setup
+  hosts: proxmox_hosts
+  gather_facts: True
+  roles:
+    - setup_networking
+...

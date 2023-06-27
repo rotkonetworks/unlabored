@@ -1,0 +1,19 @@
+# Standards: 0.2
+---
+- name: Persist iptables
+  ansible.builtin.shell:
+    cmd: "{{ item }}"
+  with_items:
+    - "iptables-save > {{ default_iptables_v4_file }}"
+    - "ip6tables-save > {{ default_iptables_v6_file }}"
+
+- name: Start default_nat_device
+  ansible.builtin.shell:
+    cmd: "ifup {{ default_nat_device }}"
+
+- name: Restart iptables
+  ansible.builtin.service:
+    name: iptables
+    state: restarted
+    enabled: True
+...

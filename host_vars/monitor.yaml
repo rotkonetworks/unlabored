@@ -1,0 +1,8 @@
+---
+host_name: "monitor01.node.rotko.net"
+host_timezone: "Europe/Helsinki"
+ansible_host: "69.69.69.69"
+
+users_with_access:
+  - tommi
+...

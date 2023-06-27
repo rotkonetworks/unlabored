@@ -1,0 +1,181 @@
+---
+host_name: "helnode04.node.rotko.net"
+host_timezone: "Europe/Helsinki"
+ansible_host: "69.69.69.78"
+role: "proxmox"
+
+default_need_port_forwarding: True
+
+default_storage: "zfs_storage"
+default_gw_device: "eno2"
+
+kernel_modules:
+  - coretemp
+  - zfs
+
+lxc_nodes:
+  - host: "bscnode07"
+    proxmox_config:
+      vmid: "207"
+      hostname: "{{ hostvars['bscnode07']['host_name'] }}"
+      ostemplate: 'local:vztmpl/{{ default_container_template }}'
+      netif: "{{ hostvars['bscnode07']['netif'] }}"
+      cores: 16
+      memory: 32768
+      swap: 16384
+      password: M4RG4RETth4tcherIS110%hot
+      disk: "{{ default_storage }}:20"
+      mounts: '{"mp0":"{{ default_storage }}:8500,mp={{ hostvars["bscnode07"]["binance_storage_path"] }}"}'
+      onboot: True
+      unprivileged: True
+      validate_certs: False
+      description: "binance node: {{ hostvars['bscnode07']['host_name'] }}"
+      state: present
+      features:
+        - nesting=1
+    port_forwards:
+      - from_port: "{{ hostvars['bscnode07']['ansible_port'] }}"
+        to_host: "{{ hostvars['bscnode07']['container_ip'] }}:22"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['bscnode07']['binance_p2p_port'] }}"
+        to_host: "{{ hostvars['bscnode07']['container_ip'] }}:{{ hostvars['bscnode07']['binance_p2p_port'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['bscnode07']['binance_p2p_port'] }}"
+        to_host: "{{ hostvars['bscnode07']['container_ip'] }}:{{ hostvars['bscnode07']['binance_p2p_port'] }}"
+        protocol: "udp"
+      - from_port: "{{ hostvars['bscnode07']['binance_ws_port'] }}"
+        to_host: "{{ hostvars['bscnode07']['container_ip'] }}:{{ hostvars['bscnode07']['binance_ws_port'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['bscnode07']['binance_http_port'] }}"
+        to_host: "{{ hostvars['bscnode07']['container_ip'] }}:{{ hostvars['bscnode07']['binance_http_port'] }}"
+        protocol: "tcp"
+  - host: "klaytn02"
+    proxmox_config:
+      vmid: "901"
+      hostname: "{{ hostvars['klaytn02']['host_name'] }}"
+      ostemplate: 'local:vztmpl/{{ default_container_template }}'
+      netif: "{{ hostvars['klaytn02']['netif'] }}"
+      cores: 16
+      memory: 32768
+      swap: 16384
+      password: M4RG4RETth4tcherIS110%hot
+      disk: "{{ default_storage }}:20"
+      mounts: '{"mp0":"{{ default_storage }}:5000,mp={{ hostvars["klaytn02"]["klaytn_storage_path"] }}"}'
+      onboot: True
+      unprivileged: True
+      validate_certs: False
+      description: "klaytn node: {{ hostvars['klaytn02']['host_name'] }}"
+      state: present
+      features:
+        - nesting=1
+    port_forwards:
+      - from_port: "{{ hostvars['klaytn02']['ansible_port'] }}"
+        to_host: "{{ hostvars['klaytn02']['container_ip'] }}:22"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['klaytn02']['klaytn_port'] }}"
+        to_host: "{{ hostvars['klaytn02']['container_ip'] }}:{{ hostvars['klaytn02']['klaytn_port'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['klaytn02']['klaytn_port'] }}"
+        to_host: "{{ hostvars['klaytn02']['container_ip'] }}:{{ hostvars['klaytn02']['klaytn_port'] }}"
+        protocol: "udp"
+      - from_port: "{{ hostvars['klaytn02']['klaytn_sub_port'] }}"
+        to_host: "{{ hostvars['klaytn02']['container_ip'] }}:{{ hostvars['klaytn02']['klaytn_sub_port'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['klaytn02']['klaytn_sub_port'] }}"
+        to_host: "{{ hostvars['klaytn02']['container_ip'] }}:{{ hostvars['klaytn02']['klaytn_sub_port'] }}"
+        protocol: "udp"
+      - from_port: "{{ hostvars['klaytn02']['klaytn_ws_port'] }}"
+        to_host: "{{ hostvars['klaytn02']['container_ip'] }}:{{ hostvars['klaytn02']['klaytn_ws_port'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['klaytn02']['klaytn_rpc_port'] }}"
+        to_host: "{{ hostvars['klaytn02']['container_ip'] }}:{{ hostvars['klaytn02']['klaytn_rpc_port'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['klaytn02']['klaytn_bridge_port'] }}"
+        to_host: "{{ hostvars['klaytn02']['container_ip'] }}:{{ hostvars['klaytn02']['klaytn_bridge_port'] }}"
+        protocol: "tcp"
+  - host: "dfk01"
+    proxmox_config:
+      vmid: "601"
+      hostname: "{{ hostvars['dfk01']['host_name'] }}"
+      ostemplate: 'local:vztmpl/{{ default_container_template }}'
+      netif: "{{ hostvars['dfk01']['netif'] }}"
+      cores: 16
+      memory: 32768
+      swap: 16384
+      password: M4RG4RETth4tcherIS110%hot
+      disk: "{{ default_storage }}:20"
+      mounts: '{"mp0":"{{ default_storage }}:4000,mp={{ hostvars["dfk01"]["defikingdom_storage_path"] }}"}'
+      onboot: True
+      unprivileged: True
+      validate_certs: False
+      description: "DeFi Kingdoms: {{ hostvars['dfk01']['host_name'] }}"
+      state: present
+      features:
+        - nesting=1
+    port_forwards:
+      - from_port: "{{ hostvars['dfk01']['ansible_port'] }}"
+        to_host: "{{ hostvars['dfk01']['container_ip'] }}:22"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['dfk01']['defikingdom_http_port'] }}"
+        to_host: "{{ hostvars['dfk01']['container_ip'] }}:{{ hostvars['dfk01']['defikingdom_http_port'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['dfk01']['defikingdom_staking_port'] }}"
+        to_host: "{{ hostvars['dfk01']['container_ip'] }}:{{ hostvars['dfk01']['defikingdom_staking_port'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['dfk01']['defikingdom_staking_port'] }}"
+        to_host: "{{ hostvars['dfk01']['container_ip'] }}:{{ hostvars['dfk01']['defikingdom_staking_port'] }}"
+        protocol: "udp"
+  - host: "evmos01"
+    proxmox_config:
+      vmid: "801"
+      hostname: "{{ hostvars['evmos01']['host_name'] }}"
+      ostemplate: 'local:vztmpl/{{ default_container_template }}'
+      netif: "{{ hostvars['evmos01']['netif'] }}"
+      cores: 16
+      memory: 32768
+      swap: 16384
+      password: M4RG4RETth4tcherIS110%hot
+      disk: "{{ default_storage }}:20"
+      mounts: '{"mp0":"{{ default_storage }}:12000,mp={{ hostvars["evmos01"]["evmos_storage_path"] }}"}'
+      onboot: True
+      unprivileged: True
+      validate_certs: False
+      description: "Evmos: {{ hostvars['evmos01']['host_name'] }}"
+      state: present
+      features:
+        - nesting=1
+    port_forwards:
+      - from_port: "{{ hostvars['evmos01']['ansible_port'] }}"
+        to_host: "{{ hostvars['evmos01']['container_ip'] }}:22"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['evmos01']['evmos_port'] }}"
+        to_host: "{{ hostvars['evmos01']['container_ip'] }}:{{ hostvars['evmos01']['evmos_port'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['evmos01']['evmos_port'] }}"
+        to_host: "{{ hostvars['evmos01']['container_ip'] }}:{{ hostvars['evmos01']['evmos_port'] }}"
+        protocol: "udp"
+      - from_port: "{{ hostvars['evmos01']['evmos_p2p_port'] }}"
+        to_host: "{{ hostvars['evmos01']['container_ip'] }}:{{ hostvars['evmos01']['evmos_p2p_port'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['evmos01']['evmos_p2p_port'] }}"
+        to_host: "{{ hostvars['evmos01']['container_ip'] }}:{{ hostvars['evmos01']['evmos_p2p_port'] }}"
+        protocol: "udp"
+      - from_port: "{{ hostvars['evmos01']['evmos_rpc_port'] }}"
+        to_host: "{{ hostvars['evmos01']['container_ip'] }}:{{ hostvars['evmos01']['evmos_rpc_port'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['evmos01']['evmos_rpc_port'] }}"
+        to_host: "{{ hostvars['evmos01']['container_ip'] }}:{{ hostvars['evmos01']['evmos_rpc_port'] }}"
+        protocol: "udp"
+      - from_port: "{{ hostvars['evmos01']['evmos_json_rpc_port'] }}"
+        to_host: "{{ hostvars['evmos01']['container_ip'] }}:{{ hostvars['evmos01']['evmos_json_rpc_port'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['evmos01']['evmos_json_rpc_ws_port'] }}"
+        to_host: "{{ hostvars['evmos01']['container_ip'] }}:{{ hostvars['evmos01']['evmos_json_rpc_ws_port'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['evmos01']['evmos_grpc_port'] }}"
+        to_host: "{{ hostvars['evmos01']['container_ip'] }}:{{ hostvars['evmos01']['evmos_grpc_port'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['evmos01']['evmos_grpc_web_port'] }}"
+        to_host: "{{ hostvars['evmos01']['container_ip'] }}:{{ hostvars['evmos01']['evmos_grpc_web_port'] }}"
+        protocol: "tcp"
+...

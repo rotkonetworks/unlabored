@@ -1,0 +1,42 @@
+---
+- name: Really Restart Avalanche
+  ansible.builtin.command:
+    argv:
+      - systemctl
+      - restart
+      - avalanchego
+
+- name: Restart Avalanche
+  ansible.builtin.systemd:
+    name: avalanchego
+    daemon_reload: True
+    state: restarted
+    enabled: True
+
+- name: Stop Avalanche
+  ansible.builtin.systemd:
+    name: avalanchego
+    daemon_reload: True
+    state: stopped
+    enabled: True
+
+- name: Start Avalanche
+  ansible.builtin.systemd:
+    name: avalanchego
+    daemon_reload: True
+    state: started
+    enabled: True
+
+- name: Systemd daemon-reload
+  ansible.builtin.systemd:
+    daemon_reload: True
+
+- name: Symlink Avalanche release
+  ansible.builtin.file:
+    src: "{{ avalanche_base }}/avalanchego-v{{ avalanche_version }}"
+    dest: "{{ avalanche_base }}/avalanche-node"
+    force: True
+    state: link
+    owner: "{{ avalanche_user }}"
+    group: "{{ avalanche_user }}"
+...

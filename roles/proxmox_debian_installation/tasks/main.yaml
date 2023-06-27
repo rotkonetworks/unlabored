@@ -1,0 +1,19 @@
+# Standards: 0.2
+---
+- name: Remove clashing Qemu packages
+  ansible.builtin.apt:
+    pkg:
+      - qemu-system-common
+      - qemu-system-data
+    state: absent
+
+- name: Install Proxmox Debian Packages
+  ansible.builtin.apt:
+    pkg:
+      - proxmox-ve
+      - open-iscsi
+      - ifupdown2
+    autoclean: True
+    autoremove: False
+    state: present
+...

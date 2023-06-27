@@ -1,0 +1,8 @@
+# Standards: 0.2
+---
+- name: Restart postfix
+  ansible.builtin.service:
+    name: postfix
+    state: restarted
+    enabled: True
+...

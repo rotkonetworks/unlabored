@@ -1,0 +1,11 @@
+# Standards: 0.2
+---
+- name: Setup predefined kernel parameters
+  ansible.posix.sysctl:
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    state: present
+  loop: "{{ (kernel_params_default | map('combine', kernel_params) | list) }}"
+  loop_control:
+    label: "Setting {{ item.name }}"
+...

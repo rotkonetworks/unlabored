@@ -1,0 +1,99 @@
+# Standards: 0.2
+---
+- name: Proxmox node setup
+  hosts: proxmox_hosts
+  gather_facts: True
+  roles:
+    - proxmox_setup_nodes
+
+- name: Default tools and configurations
+  hosts: proxmox_nodes
+  gather_facts: True
+
+  roles:
+    - setup_set_default_locale
+    - setup_set_timezone
+    - setup_install_basic_tools
+    - setup_ansible_facts
+    - setup_add_node_role
+    - setup_user_management
+    - setup_log_rotation
+
+- name: Install Arbitrum services
+  hosts: arbitrum
+  gather_facts: True
+  roles:
+    - setup_install_arbitrum
+
+- name: Install Avalanche services
+  hosts: avalanche
+  gather_facts: True
+  roles:
+    - setup_install_avalanche
+
+- name: Install Binance services
+  hosts: binance
+  gather_facts: True
+  roles:
+    - setup_install_binance
+
+- name: Install DefiKingdom services
+  hosts: defikingdom
+  gather_facts: True
+  roles:
+    - setup_install_defikingdom
+
+- name: Install Erigon services
+  hosts: erigon
+  gather_facts: True
+  roles:
+    - setup_install_erigon
+
+- name: Install Ethereum services
+  hosts: ethereum
+  gather_facts: True
+  roles:
+    - setup_install_ethereum
+
+- name: Install Evmos services
+  hosts: evmos
+  gather_facts: True
+  roles:
+    - setup_install_evmos
+
+- name: Install Moonbeam services
+  hosts: moonbeam
+  gather_facts: True
+  roles:
+    - setup_install_moonbeam
+
+- name: Install Kava services
+  hosts: kava
+  gather_facts: True
+  roles:
+    - setup_install_kava
+
+- name: Install Klaytn services
+  hosts: klaytn
+  gather_facts: True
+  roles:
+    - setup_install_klaytn
+
+- name: Install Optimism services
+  hosts: optimism
+  gather_facts: True
+  roles:
+    - setup_install_optimism
+
+- name: Install Polkadot services
+  hosts: polkadot 
+  gather_facts: True
+  roles:
+    - setup_install_polkadot
+
+- name: Install Polygon services
+  hosts: polygon
+  gather_facts: False
+  roles:
+    - setup_install_polygon
+...

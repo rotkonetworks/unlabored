@@ -1,0 +1,225 @@
+# Standard: 0.2
+---
+- name: Add Arbitrum service version
+  community.general.ini_file:
+    create: True
+    no_extra_spaces: True
+    option: "version"
+    section: "node"
+    state: present
+    value: "{{ arbitrum_version }}"
+    path: "{{ noderole_file }}"
+    owner: root
+    group: root
+    mode: '0644'
+  when: role == "arbitrum"
+
+- name: Add Avalanche service version
+  community.general.ini_file:
+    create: True
+    no_extra_spaces: True
+    option: "version"
+    section: "node"
+    state: present
+    value: "{{ avalanche_version }}"
+    path: "{{ noderole_file }}"
+    owner: root
+    group: root
+    mode: '0644'
+  when: role == "avalanche"
+
+- name: Add AvalancheDFK service version
+  community.general.ini_file:
+    create: True
+    no_extra_spaces: True
+    option: "version"
+    section: "node"
+    state: present
+    value: "{{ defikingdom_avalanche_version }} / {{ defikingdom_version }}"
+    path: "{{ noderole_file }}"
+    owner: root
+    group: root
+    mode: '0644'
+  when: role == "defikingdom"
+
+- name: Add Binance service version
+  community.general.ini_file:
+    create: True
+    no_extra_spaces: True
+    option: "version"
+    section: "node"
+    state: present
+    value: "{{ binance_geth_version }}"
+    path: "{{ noderole_file }}"
+    owner: root
+    group: root
+    mode: '0644'
+  when: role == "binance"
+
+- name: Add Fantom service version
+  community.general.ini_file:
+    create: True
+    no_extra_spaces: True
+    option: "version"
+    section: "node"
+    state: present
+    value: "{{ fantom_version }}"
+    path: "{{ noderole_file }}"
+    owner: root
+    group: root
+    mode: '0644'
+  when: role == "fantom"
+
+- name: Add Golang version
+  community.general.ini_file:
+    create: True
+    no_extra_spaces: True
+    option: "go_version"
+    section: "node"
+    state: present
+    value: "{{ default_golang_version }}"
+    path: "{{ noderole_file }}"
+    owner: root
+    group: root
+    mode: '0644'
+  when: role in ["arbitrum", "avalanche", "defikingdom", "fantom", "ethereum", "erigon", "evmos", "kava", "klaytn", "optimism", "polygon"]
+
+- name: Add Ethereum service version
+  community.general.ini_file:
+    create: True
+    no_extra_spaces: True
+    option: "version"
+    section: "node"
+    state: present
+    value: "{{ ethereum_version }}"
+    path: "{{ noderole_file }}"
+    owner: root
+    group: root
+    mode: '0644'
+  when: role == "ethereum"
+
+- name: Add Erigon service version
+  community.general.ini_file:
+    create: True
+    no_extra_spaces: True
+    option: "version"
+    section: "node"
+    state: present
+    value: "{{ erigon_version }}"
+    path: "{{ noderole_file }}"
+    owner: root
+    group: root
+    mode: '0644'
+  when: role == "erigon"
+
+- name: Add Evmos service version
+  community.general.ini_file:
+    create: True
+    no_extra_spaces: True
+    option: "version"
+    section: "node"
+    state: present
+    value: "{{ evmos_version }}"
+    path: "{{ noderole_file }}"
+    owner: root
+    group: root
+    mode: '0644'
+  when: role == "evmos"
+
+- name: Add Kava service version
+  community.general.ini_file:
+    create: True
+    no_extra_spaces: True
+    option: "version"
+    section: "node"
+    state: present
+    value: "{{ kava_version }}"
+    path: "{{ noderole_file }}"
+    owner: root
+    group: root
+    mode: '0644'
+  when: role == "kava"
+
+- name: Add Klaytn service version
+  community.general.ini_file:
+    create: True
+    no_extra_spaces: True
+    option: "version"
+    section: "node"
+    state: present
+    value: "{{ klaytn_version }}"
+    path: "{{ noderole_file }}"
+    owner: root
+    group: root
+    mode: '0644'
+  when: role == "klaytn"
+
+- name: Add Lighthouse service version
+  community.general.ini_file:
+    create: True
+    no_extra_spaces: True
+    option: "version"
+    section: "lighthouse"
+    state: present
+    value: "{{ ethereum_lighthouse_version }}"
+    path: "{{ noderole_file }}"
+    owner: root
+    group: root
+    mode: '0644'
+  when: role == "ethereum"
+
+- name: Add Moonbeam service version
+  community.general.ini_file:
+    create: True
+    no_extra_spaces: True
+    option: "version"
+    section: "node"
+    state: present
+    value: "{{ moonbeam_version }}"
+    path: "{{ noderole_file }}"
+    owner: root
+    group: root
+    mode: '0644'
+  when: role == "moonbeam"
+
+- name: Add Service Pinned Status
+  community.general.ini_file:
+    create: True
+    no_extra_spaces: True
+    option: "pinned"
+    section: "node"
+    state: present
+    value: "{{ pinned_service | default(False) }}"
+    path: "{{ noderole_file }}"
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Add Optimism service version
+  community.general.ini_file:
+    create: True
+    no_extra_spaces: True
+    option: "version"
+    section: "node"
+    state: present
+    value: "{{ optimism_version }}"
+    path: "{{ noderole_file }}"
+    owner: root
+    group: root
+    mode: '0644'
+  when: role == "optimism"
+
+- name: Add Polygon service version
+  community.general.ini_file:
+    create: True
+    no_extra_spaces: True
+    option: "version"
+    section: "node"
+    state: present
+    value: "{{ polygon_version }}"
+    path: "{{ noderole_file }}"
+    owner: root
+    group: root
+    mode: '0644'
+  when: role == "polygon"
+...

@@ -1,0 +1,11 @@
+# Standards: 0.2
+---
+- name: Disable Proxmox Subscriptiong nag on login
+  ansible.builtin.replace:
+    dest: /usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.js
+    regexp: "(!== 'active'\\) {\\n\\s+)Ext.Msg.show\\({"
+    replace: "\\1void({ //Ext.Msg.show({"
+    backup: True
+  notify:
+    - Restart pveproxy
+...

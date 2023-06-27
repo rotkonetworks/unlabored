@@ -1,0 +1,23 @@
+[Unit]
+Description=Kavad systemd service
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+User={{ kava_user }}
+WorkingDirectory={{ kava_home_path }}
+
+ExecStart={{ kava_home_path }}/kavad start \
+--home {{ kava_home_path }} \
+{% if kava_archive %}{{ kava_archive_flags }}{% endif %} \
+--json-rpc.address 0.0.0.0:{{ kava_json_rpc_port }} \
+--json-rpc.ws-address 0.0.0.0:{{ kava_json_rpc_ws_port }} \
+--json-rpc.api {{ kava_api_namespaces }} \
+--moniker {{ host_name }} \
+
+ExecStop=kill -9 $MAINPID
+Restart=always
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target

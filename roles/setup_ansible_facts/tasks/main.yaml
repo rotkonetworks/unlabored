@@ -1,0 +1,9 @@
+---
+- name: Ensure facts directory /etc/ansible/facts.d directory exists
+  ansible.builtin.file:
+    path: "{{ default_facts_path }}"
+    owner: root
+    group: root
+    mode: '0755'
+    state: directory
+...

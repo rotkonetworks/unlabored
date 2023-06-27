@@ -1,0 +1,19 @@
+# Standards: 0.2
+---
+- name: Copy /etc/default/pveproxy template to remote
+  ansible.builtin.copy:
+    src: pveproxy.template
+    mode: '0644'
+    dest: /tmp/pveproxy.template
+
+- name: Setup /etc/default/pveproxy with somewhat secure defaults
+  ansible.builtin.template:
+    src: pveproxy.template
+    dest: /etc/default/pveproxy
+    owner: root
+    group: root
+    mode: '0644'
+  notify:
+    - Restart pveproxy
+    - Restart spiceproxy
+...

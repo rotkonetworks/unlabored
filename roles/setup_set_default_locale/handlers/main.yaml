@@ -1,0 +1,16 @@
+# Standards: 0.2
+---
+- name: Rebuild Locales
+  ansible.builtin.command:
+    argv:
+      - dpkg-reconfigure
+      - --frontend=noninteractive
+      - locales
+
+- name: Update Locale
+  ansible.builtin.command:
+    argv:
+      - update-locale
+      - LANG={{ default_locale }}
+
+...

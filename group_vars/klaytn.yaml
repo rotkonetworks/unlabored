@@ -1,0 +1,17 @@
+---
+klaytn_version: "1.10.1"
+klaytn_arch: "amd64"
+klaytn_download_url: "https://packages.klaytn.net/klaytn/v{{ klaytn_version }}/ken-v{{ klaytn_version }}-0-linux-{{ klaytn_arch }}.tar.gz"
+klaytn_service: "klaytn"
+klaytn_user: "{{ service_users['klaytn'] }}"
+klaytn_base: "/opt/klaytn"
+klaytn_client_path: "{{ klaytn_base }}/klaytn_{{ klaytn_version }}_linux_{{ klaytn_arch }}"
+klaytn_storage_path: "{{ klaytn_base }}/storage"
+klaytn_config_path: "{{ klaytn_client_path }}/ken-linux-amd64/conf"
+klaytn_port: 32323
+klaytn_sub_port: 32324
+klaytn_rpc_port: 8551
+klaytn_ws_port: 8552
+klaytn_bridge_port: 50505
+klaytn_ws_api: "klay,eth,net,web3,rpc,txpool"
+...

@@ -1,0 +1,118 @@
+# Standards: 0.2
+---
+- name: Enable MASQUARADE
+  ansible.builtin.iptables:
+    table: nat
+    jump: MASQUERADE
+    chain: POSTROUTING
+    source: "{{ default_nat_network }}"
+    out_interface: "{{ default_gw_device }}"
+    state: present
+  when:
+    - default_need_port_forwarding
+  notify:
+    - Persist iptables
+
+- name: Add default NAT bridge device
+  ansible.builtin.blockinfile:
+    path: /etc/network/interfaces
+    backup: True
+    block: "{{ lookup('template', 'default_nat_device.conf') }}"
+  when:
+    - default_need_port_forwarding
+  notify:
+    - Start default_nat_device
+
+- name: Remove deprecated port forwards for NAT'd hosts
+  ansible.builtin.iptables:
+    table: nat
+    jump: DNAT
+    chain: PREROUTING
+    in_interface: "{{ default_gw_device }}"
+    protocol: "{{ item.protocol }}"
+    destination_port: "{{ item.from_port }}"
+    to_destination: "{{ item.to_host }}"
+    state: absent
+  loop: "{{ deprecated_port_forwards }}"
+  when:
+    - default_need_port_forwarding
+    - deprecated_port_forwards is defined
+  notify:
+    - Persist iptables
+
+- name: Setup Service-specific port forwards for NAT'd hosts
+  ansible.builtin.iptables:
+    table: nat
+    jump: DNAT
+    chain: PREROUTING
+    in_interface: "{{ default_gw_device }}"
+    source: "!{{ default_nat_network }}"
+    protocol: "{{ item.protocol }}"
+    destination_port: "{{ item.from_port }}"
+    to_destination: "{{ item.to_host }}"
+    state: present
+  loop: "{{ lxc_nodes | map(attribute='port_forwards') | flatten(levels=1) }}"
+  when:
+    - lxc_nodes is defined
+    - default_need_port_forwarding
+  notify:
+    - Persist iptables
+    - Start default_nat_device
+
+- name: Default value for any_node_requires_firewall
+  ansible.builtin.set_fact:
+    any_node_requires_firewall: False
+
+- name: Check if any node requires a container level firewall
+  ansible.builtin.set_fact:
+    any_node_requires_firewall: True
+  loop: "{{ lxc_nodes }}"
+  when: hostvars[item.host].container_level_firewall | default(default_container_level_firewall) | bool
+  run_once: True
+
+- name: Manage forwarding rules for the NAT network
+  ansible.builtin.iptables:
+    table: filter
+    chain: FORWARD
+    state: present
+    jump: "{{ item.jump }}"
+    source: "{{ item.source | default(omit) }}"
+    destination: "{{ item.destination | default(omit) }}"
+  loop:
+    - { jump: 'ACCEPT', source: "{{ default_nat_network_forward_cidr }}" }
+    - { jump: 'ACCEPT', destination: "{{ default_nat_network_forward_cidr }}" }
+  notify: Persist iptables
+  when: any_node_requires_firewall
+
+- name: Reject traffic to internal IP ranges
+  ansible.builtin.iptables:
+    table: filter
+    chain: FORWARD
+    state: present
+    jump: REJECT
+    destination: "{{ item }}"
+  loop: "{{ internal_ip_ranges }}"
+  notify: Persist iptables
+  when: any_node_requires_firewall
+
+- name: Block IPv4 private network addresses for OUTPUT chain
+  ansible.builtin.iptables:
+    table: filter
+    chain: OUTPUT
+    destination: "{{ item }}"
+    out_interface: "{{ default_gw_device }}"
+    jump: REJECT
+    state: present
+  loop: "{{ internal_ip_ranges }}"
+  notify:
+    - Persist iptables
+
+- name: Enable iptables service
+  ansible.builtin.systemd:
+    name: iptables
+    enabled: True
+    state: started
+  notify:
+    - Persist iptables
+    - Restart iptables
+...

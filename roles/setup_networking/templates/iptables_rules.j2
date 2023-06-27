@@ -1,0 +1,99 @@
+# iptables-rules.j2
+# TODO: not in use yet, needs to be worked out and tested
+
+# Flush existing rules
+*filter
+:INPUT DROP [0:0]
+:FORWARD DROP [0:0]
+:OUTPUT DROP [0:0]
+COMMIT
+
+# Enable loopback traffic
+*filter
+-A INPUT -i lo -j ACCEPT
+-A OUTPUT -o lo -j ACCEPT
+COMMIT
+
+# Add a rule to allow traffic to and from internal IP range
+*filter
+{% for ip_range in internal_ip_ranges %}
+-A INPUT -s {{ ip_range }} -j ACCEPT
+-A OUTPUT -d {{ ip_range }} -j ACCEPT
+-A FORWARD -s {{ ip_range }} -d {{ ip_range }} -j ACCEPT
+{% endfor %}
+COMMIT
+
+# Enable MASQUERADE for the NAT network
+*nat
+:PREROUTING ACCEPT [0:0]
+:POSTROUTING ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
+{% if default_need_port_forwarding %}
+-A POSTROUTING -s {{ default_nat_network }} -o {{ default_gw_device }} -j MASQUERADE
+{% endif %}
+COMMIT
+
+# Allow outbound traffic not destined for internal IP range
+*filter
+{% for ip_range in internal_ip_ranges %}
+-A OUTPUT ! -d {{ ip_range }} -j ACCEPT
+{% endfor %}
+COMMIT
+
+# Setup service-specific port forwards for NAT'd hosts and allow traffic to these ports
+{% if lxc_nodes is defined and default_need_port_forwarding %}
+*nat
+{% for node in lxc_nodes %}
+{% for port in node.port_forwards %}
+-A PREROUTING -i {{ default_gw_device }} ! -s {{ default_nat_network }} -p {{ port.protocol }} --dport {{ port.from_port }} -j DNAT --to {{ port.to_host }}
+{% endfor %}
+{% endfor %}
+COMMIT
+
+# Open node specific port exceptions for all chains to containers
+*filter
+{% for node in lxc_nodes %}
+{% for port in node.port_forwards %}
+-A FORWARD -s {{ default_nat_network }} --dport {{ port.from_port }} -p {{ port.protocol }} -j ACCEPT
+-A INPUT -s {{ default_nat_network }} -d {{ port.to_host.split(':')[0] }} --dport {{ port.to_host.split(':')[1] }} -p {{ port.protocol }} -j ACCEPT
+-A OUTPUT -s {{ default_nat_network }} -d {{ port.to_host.split(':')[0] }} --dport {{ port.to_host.split(':')[1] }} -p {{ port.protocol }} -j ACCEPT
+{% endfor %}
+{% endfor %}
+COMMIT
+{% endif %}
+
+# Allow Proxmox-specific ports
+*filter
+{% for chain in ['INPUT', 'OUTPUT', 'FORWARD'] %}
+{% for port in ports %}
+-A {{ chain }} -s {{ default_nat_network }} --dport {{ port.destination_port }} -p {{ port.protocol }} -j ACCEPT
+{% endfor %}
+{% endfor %}
+COMMIT
+
+# Allow related and established connections for exceptional rules to persist after dropping
+*filter
+-A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+-A OUTPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+-A FORWARD -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+COMMIT
+
+# # Block reserved IPv4 network addresses
+# *filter
+# {% for chain in ['OUTPUT', 'FORWARD'] %}
+# {% for ip_range in internal_ip_ranges %}
+# -A {{ chain }} -d {{ ip_range }} -o {{ default_gw_device }} -p {{ protocol }} -j DROP
+# {% endfor %}
+# {% endfor %}
+# {% endfor %}
+# COMMIT
+
+# Log dropped packets
+*filter
+:LOGGING - [0:0]
+-A INPUT -j LOGGING
+-A OUTPUT -j LOGGING
+-A FORWARD -j LOGGING
+-A LOGGING -m limit --limit 2/min -j LOG --log-prefix "IPTables-Dropped: " --log-level 4
+-A LOGGING -j DROP
+COMMIT

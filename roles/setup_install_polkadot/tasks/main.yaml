@@ -1,0 +1,79 @@
+---
+- name: Ensure group {{ polkadot_user }} exists
+  ansible.builtin.group:
+    name: "{{ polkadot_user }}"
+    state: present
+    system: True
+
+- name: Ensure user {{ polkadot_user }} exists
+  ansible.builtin.user:
+    append: True
+    comment: polkadot service user
+    create_home: False
+    group: "{{ polkadot_user }}"
+    groups: sudo
+    home: "{{ polkadot_base }}"
+    name: "{{ polkadot_user }}"
+    shell: "{{ default_shell }}"
+    state: present
+    system: True
+
+- name: Ensure user {{ polkadot_user }} owns {{ polkadot_base }}
+  ansible.builtin.file:
+    path: "{{ item }}"
+    owner: "{{ polkadot_user }}"
+    group: "{{ polkadot_user }}"
+    mode: '0755'
+    state: directory
+  with_items:
+    - "{{ polkadot_base }}"
+
+- name: Refresh facts
+  ansible.builtin.setup:
+
+- name: Install polkadot v{{ polkadot_version }}
+  ansible.builtin.get_url:
+    url: "{{ polkadot_download_url }}"
+    dest: "{{ polkadot_base }}/polkadot-v{{ polkadot_version }}"
+    mode: "u+rwx"
+    owner: "{{ polkadot_user }}"
+    group: "{{ polkadot_user }}"
+  when:
+    - ansible_local['noderole']['node']['pinned'] != "True"
+    - ansible_local['noderole']['node']['version'] != polkadot_version
+  notify:
+    - Add polkadot service version
+    - Add Service Pinned Status
+    - Stop polkadot
+    - Symlink polkadot release
+    - Systemd daemon-reload
+    - Restart polkadot
+
+- name: Copy polkadot systemd service to a host
+  ansible.builtin.template:
+    src: polkadot_val.service.template
+    dest: /etc/systemd/system/polkadot.service
+    owner: "root"
+    group: "root"
+    mode: '0644'
+  notify:
+    - Stop polkadot
+    - Systemd daemon-reload
+    - Restart polkadot
+  when:
+    - ansible_local['noderole']['node']['type'] == "validator"
+
+- name: Copy polkadot systemd service to a host
+  ansible.builtin.template:
+    src: polkadot_rpc.service.template
+    dest: /etc/systemd/system/polkadot.service
+    owner: "root"
+    group: "root"
+    mode: '0644'
+  notify:
+    - Stop polkadot
+    - Systemd daemon-reload
+    - Restart polkadot
+  when:
+    - ansible_local['noderole']['node']['type'] == "rpc"
+...

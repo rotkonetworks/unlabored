@@ -1,0 +1,54 @@
+# Standards: 0.2
+---
+- name: Install Zabbix Agent
+  ansible.builtin.apt:
+    pkg:
+      - zabbix-agent
+    state: present
+    update_cache: True
+  notify:
+    - Systemd daemon-reload
+
+- name: Setup /etc/zabbix/zabbix_agentd.conf with somewhat secure defaults
+  ansible.builtin.template:
+    src: zabbix_agentd.conf.template
+    dest: /etc/zabbix/zabbix_agentd.conf
+    owner: root
+    group: root
+    mode: '0644'
+  notify:
+    - Restart zabbix-agent
+
+- name: Ensure required directories exists with correct permissions
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    owner: "root"
+    group: "root"
+    mode: "{{ item.mode }}"
+    state: directory
+  with_items:
+    - { path: "{{ zabbix_ansible_base_path }}", mode: "0755" }
+    - { path: "{{ zabbix_ansible_factsd_path }}", mode: "0755" }
+    - { path: "{{ zabbix_agent_confd_path }}", mode: "0755" }
+    - { path: "{{ zabbix_agent_script_path }}", mode: "0755" }
+
+- name: Provide access to custom facts
+  ansible.builtin.template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: root
+    group: root
+    mode: "{{ item.mode }}"
+  with_items:
+    - { src: "ansiblefacts.py.template", dest: "{{ zabbix_agent_script_path }}/ansiblefacts.py", mode: "0755" }
+    - { src: "ansiblefacts.conf.template", dest: "{{ zabbix_agent_confd_path }}/ansiblefacts.conf", mode: "0644" }
+
+- name: Enable Zabbix Agent service
+  ansible.builtin.systemd:
+    name: zabbix-agent
+    enabled: True
+  check_mode: False
+  notify:
+    - Systemd daemon-reload
+    - Restart zabbix-agent
+...

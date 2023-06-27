@@ -1,0 +1,27 @@
+---
+- name: Acquire current groups
+  ansible.builtin.command:
+    argv:
+      - pveum
+      - group
+      - list
+  register: pveum_group_list
+
+- name: Register Proxmox Groups
+  ansible.builtin.set_fact:
+    current_groups: "{{ pveum_group_list.stdout | pveum_groups }}"
+
+- name: Create proxmox admin group for ansible
+  ansible.builtin.command:
+    argv:
+      - pveum
+      - group
+      - add
+      - "{{ item.name }}"
+      - -comment
+      - '"{{ item.comment }}"'
+  when:
+    - item.name not in current_groups
+  with_items: "{{ proxmox_admin_groups }}"
+
+...

@@ -1,0 +1,14 @@
+# Standards: 0.2
+---
+- name: Restart zabbix-agent
+  ansible.builtin.service:
+    name: zabbix-agent
+    state: restarted
+    enabled: True
+  check_mode: False
+
+- name: Systemd daemon-reload
+  ansible.builtin.systemd:
+    daemon_reload: True
+  check_mode: False
+...

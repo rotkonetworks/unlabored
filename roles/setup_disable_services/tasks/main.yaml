@@ -1,0 +1,20 @@
+# Standards: 0.2
+---
+
+- name: Populate service facts
+  ansible.builtin.service_facts:
+
+- name: Disable rpcbind related systemd services
+  ansible.builtin.service:
+    name: "{{ item }}"
+    state: stopped
+    enabled: False
+  register: systemctl_command_output
+  when:
+    - item in ansible_facts.services
+    - ansible_facts.services[item]['status'] == 'enabled'
+  with_items:
+    - rpcbind.socket
+    - rpcbind.service
+    - rpcbind.target
+...

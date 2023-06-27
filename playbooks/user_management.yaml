@@ -1,0 +1,9 @@
+# Standards: 0.2
+---
+- name: User Management
+  hosts: access_management
+  gather_facts: True
+
+  roles:
+    - setup_user_management
+...

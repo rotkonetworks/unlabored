@@ -1,0 +1,101 @@
+# Standards: 0.2
+---
+- name: Ensure group {{ binance_user }} exists
+  ansible.builtin.group:
+    name: "{{ binance_user }}"
+    state: present
+    system: True
+
+- name: Ensure user {{ binance_user }} exists
+  ansible.builtin.user:
+    append: True
+    comment: binance service user
+    create_home: True
+    group: "{{ binance_user }}"
+    groups: sudo
+    home: "{{ binance_base }}"
+    name: "{{ binance_user }}"
+    shell: "{{ default_shell }}"
+    state: present
+    system: True
+
+- name: Ensure required directories exists
+  ansible.builtin.file:
+    path: "{{ item }}"
+    owner: "{{ binance_user }}"
+    group: "{{ binance_user }}"
+    mode: '0755'
+    state: directory
+  with_items:
+    - "{{ binance_base }}"
+    - "{{ binance_config_path }}"
+    - "{{ binance_bin_path }}"
+    - "{{ binance_storage_path }}"
+    - "{{ binance_storage_path }}/tmp"
+
+- name: Copy binance systemd service to a host
+  ansible.builtin.template:
+    src: binance.service.template
+    dest: /etc/systemd/system/binance.service
+    owner: "{{ binance_user }}"
+    group: "{{ binance_user }}"
+    mode: '0644'
+  notify:
+    - Systemd daemon-reload
+    - Enable Binance
+
+- name: Copy bsc-logs systemd service to a host
+  ansible.builtin.template:
+    src: bsc-logs.service.template
+    dest: /etc/systemd/system/bsc-logs.service
+    owner: "{{ binance_user }}"
+    group: "{{ binance_user }}"
+    mode: '0644'
+  notify:
+    - Systemd daemon-reload
+    - Enable bsc-logs
+    - Restart bsc-logs
+
+- name: Refresh facts
+  ansible.builtin.setup:
+
+- name: Download binance geth_linux binary
+  ansible.builtin.get_url:
+    url: "{{ binance_geth_app_dl }}"
+    dest: "{{ binance_bin_path }}/geth-{{ binance_geth_version }}"
+    mode: '754'
+  when:
+    - ansible_local['noderole']['node']['pinned'] != "True"
+    - ansible_local['noderole']['node']['version'] != binance_geth_version
+  notify:
+    - Symlink Binance Version
+    - Add Binance service version
+    - Add Service Pinned Status
+    - Enable Binance
+    - Restart Binance
+
+- name: Download and Extract mainnet.zip to correct location
+  ansible.builtin.unarchive:
+    src: "{{ binance_geth_mainnet_dl }}"
+    remote_src: True
+    dest: "{{ binance_config_path }}"
+    creates: "{{ binance_config_file }}"
+
+- name: Update config.toml
+  community.general.ini_file:
+    path: "{{ binance_config_file }}"
+    section: "{{ item.section }}"
+    option: "{{ item.option }}"
+    value: "{{ item.value }}"
+    owner: "{{ binance_user }}"
+    group: "{{ binance_user }}"
+    mode: '0644'
+    state: "{{ item.state }}"
+  with_items:
+    - { section: "Node", option: "IPCPath", value: '"{{ binance_ipc_path }}"', state: "present" }
+    - { section: "Node", option: "HTTPHost", value: '"0.0.0.0"', state: "present" }
+    - { section: "Node", option: "HTTPVirtualHosts", value: '["*"]', state: "present" }
+    - { section: "Node", option: "WSHost", value: '"0.0.0.0"', state: "present" }
+  notify:
+    - Restart Binance
+...

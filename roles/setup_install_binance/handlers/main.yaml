@@ -1,0 +1,37 @@
+# Standards: 0.2
+---
+- name: Symlink Binance Version
+  ansible.builtin.file:
+    src: "{{ binance_bin_path }}/geth-{{ binance_geth_version }}"
+    dest: "{{ binance_bin_path }}/geth"
+    state: link
+    owner: "{{ binance_user }}"
+    group: "{{ binance_user }}"
+    force: True
+
+- name: Enable Binance
+  ansible.builtin.service:
+    name: binance
+    enabled: True
+
+- name: Enable bsc-logs
+  ansible.builtin.service:
+    name: bsc-logs
+    enabled: True
+
+- name: Restart Binance
+  ansible.builtin.service:
+    name: binance
+    state: restarted
+    enabled: True
+
+- name: Restart bsc-logs
+  ansible.builtin.service:
+    name: bsc-logs
+    state: restarted
+    enabled: True
+
+- name: Systemd daemon-reload
+  ansible.builtin.systemd:
+    daemon_reload: True
+...

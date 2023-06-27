@@ -1,0 +1,56 @@
+[Unit]
+Description=Erigon client
+Wants=network-online.target
+After=network.target network-online.target
+
+[Service]
+User={{ erigon_user }}
+Group={{ erigon_user }}
+LimitNOFILE={{ default_max_open_files_in_service }}
+Environment=HOME={{ erigon_base }}
+Type=simple
+ExecStart={{ erigon_base }}/erigon \
+{% if erigon_bsc %}
+--chain bsc \
+--port {{ erigon_bsc_p2p_port }} \
+--http.port {{ erigon_bsc_http_port }} \
+--http.api {{ erigon_bsc_http_api }} \
+--db.pagesize 16k \
+{% endif %}
+{% if erigon_bor %}
+--chain bor-mainnet \
+--port {{ erigon_bor_p2p_port }} \ 
+--http.port {{ erigon_bor_http_port }} \ 
+--http.api {{ erigon_bor_http_api }} \
+--db.pagesize 16k \
+{% endif %}
+{% if erigon_gno %}
+--chain gnosis \
+--port {{ erigon_gno_p2p_port }} \
+--http.port {{ erigon_gno_http_port }} \
+--http.api {{ erigon_gno_http_api }} \
+--db.pagesize 16k \
+{% endif %}
+{% if erigon_eth %}
+--chain mainnet \
+--port {{ erigon_eth_p2p_port }} \
+--http.port {{ erigon_eth_http_port }} \
+--http.api {{ erigon_eth_http_api }} \
+{% endif %}
+{% if pruned %}
+{{ erigon_pruned_flags }} \
+{% endif %}
+--datadir {{ erigon_storage_path }} \
+--private.api.addr {{ erigon_private_api_addr }} \
+--http.addr {{ erigon_addr }} \
+--ws \
+--http
+
+KillMode=process
+KillSignal=SIGTERM
+TimeoutStopSec=90
+Restart=on-failure
+RestartSec=10s
+
+[Install]
+WantedBy=multi-user.target

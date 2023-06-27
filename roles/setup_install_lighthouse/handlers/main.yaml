@@ -1,0 +1,41 @@
+# Standards: 0.2
+---
+- name: Symlink Lighthouse release
+  ansible.builtin.file:
+    src: "{{ ethereum_base }}/lighthouse-v{{ ethereum_lighthouse_version }}/lighthouse"
+    dest: "{{ ethereum_base }}/lighthouse"
+    force: True
+    state: link
+    owner: "{{ ethereum_user }}"
+    group: "{{ ethereum_user }}"
+
+- name: Enable Lighthouse
+  ansible.builtin.service:
+    name: lighthouse
+    enabled: True
+
+- name: Restart Lighthouse
+  ansible.builtin.service:
+    name: lighthouse
+    state: restarted
+    enabled: True
+
+- name: Systemd daemon-reload
+  ansible.builtin.systemd:
+    daemon_reload: True
+
+- name: Stop Lighthouse
+  ansible.builtin.systemd:
+    name: lighthouse
+    daemon_reload: True
+    state: stopped
+    enabled: True
+
+- name: Start Lighthouse
+  ansible.builtin.systemd:
+    name: lighthouse
+    daemon_reload: True
+    state: started
+    enabled: True
+
+...

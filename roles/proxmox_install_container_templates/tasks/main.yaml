@@ -1,0 +1,25 @@
+---
+- name: Acquire installed container templates
+  ansible.builtin.command:
+    argv:
+      - pveam
+      - list
+      - local
+  register: pveam_output
+
+- name: Generate available containers
+  ansible.builtin.set_fact:
+    pveam_available_containers: "{{ (pveam_available_containers | default([])) + pveam_output.stdout | regex_findall('local:vztmpl/(.*tar.gz)', multiline=True) }}"
+
+- name: Install required containers
+  ansible.builtin.command:
+    argv:
+      - pveam
+      - download
+      - local
+      - "{{ item }}"
+  when:
+    - item not in pveam_available_containers
+  with_items:
+    - "{{ default_container_template }}"
+...

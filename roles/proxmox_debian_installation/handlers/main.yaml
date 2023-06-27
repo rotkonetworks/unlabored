@@ -1,0 +1,14 @@
+# Standards: 0.2
+---
+- name: Restart pveproxy
+  ansible.builtin.service:
+    name: pveproxy
+    state: restarted
+    enabled: True
+
+- name: Restart spiceproxy
+  ansible.builtin.service:
+    name: spiceproxy
+    state: restarted
+    enabled: True
+...

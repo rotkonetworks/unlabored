@@ -1,0 +1,48 @@
+---
+
+optimism_user: "{{ service_users['optimism'] }}"
+optimism_base: "/opt/optimism"
+optimism_storage_path: "{{ optimism_base }}/storage"
+optimism_config_path: "{{ optimism_base }}/config"
+optimism_build_path: "{{ optimism_base }}/build"
+
+optimism_git_repo: "https://github.com/ethereum-optimism/optimism.git"
+optimism_genesis_url: "https://storage.googleapis.com/optimism/mainnet/genesis-berlin.json"
+optimism_version: "1.6.3"
+
+optimism_ws_port: 8543
+optimism_rpc_port: 8545
+optimism_p2p_port: 30303
+
+optimism_block_signer_address: "0x00000398232E2064F896018496b4b44b3D62751F"
+optimism_block_signer_private_key: "6587ae678cf4fc9a33000cdbf9f35226b71dcc6a4684a31203241f9bcfd55d27"
+optimism_rollup_address_manager_owner_address: "0x9BA6e03D8B90dE867373Db8cF1A58d2F7F006b3A"
+optimisnm_rollup_gas_price_oracle_owner_address: "0x648E3e8101BFaB7bf5997Bd007Fb473786019159"
+optimism_l1_rpc_endpoint: https://api.archivenode.io/wusaa5p3bhljra8japvwusaa50qzxike/erigon
+
+default_max_open_files_in_service: 32768
+default_packages:
+  - sysstat
+  - psmisc
+  - wget
+  - telnet
+  - python3-pip
+  - unzip
+  - lz4
+  - bind9-dnsutils
+  - net-tools
+  - libuser
+  - sudo
+  - bind9-dnsutils
+  - build-essential
+  - git
+  - yarn
+  - libusb-1.0-0
+  - libusb-dev
+  - libudev-dev
+  - libudev1
+  - jq
+  - pkg-config
+  - curl
+  - logrotate
+...

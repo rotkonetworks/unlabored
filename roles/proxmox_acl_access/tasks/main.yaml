@@ -1,0 +1,29 @@
+---
+- name: Acquire acl lists
+  ansible.builtin.command:
+    argv:
+      - pveum
+      - acl
+      - list
+  register: pveum_acl_list
+
+- name: Register group acl list
+  ansible.builtin.set_fact:
+    current_group_acl: "{{ pveum_acl_list.stdout | pveum_acl_group | default({}) }}"
+
+- name: Modify ACL Lists
+  ansible.builtin.command:
+    argv:
+      - pveum
+      - acl
+      - modify
+      - "{{ item.path }}"
+      - -group
+      - "{{ item.group }}"
+      - -role
+      - "{{ item.roleid }}"
+  with_items: "{{ proxmox_acl_list }}"
+  when:
+    - item not in current_group_acl
+
+...

@@ -1,0 +1,124 @@
+---
+host_name: "rot.node.rotko.net"
+host_timezone: "Europe/Helsinki"
+ansible_host: "69.69.69.73"
+role: "proxmox"
+
+default_need_port_forwarding: True
+
+default_storage: "zfs_storage"
+default_gw_device: "eno2"
+default_resource_pool: "resource_pool"
+
+kernel_modules:
+  - coretemp
+  - zfs
+
+lxc_nodes:
+  - host: "evmos02"
+    proxmox_config:
+      vmid: "802"
+      hostname: "{{ hostvars['evmos02']['host_name'] }}"
+      ostemplate: 'local:vztmpl/{{ default_container_template }}'
+      netif: "{{ hostvars['evmos02']['netif'] }}"
+      cores: 16
+      memory: 32768
+      swap: 16384
+      password: M4RG4RETth4tcherIS110%hot
+      disk: "{{ default_storage }}:20"
+      mounts: '{"mp0":"{{ default_storage }}:8000,mp={{ hostvars["evmos02"]["evmos_storage_path"] }}"}'
+      onboot: True
+      unprivileged: True
+      validate_certs: False
+      description: "Evmos: {{ hostvars['evmos02']['host_name'] }}"
+      state: present
+      features:
+        - nesting=1
+    port_forwards:
+      - from_port: "{{ hostvars['evmos02']['ansible_port'] }}"
+        to_host: "{{ hostvars['evmos02']['container_ip'] }}:22"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['evmos02']['evmos_port'] }}"
+        to_host: "{{ hostvars['evmos02']['container_ip'] }}:{{ hostvars['evmos02']['evmos_port'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['evmos02']['evmos_port'] }}"
+        to_host: "{{ hostvars['evmos02']['container_ip'] }}:{{ hostvars['evmos02']['evmos_port'] }}"
+        protocol: "udp"
+      - from_port: "{{ hostvars['evmos02']['evmos_p2p_port'] }}"
+        to_host: "{{ hostvars['evmos02']['container_ip'] }}:{{ hostvars['evmos02']['evmos_p2p_port'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['evmos02']['evmos_p2p_port'] }}"
+        to_host: "{{ hostvars['evmos02']['container_ip'] }}:{{ hostvars['evmos02']['evmos_p2p_port'] }}"
+        protocol: "udp"
+      - from_port: "{{ hostvars['evmos02']['evmos_rpc_port'] }}"
+        to_host: "{{ hostvars['evmos02']['container_ip'] }}:{{ hostvars['evmos02']['evmos_rpc_port'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['evmos02']['evmos_rpc_port'] }}"
+        to_host: "{{ hostvars['evmos02']['container_ip'] }}:{{ hostvars['evmos02']['evmos_rpc_port'] }}"
+        protocol: "udp"
+      - from_port: "{{ hostvars['evmos02']['evmos_json_rpc_port'] }}"
+        to_host: "{{ hostvars['evmos02']['container_ip'] }}:{{ hostvars['evmos02']['evmos_json_rpc_port'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['evmos02']['evmos_json_rpc_ws_port'] }}"
+        to_host: "{{ hostvars['evmos02']['container_ip'] }}:{{ hostvars['evmos02']['evmos_json_rpc_ws_port'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['evmos02']['evmos_grpc_port'] }}"
+        to_host: "{{ hostvars['evmos02']['container_ip'] }}:{{ hostvars['evmos02']['evmos_grpc_port'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['evmos02']['evmos_grpc_web_port'] }}"
+        to_host: "{{ hostvars['evmos02']['container_ip'] }}:{{ hostvars['evmos02']['evmos_grpc_web_port'] }}"
+        protocol: "tcp"
+  - host: "kava01"
+    proxmox_config:
+      vmid: "301"
+      hostname: "{{ hostvars['kava01']['host_name'] }}"
+      ostemplate: 'local:vztmpl/{{ default_container_template }}'
+      netif: "{{ hostvars['kava01']['netif'] }}"
+      cores: 16
+      memory: 32768
+      swap: 16384
+      password: M4RG4RETth4tcherIS110%hot
+      disk: "{{ default_storage }}:20"
+      mounts: '{"mp0":"{{ default_storage }}:3000,mp={{ hostvars["kava01"]["kava_storage_path"] }}"}'
+      onboot: True
+      unprivileged: True
+      validate_certs: False
+      description: "Kava: {{ hostvars['kava01']['host_name'] }}"
+      state: present
+      features:
+        - nesting=1
+    port_forwards:
+      - from_port: "{{ hostvars['kava01']['ansible_port'] }}"
+        to_host: "{{ hostvars['kava01']['container_ip'] }}:22"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['kava01']['kava_port'] }}"
+        to_host: "{{ hostvars['kava01']['container_ip'] }}:{{ hostvars['kava01']['kava_port'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['kava01']['kava_port'] }}"
+        to_host: "{{ hostvars['kava01']['container_ip'] }}:{{ hostvars['kava01']['kava_port'] }}"
+        protocol: "udp"
+      - from_port: "{{ hostvars['kava01']['kava_p2p_port'] }}"
+        to_host: "{{ hostvars['kava01']['container_ip'] }}:{{ hostvars['kava01']['kava_p2p_port'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['kava01']['kava_p2p_port'] }}"
+        to_host: "{{ hostvars['kava01']['container_ip'] }}:{{ hostvars['kava01']['kava_p2p_port'] }}"
+        protocol: "udp"
+      - from_port: "{{ hostvars['kava01']['kava_rpc_port'] }}"
+        to_host: "{{ hostvars['kava01']['container_ip'] }}:{{ hostvars['kava01']['kava_rpc_port'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['kava01']['kava_rpc_port'] }}"
+        to_host: "{{ hostvars['kava01']['container_ip'] }}:{{ hostvars['kava01']['kava_rpc_port'] }}"
+        protocol: "udp"
+      - from_port: "{{ hostvars['kava01']['kava_json_rpc_port'] }}"
+        to_host: "{{ hostvars['kava01']['container_ip'] }}:{{ hostvars['kava01']['kava_json_rpc_port'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['kava01']['kava_json_rpc_ws_port'] }}"
+        to_host: "{{ hostvars['kava01']['container_ip'] }}:{{ hostvars['kava01']['kava_json_rpc_ws_port'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['kava01']['kava_grpc_port'] }}"
+        to_host: "{{ hostvars['kava01']['container_ip'] }}:{{ hostvars['kava01']['kava_grpc_port'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['kava01']['kava_grpc_web_port'] }}"
+        to_host: "{{ hostvars['kava01']['container_ip'] }}:{{ hostvars['kava01']['kava_grpc_web_port'] }}"
+        protocol: "tcp"
+...

@@ -1,0 +1,31 @@
+#!/usr/bin/env python3
+from pathlib import Path
+import sys
+import configparser
+base_facts = Path("{{ zabbix_ansible_factsd_path }}")
+params = ""
+try:
+    params = sys.argv[1]
+except IndexError:
+    params = "noderole.node.role"
+
+try:
+    fact_basename, section, key = params.split(".", 3)
+except ValueError:
+    print(f"Provided factfile.section.key ({params}) is not in correct format")
+    sys.exit(1)
+
+
+fact_file = base_facts / f"{fact_basename}.fact"
+cfg = configparser.ConfigParser()
+
+if fact_file.exists():
+    cfg.read(fact_file)
+    try:
+        print(cfg[section][key])
+    except KeyError:
+        print(f"key/section {key}/{section} is not available")
+        sys.exit(1)
+else:
+    print(f"requested {fact_file} does not exists")
+    sys.exit(1)

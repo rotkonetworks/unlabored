@@ -1,0 +1,25 @@
+# Standards: 0.2
+---
+galaxy_info:
+  author: Jani Mikkonen <jani.mikkonen@northcode.fi>
+  description:
+  min_ansible_version: 3.0
+  platforms:
+    - name: Debian
+      versions:
+        - bullseye
+dependencies:
+  - role: proxmox_debian_gpgkeys
+  - role: proxmox_debian_repository
+  - role: proxmox_debian_installation
+  - role: proxmox_disable_subscription_nag
+  - role: proxmox_acl_groups
+  - role: proxmox_acl_users
+  - role: proxmox_acl_access
+  - role: proxmox_acl_tokens
+  - role: proxmox_install_container_templates
+  - role: setup_user_management
+
+# Disabled for now
+#  - role: proxmox_secure_node
+...

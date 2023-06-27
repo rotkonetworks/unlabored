@@ -1,0 +1,115 @@
+---
+- name: Ensure group exists {{ kava_user }}
+  ansible.builtin.group:
+    name: "{{ kava_user }}"
+    state: present
+    system: True
+
+- name: Ensure user exists {{ kava_user }}
+  ansible.builtin.user:
+    append: True
+    comment: Kava service user
+    create_home: True
+    group: "{{ kava_user }}"
+    groups: sudo
+    home: "{{ kava_home_path }}"
+    name: "{{ kava_user }}"
+    shell: "{{ default_shell }}"
+    state: present
+    system: True
+
+- name: Update .profile
+  ansible.builtin.blockinfile:
+    path: "{{ kava_home_path }}/.profile"
+    owner: "{{ kava_user }}"
+    group: "{{ kava_user }}"
+    create: True
+    mode: '0644'
+    block: |
+      GOPATH="$HOME/go"
+      PATH="$GOPATH/bin:$PATH"
+      PATH="$PATH:/usr/local/go/bin"
+
+- name: Ensure kava base directory exists
+  ansible.builtin.file:
+    path: "{{ item }}"
+    owner: "{{ kava_user }}"
+    group: "{{ kava_user }}"
+    mode: '0755'
+    state: directory
+  with_items:
+    - "{{ kava_config_path }}"
+    - "{{ kava_home_path }}"
+    - "{{ kava_log_path }}"
+    - "{{ kava_src_path }}"
+    - "{{ kava_storage_path }}"
+
+- name: Acquire kavad source
+  ansible.builtin.git:
+    repo: "{{ kava_git_repo }}"
+    dest: "{{ kava_src_path }}"
+    depth: 1
+    version: "v{{ kava_version }}"
+    force: True
+    clone: True
+  become: True
+  become_user: "{{ kava_user }}"
+
+- name: Build client
+  ansible.builtin.shell: |
+    source "{{ kava_home_path }}/.profile"
+    git checkout "v{{ kava_version }}"
+    make install
+  args:
+    executable: /bin/bash
+    chdir: "{{ kava_src_path }}"
+  become: True
+  become_user: "{{ kava_user }}"
+  register: kava_build
+  when:
+    - ansible_local['noderole']['node']['pinned'] != "true"
+    - ansible_local['noderole']['node']['version'] != kava_version
+
+- name: Install kava v{{ kava_version }}
+  ansible.builtin.copy:
+    src: "{{ kava_home_path }}/go/bin/kava"
+    dest: "{{ kava_home_path }}/kavad-v{{ kava_version }}"
+    remote_src: True
+    mode: '0744'
+    group: "{{ kava_user }}"
+    owner: "{{ kava_user }}"
+  become: True
+  become_user: "{{ kava_user }}"
+  register: kava_install
+  when:
+    - ansible_local['noderole']['node']['pinned'] != "true"
+    - ansible_local['noderole']['node']['version'] != kava_version
+  notify:
+    - Add Kava service version
+    - Add Service Pinned Status
+    - Symlink kavad release
+    - Systemd daemon-reload
+    - Stop kavad
+    - Start kavad
+
+# - name: Download genesis file
+#   ansible.builtin.get_url:
+#     url: "{{ kava_archive_snapshot_path }}/genesis.json"
+#     dest: "{{ kava_config_path }}/genesis.json"
+#     mode: "0755"
+#     group: "{{ kava_user }}"
+#     owner: "{{ kava_user }}"
+
+- name: Copy kava systemd service to a host
+  ansible.builtin.template:
+    src: kavad.service.j2
+    dest: "{{ kava_home_path }}/kavad.service"
+    owner: "{{ kava_user }}"
+    group: "{{ kava_user }}"
+    mode: '0644'
+  notify:
+    - Symlink kavad service
+    - Systemd daemon-reload
+    - Stop kavad
+    - Start kavad
+...

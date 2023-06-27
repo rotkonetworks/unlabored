@@ -1,0 +1,56 @@
+---
+erigon_version: "2.42.0"
+erigon_download_url: "https://github.com/ledgerwatch/erigon/archive/refs/tags/v{{ erigon_version }}.tar.gz"
+erigon_service: "erigon"
+erigon_user: "{{ service_users['erigon'] }}"
+erigon_base: "/opt/erigon"
+erigon_build_path: "{{ erigon_base }}/erigon-{{ erigon_version }}"
+erigon_bin_path: "{{ erigon_build_path }}/build/bin"
+erigon_storage_path: "{{ erigon_base }}/storage"
+erigon_jwtsecret_file: "{{ erigon_storage_path }}/jwt.hex"
+erigon_config_path: "{{ erigon_base }}/config"
+erigon_private_api_addr: "localhost:9090"
+erigon_addr: "0.0.0.0"
+erigon_corsdomain: "*"
+erigon_pruned_flags: "--prune hrtc"
+
+erigon_eth: False
+erigon_eth_p2p_port: 30303
+erigon_eth_p2p2_port: 30304
+erigon_eth_http_port: 8545
+erigon_eth_ws_port: 8546
+erigon_eth_bt_port: 42069
+erigon_eth_sentry_port: 4000
+erigon_eth_sentry2_port: 4001
+erigon_eth_http_api: "engine,eth,erigon,ots,web3,net,debug,trace,txpool,shh"
+
+erigon_bsc: False
+erigon_bsc_p2p_port: 30403
+erigon_bsc_p2p2_port: 30404
+erigon_bsc_http_port: 8565
+erigon_bsc_ws_port: 8566
+erigon_bsc_bt_port: 42169
+erigon_bsc_sentry_port: 4010
+erigon_bsc_sentry2_port: 4011
+erigon_bsc_http_api: "engine,eth,erigon,ots,web3,net,debug,trace,txpool,shh"
+
+erigon_bor: False
+erigon_bor_p2p_port: 30503
+erigon_bor_p2p2_port: 30504
+erigon_bor_http_port: 8555
+erigon_bor_ws_port: 8556
+erigon_bor_bt_port: 42269
+erigon_bor_sentry_port: 4020
+erigon_bor_sentry2_port: 4021
+erigon_bor_http_api: "engine,eth,erigon,ots,web3,net,debug,trace,txpool,shh"
+
+erigon_gno: False
+erigon_gno_p2p_port: 30503
+erigon_gno_p2p2_port: 30504
+erigon_gno_http_port: 8555
+erigon_gno_ws_port: 8556
+erigon_gno_bt_port: 42269
+erigon_gno_sentry_port: 4020
+erigon_gno_sentry2_port: 4021
+erigon_gno_http_api: "engine,eth,erigon,ots,web3,net,debug,trace,txpool,shh"
+...

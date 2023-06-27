@@ -1,0 +1,34 @@
+[Unit]
+Description=Optimism Geth
+Wants=network-online.target
+After=network.target network-online.target
+
+[Service]
+User={{ optimism_user }}
+Group={{ optimism_user }}
+WorkingDirectory={{ optimism_base }}/optimism-v{{ optimism_version }}
+LimitNOFILE={{ default_max_open_files_in_service }}
+Environment=HOME={{ optimism_base }}
+EnvironmentFile={{ optimism_base}}/optimism-geth-environment
+Type=simple
+ExecStart={{ optimism_base }}/optimism-v{{ optimism_version }}/l2geth/build/bin/geth \
+  --config {{ optimism_base }}/config.toml \
+  --networkid=10 \
+  --nousb \
+  --keystore={{ optimism_storage_path }}/l2geth/keystore \
+  --gcmode archive \
+  --nat extip:{{ ansible_host }} \
+  --password={{ optimism_base }}/password \
+  --allow-insecure-unlock \
+  --unlock={{ optimism_block_signer_address }} \
+  --mine \
+  --miner.etherbase={{ optimism_block_signer_address }}
+
+KillMode=process
+KillSignal=SIGTERM
+TimeoutStopSec=90
+Restart=on-failure
+RestartSec=10s
+
+[Install]
+WantedBy=multi-user.target

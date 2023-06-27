@@ -1,0 +1,44 @@
+---
+- name: Restart kavad
+  ansible.builtin.systemd:
+    name: kavad
+    daemon_reload: True
+    state: restarted
+    enabled: True
+
+- name: Stop kavad
+  ansible.builtin.systemd:
+    name: kavad
+    daemon_reload: True
+    state: stopped
+    enabled: True
+
+- name: Start kavad
+  ansible.builtin.systemd:
+    name: kavad
+    daemon_reload: True
+    state: started
+    enabled: True
+
+- name: Systemd daemon-reload
+  ansible.builtin.systemd:
+    daemon_reload: True
+
+- name: Symlink kavad release
+  ansible.builtin.file:
+    src: "{{ kava_home_path }}/kavad-v{{ kava_version }}"
+    dest: "{{ kava_home_path }}/kavad"
+    force: True
+    state: link
+    owner: "{{ kava_user }}"
+    group: "{{ kava_user }}"
+
+- name: Symlink kavad service
+  ansible.builtin.file:
+    src: "{{ kava_home_path }}/kavad.service"
+    dest: "/etc/systemd/system/kavad.service"
+    force: True
+    state: link
+    owner: "root"
+    group: "root"
+...

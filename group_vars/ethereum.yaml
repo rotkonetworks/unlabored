@@ -1,0 +1,26 @@
+---
+ethereum_version: "1.11.5-a38f4108"
+ethereum_lighthouse_version: "4.0.1"
+ethereum_arch: "amd64"
+ethereum_download_url: "https://gethstore.blob.core.windows.net/builds/geth-linux-{{ ethereum_arch }}-{{ ethereum_version }}.tar.gz"
+ethereum_lighthouse_download_url: "https://github.com/sigp/lighthouse/releases/download/v{{ ethereum_lighthouse_version }}/lighthouse-v{{ ethereum_lighthouse_version }}-x86_64-unknown-linux-gnu-portable.tar.gz"
+ethereum_service: "ethereum"
+ethereum_user: "{{ service_users['ethereum'] }}"
+ethereum_base: "/opt/ethereum"
+ethereum_storage_path: "/opt/ethereum/storage"
+ethereum_jwtsecret_file: "/opt/ethereum/storage/jwtsecret"
+ethereum_lighthouse_host: "localhost"
+ethereum_lighthouse_port: "8551"
+ethereum_lighthouse_nodetype: "beacon_node"
+ethereum_lighthouse_checkpoint_url: "https://beaconstate.info"
+ethereum_config_path: "/opt/ethereum/config"
+ethereum_syncmode: "light"
+ethereum_gcmode: "full"
+ethereum_nopruning: "false"
+ethereum_TxLookupLimit: 2350000
+ethereum_p2p_port: 30303
+ethereum_http_port: 8545
+ethereum_ws_port: 8546
+ethereum_lighthouse_beacon_port: 9000
+ethereum_cache_size: 4096
+...

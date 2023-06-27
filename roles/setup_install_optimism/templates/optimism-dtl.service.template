@@ -1,0 +1,23 @@
+[Unit]
+Description=Optimism-dtl
+Requires=optimism-geth.service
+Wants=network-online.target
+After=network.target network-online.target optimism-geth.service
+
+[Service]
+User={{ optimism_user }}
+Group={{ optimism_user }}
+WorkingDirectory={{ optimism_base }}/optimism-v{{ optimism_version }}/packages/data-transport-layer
+LimitNOFILE={{ default_max_open_files_in_service }}
+Environment=HOME={{ optimism_base }}
+Type=simple
+ExecStart=/usr/bin/yarn start
+
+KillMode=process
+KillSignal=SIGTERM
+TimeoutStopSec=90
+Restart=on-failure
+RestartSec=10s
+
+[Install]
+WantedBy=multi-user.target

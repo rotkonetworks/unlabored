@@ -1,0 +1,19 @@
+---
+ansible_host: "69.69.69.69"
+container_ip: "192.168.66.102"
+ansible_port: "2102"
+host_name: "ethereum02.ct.rotko.net"
+host_timezone: "Europe/Helsinki"
+netif: '{"net0":"name=eth0,gw={{ default_nat_network_forward_cidr.split("/")[0] }},ip={{ default_host_ip }}/24,bridge={{ default_nat_device }}"}'
+role: "ethereum"
+pinned_service: True
+
+ethereum_nopruning: "true"
+ethereum_TxLookupLimit: 0
+ethereum_p2p_port: 30313
+ethereum_http_port: 9545
+ethereum_ws_port: 9546
+ethereum_syncmode: "full"
+ethereum_gcmode: "archive"
+ethereum_cache_size: 8096
+...

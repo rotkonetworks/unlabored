@@ -1,0 +1,44 @@
+---
+- name: Restart evmosd
+  ansible.builtin.systemd:
+    name: evmosd
+    daemon_reload: True
+    state: restarted
+    enabled: True
+
+- name: Stop evmosd
+  ansible.builtin.systemd:
+    name: evmosd
+    daemon_reload: True
+    state: stopped
+    enabled: True
+
+- name: Start evmosd
+  ansible.builtin.systemd:
+    name: evmosd
+    daemon_reload: True
+    state: started
+    enabled: True
+
+- name: Systemd daemon-reload
+  ansible.builtin.systemd:
+    daemon_reload: True
+
+- name: Symlink evmosd client
+  ansible.builtin.file:
+    src: "{{ evmos_home_path }}/evmosd-v{{ evmos_version }}"
+    dest: "{{ evmos_home_path }}/evmosd"
+    force: True
+    state: link
+    owner: "{{ evmos_user }}"
+    group: "{{ evmos_user }}"
+
+- name: Symlink evmosd service
+  ansible.builtin.file:
+    src: "{{ evmos_home_path }}/evmosd.service"
+    dest: "/etc/systemd/system/evmosd.service"
+    force: True
+    state: link
+    owner: "root"
+    group: "root"
+...

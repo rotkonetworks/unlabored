@@ -1,0 +1,12 @@
+---
+ansible_host: "148.251.140.12"
+container_ip: "192.168.66.21"
+ansible_port: "2021"
+host_name: "eth01.ct.rotko.net"
+host_timezone: "Europe/Helsinki"
+netif: '{"net0":"name=eth0,gw={{ default_nat_network_forward_cidr.split("/")[0] }},ip={{ container_ip }}/24,bridge={{ default_nat_device }}"}'
+role: "erigon"
+erigon_eth: True
+pruned: False
+pinned_service: True
+...

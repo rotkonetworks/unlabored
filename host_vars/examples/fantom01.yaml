@@ -1,0 +1,10 @@
+---
+ansible_host: "185.7.192.60"
+container_ip: "192.168.66.15"
+ansible_port: "2005"
+host_name: "fantom01.ct.rotko.net"
+host_timezone: "Europe/Oslo"
+netif: '{"net0":"name=eth0,gw={{ default_nat_network_forward_cidr.split("/")[0] }},ip={{ default_host_ip }}/24,bridge={{ default_nat_device }}"}'
+role: "fantom"
+pinned_service: True
+...

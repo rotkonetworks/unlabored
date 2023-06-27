@@ -1,0 +1,1 @@
+UserParameter=ansible.facts[*],{{ zabbix_agent_script_path }}/ansiblefacts.py $1

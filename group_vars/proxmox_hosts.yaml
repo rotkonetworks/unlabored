@@ -1,0 +1,45 @@
+---
+host_ports:
+  - { protocol: "tcp", port: 22 }          # SSH
+  - { protocol: "tcp", port: 443 }         # SSL
+  - { protocol: "tcp", port: 5404 }        # Proxmox pveproxy / SPICE
+  - { protocol: "tcp", port: 5404 }        # Proxmox cluster ports
+  - { protocol: "tcp", port: 5900:5999 }   # PROXMOX VNC
+  - { protocol: "tcp", port: 8006 }        # Proxmox web panel
+
+default_packages:
+  - sysstat
+  - psmisc
+  - sudo
+  - byobu
+  - gpg
+  - gpg-agent
+  - wget
+  - btrfs-progs
+  - parted
+  - git
+  - build-essential
+  - telnet
+  - python3-pip
+  - unzip
+  - lz4
+  - iproute2
+  - bind9-dnsutils
+  - parted
+  - dmraid
+  - net-tools
+  - libuser
+  - iptables-persistent
+  - bind9-dnsutils
+  - bridge-utils
+  - zfsutils-linux
+  - zfs-dkms
+  - zfs-zed
+  - spl
+  - kmod
+  - rsync
+  - screen
+  - curl
+  - ncdu
+  - logrotate
+...

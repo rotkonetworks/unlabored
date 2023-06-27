@@ -1,0 +1,19 @@
+[Unit]
+Description=Arbitrum service
+After=syslog.target network.target
+
+[Service]
+LimitNOFILE={{ default_max_open_files_in_service }}
+User={{ arbitrum_user }}
+Group={{ arbitrum_user }}
+Type=simple
+ExecStart={{ arbitrum_base }}/arbitrum-node/arb-node \
+  --conf.file={{ arbitrum_config_path }}/config.json
+KillMode=process
+KillSignal=SIGINT
+TimeoutStopSec=90
+Restart=on-failure
+RestartSec=10s
+
+[Install]
+WantedBy=multi-user.target

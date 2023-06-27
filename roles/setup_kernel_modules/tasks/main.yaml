@@ -1,0 +1,19 @@
+# Standards: 0.2
+---
+- name: Load required kernel modules
+  community.general.modprobe:
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ kernel_modules }}"
+
+- name: Store required kernel modules to /etc/modules file
+  ansible.builtin.lineinfile:
+    path: "/etc/modules"
+    line: "{{ item }}"
+    owner: root
+    group: root
+    mode: '0644'
+    state: present
+  with_items: "{{ kernel_modules }}"
+
+...

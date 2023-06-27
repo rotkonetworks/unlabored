@@ -1,0 +1,10 @@
+# Standards: 0.2
+---
+- name: Setup and install zabbix-agent
+  hosts: rotko
+  gather_facts: True
+
+  roles:
+    - setup_add_node_role
+    - setup_install_zabbix_agent
+...

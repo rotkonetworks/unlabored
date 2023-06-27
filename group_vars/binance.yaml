@@ -1,0 +1,20 @@
+---
+binance_geth_version: 1.1.23
+binance_geth_app_dl: https://github.com/binance-chain/bsc/releases/download/v{{ binance_geth_version }}/geth_linux
+binance_geth_mainnet_dl: https://github.com/binance-chain/bsc/releases/download/v{{ binance_geth_version }}/mainnet.zip
+binance_p2p_port: 30303
+binance_ws_port: 8546
+binance_http_port: 8545
+
+binance_base: "/opt/binance"
+binance_config_path: "{{ binance_base }}/etc"
+binance_bin_path: "{{ binance_base }}/bin"
+binance_storage_path: "{{ binance_base }}/storage"
+binance_log_file: "{{ binance_storage_path }}/bsc.log"
+binance_config_file: "{{ binance_config_path }}/config.toml"
+binance_ipc_path: "{{ binance_base }}/geth.ipc"
+
+binance_user: "{{ service_users['binance'] }}"
+
+binance_archive_node: False
+...

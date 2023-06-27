@@ -1,0 +1,24 @@
+[Unit]
+Description=Evmosd systemd service
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+User={{ evmos_user }}
+WorkingDirectory={{ evmos_home_path }}
+ExecStart={{ evmos_home_path }}/evmosd start \
+--home {{ evmos_home_path }} \
+--db_backend pebbledb \
+{% if evmos_archive %}{{ evmos_archive_flags }} \
+{% endif %}--json-rpc.address 0.0.0.0:{{ evmos_json_rpc_port }} \
+--json-rpc.ws-address 0.0.0.0:{{ evmos_json_rpc_ws_port }} \
+--json-rpc.api {{ evmos_api_namespaces }} \
+--moniker {{ host_name }} \
+--chain-id {{ evmos_chain_id }}
+
+ExecStop=kill -9 $MAINPID
+Restart=always
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target

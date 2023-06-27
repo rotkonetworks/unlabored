@@ -1,0 +1,59 @@
+---
+- name: Ldconfig reload
+  ansible.builtin.command:
+    argv:
+      - ldconfig
+
+- name: Symlink Arbitrum release
+  ansible.builtin.file:
+    src: "{{ arbitrum_base }}/arbitrum-v{{ arbitrum_version }}"
+    dest: "{{ arbitrum_base }}/arbitrum-node"
+    force: True
+    state: link
+    owner: "{{ arbitrum_user }}"
+    group: "{{ arbitrum_user }}"
+
+- name: Install Arbitrum validator binaries
+  ansible.builtin.copy:
+    remote_src: True
+    src: "{{ item }}"
+    dest: "{{ arbitrum_base }}/arbitrum-v{{ arbitrum_version }}/"
+    mode: '0755'
+    owner: "{{ arbitrum_user }}"
+    group: "{{ arbitrum_user }}"
+  with_items:
+    - "{{ arbitrum_build_path }}/arbitrum/packages/arb-avm-cpp/build/bin/avm_runner"
+    - "{{ arbitrum_build_path }}/arbitrum/packages/arb-avm-cpp/build/bin/arbcore_runner"
+
+- name: Enable Arbitrum
+  ansible.builtin.service:
+    name: arbitrum
+    enabled: True
+
+- name: Start Arbitrum
+  ansible.builtin.service:
+    name: arbitrum
+    state: started
+    enabled: True
+
+- name: Restart Arbitrum
+  ansible.builtin.service:
+    name: arbitrum
+    state: restarted
+    enabled: True
+
+- name: Systemd daemon-reload
+  ansible.builtin.systemd:
+    daemon_reload: True
+
+- name: Clean build artifacts
+  ansible.builtin.file:
+    path: "{{ item }}"
+    force: True
+    state: absent
+  with_items:
+    - "{{ arbitrum_build_path }}/arbitrum"
+    - "{{ arbitrum_build_path }}/rocksdb"
+    - "{{ arbitrum_base }}/go"
+    - "{{ arbitrum_base }}/.hunter"
+...

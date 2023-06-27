@@ -1,0 +1,9 @@
+# Standards: 0.2
+---
+- name: Rebuild Timezone Data
+  ansible.builtin.command:
+    argv:
+      - dpkg-reconfigure
+      - --frontend=noninteractive
+      - tzdata
+...

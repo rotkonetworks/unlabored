@@ -1,0 +1,45 @@
+{
+  "chainId": "2K33xS9AyP9oCDiHYKVrHe7F54h2La5D8erpTChaAhdzeSu2RX",
+  "subnetId": "2e3CqLY8thW1WKS89WQ7WR9Qy2bCrrP5mv7psqMRGCHGXuQ1Uj",
+  "snowman-api-enabled": false,
+  "coreth-admin-api-enabled": false,
+  "coreth-admin-api-dir": "",
+  "eth-apis": [
+    "public-eth",
+    "public-eth-filter",
+    "net",
+    "web3",
+    "internal-public-eth",
+    "internal-public-blockchain",
+    "internal-public-transaction-pool",
+    "internal-public-account"
+  ],
+  "continuous-profiler-dir": "",
+  "continuous-profiler-frequency": 900000000000,
+  "continuous-profiler-max-files": 5,
+  "rpc-gas-cap": 50000000,
+  "rpc-tx-fee-cap": 100,
+  "preimages-enabled": false,
+  "pruning-enabled": true,
+  "snapshot-async": true,
+  "snapshot-verification-enabled": false,
+  "metrics-enabled": false,
+  "metrics-expensive-enabled": false,
+  "local-txs-enabled": false,
+  "api-max-duration": 0, // Default to no maximum
+  "ws-cpu-refill-rate": 0,
+  "ws-cpu-max-stored": 0,
+  "api-max-blocks-per-request": 0, // Default to no maximum
+  "allow-unfinalized-queries": false,
+  "allow-unprotected-txs": false,
+  "keystore-directory": "",
+  "keystore-external-signer": "",
+  "keystore-insecure-unlock-allowed": false,
+  "remote-tx-gossip-only-enabled": false,
+  "tx-regossip-frequency": 60000000000,
+  "tx-regossip-max-size": 15,
+  "log-level": "info",
+  "offline-pruning-enabled": false,
+  "offline-pruning-bloom-filter-size": 512, // MB
+  "offline-pruning-data-directory": ""
+}

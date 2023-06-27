@@ -1,0 +1,33 @@
+[Unit]
+Description=Binance/ Ethereum client
+After=syslog.target network.target
+
+[Service]
+LimitNOFILE={{ default_max_open_files_in_service }}
+User={{ binance_user }}
+Group={{ binance_user }}
+Type=simple
+ExecStart={{ binance_bin_path }}/geth \
+--config {{ binance_config_file }} \
+{% if binance_archive_node %}--syncmode full --gcmode archive \
+{%else%}--syncmode=full --tries-verify-mode=none --pruneancient=true --diffblock=5000 \
+{% endif %}
+--datadir {{ binance_storage_path }} \
+--ipcpath {{ binance_ipc_path }} \
+--cache 16000 \
+--rpc.allow-unprotected-txs \
+--txlookuplimit 0 \
+--ws.addr 0.0.0.0 \
+--http.addr 0.0.0.0 \
+--http.port {{ binance_http_port }} \
+--ws.port {{ binance_ws_port }} \
+--port {{ binance_p2p_port }}
+
+KillMode=process
+KillSignal=SIGINT
+TimeoutStopSec=90
+Restart=on-failure
+RestartSec=10s
+
+[Install]
+WantedBy=multi-user.target

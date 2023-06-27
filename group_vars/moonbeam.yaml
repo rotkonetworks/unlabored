@@ -1,0 +1,17 @@
+---
+moonbeam_version: 0.30.3
+moonbeam_download_url: https://github.com/PureStake/moonbeam/releases/download/v{{ moonbeam_version }}/moonbeam
+
+moonbeam_service: moonbeam
+moonbeam_user: "{{ service_users['moonbeam'] }}"
+moonbeam_base: /opt/moonbeam
+moonbeam_log_level: info
+moonbeam_base_port: 30333
+moonbeam_base_rpc_port: 9933
+moonbeam_base_ws_port: 9944
+moonbeam_blockchain: moonbeam
+moonbeam_chain_port: 30334
+moonbeam_chain_rpc_port: 9934
+moonbeam_chain_ws_port: 9945
+moonbeam_pruning: archive
+...

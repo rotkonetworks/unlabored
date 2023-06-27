@@ -1,0 +1,70 @@
+# Standards: 0.2
+---
+- name: Ensure group {{ ethereum_user }} exists
+  ansible.builtin.group:
+    name: "{{ ethereum_user }}"
+    state: present
+    system: True
+
+- name: Ensure user {{ ethereum_user }} exists
+  ansible.builtin.user:
+    append: True
+    comment: Ethereum service user
+    create_home: True
+    group: "{{ ethereum_user }}"
+    groups: sudo
+    home: "{{ ethereum_base }}"
+    name: "{{ ethereum_user }}"
+    shell: "{{ default_shell }}"
+    state: present
+    system: True
+
+- name: Ensure required directories exists
+  ansible.builtin.file:
+    path: "{{ item }}"
+    owner: "{{ ethereum_user }}"
+    group: "{{ ethereum_user }}"
+    mode: '0775'
+    state: directory
+  with_items:
+    - "{{ ethereum_base }}"
+    - "{{ ethereum_storage_path }}/lighthouse"
+    - "{{ ethereum_base }}/lighthouse-v{{ ethereum_lighthouse_version }}"
+  when:
+    - ethereum_syncmode != "light"
+
+- name: Install Lighthouse v{{ ethereum_lighthouse_version }}
+  ansible.builtin.unarchive:
+    src: "{{ ethereum_lighthouse_download_url }}"
+    dest: "{{ ethereum_base }}/lighthouse-v{{ ethereum_lighthouse_version }}"
+    remote_src: True
+    owner: "{{ ethereum_user }}"
+    group: "{{ ethereum_user }}"
+    creates: "{{ ethereum_base }}/lighthouse-v{{ ethereum_lighthouse_version }}/lighthouse"
+  register: lighthouse_install
+  when:
+    - ansible_local['noderole']['node']['pinned'] != "True"
+    - ansible_local['noderole']['lighthouse']['version'] != ethereum_lighthouse_version
+    - ethereum_syncmode != "light"
+  notify:
+    - Symlink Lighthouse release
+    - Stop Lighthouse
+    - Systemd daemon-reload
+    - Start Lighthouse
+    - Add Lighthouse service version
+
+- name: Copy Lighthouse systemd service to a host
+  ansible.builtin.template:
+    src: lighthouse.service.template
+    dest: /etc/systemd/system/lighthouse.service
+    owner: "root"
+    group: "root"
+    mode: '0644'
+  register: lighthouse_service
+  notify:
+    - Stop Lighthouse
+    - Systemd daemon-reload
+    - Start Lighthouse
+  when:
+    - ethereum_syncmode != "light"
+...

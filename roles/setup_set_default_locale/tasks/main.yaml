@@ -1,0 +1,37 @@
+# Standards: 0.2
+---
+- name: Ensure default locale exists
+  community.general.locale_gen:
+    name: "{{ default_locale }}"
+    state: present
+
+- name: Get current locale configuration
+  ansible.builtin.command:
+    argv:
+      - localectl
+      - status
+  register: locale_status
+  changed_when: False
+  check_mode: False
+
+- name: Parse 'LANG' from current locale configuration
+  ansible.builtin.set_fact:
+    locale_lang: "{{ locale_status.stdout | regex_search('LANG=([^\n]+)', '\\1') | first }}"
+
+- name: Apply default locale settings
+  ansible.builtin.command:
+    argv:
+      - localectl
+      - set-locale
+      - LANG={{ default_locale }}
+  changed_when: locale_lang != default_locale
+
+- name: Fix /etc/locale.gen
+  ansible.builtin.replace:
+    dest: /etc/locale.gen
+    regexp: "# {{ default_locale }} UTF-8"
+    replace: "{{ default_locale }} UTF-8"
+  notify:
+    - Rebuild Locales
+    - Update Locale
+...

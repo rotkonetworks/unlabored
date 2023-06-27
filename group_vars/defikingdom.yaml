@@ -1,0 +1,23 @@
+---
+defikingdom_version: 0.4.8
+defikingdom_avalanche_version: 1.9.7
+
+defikingdom_avalanche_git_repo: https://github.com/ava-labs/avalanchego.git
+defikingdom_plugin_git_repo: https://github.com/ava-labs/subnet-evm.git
+
+defikingdom_user: "{{ service_users['defikingdom'] }}"
+defikingdom_base: "/opt/avalanche"
+defikingdom_buildroot_path: "{{ defikingdom_base }}/src/github.com"
+defikingdom_storage_path: "{{ defikingdom_base }}/storage"
+defikingdom_config_path: "{{ defikingdom_base }}/configs"
+defikingdom_chain_config_path: "{{ defikingdom_config_path }}/chains"
+defikingdom_log_level: "info"
+defikingdom_network: "mainnet"
+defikingdom_pruning_enabled: "false"
+
+defikingdom_http_port: "9650"
+defikingdom_staking_port: "9651"
+defikingdom_enable_swimmer: False
+
+default_max_open_files_in_service: 32768
+...

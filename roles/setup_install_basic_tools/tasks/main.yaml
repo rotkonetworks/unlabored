@@ -1,0 +1,13 @@
+# Standards: 0.2
+---
+- name: Install Basic tools for debugging / monitoring / installation
+  ansible.builtin.apt:
+    pkg: "{{ item }}"
+    state: present
+    update_cache: True
+  with_items: "{{ default_packages }}"
+
+- name: Install Python dependencies
+  ansible.builtin.pip:
+    name: "{{ lookup('file', 'python_requirements.txt') | regex_replace('\n', ',') }}"
+...

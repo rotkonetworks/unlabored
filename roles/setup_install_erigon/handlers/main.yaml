@@ -1,0 +1,49 @@
+# Standards: 0.2
+---
+- name: Symlink Erigon client
+  ansible.builtin.file:
+    src: "{{ erigon_bin_path }}/erigon"
+    dest: "{{ erigon_base }}/erigon"
+    force: True
+    state: link
+    owner: "{{ erigon_user }}"
+    group: "{{ erigon_user }}"
+
+- name: Symlink Erigon service
+  ansible.builtin.file:
+    src: "{{ erigon_base }}/erigon.service"
+    dest: "/etc/systemd/system/erigon.service"
+    force: True
+    state: link
+    owner: root
+    group: root
+
+- name: Enable Erigon
+  ansible.builtin.service:
+    name: erigon
+    enabled: True
+
+- name: Restart Erigon
+  ansible.builtin.service:
+    name: erigon
+    state: restarted
+    enabled: True
+
+- name: Systemd daemon-reload
+  ansible.builtin.systemd:
+    daemon_reload: True
+
+- name: Stop Erigon
+  ansible.builtin.systemd:
+    name: erigon
+    daemon_reload: True
+    state: stopped
+    enabled: True
+
+- name: Start Erigon
+  ansible.builtin.systemd:
+    name: erigon
+    daemon_reload: True
+    state: started
+    enabled: True
+...

@@ -1,0 +1,29 @@
+---
+- name: Acquire current Users
+  ansible.builtin.command:
+    argv:
+      - pveum
+      - user
+      - list
+  register: pveum_user_list
+
+- name: Register Proxmox Users
+  ansible.builtin.set_fact:
+    proxmox_current_users: "{{ pveum_user_list.stdout | pveum_users }}"
+
+- name: Create proxmox admin account for ansible
+  ansible.builtin.command:
+    argv:
+      - pveum
+      - user
+      - add
+      - "{{ item.name }}"
+      - -comment
+      - '"{{ item.comment }}"'
+      - -group
+      - '{{ item.groups }}'
+  when:
+    - item.name not in proxmox_current_users
+  with_items: "{{ proxmox_admin_accounts }}"
+
+...

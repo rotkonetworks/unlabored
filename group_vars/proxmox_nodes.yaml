@@ -1,0 +1,33 @@
+---
+default_packages:
+  - sysstat
+  - psmisc
+  - wget
+  - telnet
+  - python3-pip
+  - unzip
+  - lz4
+  - bind9-dnsutils
+  - net-tools
+  - libuser
+  - sudo
+  - bind9-dnsutils
+  - rsync
+  - ncdu
+  - curl
+  - screen
+  - logrotate
+  - git
+  - ripgrep
+  - micro
+  - neovim
+  - bc
+  - htop
+  - tmux
+  - zsh
+  - exa
+  - fd-find
+
+default_users:
+  - tommi
+...

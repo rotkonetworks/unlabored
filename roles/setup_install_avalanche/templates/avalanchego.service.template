@@ -1,0 +1,14 @@
+[Unit]
+Description=AvalancheGo systemd service
+StartLimitIntervalSec=0
+[Service]
+Type=simple
+User={{ avalanche_user }}
+LimitNOFILE={{ default_max_open_files_in_service }}
+WorkingDirectory={{ avalanche_base }}/avalanche-node
+ExecStart={{ avalanche_base }}/avalanche-node/avalanchego --config-file={{ avalanche_config_path }}/node.json
+ExecStop=kill -9 $MAINPID
+Restart=always
+RestartSec=5s
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,97 @@
+# Standards: 0.2
+---
+- name: Ensure group {{ erigon_user }} exists
+  ansible.builtin.group:
+    name: "{{ erigon_user }}"
+    state: present
+    system: True
+
+- name: Ensure user {{ erigon_user }} exists
+  ansible.builtin.user:
+    append: True
+    comment: Erigon service user
+    create_home: True
+    group: "{{ erigon_user }}"
+    groups: sudo
+    home: "{{ erigon_base }}"
+    name: "{{ erigon_user }}"
+    shell: "{{ default_shell }}"
+    state: present
+    system: True
+
+- name: Update .profile
+  ansible.builtin.blockinfile:
+    path: "{{ erigon_base }}/.profile"
+    owner: "{{ erigon_user }}"
+    group: "{{ erigon_user }}"
+    create: True
+    mode: "644"
+    block: |
+      GOPATH="$HOME/go"
+      PATH="$GOPATH/bin:$PATH"
+      PATH="$PATH:/usr/local/go/bin"
+
+- name: Ensure required directories exists
+  ansible.builtin.file:
+    path: "{{ item }}"
+    owner: "{{ erigon_user }}"
+    group: "{{ erigon_user }}"
+    mode: "0775"
+    state: directory
+  with_items:
+    - "{{ erigon_base }}"
+    - "{{ erigon_storage_path }}"
+
+- name: Create jwtsecret file
+  become: True
+  become_user: "{{ erigon_user }}"
+  ansible.builtin.shell:
+    cmd: |
+      set -o pipefail
+      echo 0x$(openssl rand -hex 32 | tr -d "\n") > {{ erigon_jwtsecret_file }}
+    creates: "{{ erigon_jwtsecret_file }}"
+    executable: /bin/bash
+  when: ansible_local['noderole']['node']['pinned'] != "True"
+
+- name: Download and extract erigon build files
+  ansible.builtin.unarchive:
+    src: "{{ erigon_download_url }}"
+    dest: "{{ erigon_base }}"
+    remote_src: True
+    mode: '0755'
+    owner: "{{ erigon_user }}"
+    group: "{{ erigon_user }}"
+
+- name: Make client erigon v{{ erigon_version }}
+  ansible.builtin.shell: "source {{ erigon_base }}/.profile && make erigon"
+  args:
+    executable: /bin/bash
+    chdir: "{{ erigon_build_path }}"
+  become: True
+  become_user: "{{ erigon_user }}"
+  register: erigon_install
+  when:
+    - ansible_local['noderole']['node']['pinned'] != "True"
+    - ansible_local['noderole']['node']['version'] != erigon_version
+  notify:
+    - Symlink Erigon client
+    - Add Service Pinned Status
+    - Stop Erigon
+    - Systemd daemon-reload
+    - Start Erigon
+    - Add Erigon service version
+
+- name: Copy erigon systemd service to a host
+  ansible.builtin.template:
+    src: erigon.service.template
+    dest: "{{ erigon_base }}/erigon.service"
+    owner: "{{ erigon_user }}"
+    group: "{{ erigon_user }}"
+    mode: "0644"
+  register: erigon_service
+  notify:
+    - Stop Erigon
+    - Symlink Erigon service
+    - Systemd daemon-reload
+    - Start Erigon
+...

@@ -1,0 +1,239 @@
+---
+- name: Ensure group {{ optimism_user }} exists
+  ansible.builtin.group:
+    name: "{{ optimism_user }}"
+    state: present
+    system: True
+
+- name: Ensure user {{ optimism_user }} exists
+  ansible.builtin.user:
+    append: True
+    comment: Optimism service user
+    create_home: True
+    group: "{{ optimism_user }}"
+    groups: sudo
+    home: "{{ optimism_base }}"
+    name: "{{ optimism_user }}"
+    shell: "{{ default_shell }}"
+    state: present
+    system: True
+
+- name: Ensure required directories exists
+  ansible.builtin.file:
+    path: "{{ item }}"
+    owner: "{{ optimism_user }}"
+    group: "{{ optimism_user }}"
+    mode: '0775'
+    state: directory
+  with_items:
+    - "{{ optimism_base }}"
+    - "{{ optimism_storage_path }}"
+
+- name: Optimism-dtlL systemd service file
+  ansible.builtin.template:
+    src: optimism-dtl.service.template
+    mode: '0644'
+    owner: "root"
+    group: "root"
+    dest: "/etc/systemd/system/optimism-dtl.service"
+  notify:
+    - Systemd daemon-reload
+    - Enable Optimism-dtl
+
+- name: Optimism-geth systemd service file
+  ansible.builtin.template:
+    src: optimism-geth.service.template
+    mode: '0644'
+    owner: "root"
+    group: "root"
+    dest: "/etc/systemd/system/optimism-geth.service"
+  notify:
+    - Systemd daemon-reload
+    - Enable Optimism-geth
+
+- name: Optimism-geth config.toml file
+  ansible.builtin.template:
+    src: config.toml.template
+    mode: '0644'
+    owner: "{{ optimism_user }}"
+    group: "{{ optimism_user }}"
+    dest: "{{ optimism_base }}/config.toml"
+  notify:
+    - Restart Optimism-geth
+
+- name: Optimism-geth environment file
+  ansible.builtin.template:
+    src: optimism-geth-environment.template
+    mode: '0644'
+    owner: "{{ optimism_user }}"
+    group: "{{ optimism_user }}"
+    dest: "{{ optimism_base }}/optimism-geth-environment"
+  notify:
+    - Restart Optimism-geth
+
+- name: Refresh facts
+  ansible.builtin.setup:
+
+- name: Check if Optimism has been installed
+  ansible.builtin.stat:
+    path: "{{ optimism_base }}/optimism-v{{ optimism_version }}"
+  register: optimismnode
+
+- name: Clone Required repositories
+  become: True
+  become_user: "{{ optimism_user }}"
+  ansible.builtin.git:
+    depth: 1
+    recursive: True
+    clone: True
+    dest: "{{ optimism_build_path }}/{{ item.dest }}"
+    force: True
+    repo: "{{ item.url }}"
+    version: "{{ item.version }}"
+  when:
+    - optimismnode.stat.exists == False
+    - ansible_local['noderole']['node']['pinned'] != "True"
+    - ansible_local['noderole']['node']['version'] != optimism_version
+  with_items:
+    - { url: "{{ optimism_git_repo }}", version: "@eth-optimism/sdk@{{ optimism_version }}", dest: "optimism" }
+
+- name: Run yarn
+  become: True
+  become_user: "{{ optimism_user }}"
+  ansible.builtin.command:
+    argv:
+      - yarn
+    chdir: "{{ optimism_build_path }}/optimism"
+  when:
+    - optimismnode.stat.exists == False
+    - ansible_local['noderole']['node']['pinned'] != "True"
+    - ansible_local['noderole']['node']['version'] != optimism_version
+
+- name: Run yarn build
+  become: True
+  become_user: "{{ optimism_user }}"
+  ansible.builtin.command:
+    argv:
+      - yarn
+      - build
+    chdir: "{{ optimism_build_path }}/optimism"
+  when:
+    - optimismnode.stat.exists == False
+    - ansible_local['noderole']['node']['pinned'] != "True"
+    - ansible_local['noderole']['node']['version'] != optimism_version
+
+- name: Run make geth
+  become: True
+  become_user: "{{ optimism_user }}"
+  ansible.builtin.command:
+    argv:
+      - make
+      - geth
+    chdir: "{{ optimism_build_path }}/optimism/l2geth"
+  environment:
+    GOROOT: "/usr/local/go"
+    GOPATH: "{{ optimism_base }}/go"
+    PATH: "$GOPATH/bin:$GOROOT/bin:/usr/local/go/bin:/usr/local/bin:/usr/bin:/bin"
+    # environment part here is a full on hack. Since we are running ansible as "root",
+    # easiest way to build l2geth with the correct settings was/is to use become. However,
+    # that does not source /etc/profile where go env settings are stored.
+    # So setting all those here is fast
+  when:
+    - optimismnode.stat.exists == False
+    - ansible_local['noderole']['node']['pinned'] != "True"
+    - ansible_local['noderole']['node']['version'] != optimism_version
+
+- name: Install optimism
+  ansible.builtin.command:
+    argv:
+      - mv
+      - "{{ optimism_build_path }}/optimism"
+      - "{{ optimism_base }}/optimism-v{{ optimism_version }}"
+  when:
+    - optimismnode.stat.exists == False
+    - ansible_local['noderole']['node']['pinned'] != "True"
+    - ansible_local['noderole']['node']['version'] != optimism_version
+  notify:
+    - Remove Optimism Build Directory
+    - Add Optimism service version
+    - Start Optimism-geth
+    - Start Optimism-dtl
+
+- name: Optimism DTL config file
+  ansible.builtin.template:
+    src: dotenv.template
+    mode: '0644'
+    owner: "{{ optimism_user }}"
+    group: "{{ optimism_user }}"
+    dest: "{{ optimism_base }}/optimism-v{{ optimism_version }}/packages/data-transport-layer/.env"
+  notify:
+    - Restart Optimism-dtl
+
+- name: Check if genesis data has been imported
+  ansible.builtin.stat:
+    path: "{{ optimism_storage_path }}/l2geth/geth/chaindata/CURRENT"
+  register: l2gethdata
+
+- name: Check if geth account has been imported
+  ansible.builtin.stat:
+    path: "{{ optimism_storage_path }}/l2geth/keystore"
+  register: l2auth
+
+- name: Download genesis
+  ansible.builtin.get_url:
+    url: "{{ optimism_genesis_url }}"
+    dest: "/tmp/genesis.json"
+    mode: "u+rw"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+  when: l2gethdata.stat.exists == False
+
+- name: Generate empty password file
+  ansible.builtin.file:
+    path: "{{ optimism_base }}/password"
+    owner: "{{ optimism_user }}"
+    group: "{{ optimism_user }}"
+    mode: '0775'
+    state: touch
+
+- name: Generate block-signer-key file...
+  ansible.builtin.template:
+    src: block-signer-key.template
+    mode: '0755'
+    owner: "{{ optimism_user }}"
+    group: "{{ optimism_user }}"
+    dest: "{{ optimism_base }}/block-signer-key"
+
+- name: Import Optimism genesis data
+  become: True
+  become_user: "{{ optimism_user }}"
+  ansible.builtin.command:
+    argv:
+      - ./geth
+      - "--keystore={{ optimism_storage_path }}/l2geth/keystore"
+      - "--config={{ optimism_base }}/config.toml"
+      - "--nousb"
+      - "init"
+      - "/tmp/genesis.json"
+    chdir: "{{ optimism_base }}/optimism-v{{ optimism_version }}/l2geth/build/bin"
+  when: l2gethdata.stat.exists == False
+
+- name: Import Optimism geth account
+  become: True
+  become_user: "{{ optimism_user }}"
+  ansible.builtin.command:
+    argv:
+      - "./geth"
+      - "account"
+      - "import"
+      - "--keystore={{ optimism_storage_path }}/l2geth/keystore"
+      - "--datadir={{ optimism_storage_path }}/l2geth"
+      - "--password"
+      - "{{ optimism_base }}/password"
+      - "{{ optimism_base }}/block-signer-key"
+    chdir: "{{ optimism_base }}/optimism-v{{ optimism_version }}/l2geth/build/bin"
+  when: l2auth.stat.exists == False
+  notify:
+    - Restart Optimism-geth
+    - Restart Optimism-dtl
+...

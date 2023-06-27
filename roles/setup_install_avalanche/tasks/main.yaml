@@ -1,0 +1,114 @@
+---
+- name: Ensure group {{ avalanche_user }} exists
+  ansible.builtin.group:
+    name: "{{ avalanche_user }}"
+    state: present
+    system: True
+
+- name: Ensure user {{ avalanche_user }} exists
+  ansible.builtin.user:
+    append: True
+    comment: Avalanchego service user
+    create_home: True
+    group: "{{ avalanche_user }}"
+    groups: sudo
+    home: "{{ avalanche_base }}"
+    name: "{{ avalanche_user }}"
+    shell: "{{ default_shell }}"
+    state: present
+    system: True
+
+- name: Ensure required directories exists
+  ansible.builtin.file:
+    path: "{{ item }}"
+    owner: "{{ avalanche_user }}"
+    group: "{{ avalanche_user }}"
+    mode: '0775'
+    state: directory
+  with_items:
+    - "{{ avalanche_base }}"
+    - "{{ avalanche_storage_path }}"
+    - "{{ avalanche_config_path }}"
+    - "{{ avalanche_config_path }}/chains"
+    - "{{ avalanche_chain_config_path }}"
+    - "{{ avalanche_chain_config_path }}/C"
+
+- name: Refresh facts
+  ansible.builtin.setup:
+
+- name: Install Avalanchego v{{ avalanche_version }}
+  ansible.builtin.unarchive:
+    src: "{{ avalanche_download_url }}"
+    dest: "{{ avalanche_base }}"
+    remote_src: True
+    creates: "{{ avalanche_base }}/avalanchego-v{{ avalanche_version }}"
+  register: avalanche_install
+  when:
+    - ansible_local['noderole']['node']['pinned'] != "True"
+    - ansible_local['noderole']['node']['version'] != avalanche_version
+  notify:
+    - Add Service Pinned Status
+    - Add Avalanche service version
+    - Stop Avalanche
+    - Symlink Avalanche release
+    - Systemd daemon-reload
+    - Start Avalanche
+
+- name: Provide configuration file for Avalanchego
+  ansible.builtin.template:
+    src: node.json.template
+    dest: "{{ avalanche_config_path }}/node.json"
+    owner: "{{ avalanche_user }}"
+    group: "{{ avalanche_user }}"
+    mode: '0644'
+  notify:
+    - Stop Avalanche
+    - Systemd daemon-reload
+    - Start Avalanche
+
+- name: Copy Avalanche systemd service to a host
+  ansible.builtin.template:
+    src: avalanchego.service.template
+    dest: /etc/systemd/system/avalanchego.service
+    owner: "root"
+    group: "root"
+    mode: '0644'
+  register: avalanche_service
+  notify:
+    - Stop Avalanche
+    - Systemd daemon-reload
+    - Start Avalanche
+
+- name: Force "Pruning" to be disabled for C Chain
+  ansible.builtin.copy:
+    content: '{ "pruning-enabled": false }'
+    dest: "{{ avalanche_chain_config_path }}/C/config.json"
+    owner: "{{ avalanche_user }}"
+    group: "{{ avalanche_user }}"
+    mode: '0644'
+
+- name: Install Swimmer plugin if needed
+  ansible.builtin.get_url:
+    url: "{{ avalanche_swimmer_plugin_url }}"
+    dest: "{{ avalanche_base }}/avalanchego-v{{ avalanche_version }}/plugins/{{ avalanche_swimmer_plugin_url | basename }}"
+    owner: "{{ avalanche_user }}"
+    group: "{{ avalanche_user }}"
+    mode: '0755'
+  when:
+    - ansible_local['noderole']['node']['pinned'] != "True"
+    - ansible_local['noderole']['node']['version'] != avalanche_version
+    - avalanche_enable_swimmer == True
+
+- name: Copy Swimmer extra configs if needed
+  ansible.builtin.copy:
+    src: "{{ source }}"
+    dest: "{{ destination }}"
+    owner: "{{ avalanche_user }}"
+    group: "{{ avalanche_user }}"
+    mode: u+rw,g-wx,o-wx
+  when:
+    - avalanche_enable_swimmer == True
+  with_items:
+    - { source: "chain_1_config.json", destination: "{{ avalanche_chain_config_path }}/2Sk6j8TYVQc2oR1TtUz64EWHAYjDUoDQ4hpbu6FMN2JBKC77xa/config.json" }
+    - { source: "chain_2_config.json", destination: "{{ avalanche_chain_config_path }}/2K33xS9AyP9oCDiHYKVrHe7F54h2La5D8erpTChaAhdzeSu2RX/config.json" }
+...

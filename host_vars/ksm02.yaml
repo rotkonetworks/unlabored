@@ -1,0 +1,15 @@
+---
+ansible_host: "10.42.21.1"
+container_ip: "10.42.21.202"
+ansible_port: "2202"
+host_name: "ksm02.ct.rotko.net"
+host_timezone: "Asia/Bangkok"
+netif: '{"net0":"name=eth0,gw={{ innernet_gw }},ip={{ container_ip }}/24,bridge={{ innernet_if }}"}'
+role: "polkadot"
+pinned_service: True
+
+polkadot_network: kusama
+polkadot_port: 33202
+polkadot_rpc_port: 7202
+polkadot_ws_port: 9202
+...

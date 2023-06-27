@@ -1,0 +1,28 @@
+[Unit]
+Description="Polkadot service"
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=on-failure
+RestartSec=10
+User={{ polkadot_user }}
+SyslogIdentifier={{ polkadot_service }}
+LimitNOFILE={{ default_max_open_files_in_service }}
+SyslogFacility=local7
+KillSignal=SIGHUP
+ExecStart={{ polkadot_base }}/polkadot \
+     --base-path {{ polkadot_base }} \
+     --chain {{ polkadot_network }} \
+     --name "{{ host_name.split('.')[0] }}" \
+     --port {{ polkadot_p2p_port }} \
+     --rpc-port {{ polkadot_rpc_port }} \
+     --ws-port {{ polkadot_ws_port }} \
+     --execution wasm \
+     --wasm-execution compiled \
+     --pruning 1000 \
+     --db-cache {{ ansible_memtotal_mb // 2 }}
+
+[Install]
+WantedBy=multi-user.target

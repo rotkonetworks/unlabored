@@ -1,0 +1,17 @@
+# Standards: 0.2
+---
+- name: Default tools and configurations
+  hosts: proxmox_hosts
+  gather_facts: True
+
+  roles:
+    - setup_set_hostname
+    - setup_set_timezone
+    - setup_install_basic_tools
+    - setup_install_postfix
+    - setup_disable_services
+    - setup_config_sysctl
+    - setup_ansible_facts
+    - setup_kernel_modules
+    - setup_log_rotation
+...

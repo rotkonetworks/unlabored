@@ -1,0 +1,12 @@
+# Standards: 0.2
+---
+- name: Install Proxmox OSS GPG Key
+  ansible.builtin.apt_key:
+    url: http://download.proxmox.com/debian/proxmox-release-bullseye.gpg
+    state: present
+
+- name: Install Proxmox Enterprise GPG Key
+  ansible.builtin.apt_key:
+    url: https://enterprise.proxmox.com/debian/proxmox-release-bullseye.gpg
+    state: present
+...

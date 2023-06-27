@@ -1,0 +1,5 @@
+---
+# This file contains required playbooks/roles
+- name: geerlingguy.postfix
+  src: geerlingguy.postfix
+...

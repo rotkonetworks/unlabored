@@ -1,0 +1,6 @@
+# Standard: 0.2
+---
+- name: Systemd daemon-reload
+  ansible.builtin.systemd:
+    daemon_reload: True
+...

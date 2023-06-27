@@ -1,0 +1,15 @@
+---
+ansible_host: "69.69.69.69"
+container_ip: "192.168.66.201"
+ansible_port: "2201"
+host_name: "evmos01.ct.rotko.net"
+host_timezone: "Europe/Helsinki"
+netif: '{"net0":"name=eth0,gw={{ default_nat_network_forward_cidr.split("/")[0] }},ip={{ default_host_ip }}/24,bridge={{ default_nat_device }}"}'
+role: "evmos"
+evmos_archive: True
+pinned_service: True
+
+# custom ports:
+evmos_json_rpc_port: 8585
+evmos_json_rpc_ws_port: 8586
+...

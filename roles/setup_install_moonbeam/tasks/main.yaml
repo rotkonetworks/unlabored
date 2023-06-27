@@ -1,0 +1,63 @@
+---
+- name: Ensure group {{ moonbeam_user }} exists
+  ansible.builtin.group:
+    name: "{{ moonbeam_user }}"
+    state: present
+    system: True
+
+- name: Ensure user {{ moonbeam_user }} exists
+  ansible.builtin.user:
+    append: True
+    comment: Moonbeam service user
+    create_home: False
+    group: "{{ moonbeam_user }}"
+    groups: sudo
+    home: "{{ moonbeam_base }}"
+    name: "{{ moonbeam_user }}"
+    shell: "{{ default_shell }}"
+    state: present
+    system: True
+
+- name: Ensure user {{ moonbeam_user }} owns {{ moonbeam_base }}
+  ansible.builtin.file:
+    path: "{{ item }}"
+    owner: "{{ moonbeam_user }}"
+    group: "{{ moonbeam_user }}"
+    mode: '0755'
+    state: directory
+  with_items:
+    - "{{ moonbeam_base }}"
+
+- name: Refresh facts
+  ansible.builtin.setup:
+
+- name: Install Moonbeam v{{ moonbeam_version }}
+  ansible.builtin.get_url:
+    url: "{{ moonbeam_download_url }}"
+    dest: "{{ moonbeam_base }}/moonbeam-v{{ moonbeam_version }}"
+    mode: "u+rwx"
+    owner: "{{ moonbeam_user }}"
+    group: "{{ moonbeam_user }}"
+  when:
+    - ansible_local['noderole']['node']['pinned'] != "True"
+    - ansible_local['noderole']['node']['version'] != moonbeam_version
+  notify:
+    - Add Moonbeam service version
+    - Add Service Pinned Status
+    - Stop Moonbeam
+    - Symlink Moonbeam release
+    - Systemd daemon-reload
+    - Restart Moonbeam
+
+- name: Copy Moonbeam systemd service to a host
+  ansible.builtin.template:
+    src: moonbeam.service.template
+    dest: /etc/systemd/system/moonbeam.service
+    owner: "root"
+    group: "root"
+    mode: '0644'
+  notify:
+    - Stop Moonbeam
+    - Systemd daemon-reload
+    - Restart Moonbeam
+...

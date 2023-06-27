@@ -1,0 +1,24 @@
+{
+  "log-level": "{{ avalanche_log_level }}",
+  "log-display-highlight": "plain",
+  "log-display-level": "off",
+  "network-id": "{{ avalanche_network }}",
+  "public-ip": "{{ ansible_host }}",
+  "pruning-enabled": "{{ avalanche_pruning_enabled }}",
+  "db-dir": "{{ avalanche_storage_path }}/db",
+  "log-dir": "{{ avalanche_storage_path }}/logs",
+  "chain-config-dir": "{{ avalanche_chain_config_path }}",
+  "profile-dir": "{{ avalanche_storage_path }}/profiles",
+  {% if container_ip is defined %}
+  "http-host": "{{ container_ip }}",
+  "public_ip": "{{ ansible_host }}",
+  {% else %}
+  "http-host": "{{ ansible_host }}",
+  {% endif%}
+  "http-port": "{{ avalanche_http_port }}",
+  "staking-port": "{{ avalanche_staking_port }}"{% if avalanche_enable_swimmer == True%},
+  "track-subnets": "WUCXWAHsS6iygdik7RVRL3CjJHqbDQ1RESPUDqQpsH6wnRn96",
+  "chainId": "2K33xS9AyP9oCDiHYKVrHe7F54h2La5D8erpTChaAhdzeSu2RX",
+  "subnetId": "2e3CqLY8thW1WKS89WQ7WR9Qy2bCrrP5mv7psqMRGCHGXuQ1Uj"
+  {% endif %}
+}

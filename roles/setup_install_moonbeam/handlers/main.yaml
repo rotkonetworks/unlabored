@@ -1,0 +1,35 @@
+---
+- name: Restart Moonbeam
+  ansible.builtin.systemd:
+    name: moonbeam
+    daemon_reload: True
+    state: restarted
+    enabled: True
+
+- name: Stop Moonbeam
+  ansible.builtin.systemd:
+    name: moonbeam
+    daemon_reload: True
+    state: stopped
+    enabled: True
+
+- name: Start Moonbeam
+  ansible.builtin.systemd:
+    name: moonbeam
+    daemon_reload: True
+    state: started
+    enabled: True
+
+- name: Systemd daemon-reload
+  ansible.builtin.systemd:
+    daemon_reload: True
+
+- name: Symlink Moonbeam release
+  ansible.builtin.file:
+    src: "{{ moonbeam_base }}/moonbeam-v{{ moonbeam_version }}"
+    dest: "{{ moonbeam_base }}/moonbeam"
+    force: True
+    state: link
+    owner: "{{ moonbeam_user }}"
+    group: "{{ moonbeam_user }}"
+...

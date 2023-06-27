@@ -1,0 +1,38 @@
+# Standards: 0.2
+---
+- name: Add Required  apt repositories
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: "/etc/apt/sources.list.d/{{ item }}"
+    owner: root
+    group: root
+    mode: u+rw,g-wx,o-wx
+  with_items:
+    - nodesource.list
+    - yarn.list
+
+- name: Add required gpg keychains
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: "/usr/share/keyrings/{{ item }}"
+    owner: root
+    group: root
+    mode: u+rw,g-wx,o-wx
+  with_items:
+    - nodesource.gpg
+    - yarnkey.gpg
+
+- name: Update apt cache
+  ansible.builtin.apt:
+    update_cache: True
+    force_apt_get: True
+
+- name: Install nodejs and yarn
+  ansible.builtin.apt:
+    pkg:
+      - nodejs
+      - yarn
+    autoclean: True
+    autoremove: False
+    state: present
+...

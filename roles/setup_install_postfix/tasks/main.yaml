@@ -1,0 +1,12 @@
+# Standards: 0.2
+---
+- name: Install Postfix to deliver local emails
+  ansible.builtin.include_role:
+    name: geerlingguy.postfix
+  vars:
+    postfix_config_file: /etc/postfix/main.cf
+    postfix_service_state: started
+    postfix_service_enabled: True
+    postfix_inet_interfaces: "loopback-only"
+    postfix_inet_protocols: "ipv4"
+...

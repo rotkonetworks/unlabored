@@ -1,0 +1,10 @@
+# Standards: 0.2
+---
+- name: Proxmox host setup
+  hosts: proxmox_hosts
+  gather_facts: True
+
+  roles:
+    - proxmox_full_installation
+    - setup_disable_services
+...

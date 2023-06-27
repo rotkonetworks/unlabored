@@ -1,0 +1,33 @@
+---
+default_packages:
+  - sysstat
+  - psmisc
+  - sudo
+  - byobu
+  - gpg
+  - gpg-agent
+  - wget
+  - btrfs-progs
+  - parted
+  - git
+  - build-essential
+  - telnet
+  - python3-pip
+  - unzip
+  - lz4
+  - iproute2
+  - bind9-dnsutils
+  - parted
+  - dmraid
+  - net-tools
+  - libuser
+  - iptables-persistent
+  - bind9-dnsutils
+  - bridge-utils
+  - zfsutils-linux
+  - zfs-dkms
+  - zfs-zed
+  - spl
+  - kmod
+  - logrotate
+...

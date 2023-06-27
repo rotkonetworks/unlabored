@@ -1,0 +1,48 @@
+---
+# evmos version
+evmos_version: "12.1.2"
+evmos_chain_id: "evmos_9001-2"
+
+# dl locations
+evmos_download_url: "https://github.com/evmos/evmos/releases/download/v{{ evmos_version }}/evmos_{{ evmos_version }}_Linux_amd64.tar.gz"
+evmos_git_repo: "https://github.com/evmos/evmos.git"
+evmos_archive_snapshot_path: "http://cosmosia34.notional.ventures:11111/evmos-archive"
+evmos_pruned_snapshot_path: "http://cosmosia25.notional.ventures:11111/evmos"
+evmos_archive_chain_genesis: "{{ evmos_archive_snapshot_path }}/chain.json"
+evmos_pruned_chain_genesis: "{{ evmos_pruned_snapshot_path }}/chain.json"
+
+# service/user
+evmos_service: "evmos"
+evmos_user: "{{ service_users['evmos'] }}"
+
+# paths
+evmos_home_path: "/opt/evmos"
+evmos_src_path: "{{ evmos_home_path }}/src"
+evmos_storage_path: "{{ evmos_home_path }}/data"
+evmos_config_path: "{{ evmos_home_path }}/config"
+evmos_log_path: "{{ evmos_home_path }}/logs"
+evmos_script_path: "{{ evmos_home_path }}/scripts"
+
+# database
+evmos_database: "pebbledb"
+evmos_database_flags: "--db_backend={{ evmos_database }}"
+
+# pruning
+evmos_archive: True
+evmos_archive_flags: "--pruning nothing"
+
+# ports
+evmos_port: 26658
+evmos_p2p_port: 26656
+evmos_rpc_port: 26657
+evmos_json_rpc_port: 8545
+evmos_json_rpc_ws_port: 8546
+evmos_grpc_port: 9090
+evmos_grpc_web_port: 9091
+
+# advanced
+evmos_timeout_broadcast_tx_commit: 60s
+evmos_min_gas_prices: "10000"
+evmos_mempool_size: 5000
+evmos_api_namespaces: eth,net,web3,txpool
+...

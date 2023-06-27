@@ -1,0 +1,50 @@
+name: Python application
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [ "3.10" ]  # Add more versions here if necessary.
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+        cache: 'pip'
+        cache-dependency-path: 'requirements*.txt'
+    - name: Install dependencies and run linters
+      run: |
+        export PIP_NO_CLEAN=TRUE
+        export PIP_PREFER_BINARY=TRUE
+        python -m pip install --upgrade pip setuptools wheel
+        if [ -f requirements-dev.txt ]; then
+          python -m pip install -r requirements-dev.txt
+        elif [ -f requirements.txt ]; then 
+          python -m pip install -r requirements.txt
+        fi
+        if [ -f ansible/requirements.yaml ]; then ansible-galaxy install -r ansible/requirements.yaml; fi
+        
+        # Set up ansible vault
+        echo $ANSIBLE_VAULT_PASSWORD > .vault_pass
+        chmod 600 .vault_pass
+        export ANSIBLE_VAULT_PASSWORD_FILE=.vault_pass
+        
+        # Run all commands within "ansible" directory
+        cd ansible
+        inv syntaxcheck
+        inv ansiblelint
+        inv yamllint
+        inv flake8
+        inv black
+        inv ansiblelater
+      env: 
+        ANSIBLE_VAULT_PASSWORD: ${{ secrets.VAULT_PASS }}

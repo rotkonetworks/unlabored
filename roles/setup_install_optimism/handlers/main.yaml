@@ -1,0 +1,45 @@
+---
+- name: Remove Optimism Build Directory
+  ansible.builtin.file:
+    path: "{{ optimism_build_path }}/optimism"
+    state: absent
+
+- name: Enable Optimism-dtl
+  ansible.builtin.service:
+    name: optimism-dtl
+    enabled: True
+
+- name: Restart Optimism-dtl
+  ansible.builtin.service:
+    name: optimism-dtl
+    state: restarted
+    enabled: True
+
+- name: Enable Optimism-geth
+  ansible.builtin.service:
+    name: optimism-geth
+    enabled: True
+
+- name: Restart Optimism-geth
+  ansible.builtin.service:
+    name: optimism-geth
+    state: restarted
+    enabled: True
+
+- name: Systemd daemon-reload
+  ansible.builtin.systemd:
+    daemon_reload: True
+
+- name: Start Optimism-geth
+  ansible.builtin.service:
+    name: optimism-geth
+    state: started
+    enabled: True
+
+- name: Start Optimism-dtl
+  ansible.builtin.service:
+    name: optimism-dtl
+    state: started
+    enabled: True
+
+...

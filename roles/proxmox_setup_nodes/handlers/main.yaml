@@ -1,0 +1,13 @@
+---
+- name: Stop container
+  community.general.proxmox:
+    vmid: "{{ item.proxmox_config['vmid'] }}"
+    state: 'stopped'
+  listen: Stop container
+
+- name: Start container
+  community.general.proxmox:
+    vmid: "{{ item.proxmox_config['vmid'] }}"
+    state: 'started'
+  listen: Start container
+...

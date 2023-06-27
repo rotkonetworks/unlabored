@@ -1,0 +1,13 @@
+# Standards: 0.2
+---
+galaxy_info:
+  author: Jani Mikkonen <jani.mikkonen@northcode.fi>
+  description:
+  min_ansible_version: 3.0
+  platforms:
+    - name: Debian
+      versions:
+        - bullseye
+dependencies:
+  - role: setup_ansible_facts
+...

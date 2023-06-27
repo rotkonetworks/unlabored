@@ -1,0 +1,24 @@
+# Standards: 0.2
+---
+- name: Setup fully qualified domain name and /etc/hosts entries in Debian
+  ansible.builtin.hostname:
+    name: "{{ host_name }}"
+
+- name: Update /etc/hosts with appropriate host entries for localhost
+  ansible.builtin.lineinfile:
+    path: /etc/hosts
+    regexp: '^127\.0\.0\.1'
+    line: "127.0.0.1\t\t{{ host_name }} localhost.localdomain localhost"
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Add host entry with non-loopback ip address to /etc/hosts
+  ansible.builtin.lineinfile:
+    path: /etc/hosts
+    line: "{{ ansible_host }}\t\t{{ host_name }} {{ host_name.split('.')[0] }} pvelocalhost"
+    owner: root
+    group: root
+    mode: '0644'
+    state: present
+...

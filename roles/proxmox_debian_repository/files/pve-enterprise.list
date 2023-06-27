@@ -1,0 +1,3 @@
+# NOTE: Repository is disabled for now as it will cause apt update trigger warnings
+
+#deb https://enterprise.proxmox.com/debian/pve bullseye pve-enterprise

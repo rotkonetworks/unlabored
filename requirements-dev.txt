@@ -1,0 +1,11 @@
+ansible-lint
+ansible-later
+flake8
+flake8-self
+flake8-eradicate
+flake8-builtins
+flake8-commas
+python-language-server[all]
+black
+invoke
+-r requirements.txt

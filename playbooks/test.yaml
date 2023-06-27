@@ -1,0 +1,12 @@
+# Standards: 0.2
+---
+- name: Proxmox host setup
+  hosts: proxmox_hosts
+  gather_facts: True
+
+  roles:
+    - proxmox_acl_groups
+    - proxmox_acl_users
+    - proxmox_acl_access
+    - proxmox_acl_tokens
+...

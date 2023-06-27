@@ -1,0 +1,47 @@
+---
+
+arbitrum_user: "{{ service_users['arbitrum'] }}"
+arbitrum_base: "/opt/arbitrum"
+arbitrum_storage_path: "{{ arbitrum_base }}/storage"
+arbitrum_config_path: "{{ arbitrum_base }}/config"
+arbitrum_build_path: "{{ arbitrum_base }}/build"
+
+arbitrum_rocksdb_install_path: "/usr/local/lib"
+
+arbitrum_git_repo: "https://github.com/offchainlabs/arbitrum.git"
+arbitrum_version: "1.4.5"
+arbitrum_rocksdb_git_repo: "https://github.com/facebook/rocksdb.git"
+arbitrum_rocksdb_version: "6.20.3"
+
+arbitrum_l1_ethereum_url: "http://ethereum03.ct.rotko.net:9545"
+arbitrum_pruning_mode: "off"
+arbitrum_feed_output_port: "9642"
+arbitrum_rpc_port: "8547"
+arbitrum_ws_port: "8548"
+
+default_max_open_files_in_service: 32768
+default_packages:
+  - sysstat
+  - psmisc
+  - wget
+  - telnet
+  - python3-pip
+  - unzip
+  - lz4
+  - bind9-dnsutils
+  - net-tools
+  - libuser
+  - sudo
+  - bind9-dnsutils
+  - build-essential
+  - git
+  - yarn
+  - cmake
+  - emscripten
+  - pkg-config
+  - libgmp-dev
+  - libssl-dev
+  - librocksdb-dev
+  - libboost-all-dev
+  - logrotate
+...

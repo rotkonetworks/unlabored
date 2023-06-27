@@ -1,0 +1,33 @@
+# Standards: 0.2
+---
+- name: Check if we have foundry installer
+  ansible.builtin.stat:
+    path: /usr/local/bin/foundryup
+  register: foundryup
+
+- name: Download foundry installer script
+  ansible.builtin.get_url:
+    url: "{{ foundry_download_url }}"
+    dest: "/tmp/foundry_install"
+    mode: "u+rwx"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+  when: foundryup.stat.exists == False
+  notify:
+    - Run foundry installer script
+    - Execute Foundry Installer
+
+- name: Run foundry installer script
+  ansible.builtin.shell:
+    cmd: "/tmp/foundry_install"
+  when: foundryup.stat.exists == False
+  environment:
+    FOUNDRY_DIR: /usr/local
+
+- name: Execute Foundry Installer
+  ansible.builtin.shell:
+    cmd: /usr/local/bin/foundryup
+  when: foundryup.stat.exists == False
+  environment:
+    FOUNDRY_DIR: /usr/local
+...

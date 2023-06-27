@@ -1,0 +1,94 @@
+---
+- name: Ensure default_admin_group exists
+  ansible.builtin.group:
+    gid: "{{ default_admin_group_id }}"
+    name: "{{ default_admin_group_name }}"
+    state: present
+    system: True
+
+- name: Get Passwd database
+  ansible.builtin.getent:
+    database: passwd
+
+- name: Get groups
+  ansible.builtin.getent:
+    database: group
+    split: ':'
+
+- name: Add users to the host
+  ansible.builtin.user:
+    comment: "{{ item.comment }}"
+    create_home: True
+    groups: "{{ default_admin_group_name }}"
+    name: "{{ item.name }}"
+    home: "{{ item.home | default('/home/' + item.name) }}"
+    system: False
+    generate_ssh_key: False
+    password_lock: True
+    shell: "{{ default_shell }}"
+    state: present
+  with_items: "{{ all_users }}"
+  when:
+    - item.name in ( users_with_access | default(default_users))
+    - default_admin_group_name in ( ansible_facts.getent_group | default([]) )
+
+- name: Refresh facts
+  ansible.builtin.setup:
+
+- name: Get non-system users from prepopulated passwd database
+  ansible.builtin.set_fact:
+    pam_current_users: "{{ pam_current_users | default([]) + [item] }}"
+  when:
+    - (ansible_facts.getent_passwd[item][1] | int) > min_uid
+    - (ansible_facts.getent_passwd[item][1] | int) < max_uid
+  with_items: "{{ ansible_facts.getent_passwd }}"
+
+- name: Generate service_users_lookup
+  ansible.builtin.set_fact:
+    service_users_lookup: "{{ (service_users_lookup | default([])) + [item.value] }}"
+  with_items:
+    - "{{ service_users | dict2items }}"
+
+- name: Remove users that are not marked with access to a host
+  ansible.builtin.user:
+    name: "{{ item }}"
+    state: absent
+    remove: True
+  with_items: "{{ pam_current_users | default([]) }}"
+  when:
+    - item not in ( users_with_access | default(default_users) )
+    - item not in service_users_lookup
+
+- name: Update users authorized_keys
+  ansible.posix.authorized_key:
+    exclusive: False
+    key: "{{ lookup('file', '{{ item.name }}.pub') }}"
+    state: present
+    user: "{{ item.name }}"
+    manage_dir: True
+  with_items: "{{ all_users }}"
+  when:
+    - item.name in ( users_with_access | default(default_users) )
+    - item.name in ( pam_current_users | default([]) )
+    - item.name  not in service_users_lookup
+
+- name: Enable passwordless sudo access with sudoers.
+  ansible.builtin.lineinfile:
+    dest: "/etc/sudoers.d/{{ default_admin_group_name }}"
+    state: present
+    create: True
+    regexp: '^%{{ default_admin_group_name }}'
+    line: '%{{ default_admin_group_name }} ALL=(ALL) NOPASSWD: {{ commands_for_sudo | default(default_shell) }}'
+    owner: root
+    group: root
+    mode: "0644"
+    validate: visudo -cf %s
+
+- name: Enable ssh AgentForwarding even with sudo
+  ansible.builtin.template:
+    src: agentforwarding.template
+    dest: /etc/sudoers.d/agentforwarding
+    owner: root
+    group: root
+    mode: '0644'
+...

@@ -1,0 +1,177 @@
+---
+- name: Ensure group {{ arbitrum_user }} exists
+  ansible.builtin.group:
+    name: "{{ arbitrum_user }}"
+    state: present
+    system: True
+
+- name: Ensure user {{ arbitrum_user }} exists
+  ansible.builtin.user:
+    append: True
+    comment: Arbitrum service user
+    create_home: True
+    group: "{{ arbitrum_user }}"
+    groups: sudo
+    home: "{{ arbitrum_base }}"
+    name: "{{ arbitrum_user }}"
+    shell: "{{ default_shell }}"
+    state: present
+    system: True
+
+- name: Ensure required directories exists
+  ansible.builtin.file:
+    path: "{{ item }}"
+    owner: "{{ arbitrum_user }}"
+    group: "{{ arbitrum_user }}"
+    mode: '0775'
+    state: directory
+  with_items:
+    - "{{ arbitrum_base }}"
+    - "{{ arbitrum_storage_path }}"
+    - "{{ arbitrum_config_path }}"
+    - "{{ arbitrum_build_path }}"
+    - "{{ arbitrum_base }}/arbitrum-v{{ arbitrum_version }}"
+  notify:
+    - Symlink Arbitrum release
+
+- name: Check if Arbitrum has been installed
+  ansible.builtin.stat:
+    path: "{{ arbitrum_base }}/arbitrum-v{{ arbitrum_version }}/arb-node"
+  register: arbnode
+
+- name: Check if rocksdb has been installed
+  ansible.builtin.stat:
+    path: "{{ arbitrum_rocksdb_install_path }}/librocksdb.so.{{ arbitrum_rocksdb_version }}"
+  register: rocksdb
+
+- name: Refresh facts
+  ansible.builtin.setup:
+
+- name: Clone Required repositories
+  become: True
+  become_user: "{{ arbitrum_user }}"
+  ansible.builtin.git:
+    depth: 1
+    recursive: True
+    clone: True
+    dest: "{{ arbitrum_build_path }}/{{ item.dest }}"
+    force: True
+    repo: "{{ item.url }}"
+    version: "{{ item.version }}"
+  when:
+    - arbnode.stat.exists == False
+    - ansible_local['noderole']['node']['pinned'] != "True"
+    - ansible_local['noderole']['node']['version'] != arbitrum_version
+  with_items:
+    - { url: "{{ arbitrum_git_repo }}", version: "v{{ arbitrum_version }}", dest: "arbitrum" }
+    - { url: "{{ arbitrum_rocksdb_git_repo }}", version: "v{{ arbitrum_rocksdb_version }}", dest: "rocksdb" }
+
+- name: Build Rocksdb
+  ansible.builtin.command:
+    argv:
+      - make
+      - --jobs=16
+      - shared_lib
+      - install-shared
+    creates: "/usr/local/lib/librocksdb.so.{{ arbitrum_rocksdb_version }}"
+    chdir: "{{ arbitrum_build_path }}/rocksdb"
+  when:
+    - rocksdb.stat.exists == False
+
+- name: Generate ldconfig file for rocksdb installation
+  ansible.builtin.template:
+    src: local.conf.template
+    mode: '0644'
+    dest: /etc/ld.so.conf.d/local.conf
+  notify:
+    - Ldconfig reload
+
+- name: Arbitrum config file
+  ansible.builtin.template:
+    src: config.json.template
+    mode: '0644'
+    owner: "{{ arbitrum_user }}"
+    group: "{{ arbitrum_user }}"
+    dest: "{{ arbitrum_config_path }}/config.json"
+  notify:
+    - Restart Arbitrum
+
+- name: Copy arbitrum systemd service to a host
+  ansible.builtin.template:
+    src: arbitrum.service.template
+    dest: /etc/systemd/system/arbitrum.service
+    owner: root
+    group: root
+    mode: '0644'
+  notify:
+    - Systemd daemon-reload
+    - Enable Arbitrum
+
+- name: Build Arbitrum validator
+  become: True
+  become_user: "{{ arbitrum_user }}"
+  ansible.builtin.command:
+    argv:
+      - yarn
+      - install:validator
+    creates: "{{ arbitrum_build_path }}/arbitrum/packages/arb-avm-cpp/build/bin/avm_runner"
+    chdir: "{{ arbitrum_build_path }}/arbitrum"
+  when:
+    - arbnode.stat.exists == False
+    - ansible_local['noderole']['node']['pinned'] != "True"
+    - ansible_local['noderole']['node']['version'] != arbitrum_version
+  environment:
+    GOROOT: "/usr/local/go"
+    GOPATH: "{{ arbitrum_base }}/go"
+    PATH: "$GOPATH/bin:$GOROOT/bin:/usr/local/go/bin:/usr/local/bin:/usr/bin:/bin"
+  notify:
+    - Install Arbitrum validator binaries
+    - Symlink Arbitrum release
+    - Add Arbitrum service version
+
+- name: Install go dependencies
+  become: True
+  become_user: "{{ arbitrum_user }}"
+  ansible.builtin.command:
+    argv:
+      - go
+      - mod
+      - download
+    chdir: "{{ arbitrum_build_path }}/arbitrum/packages/arb-rpc-node"
+    creates: "{{ arbitrum_base }}/go"
+  when:
+    - arbnode.stat.exists == False
+    - ansible_local['noderole']['node']['pinned'] != "True"
+    - ansible_local['noderole']['node']['version'] != arbitrum_version
+  environment:
+    GOROOT: "/usr/local/go"
+    GOPATH: "{{ arbitrum_base }}/go"
+    PATH: "$GOPATH/bin:$GOROOT/bin:/usr/local/go/bin:/usr/local/bin:/usr/bin:/bin"
+
+- name: Build GO parts of the arbitrum tools
+  become: True
+  become_user: "{{ arbitrum_user }}"
+  ansible.builtin.command:
+    argv:
+      - go
+      - install
+    creates: "{{ arbitrum_base }}/arbitrum-v{{ arbitrum_version }}/{{ item.name }}"
+    chdir: "{{ arbitrum_build_path }}/arbitrum/{{ item.path }}/{{ item.name }}"
+  environment:
+    GOBIN: "{{ arbitrum_base }}/arbitrum-v{{ arbitrum_version }}"
+    GOROOT: "/usr/local/go"
+    GOPATH: "{{ arbitrum_base }}/go"
+    PATH: "$GOPATH/bin:$GOROOT/bin:/usr/local/go/bin:/usr/local/bin:/usr/bin:/bin"
+  when:
+    - arbnode.stat.exists == False
+    - ansible_local['noderole']['node']['pinned'] != "True"
+    - ansible_local['noderole']['node']['version'] != arbitrum_version
+  with_items:
+    - { path: "packages/arb-rpc-node/cmd", name: "arb-node" }
+    - { path: "packages/arb-rpc-node/cmd", name: "arb-cli" }
+  notify:
+    - Enable Arbitrum
+    - Start Arbitrum
+    - Clean build artifacts
+    - Add Arbitrum service version
+...

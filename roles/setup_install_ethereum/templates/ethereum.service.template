@@ -1,0 +1,34 @@
+[Unit]
+Description=Ethereum client
+Wants=network-online.target
+After=network.target network-online.target
+
+[Service]
+User={{ ethereum_user }}
+Group={{ ethereum_user }}
+LimitNOFILE={{ default_max_open_files_in_service }}
+Environment=HOME={{ ethereum_base }}
+Type=simple
+ExecStart={{ ethereum_base }}/geth \
+  --mainnet \
+  --config {{ ethereum_config_path }}/config.toml \
+  --syncmode {{ ethereum_syncmode }} \
+  --gcmode {{ ethereum_gcmode }} \
+  --http \
+  --http.corsdomain * \
+  --ws.origins * \
+  --cache {{ ethereum_cache_size }} \
+  --fdlimit {{ default_max_open_files_in_service }} \
+  --authrpc.jwtsecret {{ ethereum_jwtsecret_file }} \
+  --authrpc.addr {{ ethereum_lighthouse_host }} \
+  --authrpc.port {{ ethereum_lighthouse_port }} \
+  --authrpc.vhosts {{ ethereum_lighthouse_host }}
+
+KillMode=process
+KillSignal=SIGTERM
+TimeoutStopSec=90
+Restart=on-failure
+RestartSec=10s
+
+[Install]
+WantedBy=multi-user.target

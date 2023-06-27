@@ -1,0 +1,12 @@
+# Standards: 0.2
+---
+galaxy_info:
+  author: Jani Mikkonen <jani.mikkonen@northcode.fi>
+  description: Install foundry framework
+  min_ansible_version: 3.0
+  platforms:
+    - name: Debian
+      versions:
+        - bullseye
+dependencies:
+...

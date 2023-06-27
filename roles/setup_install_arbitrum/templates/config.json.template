@@ -1,0 +1,221 @@
+{
+  "bridge-utils-address": "0x84efa170dc6d521495d7942e372b8e4b2fb918ec",
+  "conf": {
+    "dump": false,
+    "env-prefix": "",
+    "file": "",
+    "s3": {
+      "access-key": "",
+      "bucket": "",
+      "object-key": "",
+      "region": "",
+      "secret-key": ""
+    },
+    "string": ""
+  },
+  "core": {
+    "add-messages-max-failure-count": 10,
+    "cache": {
+      "basic-interval": 100000000,
+      "basic-size": 100,
+      "disable": false,
+      "last": false,
+      "lru-size": 1000,
+      "seed-on-startup": false,
+      "timed-expire": "20m0s"
+    },
+    "checkpoint-gas-frequency": 1000000000,
+    "checkpoint-load-gas-cost": 250000000,
+    "checkpoint-load-gas-factor": 4,
+    "checkpoint-max-execution-gas": 250000000,
+    "checkpoint-max-to-prune": 2,
+    "checkpoint-prune-on-startup": false,
+    "checkpoint-pruning-mode": "{{ arbitrum_pruning_mode}}",
+    "database": {
+      "compact": false,
+      "exit-after": false,
+      "metadata": false,
+      "save-interval": "0s",
+      "save-on-startup": false,
+      "save-path": "db_checkpoints"
+    },
+    "debug": false,
+    "debug-timing": false,
+    "idle-sleep": "5ms",
+    "lazy-load-archive-queries": true,
+    "lazy-load-core-machine": false,
+    "message-process-count": 100,
+    "test": {
+      "load-count": 0,
+      "reorg-to": {
+        "l1-block": 0,
+        "l2-block": 0,
+        "log": 0,
+        "message": 0
+      },
+      "reset-all-except-inbox": false,
+      "run-until": 0
+    },
+    "thread-max-failure-count": 2,
+    "yield-instruction-count": 50000000
+  },
+  "feed": {
+    "input": {
+      "timeout": "20s",
+      "url": [
+        "wss://arb1.arbitrum.io/feed"
+      ]
+    },
+    "output": {
+      "addr": "0.0.0.0",
+      "client-timeout": "15s",
+      "io-timeout": "5s",
+      "max-send-queue": 4096,
+      "ping": "5s",
+      "port": "{{ arbitrum_feed_output_port }}",
+      "queue": 100,
+      "workers": 100
+    }
+  },
+  "gas-price": "0",
+  "healthcheck": {
+    "addr": "",
+    "enable": false,
+    "l1-node": false,
+    "metrics": false,
+    "metrics-prefix": "",
+    "port": 0,
+    "sequencer": false
+  },
+  "l1": {
+    "chain-id": "0",
+    "url": "{{ arbitrum_l1_ethereum_url }}"
+  },
+  "log": {
+    "core": "info",
+    "rpc": "info"
+  },
+  "metrics": false,
+  "metrics-server": {
+    "addr": "127.0.0.1",
+    "port": "6070"
+  },
+  "node": {
+    "aggregator": {
+      "inbox-address": "0x4Dbd4fc535Ac27206064B68FfCf827b0A60BAB3f",
+      "max-batch-time": 10,
+      "stateful": false
+    },
+    "cache": {
+      "allow-slow-lookup": false,
+      "block-info-lru-size": 100000,
+      "lru-size": 1000,
+      "timed-expire": "20m0s"
+    },
+    "chain-id": "42161",
+    "forwarder": {
+      "rpc-mode": "full",
+      "submitter-address": "",
+      "target": "https://arb1.arbitrum.io/rpc"
+    },
+    "inbox-reader": {
+      "delay-blocks": 4,
+      "paranoid": false,
+      "sequencer-signature-expiry": "10m0s"
+    },
+    "log-idle-sleep": "100ms",
+    "log-process-count": 100,
+    "rpc": {
+      "addr": "0.0.0.0",
+      "enable-devops-stubs": false,
+      "enable-l1-calls": false,
+      "max-call-gas": "5000000",
+      "path": "/",
+      "port": {{ arbitrum_rpc_port }},
+      "tracing": {
+        "enable": false,
+        "namespace": "arbtrace"
+      }
+    },
+    "sequencer": {
+      "continue-batch-posting-block-interval": 2,
+      "create-batch-block-interval": 270,
+      "dangerous": {
+        "disable-batch-posting": false,
+        "disable-delayed-message-sequencing": false,
+        "publish-batches-without-lockout": false,
+        "reorg-out-huge-messages": false,
+        "rewrite-sequencer-address": false
+      },
+      "debug-timing": false,
+      "delayed-messages-target-delay": 12,
+      "gas-refunder-address": "",
+      "gas-refunder-extra-gas": "50000",
+      "l1-posting-strategy": {
+        "high-gas-delay-blocks": 270,
+        "high-gas-threshold": "150"
+      },
+      "lockout": {
+        "max-latency": 10000000000,
+        "redis": "",
+        "self-rpc-url": "",
+        "seq-num-timeout": 300000000000,
+        "timeout": 30000000000
+      },
+      "max-batch-gas-cost": 2000000
+    },
+    "type": "forwarder",
+    "ws": {
+      "addr": "0.0.0.0",
+      "path": "/",
+      "port": {{ arbitrum_ws_port }}
+    }
+  },
+  "persistent": {
+    "chain": "mainnet",
+    "global-config": "{{ arbitrum_storage_path }}"
+  },
+  "pprof-enable": false,
+  "rollup": {
+    "address": "0xC12BA48c781F6e392B49Db2E25Cd0c28cD77531A",
+    "block-search-size": 0,
+    "from-block": "12525700",
+    "machine": {
+      "filename": "mainnet.arb1.mexe",
+      "url": "https://raw.githubusercontent.com/OffchainLabs/arb-os/48bdb999a703575d26a856499e6eb3e17691e99d/arb_os/arbos.mexe"
+    }
+  },
+  "validator": {
+    "contract-wallet-address": "",
+    "contract-wallet-address-filename": "chainState.json",
+    "dont-challenge": false,
+    "l1-posting-strategy": {
+      "high-gas-delay-blocks": 270,
+      "high-gas-threshold": "150"
+    },
+    "only-create-wallet-contract": false,
+    "staker-delay": "1m0s",
+    "strategy": "",
+    "utils-address": "0x2B36F23ce0bAbD57553b26Da4C7a0585bac65DC1",
+    "wallet-factory-address": "0xe17d8Fa6BC62590f840C5Dd35f300F77D55CC178",
+    "withdraw-destination": ""
+  },
+  "wait-to-catch-up": false,
+  "wallet": {
+    "fireblocks": {
+      "feed-signer": {
+        "password": "",
+        "pathname": "feed-signer-wallet",
+        "private-key": ""
+      },
+      "ssl-key": "",
+      "ssl-key-password": ""
+    },
+    "local": {
+      "only-create-key": false,
+      "password": "",
+      "pathname": "rpc-wallet",
+      "private-key": ""
+    }
+  }
+}

@@ -1,0 +1,41 @@
+# Standards: 0.2
+---
+- name: Symlink Ethereum release
+  ansible.builtin.file:
+    src: "{{ ethereum_base }}/geth-linux-{{ ethereum_arch }}-{{ ethereum_version }}/geth"
+    dest: "{{ ethereum_base }}/geth"
+    force: True
+    state: link
+    owner: "{{ ethereum_user }}"
+    group: "{{ ethereum_user }}"
+
+- name: Enable Ethereum
+  ansible.builtin.service:
+    name: ethereum
+    enabled: True
+
+- name: Restart Ethereum
+  ansible.builtin.service:
+    name: ethereum
+    state: restarted
+    enabled: True
+
+- name: Systemd daemon-reload
+  ansible.builtin.systemd:
+    daemon_reload: True
+
+- name: Stop Ethereum
+  ansible.builtin.systemd:
+    name: ethereum
+    daemon_reload: True
+    state: stopped
+    enabled: True
+
+- name: Start Ethereum
+  ansible.builtin.systemd:
+    name: ethereum
+    daemon_reload: True
+    state: started
+    enabled: True
+
+...

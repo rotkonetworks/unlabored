@@ -1,0 +1,116 @@
+---
+- name: Ensure group and user exist for {{ evmos_user }}
+  block:
+    - name: Ensure group exists {{ evmos_user }}
+      ansible.builtin.group:
+        name: "{{ evmos_user }}"
+        state: present
+        system: True
+
+    - name: Ensure user exists {{ evmos_user }}
+      ansible.builtin.user:
+        append: True
+        comment: Evmos service user
+        create_home: True
+        group: "{{ evmos_user }}"
+        groups: sudo
+        home: "{{ evmos_home_path }}"
+        name: "{{ evmos_user }}"
+        shell: "{{ default_shell }}"
+        state: present
+        system: True
+
+- name: Update .profile
+  ansible.builtin.blockinfile:
+    path: "{{ evmos_home_path }}/.profile"
+    owner: "{{ evmos_user }}"
+    group: "{{ evmos_user }}"
+    create: True
+    mode: '0644'
+    block: |
+      GOPATH="$HOME/go"
+      PATH="$GOPATH/bin:$PATH"
+      PATH="$PATH:/usr/local/go/bin"
+
+- name: Ensure evmos base directory exists
+  ansible.builtin.file:
+    path: "{{ item }}"
+    owner: "{{ evmos_user }}"
+    group: "{{ evmos_user }}"
+    mode: '0755'
+    state: directory
+  loop:
+    - "{{ evmos_config_path }}"
+    - "{{ evmos_home_path }}"
+    - "{{ evmos_log_path }}"
+    - "{{ evmos_src_path }}"
+    - "{{ evmos_storage_path }}"
+
+- name: Acquire evmosd source
+  ansible.builtin.git:
+    repo: "{{ evmos_git_repo }}"
+    dest: "{{ evmos_src_path }}"
+    depth: 1
+    version: "v{{ evmos_version }}"
+    force: True
+    clone: True
+  become: True
+  become_user: "{{ evmos_user }}"
+
+- name: Add pebbledb and build client
+  ansible.builtin.command:
+    cmd: |
+      source "{{ evmos_home_path }}/.profile"
+      go mod edit -replace github.com/tendermint/tm-db=github.com/baabeetaa/tm-db@pebble
+      go mod tidy
+      go mod edit -replace github.com/tendermint/tendermint=github.com/skip-mev/mev-tendermint
+      go mod tidy
+      go install -ldflags '-w -s -X github.com/cosmos/cosmos-sdk/types.DBBackend=pebbledb -X github.com/tendermint/tm-db.ForceSync=1' -tags pebbledb ./...
+    chdir: "{{ evmos_src_path }}"
+  become: True
+  become_user: "{{ evmos_user }}"
+  register: evmos_build
+  when: ansible_local['noderole']['node']['pinned'] != "True" and ansible_local['noderole']['node']['version'] != evmos_version
+
+- name: Install evmos v{{ evmos_version }}
+  ansible.builtin.copy:
+    src: "{{ evmos_home_path }}/go/bin/evmosd"
+    dest: "{{ evmos_home_path }}/evmosd-v{{ evmos_version }}"
+    remote_src: True
+    mode: '0755'
+    group: "{{ evmos_user }}"
+    owner: "{{ evmos_user }}"
+  become: True
+  become_user: "{{ evmos_user }}"
+  register: evmos_install
+  when: ansible_local['noderole']['node']['pinned'] != "True" and ansible_local['noderole']['node']['version'] != evmos_version
+  notify:
+    - Symlink evmosd client
+    - Symlink evmosd service
+    - Systemd daemon-reload
+    - Stop evmosd
+    - Start evmosd
+
+- name: Download genesis file
+  ansible.builtin.get_url:
+    url: "{{ evmos_chain_genesis_url }}"
+    dest: "{{ evmos_config_path }}/genesis.json"
+    mode: "0644"
+    group: "{{ evmos_user }}"
+    owner: "{{ evmos_user }}"
+    force: False
+
+- name: Copy evmos systemd service to a host
+  ansible.builtin.template:
+    src: evmosd.service.j2
+    dest: "{{ evmos_home_path }}/evmosd.service"
+    owner: "{{ evmos_user }}"
+    group: "{{ evmos_user }}"
+    mode: '0644'
+  notify:
+    - Symlink evmosd client
+    - Symlink evmosd service
+    - Systemd daemon-reload
+    - Stop evmosd
+    - Start evmosd
+...

@@ -1,0 +1,21 @@
+---
+avalanche_version: "1.10.0"
+avalanche_arch: amd64
+avalanche_download_url: "https://github.com/ava-labs/avalanchego/releases/download/v{{ avalanche_version }}/avalanchego-linux-{{ avalanche_arch }}-v{{ avalanche_version }}.tar.gz"
+avalanche_swimmer_plugin_url: "https://swimmer-plugin.s3.ap-southeast-1.amazonaws.com/subnet-evm/latest/srSGD5JeYhL8GLx4RUw53VN5TcoBbax6EeCYmy5S3DiteJhdF"
+
+avalanche_user: "{{ service_users['avalanche'] }}"
+avalanche_base: "/opt/avalanche"
+avalanche_storage_path: "{{ avalanche_base }}/storage"
+avalanche_config_path: "{{ avalanche_base }}/configs"
+avalanche_chain_config_path: "{{ avalanche_config_path }}/chains"
+avalanche_log_level: "info"
+avalanche_network: "mainnet"
+avalanche_pruning_enabled: "false"
+
+avalanche_http_port: "9650"
+avalanche_staking_port: "9651"
+avalanche_enable_swimmer: False
+
+default_max_open_files_in_service: 32768
+...

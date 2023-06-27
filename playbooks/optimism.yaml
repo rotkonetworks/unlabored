@@ -1,0 +1,9 @@
+# Standards: 0.2
+---
+- name: Default tools and configurations
+  hosts: optimism
+  gather_facts: True
+  roles:
+    - setup_add_node_role
+    - setup_install_optimism
+...

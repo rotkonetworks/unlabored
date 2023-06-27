@@ -1,0 +1,30 @@
+# Standards: 0.2
+---
+- name: Configure journald log rotation rules
+  community.general.ini_file:
+    create: True
+    no_extra_spaces: True
+    option: "{{ item.key }}"
+    section: "Journal"
+    state: present
+    value: "{{ item.value }}"
+    path: "{{ default_journald_config_file }}"
+    owner: root
+    group: root
+    mode: '0644'
+  with_dict: "{{ default_journald_options }}"
+  notify:
+    - Systemd daemon-reload
+
+- name: Configure logrotate with additional log files besides journald logs
+  ansible.builtin.template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dst }}"
+    owner: root
+    group: root
+    mode: '0644'
+  with_items:
+    - { src: "rsyslog.template", dst: "/etc/logrotate.d/rsyslog" }
+  notify:
+    - Systemd daemon-reload
+...

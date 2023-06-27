@@ -1,0 +1,48 @@
+---
+# kava version
+kava_version: "0.21.1"
+kava_chain_id: "kava_2222-10"
+
+# dl locations
+kava_download_url: "https://github.com/Kava-Labs/kava/releases/download/v{{ kava_version }}/kava_{{ kava_version }}_Linux_amd64.tar.gz"
+kava_git_repo: "https://github.com/Kava-Labs/kava.git"
+# TODO: make variables to support snapshots
+# TODO: https://quicksync.io/networks/kava.html --> implement snapshot dl script
+kava_archive_snapshot_path: "https://dl2.quicksync.io/kava_2222-10-default.20230419.0110.tar.lz4"
+kava_pruned_snapshot_path: "https://dl2.quicksync.io/kava_2222-10-pruned.20230419.0210.tar.lz4"
+
+# service/user
+kava_service: "kava"
+kava_user: "{{ service_users['kava'] }}"
+
+# paths
+kava_home_path: "/opt/kava"
+kava_src_path: "{{ kava_home_path }}/src"
+kava_storage_path: "{{ kava_home_path }}/data"
+kava_config_path: "{{ kava_home_path }}/config"
+kava_log_path: "{{ kava_home_path }}/logs"
+kava_script_path: "{{ kava_home_path }}/scripts"
+
+# database
+kava_database: "pebbledb"
+kava_database_flags: "--db_backend={{ kava_database }}"
+
+# pruning
+kava_archive: True
+kava_archive_flags: "--pruning nothing"
+
+# ports
+kava_port: 26658
+kava_p2p_port: 26656
+kava_rpc_port: 26657
+kava_json_rpc_port: 8545
+kava_json_rpc_ws_port: 8546
+kava_grpc_port: 9090
+kava_grpc_web_port: 9091
+
+# advanced
+kava_timeout_broadcast_tx_commit: 60s
+kava_min_gas_prices: "10000"
+kava_mempool_size: 5000
+kava_api_namespaces: eth,net,web3,txpool
+...

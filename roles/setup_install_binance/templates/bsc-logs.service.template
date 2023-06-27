@@ -1,0 +1,16 @@
+[Unit]
+Description="Binance logs from bsc.log to journald"
+After=network.target binance.service
+BindsTo=binance.service
+PartOf=binance.service
+
+[Service]
+Type=simple
+ExecStart=/bin/bash -c 'tail -F /opt/binance/storage/bsc.log | systemd-cat -t bsc'
+Restart=on-failure
+RestartSec=5s
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
