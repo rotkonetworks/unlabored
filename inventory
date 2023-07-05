@@ -10,11 +10,14 @@ polkadot
 
 [polkadot]
 ksm01
+ksm02
 dot01
-west01
+dot02
+wnd01
 
 [proxmox_hosts]
-eur01
+bkk01
+bkk02
 
 [unmanaged]
 ansible

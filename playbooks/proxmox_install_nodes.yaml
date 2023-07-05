@@ -37,12 +37,6 @@
   roles:
     - setup_install_binance
 
-- name: Install DefiKingdom services
-  hosts: defikingdom
-  gather_facts: True
-  roles:
-    - setup_install_defikingdom
-
 - name: Install Erigon services
   hosts: erigon
   gather_facts: True
@@ -73,12 +67,6 @@
   roles:
     - setup_install_kava
 
-- name: Install Klaytn services
-  hosts: klaytn
-  gather_facts: True
-  roles:
-    - setup_install_klaytn
-
 - name: Install Optimism services
   hosts: optimism
   gather_facts: True
@@ -90,10 +78,4 @@
   gather_facts: True
   roles:
     - setup_install_polkadot
-
-- name: Install Polygon services
-  hosts: polygon
-  gather_facts: False
-  roles:
-    - setup_install_polygon
 ...

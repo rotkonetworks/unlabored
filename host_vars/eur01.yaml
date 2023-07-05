@@ -55,7 +55,7 @@ lxc_nodes:
       memory: 16384
       swap: 8192
       password: N0tS4l4k4l4!
-      disk: "local:20"
+      disk: {{ default_storage }}
       mounts: '{"mp0":"{{ default_storage }}:500,mp={{ hostvars["ksm01"]["polkadot_base"] }}"}'
       onboot: True
       unprivileged: True

@@ -1,21 +1,21 @@
 ---
-host_name: "bkk01.rotko.net"
+host_name: "bkk02.rotko.net"
 host_timezone: "Asia/Bangkok"
-ansible_host: "192.168.33.117"
+ansible_host: "27.131.160.108"
 role: "proxmox"
 
 kernel_modules:
   - k10temp
   - zfs
 
-default_need_port_forwarding: True
-default_gw_device: "enp36s0"
-default_storage: "zfs_storage"
+default_need_port_forwarding: False
+default_gw_device: "enp4s0"
+default_storage: "tank"
 
 lxc_nodes:
-  - host: "dot01"
+  - host: "dot02"
     proxmox_config:
-      vmid: "101"
+      vmid: "112"
       hostname: "{{ hostvars['dot01']['host_name'] }}"
       ostemplate: 'local:vztmpl/{{ default_container_template }}'
       netif: "{{ hostvars['dot01']['netif'] }}"
@@ -42,38 +42,9 @@ lxc_nodes:
       - from_port: "{{ hostvars['dot01']['polkadot_prom_port'] }}"
         to_host: "{{ hostvars['dot01']['container_ip'] }}:{{ hostvars['dot01']['polkadot_prom_port'] }}"
         protocol: "tcp"
-  - host: "ksm01"
-    proxmox_config:
-      vmid: "201"
-      hostname: "{{ hostvars['ksm01']['host_name'] }}"
-      ostemplate: 'local:vztmpl/{{ default_container_template }}'
-      netif: "{{ hostvars['ksm01']['netif'] }}"
-      cores: 2
-      memory: 20480
-      swap: 10240
-      password: N0tS4l4k4l4!
-      disk: "local:20"
-      mounts: '{"mp0":"{{ default_storage }}:450,mp={{ hostvars["ksm01"]["polkadot_base"] }}"}'
-      onboot: True
-      unprivileged: True
-      validate_certs: False
-      description: "kusama validator node: {{ hostvars['ksm01']['host_name'] }}"
-      state: present
-      features:
-        - nesting=1
-    port_forwards:
-      - from_port: "{{ hostvars['ksm01']['ansible_port'] }}"
-        to_host: "{{ hostvars['ksm01']['container_ip'] }}:22"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['ksm01']['polkadot_p2p_port'] }}"
-        to_host: "{{ hostvars['ksm01']['container_ip'] }}:{{ hostvars['ksm01']['polkadot_p2p_port'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['ksm01']['polkadot_prom_port'] }}"
-        to_host: "{{ hostvars['ksm01']['container_ip'] }}:{{ hostvars['ksm01']['polkadot_prom_port'] }}"
-        protocol: "tcp"
   - host: "ksm02"
     proxmox_config:
-      vmid: "202"
+      vmid: "122"
       hostname: "{{ hostvars['ksm02']['host_name'] }}"
       ostemplate: 'local:vztmpl/{{ default_container_template }}'
       netif: "{{ hostvars['ksm02']['netif'] }}"
@@ -81,7 +52,7 @@ lxc_nodes:
       memory: 20480
       swap: 10240
       password: N0tS4l4k4l4!
-      disk: "local:20"
+      disk: "{{ default_storage }}:20"
       mounts: '{"mp0":"{{ default_storage }}:450,mp={{ hostvars["ksm02"]["polkadot_base"] }}"}'
       onboot: True
       unprivileged: True
@@ -90,14 +61,4 @@ lxc_nodes:
       state: present
       features:
         - nesting=1
-    port_forwards:
-      - from_port: "{{ hostvars['ksm02']['ansible_port'] }}"
-        to_host: "{{ hostvars['ksm02']['container_ip'] }}:22"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['ksm02']['polkadot_p2p_port'] }}"
-        to_host: "{{ hostvars['ksm02']['container_ip'] }}:{{ hostvars['ksm02']['polkadot_p2p_port'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['ksm02']['polkadot_prom_port'] }}"
-        to_host: "{{ hostvars['ksm02']['container_ip'] }}:{{ hostvars['ksm02']['polkadot_prom_port'] }}"
-        protocol: "tcp"
 ...
