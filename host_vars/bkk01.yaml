@@ -1,7 +1,9 @@
 ---
 host_name: "bkk01.rotko.net"
 host_timezone: "Asia/Bangkok"
-ansible_host: "27.131.160.107"
+# ansible_host: "27.131.160.107"
+ansible_host: "27.131.160.106"
+ansible_port: "20781"
 role: "proxmox"
 
 kernel_modules:

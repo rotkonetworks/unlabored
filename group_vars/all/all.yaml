@@ -35,7 +35,6 @@ default_container_level_firewall: True
 
 default_container_template: "debian-12-standard_12.0-1_amd64.tar.zst"
 default_users:
-  - satoshi
   - user
   - winboxuser
   - key
@@ -88,10 +87,12 @@ kernel_params:
 pinned_service: False
 
 all_users:
-  - name: satoshi
-    comment: "satoshi"
+  - name: key
+    comment: "key"
   - name: user
     comment: "user"
+  - name: winboxuser
+    comment: "winbox"
 
 proxmox_default_admin_account: "ansible_admin@pve"
 proxmox_default_admin_comment: "Ansible promox account"
