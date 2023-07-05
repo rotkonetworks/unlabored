@@ -10,4 +10,5 @@
 - name: Install Python dependencies
   ansible.builtin.pip:
     name: "{{ lookup('file', 'python_requirements.txt') | regex_replace('\n', ',') }}"
+    extra_args: --break-system-packages
 ...

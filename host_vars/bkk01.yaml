@@ -20,11 +20,11 @@ lxc_nodes:
       ostemplate: 'local:vztmpl/{{ default_container_template }}'
       netif: "{{ hostvars['dot01']['netif'] }}"
       cores: 2
-      memory: 20480
-      swap: 10240
-      password: N0tS4l4k4l4!
+      memory: 30720
+      swap: 15360
+      password: "{{ default_password }}"
       disk: "{{ default_storage }}:20"
-      mounts: '{"mp0":"{{ default_storage }}:350,mp={{ hostvars["dot01"]["polkadot_base"] }}"}'
+      mounts: '{"mp0":"{{ default_storage }}:600,mp={{ hostvars["dot01"]["polkadot_base"] }}"}'
       onboot: True
       unprivileged: True
       validate_certs: False
@@ -39,11 +39,11 @@ lxc_nodes:
       ostemplate: 'local:vztmpl/{{ default_container_template }}'
       netif: "{{ hostvars['ksm01']['netif'] }}"
       cores: 2
-      memory: 20480
-      swap: 10240
-      password: N0tS4l4k4l4!
+      memory: 30720
+      swap: 15360
+      password: "{{ default_password }}"
       disk: "{{ default_storage }}:20"
-      mounts: '{"mp0":"{{ default_storage }}:450,mp={{ hostvars["ksm01"]["polkadot_base"] }}"}'
+      mounts: '{"mp0":"{{ default_storage }}:800,mp={{ hostvars["ksm01"]["polkadot_base"] }}"}'
       onboot: True
       unprivileged: True
       validate_certs: False

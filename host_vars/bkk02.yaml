@@ -16,32 +16,22 @@ lxc_nodes:
   - host: "dot02"
     proxmox_config:
       vmid: "112"
-      hostname: "{{ hostvars['dot01']['host_name'] }}"
+      hostname: "{{ hostvars['dot02']['host_name'] }}"
       ostemplate: 'local:vztmpl/{{ default_container_template }}'
-      netif: "{{ hostvars['dot01']['netif'] }}"
+      netif: "{{ hostvars['dot02']['netif'] }}"
       cores: 2
-      memory: 20480
-      swap: 10240
-      password: N0tS4l4k4l4!
+      memory: 30720
+      swap: 15360
+      password: "{{ default_password }}"
       disk: "{{ default_storage }}:20"
-      mounts: '{"mp0":"{{ default_storage }}:350,mp={{ hostvars["dot01"]["polkadot_base"] }}"}'
+      mounts: '{"mp0":"{{ default_storage }}:600,mp={{ hostvars["dot02"]["polkadot_base"] }}"}'
       onboot: True
       unprivileged: True
       validate_certs: False
-      description: "polkadot validator node: {{ hostvars['dot01']['host_name'] }}"
+      description: "polkadot 2nd validator node: {{ hostvars['dot02']['host_name'] }}"
       state: present
       features:
         - nesting=1
-    port_forwards:
-      - from_port: "{{ hostvars['dot01']['ansible_port'] }}"
-        to_host: "{{ hostvars['dot01']['container_ip'] }}:22"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['dot01']['polkadot_port'] }}"
-        to_host: "{{ hostvars['dot01']['container_ip'] }}:{{ hostvars['dot01']['polkadot_port'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['dot01']['polkadot_prom_port'] }}"
-        to_host: "{{ hostvars['dot01']['container_ip'] }}:{{ hostvars['dot01']['polkadot_prom_port'] }}"
-        protocol: "tcp"
   - host: "ksm02"
     proxmox_config:
       vmid: "122"
@@ -49,11 +39,11 @@ lxc_nodes:
       ostemplate: 'local:vztmpl/{{ default_container_template }}'
       netif: "{{ hostvars['ksm02']['netif'] }}"
       cores: 2
-      memory: 20480
-      swap: 10240
-      password: N0tS4l4k4l4!
+      memory: 30720
+      swap: 15360
+      password: "{{ default_password }}"
       disk: "{{ default_storage }}:20"
-      mounts: '{"mp0":"{{ default_storage }}:450,mp={{ hostvars["ksm02"]["polkadot_base"] }}"}'
+      mounts: '{"mp0":"{{ default_storage }}:800,mp={{ hostvars["ksm02"]["polkadot_base"] }}"}'
       onboot: True
       unprivileged: True
       validate_certs: False

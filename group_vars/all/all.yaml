@@ -6,7 +6,8 @@ ansible_ssh_private_key_file: "~/.ssh/proxmox/ansible_ssh_key"
 default_facts_path: "/etc/ansible/facts.d"
 default_resource_pool: "resource_pool"
 default_passphrase: "N0thing but bitch3s in th3 sun!"
-zabbix_master: "69.69.69.36"
+default_password: "m4rg4r1t45"
+zabbix_master: "27.131.160.106"
 zabbix_agent_base_path: "/etc/zabbix"
 zabbix_agent_script_path: "{{ zabbix_agent_base_path }}/scripts"
 zabbix_agent_confd_path: "{{ zabbix_agent_base_path }}/zabbix_agentd.conf.d/"
@@ -32,13 +33,13 @@ default_netif: '{"net0":"name=eth0,gw={{ default_nat_network_forward_cidr.split(
 default_max_open_files_in_service: 16368
 default_container_level_firewall: True
 
-default_container_template: "debian-11-standard_11.6-1_amd64.tar.zst"
+default_container_template: "debian-12-standard_12.0-1_amd64.tar.zst"
 default_users:
   - satoshi
-  - rotko
+  - user
 
 default_golang_dl_base_url: "https://dl.google.com/go/go"
-default_golang_version: "1.20.4"
+default_golang_version: "1.20.5"
 default_golang_os: "linux"
 default_golang_arch: "amd64"
 default_golang_base_path: "/usr/local"
@@ -48,7 +49,7 @@ default_golang_bin_path: "{{ default_golang_GOROOT }}/go/bin"
 default_rust_installer_saved: "/tmp/sh.rustup.rs"
 default_rust_installer_dl_url: "https://sh.rustup.rs"
 
-default_storage: "zfs_storage"
+default_storage: "tank"
 
 default_journald_config_file: "/etc/systemd/journald.conf"
 default_journald_options:
@@ -128,12 +129,10 @@ service_users:
   arbitrum: "arbitrum"
   avalanche: "avalanche"
   binance: "binance"
-  defikingdom: "avalanche"
   erigon: "erigon"
   ethereum: "ethereum"
   evmos: "evmos"
   kava: "kava"
-  klaytn: "klaytn"
   moonbeam: "moonbeam"
   polygon: "polygon"
   polkadot: "polkadot"
