@@ -31,7 +31,7 @@ jobs:
         elif [ -f requirements.txt ]; then 
           python -m pip install -r requirements.txt
         fi
-        if [ -f ansible/requirements.yaml ]; then ansible-galaxy install -r ansible/requirements.yaml; fi
+        if [ -f requirements.yaml ]; then ansible-galaxy install -r requirements.yaml; fi
         
         # Set up ansible vault
         echo $ANSIBLE_VAULT_PASSWORD > .vault_pass
@@ -46,5 +46,5 @@ jobs:
         inv flake8
         inv black
         inv ansiblelater
-      env: 
+      env:
         ANSIBLE_VAULT_PASSWORD: ${{ secrets.VAULT_PASS }}
