@@ -5,3 +5,4 @@ testinventory
 later_plugins/__pycache__
 filter_plugins/__pycache__
 roles/geerlingguy.postfix/
+group_vars/all/all.yaml

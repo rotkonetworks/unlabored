@@ -1,3 +1,6 @@
+# rm comments
+# rename all_example.yaml to all.yaml
+# edit all.yaml to your needs
 ---
 ansible_user: "root"
 ansible_connection: ssh
@@ -5,8 +8,8 @@ ansible_ssh_private_key_file: "~/.ssh/proxmox/ansible_ssh_key"
 
 default_facts_path: "/etc/ansible/facts.d"
 default_resource_pool: "resource_pool"
-default_passphrase: "N0thing but bitch3s in th3 sun!"
-default_password: "m4rg4r1t45"
+default_passphrase: "def4ult_p4ssphrase!"
+default_password: "p4ssw0rdSw0rdF1sh"
 zabbix_master: "27.131.160.106"
 zabbix_agent_base_path: "/etc/zabbix"
 zabbix_agent_script_path: "{{ zabbix_agent_base_path }}/scripts"
