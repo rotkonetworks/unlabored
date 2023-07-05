@@ -1,7 +1,7 @@
 ---
 ansible_user: "root"
 ansible_connection: ssh
-ansible_ssh_private_key_file: "~/.ssh/proxmox/ansible_ssh_key"
+ansible_ssh_private_key_file: "~/.ssh/unlabored/ansible_ssh_key"
 
 default_facts_path: "/etc/ansible/facts.d"
 default_resource_pool: "resource_pool"
@@ -37,6 +37,8 @@ default_container_template: "debian-12-standard_12.0-1_amd64.tar.zst"
 default_users:
   - satoshi
   - user
+  - winboxuser
+  - key
 
 default_golang_dl_base_url: "https://dl.google.com/go/go"
 default_golang_version: "1.20.5"
@@ -88,8 +90,8 @@ pinned_service: False
 all_users:
   - name: satoshi
     comment: "satoshi"
-  - name: rotko
-    comment: "rotko networks"
+  - name: user
+    comment: "user"
 
 proxmox_default_admin_account: "ansible_admin@pve"
 proxmox_default_admin_comment: "Ansible promox account"

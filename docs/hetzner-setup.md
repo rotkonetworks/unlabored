@@ -62,7 +62,6 @@ IMAGE /root/.oldroot/nfs/install/../images/Debian-1106-bullseye-amd64-base.tar.g
 
 a. Log in to the server as root.
 b. Update the package list and install required packages:
-
 ```bash
 apt update
 apt install -y zfsutils-linux
@@ -71,13 +70,11 @@ apt install -y zfsutils-linux
 5. Create a ZFS pool with the desired settings:
 
 a. Get the PARTUUIDs of the disks you want to use for the ZFS pool:
-
 ```bash
 blkid
 ```
 
 b. Create a ZFS pool with the desired PARTUUIDs:
-
 ```bash
 zpool create zfs_storage PARTUUID=disk1 PARTUUID=disk2 PARTUUID=disk3 PARTUUID=disk4
 ```
@@ -85,30 +82,25 @@ zpool create zfs_storage PARTUUID=disk1 PARTUUID=disk2 PARTUUID=disk3 PARTUUID=d
 Replace `disk1`, `disk2`, `disk3`, and `disk4` with the appropriate PARTUUIDs.
 
 6. Create a ZFS dataset with custom settings for blockchain nodes:
-
 ```bash
 zfs create -o mountpoint=/mnt/zfs_storage -o sync=standard -o redundant_metadata=most -o atime=off -o logbias=latency -o recordsize=4k zfs_storage/main
 ```
 
 7. Check the status of the ZFS pool and dataset:
-
 ```bash
 zpool status zfs_storage
 zfs list
 ```
 
 8. Mount the ZFS dataset:
-
 ```bash
 zfs mount zfs_storage/main
 ```
 
 9. Verify the dataset is mounted correctly:
-
 ```bash
 df -h
 ```
-
 
 10. Install Proxmox on top of the Debian base system (optional):
 
@@ -131,3 +123,34 @@ b. Regularly monitor your node's performance and storage usage to ensure smooth 
 and make any necessary adjustments to the ZFS dataset properties as needed.
 
 With these steps completed, your server is now set up with a ZFS storage pool optimized for running blockchain nodes on top of the Debian base system, and optionally with Proxmox installed. Remember to adjust settings and configurations as needed to suit your specific blockchain platform and use case.
+
+
+## Networking
+Accept forward/output traffic into your dhcp CIDR block traffic into internal
+IP addresses.
+
+### Private networks
+  - "0.0.0.0/8"
+  - "10.0.0.0/8"
+  - "100.64.0.0/10"
+  - "127.16.0.0/12"
+  - "169.254.0.0/16"
+  - "172.16.0.0/12"
+  - "192.0.0.0/24"
+  - "192.0.2.0/24"
+  - "192.88.99.0/24"
+  - "192.168.0.0/16"
+  - "198.18.0.0/15"
+  - "198.51.100.0/24"
+  - "203.0.113.0/24"
+  - "224.0.0.0/4"
+  - "240.0.0.0/4"
+  - "255.255.255.255/32"
+
+### Links
+https://github.com/ledgerwatch/erigon/issues/6034 most informative topic regarding
+disable ipv6: https://github.com/ledgerwatch/erigon/issues/6117
+- echo 1 > /sys/module/ipv6/parameters/disable
+- https://www.golinuxcloud.com/linux-check-ipv6-enabled/
+- https://community.hetzner.com/tutorials/block-outgoing-traffic-to-private-networks
+![FORWRD-chain solution](lxc-port-forwarding-rules.png)
