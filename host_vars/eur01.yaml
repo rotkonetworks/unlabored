@@ -19,10 +19,10 @@ lxc_nodes:
       hostname: "{{ hostvars['dot01']['host_name'] }}"
       ostemplate: 'local:vztmpl/{{ default_container_template }}'
       netif: "{{ hostvars['dot01']['netif'] }}"
-      cores: 2
+      cores: 4
       memory: 16384
       swap: 8192
-      password: N0tS4l4k4l4!
+      password: "{{ default_password }}"
       disk: "{{ default_storage }}:20"
       mounts: '{"mp0":"{{ default_storage }}:400,mp={{ hostvars["dot01"]["polkadot_base"] }}"}'
       onboot: True
@@ -51,10 +51,10 @@ lxc_nodes:
       hostname: "{{ hostvars['ksm01']['host_name'] }}"
       ostemplate: 'local:vztmpl/{{ default_container_template }}'
       netif: "{{ hostvars['ksm01']['netif'] }}"
-      cores: 2
+      cores: 4
       memory: 16384
       swap: 8192
-      password: N0tS4l4k4l4!
+      password: "{{ default_password }}"
       disk: {{ default_storage }}
       mounts: '{"mp0":"{{ default_storage }}:500,mp={{ hostvars["ksm01"]["polkadot_base"] }}"}'
       onboot: True

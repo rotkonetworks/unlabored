@@ -11,7 +11,7 @@ This script requires two arguments: the remote host account name and the path to
 It will clone the GitHub repository, set up dependencies in a virtual environment, create SSH shortcuts,
 and optionally set up the SSH Agent service for forwarding.
 
-### Example
+## Example
 For example, to install the development environment with a remote host account named "tommi" and
 an SSH private key located at "~/.ssh/id_rsa", use the following command:
 ```bash
@@ -30,3 +30,12 @@ This alias will allow you to quickly navigate to the correct directory and activ
 invoke sshconfig
 ```
 This will update your SSH configs to include any changes that have been made to the repository.
+
+## Documentation
+
+1. [Hardware Preparation](docs/hardware-setup.md) - A guide on how to prepare the hardware for the setup process.
+2. [Proxmox Maintenance](docs/proxmox-setup.md) - Instructions for managing and maintaining Proxmox servers and environments.
+3. [Networking](docs/networking.md) - Thinking networking and firewall solutions
+4. [Playbooks](docs/playbooks.md) - An overview of the Ansible playbooks used for various tasks and how to execute them.
+5. [Data Sync](docs/data-sync.md) - A tutorial on synchronizing data between servers using `rsync` and `screen` commands.
+6. [Hetzner setup - extra](docs/hetzner-setup.md) - Instructions for setting up hetzner robot servers.

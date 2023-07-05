@@ -1,0 +1,123 @@
+#!/bin/bash
+set -e
+
+trap 'echo "Error occurred at line $LINENO"' ERR
+
+log() {
+	echo "[$(date +'%Y-%m-%dT%H:%M:%S%z')]: $*" >&2
+}
+
+command -v python3 >/dev/null 2>&1 || { log "Python3 is required but it's not installed. Aborting."; exit 1; }
+
+ssh_folder_path="$HOME/.ssh/unlabored"
+account_name=""
+ssh_key_path=""
+
+usage() {
+	cat <<EOF
+Usage: $0 <command> -a <account_name> -k <ssh_key_path>
+
+Commands:
+install       Run the installation.
+setup         Run the setup.
+ssh-agent     Set up the SSH Agent service.
+all           Run everything (install, setup, ssh-agent).
+
+Arguments:
+-a <account_name> The username for the remote host.
+-k <ssh_key_path> The path to the SSH private key to use for authentication.
+
+Example: $0 install -a root -k ~/.ssh/ansible_ssh_key
+
+Reqs: apt install python3 python3-venv python3-pip
+This script sets up a development environment setting up proxmox using ansible.
+EOF
+exit 1
+}
+
+while getopts "a:k:" option; do
+  case "${option}" in
+    a) account_name="${OPTARG}";;
+    k) ssh_key_path="${OPTARG}";;
+    *) usage ;;
+  esac
+done
+
+shift $((OPTIND -1))
+
+if [ -z "${account_name}" ] || [ -z "${ssh_key_path}" ]; then
+  usage
+fi
+
+command=$1
+
+case "${command}" in
+	install) install "$@";;
+	setup) setup "$@";;
+	ssh-agent) ssh_agent "$@";;
+	all) all "$@";;
+	*) usage ;;
+esac
+
+install() {
+	python3 -m venv venv
+	source ./venv/bin/activate
+	pip install -r ./requirements.txt
+	pip install -r ./requirements-dev.txt
+	ansible-galaxy install -r requirements.yaml -p ./roles/
+	pip install git+https://github.com/hitchhooker/AISTool
+}
+
+setup() {
+	if [[ ! -f "$ssh_key_path" ]]; then
+		log "The SSH key file does not exist."
+		usage
+		exit 1
+	fi
+
+	mkdir -p "$ssh_folder_path"
+	cp "$ssh_key_path" "$ssh_folder_path/ansible_ssh_key"
+
+	export SSH_CONFIG_TARGET="$ssh_folder_path/config"
+	export SSH_CONFIG_USER="$account_name"
+	export SSH_CONFIG_IDENTITY="$ssh_folder_path/ansible_ssh_key"
+	if ! grep -qxF "Include $ssh_folder_path/config" ~/.ssh/config; then 
+		echo "Include $ssh_folder_path/config" >>~/.ssh/config; 
+	fi
+	inv sshconfig
+}
+
+ssh_agent() {
+	log "Setting up SSH Agent service for forwarding..."
+	local shellrc_files=("$HOME/.bashrc" "$HOME/.zshrc")
+
+	for shellrc in "${shellrc_files[@]}"; do
+		if [[ -w "$shellrc" ]] && ! grep -qF 'SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"' "$shellrc"; then
+			echo 'export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"' >>"$shellrc"
+			log "Exported SSH_AUTH_SOCK to $shellrc. Please source this file or restart your shell session for the changes to take effect."
+		elif [[ ! -f "$shellrc" ]]; then
+			log "$shellrc does not exist. Skipping..."
+		else
+			log "SSH_AUTH_SOCK is already exported in $shellrc or the file is not writable. Skipping..."
+		fi
+	done
+
+	cat <<EOF >~/.config/systemd/user/ssh-agent.service
+[Unit]
+Description=SSH authentication agent
+[Service]
+ExecStart=/usr/bin/ssh-agent -a %t/ssh-agent.socket -D
+Type=simple
+[Install]
+WantedBy=default.target
+EOF
+
+	systemctl --user daemon-reload
+	systemctl --user enable --now ssh-agent
+}
+
+all() {
+	install "$@"
+	setup "$@"
+	ssh_agent "$@"
+}
