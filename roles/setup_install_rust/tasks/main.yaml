@@ -1,0 +1,26 @@
+# Standards: 0.2
+---
+- name: Install golang {{ default_golang_version }}
+  ansible.builtin.unarchive:
+    src: "{{ default_golang_dl_base_url }}{{ default_golang_version }}.{{ default_golang_os }}-{{ default_golang_arch }}.tar.gz"
+    dest: "{{ default_golang_base_path }}"
+    remote_src: True
+    # creates: "{{ default_golang_GOROOT }}"
+  when:
+    - ansible_local['noderole']['node']['go_version'] != default_golang_version
+  notify:
+    - Add Golang version
+
+- name: Export golang environment variables
+  ansible.builtin.lineinfile:
+    path: "/etc/profile"
+    line: "{{ item }}"
+    owner: root
+    group: root
+    mode: '0644'
+    state: present
+  with_items:
+    - "export GOROOT={{ default_golang_GOROOT }}"
+    - "export GOPATH=$HOME/go"
+    - "export PATH=$GOPATH/bin:$GOROOT/bin:$PATH"
+...
