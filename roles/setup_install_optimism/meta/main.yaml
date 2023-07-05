@@ -8,6 +8,7 @@ galaxy_info:
     - name: Debian
       versions:
         - bullseye
+        - bookworm
 dependencies:
   - role: setup_install_nodejs
   - role: setup_install_golang

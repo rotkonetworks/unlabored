@@ -9,5 +9,6 @@ galaxy_info:
       versions:
         - bullseye
         - bookworm
+        - bookworm
 dependencies:
 ...

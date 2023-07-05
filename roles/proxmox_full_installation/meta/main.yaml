@@ -8,6 +8,7 @@ galaxy_info:
     - name: Debian
       versions:
         - bullseye
+        - bookworm
 dependencies:
   - role: proxmox_debian_gpgkeys
   - role: proxmox_debian_repository
