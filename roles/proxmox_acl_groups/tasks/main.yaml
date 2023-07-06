@@ -1,15 +1,31 @@
 ---
-- name: Acquire current groups
-  ansible.builtin.command:
-    argv:
-      - pveum
-      - group
-      - list
-  register: pveum_group_list
+- name: Check if node is part of a cluster
+  ansible.builtin.stat:
+    path: /etc/pve/corosync.conf
+  register: cluster_config
 
-- name: Register Proxmox Groups
+- name: Set is_cluster fact
   ansible.builtin.set_fact:
-    current_groups: "{{ pveum_group_list.stdout | pveum_groups }}"
+    is_cluster: "{{ cluster_config.stat.exists }}"
+
+- name: Acquire current groups
+  block:
+  - ansible.builtin.shell:
+      cmd: "pveum group list | awk '{print $2}' | grep -wo '[a-zA-Z0-9_-]*' || true"
+    register: pveum_group_list
+    changed_when: false
+
+  - ansible.builtin.set_fact:
+      current_groups: "{{ pveum_group_list.stdout_lines }}"
+    when: pveum_group_list.stdout != ""
+
+  - ansible.builtin.set_fact:
+      current_groups: []
+    when: pveum_group_list.stdout == ""
+
+- name: Debug current groups
+  ansible.builtin.debug:
+    var: current_groups
 
 - name: Create proxmox admin group for ansible
   ansible.builtin.command:
@@ -20,8 +36,7 @@
       - "{{ item.name }}"
       - -comment
       - '"{{ item.comment }}"'
-  when:
-    - item.name not in current_groups
+  when: item.name not in current_groups
   with_items: "{{ proxmox_admin_groups }}"
-
+  run_once: "{{ is_cluster }}"
 ...
