@@ -13,6 +13,7 @@ kernel_modules:
 default_need_iptables_port_forwarding: False
 default_gw_device: "enp4s0"
 default_storage: "tank"
+default_resource_pool: "bkk01_resource_pool"
 
 lxc_nodes:
   - host: "dot01"
