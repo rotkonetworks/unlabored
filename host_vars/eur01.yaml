@@ -8,7 +8,7 @@ kernel_modules:
   - k10temp
   - zfs
 
-default_need_port_forwarding: True
+default_need_iptables_port_forwarding: True
 default_gw_device: "enp7s0"
 default_storage: "zfs_storage"
 

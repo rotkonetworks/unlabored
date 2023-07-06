@@ -18,7 +18,8 @@ min_uid: 999
 max_uid: 60000
 
 default_locale: "en_US.UTF-8"
-default_need_port_forwarding: False
+default_need_iptables_port_forwarding: False
+default_hetzner_firewall: False
 default_admin_group_name: "bofh"
 default_admin_group_id: "500"
 default_shell: "/bin/bash"
@@ -31,7 +32,6 @@ default_gw_device: "eth0"
 default_host_ip: "{{ container_ip | default(ansible_host) }}"
 default_netif: '{"net0":"name=eth0,gw={{ default_nat_network_forward_cidr.split("/")[0] }},ip={{ container_ip }}/24,bridge={{ default_nat_device }}"}'
 default_max_open_files_in_service: 16368
-default_container_level_firewall: True
 
 default_container_template: "debian-12-standard_12.0-1_amd64.tar.zst"
 default_users:
