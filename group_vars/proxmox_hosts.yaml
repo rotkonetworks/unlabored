@@ -3,7 +3,6 @@ host_ports:
   - { protocol: "tcp", port: 22 }          # SSH
   - { protocol: "tcp", port: 443 }         # SSL
   - { protocol: "tcp", port: 5404 }        # Proxmox pveproxy / SPICE
-  - { protocol: "tcp", port: 5404 }        # Proxmox cluster ports
   - { protocol: "tcp", port: 5900:5999 }   # PROXMOX VNC
   - { protocol: "tcp", port: 8006 }        # Proxmox web panel
 

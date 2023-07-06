@@ -4,6 +4,7 @@
   hosts: proxmox_hosts
   gather_facts: True
   roles:
+    - setup_networking
     - proxmox_setup_nodes
 
 - name: Default tools and configurations
