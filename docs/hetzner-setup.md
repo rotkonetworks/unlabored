@@ -76,25 +76,25 @@ blkid
 
 b. Create a ZFS pool with the desired PARTUUIDs:
 ```bash
-zpool create zfs_storage PARTUUID=disk1 PARTUUID=disk2 PARTUUID=disk3 PARTUUID=disk4
+zpool create tank PARTUUID=disk1 PARTUUID=disk2 PARTUUID=disk3 PARTUUID=disk4
 ```
 
 Replace `disk1`, `disk2`, `disk3`, and `disk4` with the appropriate PARTUUIDs.
 
 6. Create a ZFS dataset with custom settings for blockchain nodes:
 ```bash
-zfs create -o mountpoint=/mnt/zfs_storage -o sync=standard -o redundant_metadata=most -o atime=off -o logbias=latency -o recordsize=4k zfs_storage/main
+zfs create -o mountpoint=/mnt/tank -o sync=standard -o redundant_metadata=most -o atime=off -o logbias=latency -o recordsize=4k tank/main
 ```
 
 7. Check the status of the ZFS pool and dataset:
 ```bash
-zpool status zfs_storage
+zpool status tank
 zfs list
 ```
 
 8. Mount the ZFS dataset:
 ```bash
-zfs mount zfs_storage/main
+zfs mount tank/main
 ```
 
 9. Verify the dataset is mounted correctly:
