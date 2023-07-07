@@ -75,7 +75,7 @@
     - setup_install_optimism
 
 - name: Install Polkadot services
-  hosts: polkadot 
+  hosts: polkadot
   gather_facts: True
   roles:
     - setup_install_polkadot

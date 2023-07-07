@@ -12,16 +12,22 @@
 - name: Acquire current users on primary node
   delegate_to: "{{ primary_node }}"
   block:
-    - ansible.builtin.shell:
-        cmd: "pveum user list | awk '{print $2}' | grep -wo '[a-zA-Z0-9_-]*@pve' || true"
+    - name: Get current users
+      ansible.builtin.shell:
+        cmd: "set -o pipefail && pveum user list | awk '{print $2}' | grep -wo '[a-zA-Z0-9_-]*@pve' || true"
       register: pveum_user_list
       changed_when: false
+      failed_when: false
+      args:
+        executable: /bin/bash
 
-    - ansible.builtin.set_fact:
+    - name: Set current users fact if users exist
+      ansible.builtin.set_fact:
         current_users: "{{ pveum_user_list.stdout_lines }}"
       when: pveum_user_list.stdout != ""
 
-    - ansible.builtin.set_fact:
+    - name: Set current users fact empty if no users exist
+      ansible.builtin.set_fact:
         current_users: []
       when: pveum_user_list.stdout == ""
 

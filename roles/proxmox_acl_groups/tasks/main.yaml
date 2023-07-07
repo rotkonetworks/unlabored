@@ -11,18 +11,24 @@
 
 - name: Acquire current groups
   block:
-  - ansible.builtin.shell:
-      cmd: "pveum group list | awk '{print $2}' | grep -wo '[a-zA-Z0-9_-]*' || true"
-    register: pveum_group_list
-    changed_when: false
+    - name: Get current groups
+      ansible.builtin.shell:
+        cmd: "set -o pipefail && pveum acl list | awk '{print $2}' | grep -wo '[a-zA-Z0-9_-]*'"
+      register: pveum_acl_list
+      changed_when: false
+      failed_when: false
+      args:
+        executable: /bin/bash
 
-  - ansible.builtin.set_fact:
-      current_groups: "{{ pveum_group_list.stdout_lines }}"
-    when: pveum_group_list.stdout != ""
+    - name: Set current groups fact
+      ansible.builtin.set_fact:
+        current_groups: "{{ pveum_group_list.stdout_lines }}"
+      when: pveum_group_list.stdout != ""
 
-  - ansible.builtin.set_fact:
-      current_groups: []
-    when: pveum_group_list.stdout == ""
+    - name: Set current groups fact
+      ansible.builtin.set_fact:
+        current_groups: []
+      when: pveum_group_list.stdout == ""
 
 - name: Create proxmox admin group for ansible
   ansible.builtin.command:
