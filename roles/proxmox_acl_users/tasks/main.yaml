@@ -43,6 +43,6 @@
       - '"{{ item.comment }}"'
       - -group
       - "{{ item.groups }}"
-  when: item.name not in current_users and item.name != ""
+  when: item.name not in current_users and item.name != "" and (inventory_hostname == primary_node)
   with_items: "{{ proxmox_admin_accounts }}"
 ...

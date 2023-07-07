@@ -1,12 +1,26 @@
 # Standards: 0.2
 ---
-- name: Install Proxmox OSS GPG Key
+- name: Install Proxmox OSS GPG Key (Bullseye)
   ansible.builtin.apt_key:
     url: http://download.proxmox.com/debian/proxmox-release-bullseye.gpg
     state: present
+  when: ansible_facts['distribution_release'] == "bullseye"
 
-- name: Install Proxmox Enterprise GPG Key
+- name: Install Proxmox Enterprise GPG Key (Bullseye)
   ansible.builtin.apt_key:
     url: https://enterprise.proxmox.com/debian/proxmox-release-bullseye.gpg
     state: present
-...
+  when: ansible_facts['distribution_release'] == "bullseye"
+
+- name: Install Proxmox OSS GPG Key (Bookworm)
+  ansible.builtin.apt_key:
+    url: http://download.proxmox.com/debian/proxmox-release-bookworm.gpg
+    state: present
+  when: ansible_facts['distribution_release'] == "bookworm"
+
+- name: Install Proxmox Enterprise GPG Key (Bookworm)
+  ansible.builtin.apt_key:
+    url: https://enterprise.proxmox.com/debian/proxmox-release-bookworm.gpg
+    state: present
+  when: ansible_facts['distribution_release'] == "bookworm"
+  ...
