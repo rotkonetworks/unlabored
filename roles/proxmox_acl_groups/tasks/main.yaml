@@ -4,8 +4,9 @@
     path: /etc/pve/corosync.conf
   register: cluster_config
 
-- name: Set is_cluster fact
+- name: Set primary node and is_cluster fact
   ansible.builtin.set_fact:
+    primary_node: "{{ cluster_config.stat.exists | ternary(groups['all'][0], inventory_hostname) }}"
     is_cluster: "{{ cluster_config.stat.exists }}"
 
 - name: Acquire current groups
@@ -23,10 +24,6 @@
       current_groups: []
     when: pveum_group_list.stdout == ""
 
-- name: Debug current groups
-  ansible.builtin.debug:
-    var: current_groups
-
 - name: Create proxmox admin group for ansible
   ansible.builtin.command:
     argv:
@@ -36,7 +33,7 @@
       - "{{ item.name }}"
       - -comment
       - '"{{ item.comment }}"'
-  when: item.name not in current_groups
+  when: (item.name not in current_groups) and (inventory_hostname == primary_node)
+  delegate_to: "{{ primary_node }}"
   with_items: "{{ proxmox_admin_groups }}"
-  run_once: "{{ is_cluster }}"
 ...

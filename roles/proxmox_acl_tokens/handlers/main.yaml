@@ -4,6 +4,7 @@
     generated_admin_token: "{{ item.stdout | pveum_generated_token }}"
   with_items: "{{ generated_tokens.results }}"
   when:
+    - generated_tokens is defined
     - generated_tokens.changed
     - item.changed
 
@@ -19,6 +20,7 @@
     owner: root
     group: root
     mode: '0644'
+  when: generated_admin_token is defined
 
 - name: Refresh Facts
   ansible.builtin.setup:

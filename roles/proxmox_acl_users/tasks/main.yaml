@@ -1,17 +1,38 @@
 ---
-- name: Acquire current Users
-  ansible.builtin.command:
-    argv:
-      - pveum
-      - user
-      - list
-  register: pveum_user_list
+- name: Check if node is part of a cluster
+  ansible.builtin.stat:
+    path: /etc/pve/corosync.conf
+  register: cluster_config
 
-- name: Register Proxmox Users
+- name: Set primary node and is_cluster fact
   ansible.builtin.set_fact:
-    proxmox_current_users: "{{ pveum_user_list.stdout | pveum_users }}"
+    primary_node: "{{ cluster_config.stat.exists | ternary(groups['all'][0], inventory_hostname) }}"
+    is_cluster: "{{ cluster_config.stat.exists }}"
 
-- name: Create proxmox admin account for ansible
+- name: Acquire current users on primary node
+  delegate_to: "{{ primary_node }}"
+  block:
+    - ansible.builtin.shell:
+        cmd: "pveum user list | awk '{print $2}' | grep -wo '[a-zA-Z0-9_-]*@pve' || true"
+      register: pveum_user_list
+      changed_when: false
+
+    - ansible.builtin.set_fact:
+        current_users: "{{ pveum_user_list.stdout_lines }}"
+      when: pveum_user_list.stdout != ""
+
+    - ansible.builtin.set_fact:
+        current_users: []
+      when: pveum_user_list.stdout == ""
+
+- name: Check if user needs to be added or modified
+  delegate_to: "{{ primary_node }}"
+  ansible.builtin.set_fact:
+    user_action: "{{ item.name in current_users | ternary('modify', 'add') }}"
+  with_items: "{{ proxmox_admin_accounts }}"
+
+- name: Create proxmox admin account for ansible on primary node
+  delegate_to: "{{ primary_node }}"
   ansible.builtin.command:
     argv:
       - pveum
@@ -21,9 +42,7 @@
       - -comment
       - '"{{ item.comment }}"'
       - -group
-      - '{{ item.groups }}'
-  when:
-    - item.name not in proxmox_current_users
+      - "{{ item.groups }}"
+  when: item.name not in current_users and item.name != ""
   with_items: "{{ proxmox_admin_accounts }}"
-
 ...
