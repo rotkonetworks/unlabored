@@ -40,7 +40,7 @@ install() {
 	source ./venv/bin/activate
 	pip install -r ./requirements.txt
 	pip install -r ./requirements-dev.txt
-	ansible-galaxy install -r requirements.yaml -p ./roles/
+  ansible-galaxy role install -r requirements.yaml -p ./ext_roles
 	pip install git+https://github.com/hitchhooker/AISTool
 }
 

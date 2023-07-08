@@ -18,9 +18,10 @@ skip_list:
   - schema[meta]
 exclude_paths:
   - .later.yaml
+  - ./ext_roles/
 offline: False
 kinds:
   - playbook: "playbooks/*.{yml,yaml}"
-  - tasks: "playbooks/roles/*/tasks/*.{yml,yaml}"
-  - meta: "playbooks/roles/*/meta/main.{yml,yaml}"
+  - tasks: "roles/*/tasks/*.{yml,yaml}"
+  - meta: "roles/*/meta/main.{yml,yaml}"
 ...

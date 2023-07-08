@@ -10,7 +10,8 @@ kernel_modules:
   - k10temp
   - zfs
 
-default_need_iptables_port_forwarding: False
+default_router: "routeros"
+default_need_iptables_port_forwarding: True
 default_gw_device: "enp4s0"
 default_storage: "tank"
 default_resource_pool: "bkk02_resource_pool"
@@ -18,7 +19,7 @@ default_resource_pool: "bkk02_resource_pool"
 lxc_nodes:
   - host: "dot02"
     proxmox_config:
-      vmid: "102"
+      vmid: "112"
       hostname: "{{ hostvars['dot02']['host_name'] }}"
       ostemplate: 'local:vztmpl/{{ default_container_template }}'
       netif: "{{ hostvars['dot02']['netif'] }}"
@@ -37,7 +38,7 @@ lxc_nodes:
         - nesting=1
   - host: "ksm02"
     proxmox_config:
-      vmid: "202"
+      vmid: "122"
       hostname: "{{ hostvars['ksm02']['host_name'] }}"
       ostemplate: 'local:vztmpl/{{ default_container_template }}'
       netif: "{{ hostvars['ksm02']['netif'] }}"
