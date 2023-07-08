@@ -9,5 +9,4 @@ python-language-server[all]
 black
 invoke
 wheel
---use-pep517
 -r requirements.txt

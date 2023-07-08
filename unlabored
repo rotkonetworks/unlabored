@@ -15,61 +15,40 @@ ssh_key_path=""
 
 usage() {
 	cat <<EOF
-Usage: $0 <command> -a <account_name> -k <ssh_key_path>
+Usage: $0 <command> [-a <account_name> -k <ssh_key_path>]
 
 Commands:
 install       Run the installation.
-setup         Run the setup.
+setup-ssh     Set up SSH.
 ssh-agent     Set up the SSH Agent service.
-all           Run everything (install, setup, ssh-agent).
+all           Run everything (install, setup-ssh, ssh-agent).
 
-Arguments:
+Optional arguments:
 -a <account_name> The username for the remote host.
 -k <ssh_key_path> The path to the SSH private key to use for authentication.
 
 Example: $0 install -a root -k ~/.ssh/ansible_ssh_key
 
 Reqs: apt install python3 python3-venv python3-pip
-This script sets up a development environment setting up proxmox using ansible.
+This script sets up a development environment for setting up proxmox using ansible.
 EOF
 exit 1
 }
 
-while getopts "a:k:" option; do
-  case "${option}" in
-    a) account_name="${OPTARG}";;
-    k) ssh_key_path="${OPTARG}";;
-    *) usage ;;
-  esac
-done
-
-shift $((OPTIND -1))
-
-if [ -z "${account_name}" ] || [ -z "${ssh_key_path}" ]; then
-  usage
-fi
-
-command=$1
-
-case "${command}" in
-	install) install "$@";;
-	setup) setup "$@";;
-	ssh-agent) ssh_agent "$@";;
-	all) all "$@";;
-	*) usage ;;
-esac
-
 install() {
 	python3 -m venv venv
 	source ./venv/bin/activate
-  python -m pip install --upgrade pip
 	pip install -r ./requirements.txt
 	pip install -r ./requirements-dev.txt
-	ansible-galaxy install -r requirements.yaml -p ./collections/
+	ansible-galaxy install -r requirements.yaml -p ./roles/
 	pip install git+https://github.com/hitchhooker/AISTool
 }
 
-setup() {
+setup_ssh() {
+	if [ -z "${account_name}" ] || [ -z "${ssh_key_path}" ]; then
+  		usage
+	fi
+
 	if [[ ! -f "$ssh_key_path" ]]; then
 		log "The SSH key file does not exist."
 		usage
@@ -117,8 +96,26 @@ EOF
 	systemctl --user enable --now ssh-agent
 }
 
-all() {
-	install "$@"
-	setup "$@"
-	ssh_agent "$@"
-}
+if [ $# -eq 0 ]; then
+  usage
+  exit 1
+fi
+
+command=$1
+shift
+
+while getopts "a:k:" option; do
+  case "${option}" in
+    a) account_name="${OPTARG}";;
+    k) ssh_key_path="${OPTARG}";;
+    *) usage ;;
+  esac
+done
+
+case "${command}" in
+	install) install;;
+	setup-ssh) setup_ssh;;
+	ssh-agent) ssh_agent;;
+	all) install; setup_ssh; ssh_agent;;
+	*) usage ;;
+esac
