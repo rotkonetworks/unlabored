@@ -39,7 +39,7 @@
       - "{{ proxmox_default_admin_token_comment }}"
   with_items: "{{ proxmox_admin_accounts }}"
   when:
-    - proxmox_admin_token not in item.stdout
+    - proxmox_admin_token not in user_token_list.results | map(attribute='stdout') | list
   register: generated_tokens
   notify:
     - Extract Generated Proxmox Admin Token
