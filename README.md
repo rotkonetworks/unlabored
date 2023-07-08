@@ -10,12 +10,19 @@ git clone repo && cd repo
 ```
 The `<command>` can be:
 
-- ```install```: It sets up a Python virtual environment, installs necessary Python packages from `requirements.txt` and `requirements-dev.txt`, Ansible roles from `requirements.yaml`, and a tool from a specific GitHub repository.
-- ```setup```: It validates the existence of the SSH key, creates a directory for SSH configurations, exports necessary environment variables and invokes a command to update the SSH configuration.
-- ```ssh-agent```: It exports a variable for the SSH agent and sets up the SSH agent service.
-- ```all```: It performs all the above steps sequentially (install, setup, ssh-agent).
+- ```install```: It sets up a Python virtual environment, installs necessary
+  Python packages from `requirements.txt` and `requirements-dev.txt`, Ansible
+  roles from `requirements.yaml`, and a tool from a specific GitHub repository.
+- ```setup-ssh```: It validates the existence of the SSH key, creates a
+  directory for SSH configurations, exports necessary environment variables and
+  invokes a command to update the SSH configuration.
+- ```ssh-agent```: It exports a variable for the SSH agent and sets up the SSH
+  agent service.
+- ```all```: It performs all the above steps sequentially (install, setup,
+  ssh-agent).
 
-Please replace `<account_name>` and `<ssh_key_path>` with your username and the path to your SSH private key, respectively.
+Please replace `<account_name>` and `<ssh_key_path>` with your username and the
+path to your SSH private key, respectively.
 
 For instance:
 ```bash
@@ -24,6 +31,7 @@ For instance:
 
 
 ## Shortcut and Virtual Environment
+
 To set up a shortcut and virtual environment, add the following alias to your bashrc or zshrc:
 ```bash
 alias unlabored='cd ~/src/unlabored && source ../venv/bin/activate'
