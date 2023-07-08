@@ -18,7 +18,7 @@ default_resource_pool: "bkk02_resource_pool"
 lxc_nodes:
   - host: "dot02"
     proxmox_config:
-      vmid: "112"
+      vmid: "102"
       hostname: "{{ hostvars['dot02']['host_name'] }}"
       ostemplate: 'local:vztmpl/{{ default_container_template }}'
       netif: "{{ hostvars['dot02']['netif'] }}"
@@ -37,7 +37,7 @@ lxc_nodes:
         - nesting=1
   - host: "ksm02"
     proxmox_config:
-      vmid: "122"
+      vmid: "202"
       hostname: "{{ hostvars['ksm02']['host_name'] }}"
       ostemplate: 'local:vztmpl/{{ default_container_template }}'
       netif: "{{ hostvars['ksm02']['netif'] }}"

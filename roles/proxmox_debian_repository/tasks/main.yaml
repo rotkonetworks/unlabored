@@ -1,20 +1,22 @@
 # Standards: 0.2
 ---
-- name: Add Proxmox no-subscription debian repository to the host
+- name: Add Proxmox no-subscription debian bullseye repository to the host
   ansible.builtin.copy:
-    src: pve-install-repo.list
+    src: "pve-install-repo-{{ ansible_facts['distribution_release'] }}.list"
     dest: /etc/apt/sources.list.d/pve-install-repo.list
     owner: root
     group: root
     mode: u+rw,g-wx,o-wx
+  when: ansible_facts['distribution_release'] in ["bullseye", "bookworm"]
 
-- name: Add Proxmox enterprise debian repository to the host
+- name: Add Proxmox enterprise debian bullseye repository to the host
   ansible.builtin.copy:
-    src: pve-enterprise.list
+    src: "pve-enterprise-{{ ansible_facts['distribution_release'] }}.list"
     dest: /etc/apt/sources.list.d/pve-enterprise.list
     owner: root
     group: root
     mode: u+rw,g-wx,o-wx
+  when: ansible_facts['distribution_release'] in ["bullseye", "bookworm"]
 
 - name: Update APT cache after proxmox repository
   ansible.builtin.apt:

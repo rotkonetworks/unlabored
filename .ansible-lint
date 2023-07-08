@@ -1,0 +1,26 @@
+---
+warn_list:
+  - no-tabs
+  - var-spacing
+  - no-handler
+skip_list:
+  - '503'
+  - args[module]
+  - name[template]
+  - no-tabs
+  - var-naming
+  - no-changed-when
+  - literal-compare
+  - command-instead-of-shell
+  - command-instead-of-module
+  - yaml[truthy]
+  - yaml[line-length]
+  - schema[meta]
+exclude_paths:
+  - .later.yaml
+offline: False
+kinds:
+  - playbook: "playbooks/*.{yml,yaml}"
+  - tasks: "playbooks/roles/*/tasks/*.{yml,yaml}"
+  - meta: "playbooks/roles/*/meta/main.{yml,yaml}"
+...
