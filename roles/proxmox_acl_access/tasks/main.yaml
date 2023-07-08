@@ -21,10 +21,6 @@
   ansible.builtin.set_fact:
     current_group_acl: "{{ pveum_acl_list.stdout | pveum_acl_group | default({}) }}"
 
-- name: Debug primary_node
-  ansible.builtin.debug:
-    var: primary_node
-
 - name: Debug current_group_acl
   ansible.builtin.debug:
     var: current_group_acl
@@ -43,10 +39,6 @@
   with_items: "{{ proxmox_acl_list }}"
   when:
     - "'{{ item.group }}{{ item.path }}{{ item.roleid }}' not in current_group_acl | map('join', '') | list"
-
-- name: Debug primary_node
-  ansible.builtin.debug:
-    var: primary_node
 
 - name: Debug current_group_acl
   ansible.builtin.debug:
