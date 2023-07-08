@@ -3,20 +3,25 @@
 effortless proxmox-ansible infra for blockchains
 
 ## Installation:
-There is installation script at https://unlabored.rotko.net
 ```bash
-curl -s https://api.github.com/gists/<TODO> | jq -r '.files | first(.[]).content' > install-unlabored && chmod +x install-unlabored && ./install-unlabored
+sudo apt install python3 python3-venv python3-pip
+git clone repo && cd repo
+./unlabored <command> -a <account_name> -k <ssh_key_path>
 ```
-This script requires two arguments: the remote host account name and the path to the SSH private key.
-It will clone the GitHub repository, set up dependencies in a virtual environment, create SSH shortcuts,
-and optionally set up the SSH Agent service for forwarding.
+The `<command>` can be:
 
-## Example
-For example, to install the development environment with a remote host account named "tommi" and
-an SSH private key located at "~/.ssh/id_rsa", use the following command:
+- ```install```: It sets up a Python virtual environment, installs necessary Python packages from `requirements.txt` and `requirements-dev.txt`, Ansible roles from `requirements.yaml`, and a tool from a specific GitHub repository.
+- ```setup```: It validates the existence of the SSH key, creates a directory for SSH configurations, exports necessary environment variables and invokes a command to update the SSH configuration.
+- ```ssh-agent```: It exports a variable for the SSH agent and sets up the SSH agent service.
+- ```all```: It performs all the above steps sequentially (install, setup, ssh-agent).
+
+Please replace `<account_name>` and `<ssh_key_path>` with your username and the path to your SSH private key, respectively.
+
+For instance:
 ```bash
-./install-unlabored tommi ~/.ssh/id_rsa
+./unlabored install -a root -k ~/.ssh/ansible_ssh_key
 ```
+
 
 ## Shortcut and Virtual Environment
 To set up a shortcut and virtual environment, add the following alias to your bashrc or zshrc:
@@ -30,6 +35,13 @@ This alias will allow you to quickly navigate to the correct directory and activ
 invoke sshconfig
 ```
 This will update your SSH configs to include any changes that have been made to the repository.
+
+## Linting
+```bash
+inv check
+inv ansiblelater
+inv ansiblelint
+```
 
 ## Documentation
 
