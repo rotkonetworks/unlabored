@@ -1,4 +1,13 @@
 ---
+- name: Extract Generated Proxmox Admin Token
+  ansible.builtin.set_fact:
+    generated_admin_token: "{{ item.stdout | pveum_generated_token }}"
+  with_items: "{{ generated_tokens.results }}"
+  when:
+    - generated_tokens.changed
+    - item.changed
+  listen: Extract Generated Proxmox Admin Token
+
 - name: Save Proxmox Admin Token
   community.general.ini_file:
     create: True
@@ -6,7 +15,7 @@
     option: "token"
     section: "api"
     state: present
-    value: "{{ token_id | vault(default_passphrase) | regex_replace('\n', '\n   ') }}"
+    value: "{{ generated_admin_token | vault(default_passphrase) | regex_replace('\n', '\n   ') }}"
     path: "{{ proxmox_token_file }}"
     owner: root
     group: root

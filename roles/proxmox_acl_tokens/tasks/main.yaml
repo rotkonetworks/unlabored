@@ -6,9 +6,9 @@
 
 - name: Generate token identifier for each host
   ansible.builtin.set_fact:
-    token_id: "{{ proxmox_default_admin_token }}-{{ inventory_hostname }}"
+    proxmox_admin_token: "{{ proxmox_default_admin_token }}-{{ inventory_hostname }}"
 
-- name: Attempt to list existing authentication tokens
+- name: Acquire existing tokens
   ansible.builtin.command:
     argv:
       - pveum
@@ -17,25 +17,32 @@
       - list
       - "{{ item.name }}"
   with_items: "{{ proxmox_admin_accounts }}"
-  ignore_errors: True
-  register: existing_tokens
+  register: user_token_list
 
-- name: Attempt to create authentication tokens if they don't exist
+- name: Store existing tokens
+  ansible.builtin.set_fact:
+    user_tokens: "{{ user_tokens | default({}) | combine({item.cmd[-1]: item.stdout | pveum_user_tokens}) }}"
+  with_items: "{{ user_token_list.results }}"
+
+- name: Create authentication tokens
   ansible.builtin.command:
     argv:
       - pveum
       - user
       - token
       - add
-      - "{{ item.item.name }}"
-      - "{{ token_id }}"
+      - "{{ item.name }}"
+      - "{{ proxmox_admin_token }}"
       - -privsep
       - "0"
       - -comment
       - "{{ proxmox_default_admin_token_comment }}"
-  with_items: "{{ existing_tokens.results }}"
-  when: token_id not in item.stdout
-  notify: 
+  with_items: "{{ proxmox_admin_accounts }}"
+  when:
+    - proxmox_admin_token not in item.stdout
+  register: generated_tokens
+  notify:
+    - Extract Generated Proxmox Admin Token
     - Save Proxmox Admin Token
     - Refresh Facts
 ...
