@@ -24,6 +24,11 @@
     user_tokens: "{{ user_tokens | default({}) | combine({item.cmd[-1]: item.stdout | pveum_user_tokens}) }}"
   with_items: "{{ user_token_list.results }}"
 
+- name: Extract tokenids
+  ansible.builtin.set_fact:
+    tokenids: "{{ item.stdout | regex_findall('^\\│ (admin_token-bkk\\d+) │.*$', multiline=True) }}"
+  with_items: "{{ user_token_list.results }}"
+
 - name: Create authentication tokens
   ansible.builtin.command:
     argv:
@@ -39,7 +44,7 @@
       - "{{ proxmox_default_admin_token_comment }}"
   with_items: "{{ proxmox_admin_accounts }}"
   when:
-    - proxmox_admin_token not in user_token_list.results | map(attribute='stdout') | list
+    - proxmox_admin_token not in tokenids
   register: generated_tokens
   notify:
     - Extract Generated Proxmox Admin Token
