@@ -1,20 +1,4 @@
 ---
-- name: Extract Proxmox Admin Token
-  ansible.builtin.command:
-    argv:
-      - pveum
-      - user
-      - token
-      - list
-      - "{{ item.name }}"
-  with_items: "{{ proxmox_admin_accounts }}"
-  register: existing_token
-  when: existing_token.rc is defined and existing_token.rc == 255
-
-- name: Set Proxmox Admin Token
-  ansible.builtin.set_fact:
-    admin_token: "{{ (existing_token.rc == 0) | ternary(existing_token.stdout | pveum_existing_token, generated_admin_token) }}"
-
 - name: Save Proxmox Admin Token
   community.general.ini_file:
     create: True
@@ -22,13 +6,14 @@
     option: "token"
     section: "api"
     state: present
-    value: "{{ admin_token | vault(default_passphrase) | regex_replace('\n', '\n   ') }}"
+    value: "{{ token_id | vault(default_passphrase) | regex_replace('\n', '\n   ') }}"
     path: "{{ proxmox_token_file }}"
     owner: root
     group: root
     mode: '0644'
-  when: admin_token is defined
+  listen: Save Proxmox Admin Token
 
 - name: Refresh Facts
   ansible.builtin.setup:
+  listen: Refresh Facts
 ...

@@ -4,49 +4,38 @@
     path: "{{ default_facts_path }}/proxmox.fact"
   register: proxmox_fact_file
 
-- name: Generate token identifier
+- name: Generate token identifier for each host
   ansible.builtin.set_fact:
-    token_id: "{{ proxmox_default_admin_token }}"
+    token_id: "{{ proxmox_default_admin_token }}-{{ inventory_hostname }}"
 
-- name: Attempt to create authentication tokens
+- name: Attempt to list existing authentication tokens
+  ansible.builtin.command:
+    argv:
+      - pveum
+      - user
+      - token
+      - list
+      - "{{ item.name }}"
+  with_items: "{{ proxmox_admin_accounts }}"
+  ignore_errors: True
+  register: existing_tokens
+
+- name: Attempt to create authentication tokens if they don't exist
   ansible.builtin.command:
     argv:
       - pveum
       - user
       - token
       - add
-      - "{{ item.name }}"
+      - "{{ item.item.name }}"
       - "{{ token_id }}"
       - -privsep
       - "0"
       - -comment
       - "{{ proxmox_default_admin_token_comment }}"
-  with_items: "{{ proxmox_admin_accounts }}"
-  register: generated_tokens
-  failed_when: "'Token already exists' not in generated_tokens.stderr"
-  ignore_errors: True
-  when: proxmox_fact_file.stat.exists == False
-
-- name: Extract Generated or Existing Proxmox Admin Token
-  ansible.builtin.set_fact:
-    generated_admin_token: "{{ item.stdout | pveum_generated_token }}"
-  with_items: "{{ generated_tokens.results }}"
-  when: generated_tokens is defined and generated_tokens.changed
-
-- name: Save Proxmox Admin Token
-  community.general.ini_file:
-    create: True
-    no_extra_spaces: True
-    option: "token"
-    section: "api"
-    state: present
-    value: "{{ generated_admin_token | vault(default_passphrase) | regex_replace('\n', '\n   ') }}"
-    path: "{{ proxmox_token_file }}"
-    owner: root
-    group: root
-    mode: '0644'
-  when: generated_admin_token is defined
-
-- name: Refresh Facts
-  ansible.builtin.setup:
+  with_items: "{{ existing_tokens.results }}"
+  when: token_id not in item.stdout
+  notify: 
+    - Save Proxmox Admin Token
+    - Refresh Facts
 ...

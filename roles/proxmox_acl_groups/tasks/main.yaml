@@ -13,8 +13,8 @@
   block:
     - name: Get current groups
       ansible.builtin.shell:
-        cmd: "set -o pipefail && pveum acl list | awk '{print $2}' | grep -wo '[a-zA-Z0-9_-]*'"
-      register: pveum_acl_list
+        cmd: "set -o pipefail && pveum group list | tail -n +3 | awk '{print $2}' | grep -wo '[a-zA-Z0-9_-]*'"
+      register: pveum_group_list
       changed_when: false
       failed_when: false
       args:

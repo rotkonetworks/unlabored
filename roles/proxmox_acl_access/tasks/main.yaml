@@ -21,6 +21,14 @@
   ansible.builtin.set_fact:
     current_group_acl: "{{ pveum_acl_list.stdout | pveum_acl_group | default({}) }}"
 
+- name: Debug primary_node
+  ansible.builtin.debug:
+    var: primary_node
+
+- name: Debug current_group_acl
+  ansible.builtin.debug:
+    var: current_group_acl
+
 - name: Modify ACL Lists
   ansible.builtin.command:
     argv:
@@ -34,6 +42,13 @@
       - "{{ item.roleid }}"
   with_items: "{{ proxmox_acl_list }}"
   when:
-    - item not in current_group_acl
-    - inventory_hostname == primary_node
+    - "'{{ item.group }}{{ item.path }}{{ item.roleid }}' not in current_group_acl | map('join', '') | list"
+
+- name: Debug primary_node
+  ansible.builtin.debug:
+    var: primary_node
+
+- name: Debug current_group_acl
+  ansible.builtin.debug:
+    var: current_group_acl
 ...
