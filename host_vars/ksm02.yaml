@@ -9,8 +9,12 @@ role: "polkadot"
 pinned_service: True
 
 polkadot_network: kusama
-default_telemetry_name: "Kusama XI Validator"
+default_node_type: "validator"
+default_telemetry_name: "Kusama XI Validator 2"
+polkadot_pruning: 1000
+polkadot_database: paritydb
+polkadot_syncmode: warp
 polkadot_port: 33122
-polkadot_rpc_port: 7122
-polkadot_ws_port: 9122
+polkadot_rpc_port: 9122
+polkadot_prom_port: 7122
 ...

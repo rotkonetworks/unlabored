@@ -6,13 +6,13 @@ polkadot_service: polkadot
 polkadot_user: "{{ service_users['polkadot'] }}"
 polkadot_base: /opt/polkadot
 polkadot_log_level: info
-# port logic -> 101 dot01 201 ksm01 111 beam01
 polkadot_network: polkadot
 # pruning options: archive(rpc), archive-canonical(rpc/finalized) 256(default), 1000(validator)
-polkadot_pruning: 1000
 default_node_type: validator
+polkadot_pruning: 1000
+polkadot_database: paritydb
+polkadot_syncmode: warp
 polkadot_p2p_port: 33100
-polkadot_rpc_port: 7100
-polkadot_ws_port: 9100
-polkadot_prom_port: 6100
+polkadot_rpc_port: 9100
+polkadot_prom_port: 7100
 ...

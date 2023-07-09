@@ -48,6 +48,7 @@
     - Add Service Pinned Status
     - Stop polkadot
     - Symlink polkadot release
+    - Symlink binary executable
     - Systemd daemon-reload
     - Restart polkadot
 
@@ -58,7 +59,6 @@
   ansible.builtin.template:
     src: polkadot_val.service.template
     dest: "{{ polkadot_base }}/polkadot.service"
-    become: True
     owner: "{{ polkadot_user }}"
     group: "{{ polkadot_user }}"
     mode: '0644'
@@ -69,7 +69,6 @@
   ansible.builtin.template:
     src: polkadot_rpc.service.template
     dest: "{{ polkadot_base }}/polkadot.service"
-    become: True
     owner: "{{ polkadot_user }}"
     group: "{{ polkadot_user }}"
     mode: '0644'
@@ -81,6 +80,7 @@
     src: "{{ polkadot_base }}/polkadot.service"
     dest: "/etc/systemd/system/polkadot.service"
     state: link
+    force: True
     owner: "root"
     group: "root"
     mode: '0644'

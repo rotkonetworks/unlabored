@@ -15,6 +15,8 @@ KillSignal=SIGHUP
 ExecStart={{ polkadot_base }}/polkadot \
      --base-path {{ polkadot_base }} \
      --chain {{ polkadot_network }} \
+     --database {{ polkadot_database }} \
+     --sync {{ polkadot_syncmode }} \
      --name "{{ hostvars[inventory_hostname]['default_telemetry_name'] | default(host_name) }}" \
      --port {{ polkadot_p2p_port }} \
      --rpc-port {{ polkadot_rpc_port }} \
