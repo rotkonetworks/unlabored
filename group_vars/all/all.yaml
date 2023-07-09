@@ -11,6 +11,8 @@ default_password: "m4rg4r1t45"
 default_resource_pool: "resource_pool"
 # TODO: test if this works
 # default_resource_pool: "{{ inventory_hostname}}resource_pool"
+default_node_type: validator
+pinned_service: False
 
 # Monitoring
 zabbix_master: "192.169.69.42"
@@ -42,7 +44,6 @@ default_admin_group_id: "500"
 default_shell: "/bin/bash"
 default_max_open_files_in_service: 16368
 default_container_template: "debian-12-standard_12.0-1_amd64.tar.zst"
-pinned_service: False
 
 # Golang
 default_golang_dl_base_url: "https://dl.google.com/go/go"

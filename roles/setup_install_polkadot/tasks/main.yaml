@@ -4,6 +4,8 @@
     name: "{{ polkadot_user }}"
     state: present
     system: True
+  notify:
+  - Add type of service
 
 - name: Ensure user {{ polkadot_user }} exists
   ansible.builtin.user:
@@ -44,7 +46,6 @@
   notify:
     - Add Polkadot service version
     - Add Service Pinned Status
-    - Add type of service
     - Stop polkadot
     - Symlink polkadot release
     - Systemd daemon-reload
@@ -53,31 +54,38 @@
 - name: Refresh facts
   ansible.builtin.setup:
 
-- name: Copy polkadot systemd service to a validator node
+- name: Copy Polkadot systemd service for a validator node
   ansible.builtin.template:
     src: polkadot_val.service.template
-    dest: /etc/systemd/system/polkadot.service
-    owner: "root"
-    group: "root"
+    dest: "{{ polkadot_base }}/polkadot.service"
+    become: True
+    owner: "{{ polkadot_user }}"
+    group: "{{ polkadot_user }}"
     mode: '0644'
-  notify:
-    - Stop polkadot
-    - Systemd daemon-reload
-    - Restart polkadot
   when:
     - ansible_local['noderole']['node']['type'] == "validator"
 
-- name: Copy Polkadot service to an endpoint node
+- name: Copy Polkadot service for an endpoint node
   ansible.builtin.template:
     src: polkadot_rpc.service.template
-    dest: /etc/systemd/system/polkadot.service
+    dest: "{{ polkadot_base }}/polkadot.service"
+    become: True
+    owner: "{{ polkadot_user }}"
+    group: "{{ polkadot_user }}"
+    mode: '0644'
+  when:
+    - ansible_local['noderole']['node']['type'] == "rpc"
+
+- name: Symlink Polkadot service to systemd
+  ansible.builtin.file:
+    src: "{{ polkadot_base }}/polkadot.service"
+    dest: "/etc/systemd/system/polkadot.service"
+    state: link
     owner: "root"
     group: "root"
     mode: '0644'
   notify:
-    - Stop polkadot
+    - Stop Polkadot
     - Systemd daemon-reload
-    - Restart polkadot
-  when:
-    - ansible_local['noderole']['node']['type'] == "rpc"
+    - Restart Polkadot
 ...

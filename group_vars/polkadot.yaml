@@ -10,6 +10,7 @@ polkadot_log_level: info
 polkadot_network: polkadot
 # pruning options: archive(rpc), archive-canonical(rpc/finalized) 256(default), 1000(validator)
 polkadot_pruning: 1000
+default_node_type: validator
 polkadot_p2p_port: 33100
 polkadot_rpc_port: 7100
 polkadot_ws_port: 9100

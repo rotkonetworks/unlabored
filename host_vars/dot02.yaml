@@ -9,6 +9,7 @@ role: "polkadot"
 pinned_service: True
 
 polkadot_network: "polkadot"
+default_node_type: "validator"
 polkadot_port: 33112
 polkadot_rpc_port: 7112
 polkadot_ws_port: 9112
