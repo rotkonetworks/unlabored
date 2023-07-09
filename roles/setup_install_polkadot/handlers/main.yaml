@@ -26,8 +26,8 @@
 
 - name: Symlink Polkadot release
   ansible.builtin.file:
-    src: "{{ polkadot_base }}/moonbeam-v{{ moonbeam_version }}"
-    dest: "{{ polkadot_base }}/moonbeam"
+    src: "{{ polkadot_base }}/polkadot-v{{ polkadot_version }}"
+    dest: "{{ polkadot_base }}/polkadot"
     force: True
     state: link
     owner: "{{ polkadot_user }}"

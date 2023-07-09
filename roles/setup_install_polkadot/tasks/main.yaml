@@ -42,14 +42,18 @@
     - ansible_local['noderole']['node']['pinned'] != "True"
     - ansible_local['noderole']['node']['version'] != polkadot_version
   notify:
-    - Add polkadot service version
+    - Add Polkadot service version
     - Add Service Pinned Status
+    - Add type of service
     - Stop polkadot
     - Symlink polkadot release
     - Systemd daemon-reload
     - Restart polkadot
 
-- name: Copy polkadot systemd service to a host
+- name: Refresh facts
+  ansible.builtin.setup:
+
+- name: Copy polkadot systemd service to a validator node
   ansible.builtin.template:
     src: polkadot_val.service.template
     dest: /etc/systemd/system/polkadot.service
@@ -63,7 +67,7 @@
   when:
     - ansible_local['noderole']['node']['type'] == "validator"
 
-- name: Copy polkadot systemd service to a host
+- name: Copy Polkadot service to an endpoint node
   ansible.builtin.template:
     src: polkadot_rpc.service.template
     dest: /etc/systemd/system/polkadot.service
