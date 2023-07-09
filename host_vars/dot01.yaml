@@ -10,6 +10,7 @@ pinned_service: True
 
 polkadot_network: "polkadot"
 default_node_type: "validator"
+default_telemetry_name: "Rotko Networks - {{ host_name }}"
 polkadot_port: 33111
 polkadot_rpc_port: 7111
 polkadot_ws_port: 9111
