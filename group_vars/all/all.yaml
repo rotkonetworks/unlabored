@@ -3,26 +3,28 @@ ansible_user: "root"
 ansible_connection: ssh
 ansible_ssh_private_key_file: "~/.ssh/unlabored/ansible_ssh_key"
 
-default_facts_path: "/etc/ansible/facts.d"
-default_resource_pool: "resource_pool"
+# phrase for decrypting vaulted files
 default_passphrase: "N0thing but bitch3s in th3 sun!"
+# default password for containers/vms(root ssh disabled)
 default_password: "m4rg4r1t45"
-zabbix_master: "27.131.160.106"
+
+default_resource_pool: "resource_pool"
+# TODO: test if this works
+# default_resource_pool: "{{ inventory_hostname}}resource_pool"
+
+# Monitoring
+zabbix_master: "192.169.69.42"
 zabbix_agent_base_path: "/etc/zabbix"
 zabbix_agent_script_path: "{{ zabbix_agent_base_path }}/scripts"
 zabbix_agent_confd_path: "{{ zabbix_agent_base_path }}/zabbix_agentd.conf.d/"
 zabbix_ansible_base_path: "/etc/ansible"
 zabbix_ansible_factsd_path: "{{ zabbix_ansible_base_path }}/facts.d"
 
-min_uid: 999
-max_uid: 60000
-
-default_locale: "en_US.UTF-8"
+# Networking
+default_need_routeros_port_forwarding: False
 default_need_iptables_port_forwarding: False
 default_hetzner_firewall: False
-default_admin_group_name: "bofh"
-default_admin_group_id: "500"
-default_shell: "/bin/bash"
+default_locale: "en_US.UTF-8"
 default_iptables_v4_file: "/etc/iptables/rules.v4"
 default_iptables_v6_file: "/etc/iptables/rules.v6"
 default_nat_network: "192.168.69.0/24"
@@ -31,14 +33,18 @@ default_nat_device: "vmbr0"
 default_gw_device: "eth0"
 default_host_ip: "{{ container_ip | default(ansible_host) }}"
 default_netif: '{"net0":"name=eth0,gw={{ default_nat_network_forward_cidr.split("/")[0] }},ip={{ container_ip }}/24,bridge={{ default_nat_device }}"}'
+
+# Misc
+min_uid: 999
+max_uid: 60000
+default_admin_group_name: "bofh"
+default_admin_group_id: "500"
+default_shell: "/bin/bash"
 default_max_open_files_in_service: 16368
-
 default_container_template: "debian-12-standard_12.0-1_amd64.tar.zst"
-default_users:
-  - user
-  - winboxuser
-  - key
+pinned_service: False
 
+# Golang
 default_golang_dl_base_url: "https://dl.google.com/go/go"
 default_golang_version: "1.20.5"
 default_golang_os: "linux"
@@ -47,11 +53,14 @@ default_golang_base_path: "/usr/local"
 default_golang_GOROOT: "{{ default_golang_base_path }}/go"
 default_golang_bin_path: "{{ default_golang_GOROOT }}/go/bin"
 
+# Rust
 default_rust_installer_saved: "/tmp/sh.rustup.rs"
 default_rust_installer_dl_url: "https://sh.rustup.rs"
 
+# Filesystem
 default_storage: "tank"
 
+# Logging
 default_journald_config_file: "/etc/systemd/journald.conf"
 default_journald_options:
   - Compress: "yes"
@@ -64,9 +73,12 @@ default_journald_options:
   - ForwardToConsole: "no"
   - ForwardToWall: "no"
 
+# Facts
+default_facts_path: "/etc/ansible/facts.d"
 noderole_file: "{{ default_facts_path }}/noderole.fact"
 proxmox_token_file: "{{ default_facts_path }}/proxmox.fact"
 
+# Kernel modules
 kernel_modules:
   - zfs
 
@@ -84,7 +96,12 @@ kernel_params:
   - name: net.ipv4.ip_forward
     value: 1
 
-pinned_service: False
+# User management
+default_users:
+  - user
+  - winboxuser
+  - key
+  - tommi
 
 all_users:
   - name: key
@@ -93,7 +110,10 @@ all_users:
     comment: "user"
   - name: winboxuser
     comment: "winbox"
+  - name: tommi
+    comment: "tommi"
 
+# Proxmox management
 proxmox_default_admin_account: "ansible_admin@pve"
 proxmox_default_admin_comment: "Ansible promox account"
 proxmox_default_admin_group: "rot_admin"
@@ -128,6 +148,7 @@ proxmox_defaults:
   timeout: 1200
   proxmox_default_behavior: no_defaults
 
+# Service users named after clients
 service_users:
   arbitrum: "arbitrum"
   avalanche: "avalanche"
@@ -140,6 +161,4 @@ service_users:
   polygon: "polygon"
   polkadot: "polkadot"
   optimism: "optimism"
-
-foundry_download_url: "https://foundry.paradigm.xyz"
 ...

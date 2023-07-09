@@ -1,5 +1,5 @@
 ---
-polkadot_version: 0.9.44
+polkadot_version: 0.9.43
 polkadot_download_url: https://github.com/paritytech/polkadot/releases/download/v{{ polkadot_version }}/polkadot
 
 polkadot_service: polkadot

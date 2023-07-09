@@ -10,8 +10,8 @@ kernel_modules:
   - k10temp
   - zfs
 
-default_router: "routeros"
-default_need_iptables_port_forwarding: True
+default_need_routeros_port_forwarding: True
+default_need_iptables_port_forwarding: False
 default_gw_device: "enp4s0"
 default_storage: "tank"
 default_resource_pool: "bkk02_resource_pool"

@@ -13,7 +13,6 @@ ksm01
 ksm02
 dot01
 dot02
-wnd01
 
 [proxmox_hosts]
 bkk01
