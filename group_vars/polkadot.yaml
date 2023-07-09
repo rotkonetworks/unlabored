@@ -9,6 +9,7 @@ polkadot_log_level: info
 polkadot_network: polkadot
 # pruning options: archive(rpc), archive-canonical(rpc/finalized) 256(default), 1000(validator)
 default_node_type: validator
+default_telemetry_url: "wss://telemetry.w3f.community/submit/ 0"
 polkadot_pruning: 1000
 polkadot_database: paritydb
 polkadot_syncmode: warp

@@ -1,0 +1,7 @@
+{% for item in port_forwards %}
+
+/ip/firewall/nat add chain=dstnat action=dst-nat to-addresses={{
+  item.container_ip }} to-ports={{ item.to_ports }} protocol=tcp
+  in-interface=ether1 dst-port={{ item.dst_port }}
+
+{% endfor %}
