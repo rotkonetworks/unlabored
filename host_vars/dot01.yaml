@@ -17,4 +17,5 @@ polkadot_syncmode: warp
 polkadot_p2p_port: 33111
 polkadot_rpc_port: 9111
 polkadot_prom_port: 7111
+zabbix_ext_port: 10111
 ...

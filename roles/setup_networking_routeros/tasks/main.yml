@@ -1,47 +1,34 @@
+---
 - name: Fetch existing NAT rules
-  community.network.routeros_command:
+  community.routeros.command:
     commands: /ip firewall nat print without-paging
-  register: existing_nat_rules
+  register: _existing_nat_rules_raw
+
+- name: Parse existing NAT rules
+  ansible.builtin.set_fact:
+    existing_nat_rules: "{{ _existing_nat_rules_raw.stdout[0] | parse_nat_rules }}"
 
 - name: Define new port forwarding rules
-  set_fact:
+  ansible.builtin.set_fact:
     new_port_forwards: "{{ lxc_nodes | map(attribute='port_forwards') | flatten(levels=1) }}"
 
 - name: Setup service-specific port forwards for NAT'd hosts
+  when: lxc_nodes is defined
   block:
-    - name: Check if the rule already exists
-      set_fact:
-        rule_exists: "{{ item.to_host in existing_nat_rules.stdout[0] and item.from_port in existing_nat_rules.stdout[0] and item.protocol in existing_nat_rules.stdout[0] }}"
-      loop: "{{ new_port_forwards }}"
-      register: check_rules
-
     - name: Add new rule if it doesn't exist
-      community.network.routeros_command:
+      community.routeros.command:
         commands:
-          - /ip firewall nat add chain=dstnat action=dst-nat to-addresses="{{ item.item.to_host }}" protocol="{{ item.item.protocol }}" dst-port="{{ item.item.from_port }}" in-interface="{{ default_gw_device }}"
-      loop: "{{ check_rules.results }}"
-      when: not item.ansible_facts.rule_exists
-    
-    - name: Check if the masquarade already set
-      set_fact:
-        masq_exists: "{{ default_gw_device in existing_nat_rules.stdout[0] }}"
+          - /ip firewall nat add chain=dstnat action=dst-nat to-addresses="{{ item.to_host }}" protocol="{{ item.protocol }}" dst-port="{{ item.from_port }}" in-interface="{{ default_gw_device }}"
+      loop: "{{ new_port_forwards }}"
+      when: item not in existing_nat_rules
+
+    - name: Check if the masquerade already set
+      ansible.builtin.set_fact:
+        masq_exists: "{{ default_gw_device in _existing_nat_rules_raw.stdout[0] }}"
 
     - name: Add masquerade rule
-      community.network.routeros_command:
+      community.routeros.command:
         commands:
           - /ip firewall nat add chain=srcnat action=masquerade out-interface="{{ default_gw_device }}"
-        when: not masq_exists
-
-    # TODO: figure MAC address assignment, currently not deterministic
-    #
-    # - name: Define new DHCP assignments
-    #   set_fact:
-    #     new_dhcp_assignments: "{{ lxc_nodes }}"
-    #
-    # - name: Add DHCP assignments
-    #   community.network.routeros_command:
-    #     commands:
-    #       - /ip dhcp-server lease add address="{{ item.ip }}" mac-address="{{ item.mac }}" server="{{ dhcp_server_name }}"
-    #   loop: "{{ new_dhcp_assignments }}"
-  when: 
-    - lxc_nodes is defined
+      when: not masq_exists
+...

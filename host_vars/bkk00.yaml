@@ -1,0 +1,13 @@
+---
+host_name: "gw.rotko.net"
+host_timezone: "Asia/Bangkok"
+ansible_host: "27.131.160.106"
+ansible_port: 20780
+ansible_connection: ansible.netcommon.network_cli
+ansible_network_os: community.network.routeros
+ansible_user: ansible
+ansible_ssh_private_key_file: ~/.ssh/unlabored/ansible_mikrotik
+# ansible_ssh_common_args: '-o ProxyCommand="ssh -W %h:%p -q bkk01"'
+
+default_gw_device: "ether1"  # ether1, sfp-sfpplus1, sfp-sfpplus2
+...

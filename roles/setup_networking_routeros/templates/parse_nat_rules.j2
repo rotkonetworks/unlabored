@@ -1,0 +1,15 @@
+{% set nat_rules = [] %}
+{% for line in stdout_lines %}
+  {% if 'chain=dstnat' in line %}
+    {% set nat_rule = {} %}
+    {% set fields = line.split() %}
+    {% for field in fields %}
+      {% if '=' in field %}
+        {% set key, value = field.split('=') %}
+        {% set _ = nat_rule.update({key: value}) %}
+      {% endif %}
+    {% endfor %}
+    {% set _ = nat_rules.append(nat_rule) %}
+  {% endif %}
+{% endfor %}
+{{ nat_rules }}

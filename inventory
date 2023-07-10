@@ -4,6 +4,7 @@ rotko
 [rotko:children]
 proxmox_hosts
 proxmox_nodes
+routeros
 
 [proxmox_nodes:children]
 polkadot
@@ -17,6 +18,9 @@ dot02
 [proxmox_hosts]
 bkk01
 bkk02
+
+[routeros]
+bkk00
 
 [unmanaged]
 ansible

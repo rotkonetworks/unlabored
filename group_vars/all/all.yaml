@@ -15,6 +15,7 @@ default_node_type: validator
 pinned_service: False
 
 # Monitoring
+default_zabbix_port: 10050
 zabbix_master: "192.169.69.42"
 zabbix_agent_base_path: "/etc/zabbix"
 zabbix_agent_script_path: "{{ zabbix_agent_base_path }}/scripts"

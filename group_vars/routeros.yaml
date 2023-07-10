@@ -1,1 +1,8 @@
-# Router OS configuration
+---
+# RouterOS defaults
+ansible_connection: ansible.netcommon.network_cli
+ansible_network_os: community.network.routeros
+ansible_user: ansible
+ansible_ssh_private_key_file: ~/.ssh/unlabored/ansible_mikrotik
+ansible_port: 20780
+...
