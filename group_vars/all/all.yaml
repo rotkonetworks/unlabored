@@ -1,0 +1,166 @@
+---
+ansible_user: "root"
+ansible_connection: ssh
+ansible_ssh_private_key_file: "~/.ssh/unlabored/ansible_ssh_key"
+
+# phrase for decrypting vaulted files
+default_passphrase: "N0thing but bitch3s in th3 sun!"
+# default password for containers/vms(root ssh disabled)
+default_password: "m4rg4r1t45"
+
+default_resource_pool: "resource_pool"
+# TODO: test if this works
+# default_resource_pool: "{{ inventory_hostname}}resource_pool"
+default_node_type: validator
+pinned_service: False
+
+# Monitoring
+default_zabbix_port: 10050
+zabbix_master: "192.169.69.42"
+zabbix_agent_base_path: "/etc/zabbix"
+zabbix_agent_script_path: "{{ zabbix_agent_base_path }}/scripts"
+zabbix_agent_confd_path: "{{ zabbix_agent_base_path }}/zabbix_agentd.conf.d/"
+zabbix_ansible_base_path: "/etc/ansible"
+zabbix_ansible_factsd_path: "{{ zabbix_ansible_base_path }}/facts.d"
+
+# Networking
+default_need_routeros_port_forwarding: False
+default_need_iptables_port_forwarding: False
+default_hetzner_firewall: False
+default_locale: "en_US.UTF-8"
+default_iptables_v4_file: "/etc/iptables/rules.v4"
+default_iptables_v6_file: "/etc/iptables/rules.v6"
+default_nat_network: "192.168.69.0/24"
+default_nat_network_forward_cidr: "192.168.69.1/24"
+default_nat_device: "vmbr0"
+default_gw_device: "eth0"
+default_host_ip: "{{ container_ip | default(ansible_host) }}"
+default_netif: '{"net0":"name=eth0,gw={{ default_nat_network_forward_cidr.split("/")[0] }},ip={{ container_ip }}/24,bridge={{ default_nat_device }}"}'
+
+# Misc
+min_uid: 999
+max_uid: 60000
+default_admin_group_name: "bofh"
+default_admin_group_id: "500"
+default_shell: "/bin/bash"
+default_max_open_files_in_service: 16368
+default_container_template: "debian-12-standard_12.0-1_amd64.tar.zst"
+
+# Golang
+default_golang_dl_base_url: "https://dl.google.com/go/go"
+default_golang_version: "1.20.5"
+default_golang_os: "linux"
+default_golang_arch: "amd64"
+default_golang_base_path: "/usr/local"
+default_golang_GOROOT: "{{ default_golang_base_path }}/go"
+default_golang_bin_path: "{{ default_golang_GOROOT }}/go/bin"
+
+# Rust
+default_rust_installer_saved: "/tmp/sh.rustup.rs"
+default_rust_installer_dl_url: "https://sh.rustup.rs"
+
+# Filesystem
+default_storage: "tank"
+
+# Logging
+default_journald_config_file: "/etc/systemd/journald.conf"
+default_journald_options:
+  - Compress: "yes"
+  - Seal: "no"
+  - SplitMode: "none"
+  - SystemMaxFiles: "7"
+  - MaxFilesSec: "1day"
+  - ForwardToSyslog: "no"
+  - ForwardToKMsg: "no"
+  - ForwardToConsole: "no"
+  - ForwardToWall: "no"
+
+# Facts
+default_facts_path: "/etc/ansible/facts.d"
+noderole_file: "{{ default_facts_path }}/noderole.fact"
+proxmox_token_file: "{{ default_facts_path }}/proxmox.fact"
+
+# Kernel modules
+kernel_modules:
+  - zfs
+
+kernel_params_default:
+  - name: net.ipv4.ip_forward
+    value: 1
+    ignoreerrors: False
+    reload: True
+    state: present
+    sysctl_file: /etc/sysctl.conf
+
+kernel_params:
+  - name: net.ipv4.igmp_link_local_mcast_reports
+    value: 0
+  - name: net.ipv4.ip_forward
+    value: 1
+
+# User management
+default_users:
+  - user
+  - winboxuser
+  - key
+  - tommi
+
+all_users:
+  - name: key
+    comment: "key"
+  - name: user
+    comment: "user"
+  - name: winboxuser
+    comment: "winbox"
+  - name: tommi
+    comment: "tommi"
+
+# Proxmox management
+proxmox_default_admin_account: "ansible_admin@pve"
+proxmox_default_admin_comment: "Ansible promox account"
+proxmox_default_admin_group: "rot_admin"
+proxmox_default_admin_group_comment: "Rotko admin group"
+proxmox_default_admin_token: "admin_token"
+proxmox_default_admin_token_comment: "Default token to use to manage proxmox via ansible"
+
+proxmox_admin_accounts:
+  - name: "{{ proxmox_default_admin_account }}"
+    groups: "{{ proxmox_default_admin_group }}"
+    comment: "{{ proxmox_default_admin_comment }}"
+
+proxmox_admin_groups:
+  - name: "{{ proxmox_default_admin_group }}"
+    comment: "{{ proxmox_default_admin_group_comment }}"
+
+proxmox_acl_list:
+  - path: "/"
+    group: "{{ proxmox_default_admin_group }}"
+    roleid: "Administrator"
+  - path: "/pool/{{ default_resource_pool }}"
+    group: "{{ proxmox_default_admin_group }}"
+    roleid: "Administrator"
+
+proxmox_defaults:
+  api_host: "{{ host_name.split('.')[0] }}"
+  api_user: "{{ proxmox_default_admin_account }}"
+  api_token_id: "{{ proxmox_default_admin_token }}-{{ inventory_hostname }}"
+  api_token_secret: "{{ ansible_local.proxmox.api.token | unvault(default_passphrase) }}"
+  pubkey: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAPBgdF5W2e5iMFt1iiLRuRdz7RxJzmj9v30nn9vZTYP user@pc02"
+  node: "{{ host_name.split('.')[0] }}"
+  timeout: 1200
+  proxmox_default_behavior: no_defaults
+
+# Service users named after clients
+service_users:
+  arbitrum: "arbitrum"
+  avalanche: "avalanche"
+  binance: "binance"
+  erigon: "erigon"
+  ethereum: "ethereum"
+  evmos: "evmos"
+  kava: "kava"
+  moonbeam: "moonbeam"
+  polygon: "polygon"
+  polkadot: "polkadot"
+  optimism: "optimism"
+...
