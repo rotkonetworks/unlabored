@@ -27,7 +27,4 @@ default_packages:
   - zsh
   - exa
   - fd-find
-
-default_users:
-  - tommi
 ...

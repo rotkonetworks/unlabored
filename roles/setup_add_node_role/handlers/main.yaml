@@ -209,6 +209,20 @@
     mode: '0644'
   when: role == "optimism"
 
+- name: Add Polkadot service version
+  community.general.ini_file:
+    create: True
+    no_extra_spaces: True
+    option: "version"
+    section: "node"
+    state: present
+    value: "{{ polkadot_version }}"
+    path: "{{ noderole_file }}"
+    owner: root
+    group: root
+    mode: '0644'
+  when: role == "polkadot"
+
 - name: Add Polygon service version
   community.general.ini_file:
     create: True
@@ -222,4 +236,17 @@
     group: root
     mode: '0644'
   when: role == "polygon"
+
+- name: Add type of service
+  community.general.ini_file:
+    create: True
+    no_extra_spaces: True
+    option: "type"
+    section: "node"
+    state: present
+    value: "{{ default_node_type }}"
+    path: "{{ noderole_file }}"
+    owner: root
+    group: root
+    mode: '0644'
 ...

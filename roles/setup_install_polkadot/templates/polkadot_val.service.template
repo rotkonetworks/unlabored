@@ -1,5 +1,5 @@
 [Unit]
-Description="Polkadot service"
+Description="{{ host_name.split('.')[0] }} - Polkadot service"
 After=network.target
 StartLimitIntervalSec=0
 
@@ -15,10 +15,13 @@ KillSignal=SIGHUP
 ExecStart={{ polkadot_base }}/polkadot \
      --base-path {{ polkadot_base }} \
      --chain {{ polkadot_network }} \
-     --name "{{ host_name.split('.')[0] }}" \
+     --database {{ polkadot_database }} \
+     --sync {{ polkadot_syncmode }} \
+     --name "{{ hostvars[inventory_hostname]['default_telemetry_name'] | default(host_name) }}" \
+     --telemetry-url "{{ hostvars[inventory_hostname]['default_telemetry_url'] | default('wss://telemetry.w3f.community/submit/ 0') }}" \
      --port {{ polkadot_p2p_port }} \
      --rpc-port {{ polkadot_rpc_port }} \
-     --ws-port {{ polkadot_ws_port }} \
+     --prometheus-port {{ polkadot_prom_port }} \
      --execution wasm \
      --wasm-execution compiled \
      --pruning 1000 \

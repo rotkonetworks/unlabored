@@ -4,7 +4,13 @@
   hosts: proxmox_hosts
   gather_facts: True
   roles:
-    - proxmox_setup_nodes
+    - role: setup_networking_routeros
+      when: default_need_routeros_port_forwarding
+
+    - role: setup_networking_iptables
+      when: default_need_iptables_port_forwarding
+
+    - role: proxmox_setup_nodes
 
 - name: Default tools and configurations
   hosts: proxmox_nodes
@@ -74,7 +80,7 @@
     - setup_install_optimism
 
 - name: Install Polkadot services
-  hosts: polkadot 
+  hosts: polkadot
   gather_facts: True
   roles:
     - setup_install_polkadot

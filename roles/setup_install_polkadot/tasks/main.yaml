@@ -4,6 +4,8 @@
     name: "{{ polkadot_user }}"
     state: present
     system: True
+  notify:
+    - Add type of service
 
 - name: Ensure user {{ polkadot_user }} exists
   ansible.builtin.user:
@@ -42,38 +44,48 @@
     - ansible_local['noderole']['node']['pinned'] != "True"
     - ansible_local['noderole']['node']['version'] != polkadot_version
   notify:
-    - Add polkadot service version
+    - Add Polkadot service version
     - Add Service Pinned Status
     - Stop polkadot
     - Symlink polkadot release
+    - Symlink binary executable
     - Systemd daemon-reload
     - Restart polkadot
 
-- name: Copy polkadot systemd service to a host
+- name: Refresh facts
+  ansible.builtin.setup:
+
+- name: Copy Polkadot systemd service for a validator node
   ansible.builtin.template:
     src: polkadot_val.service.template
-    dest: /etc/systemd/system/polkadot.service
-    owner: "root"
-    group: "root"
+    dest: "{{ polkadot_base }}/polkadot.service"
+    owner: "{{ polkadot_user }}"
+    group: "{{ polkadot_user }}"
     mode: '0644'
-  notify:
-    - Stop polkadot
-    - Systemd daemon-reload
-    - Restart polkadot
   when:
     - ansible_local['noderole']['node']['type'] == "validator"
 
-- name: Copy polkadot systemd service to a host
+- name: Copy Polkadot service for an endpoint node
   ansible.builtin.template:
     src: polkadot_rpc.service.template
-    dest: /etc/systemd/system/polkadot.service
+    dest: "{{ polkadot_base }}/polkadot.service"
+    owner: "{{ polkadot_user }}"
+    group: "{{ polkadot_user }}"
+    mode: '0644'
+  when:
+    - ansible_local['noderole']['node']['type'] == "rpc"
+
+- name: Symlink Polkadot service to systemd
+  ansible.builtin.file:
+    src: "{{ polkadot_base }}/polkadot.service"
+    dest: "/etc/systemd/system/polkadot.service"
+    state: link
+    force: True
     owner: "root"
     group: "root"
     mode: '0644'
   notify:
-    - Stop polkadot
+    - Stop Polkadot
     - Systemd daemon-reload
-    - Restart polkadot
-  when:
-    - ansible_local['noderole']['node']['type'] == "rpc"
+    - Restart Polkadot
 ...

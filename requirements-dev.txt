@@ -8,4 +8,5 @@ flake8-commas
 python-language-server[all]
 black
 invoke
+wheel
 -r requirements.txt

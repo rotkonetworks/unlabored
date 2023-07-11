@@ -1,0 +1,13 @@
+# Standards: 0.2
+---
+galaxy_info:
+  author: Rotko Networks <hq@rotko.net>
+  description: iptables NAT && hetzner firewall rules
+  min_ansible_version: 3.0
+  platforms:
+    - name: Debian
+      versions:
+        - bullseye
+        - bookworm
+dependencies:
+...

@@ -9,7 +9,7 @@ role: "polkadot"
 pinned_service: True
 
 polkadot_network: westend
-polkadot_port: 33131
+polkadot_p2p_port: 33131
 polkadot_rpc_port: 7131
 polkadot_ws_port: 9131
 ...

@@ -1,4 +1,13 @@
 ---
+- name: Check if proxmox.fact file exists
+  ansible.builtin.stat:
+    path: "{{ default_facts_path }}/proxmox.fact"
+  register: proxmox_fact_file
+
+- name: Generate token identifier for each host
+  ansible.builtin.set_fact:
+    proxmox_admin_token: "{{ proxmox_default_admin_token }}-{{ inventory_hostname }}"
+
 - name: Acquire existing tokens
   ansible.builtin.command:
     argv:
@@ -15,6 +24,11 @@
     user_tokens: "{{ user_tokens | default({}) | combine({item.cmd[-1]: item.stdout | pveum_user_tokens}) }}"
   with_items: "{{ user_token_list.results }}"
 
+- name: Extract tokenids
+  ansible.builtin.set_fact:
+    tokenids: "{{ item.stdout | regex_findall('^\\│ (admin_token-bkk\\d+) │.*$', multiline=True) }}"
+  with_items: "{{ user_token_list.results }}"
+
 - name: Create authentication tokens
   ansible.builtin.command:
     argv:
@@ -23,14 +37,14 @@
       - token
       - add
       - "{{ item.name }}"
-      - "{{ proxmox_default_admin_token }}"
+      - "{{ proxmox_admin_token }}"
       - -privsep
       - "0"
       - -comment
       - "{{ proxmox_default_admin_token_comment }}"
   with_items: "{{ proxmox_admin_accounts }}"
   when:
-    - proxmox_default_admin_token not in user_tokens[item.name]
+    - proxmox_admin_token not in tokenids
   register: generated_tokens
   notify:
     - Extract Generated Proxmox Admin Token

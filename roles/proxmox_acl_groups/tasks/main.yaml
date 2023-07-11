@@ -1,15 +1,34 @@
 ---
-- name: Acquire current groups
-  ansible.builtin.command:
-    argv:
-      - pveum
-      - group
-      - list
-  register: pveum_group_list
+- name: Check if node is part of a cluster
+  ansible.builtin.stat:
+    path: /etc/pve/corosync.conf
+  register: cluster_config
 
-- name: Register Proxmox Groups
+- name: Set primary node and is_cluster fact
   ansible.builtin.set_fact:
-    current_groups: "{{ pveum_group_list.stdout | pveum_groups }}"
+    primary_node: "{{ cluster_config.stat.exists | ternary(groups['all'][0], inventory_hostname) }}"
+    is_cluster: "{{ cluster_config.stat.exists }}"
+
+- name: Acquire current groups
+  block:
+    - name: Get current groups
+      ansible.builtin.shell:
+        cmd: "set -o pipefail && pveum group list | tail -n +3 | awk '{print $2}' | grep -wo '[a-zA-Z0-9_-]*'"
+      register: pveum_group_list
+      changed_when: false
+      failed_when: false
+      args:
+        executable: /bin/bash
+
+    - name: Set current groups fact
+      ansible.builtin.set_fact:
+        current_groups: "{{ pveum_group_list.stdout_lines }}"
+      when: pveum_group_list.stdout != ""
+
+    - name: Set current groups fact
+      ansible.builtin.set_fact:
+        current_groups: []
+      when: pveum_group_list.stdout == ""
 
 - name: Create proxmox admin group for ansible
   ansible.builtin.command:
@@ -20,8 +39,7 @@
       - "{{ item.name }}"
       - -comment
       - '"{{ item.comment }}"'
-  when:
-    - item.name not in current_groups
+  when: (item.name not in current_groups) and (inventory_hostname == primary_node)
+  delegate_to: "{{ primary_node }}"
   with_items: "{{ proxmox_admin_groups }}"
-
 ...

@@ -6,6 +6,7 @@
   when:
     - generated_tokens.changed
     - item.changed
+  listen: Extract Generated Proxmox Admin Token
 
 - name: Save Proxmox Admin Token
   community.general.ini_file:
@@ -19,7 +20,9 @@
     owner: root
     group: root
     mode: '0644'
+  listen: Save Proxmox Admin Token
 
 - name: Refresh Facts
   ansible.builtin.setup:
+  listen: Refresh Facts
 ...

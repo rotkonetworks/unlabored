@@ -47,8 +47,8 @@ ansible-playbook playbooks/basic_installation.yaml
 
 ```bash
 lsblk -lo PARTUUID,NAME,SIZE,MOUNTPOINT
-zpool create -o ashift=12 zfs_storage 03d4d59a-762c-d149-8e97-1e58a9b01238 3f1fa082-74fd-a94e-83f4-23d4e8c8a157 872a679c-a649-0245-8a6c-e256041eb941 c16da6e1-2f17-8444-8e4a-0256d34655ee
-zfs create -o mountpoint=/mnt/zfs_storage -o sync=standard -o redundant_metadata=most -o atime=off -o logbias=latency -o recordsize=4k zfs_storage/main
+zpool create -o ashift=12 tank 03d4d59a-762c-d149-8e97-1e58a9b01238 3f1fa082-74fd-a94e-83f4-23d4e8c8a157 872a679c-a649-0245-8a6c-e256041eb941 c16da6e1-2f17-8444-8e4a-0256d34655ee
+zfs create -o mountpoint=/mnt/tank -o sync=standard -o redundant_metadata=most -o atime=off -o logbias=latency -o recordsize=4k tank/main
 ```
 
 12. Apply the `proxmox_install_on_debian_host.yaml` playbook:
@@ -65,12 +65,12 @@ pveum passwd tommi@pve
 pveum acl modify / -user tommi@pve -role Administrator
 ```
 
-14. Log in to the web UI using your created credentials and ensure the generated zfs_storage pool is visible/added as a disk resource. Note that you need to change the "REALM" to pve when logging in.
+14. Log in to the web UI using your created credentials and ensure the generated tank pool is visible/added as a disk resource. Note that you need to change the "REALM" to pve when logging in.
 
 15. Add manually resource_pool to the datacenter at proxmox panel
 
 ![add resource pool from proxmox panel](create-resource-pool-manually.png)
-- this is required to succesfully create nodes, otherwise you dont have permission to write with scripts to /zfs_storage/main 
+- this is required to succesfully create nodes, otherwise you dont have permission to write with scripts to /tank/main 
 and hit your head against the wall running ansible scripts without feedback
 - terminal: pvesh create /pools -poolid resource_pool
 

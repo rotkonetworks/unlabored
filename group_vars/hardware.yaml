@@ -3,11 +3,9 @@ default_packages:
   - sysstat
   - psmisc
   - sudo
-  - byobu
   - gpg
   - gpg-agent
   - wget
-  - btrfs-progs
   - parted
   - git
   - build-essential
@@ -30,4 +28,5 @@ default_packages:
   - spl
   - kmod
   - logrotate
+  - rsync
 ...

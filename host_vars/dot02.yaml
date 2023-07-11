@@ -8,8 +8,13 @@ netif: '{"net0":"name=eth0,gw={{ default_nat_network_forward_cidr.split("/")[0] 
 role: "polkadot"
 pinned_service: True
 
+default_telemetry_name: "Rotko Networks - {{ host_name.split('.')[0] }}"
 polkadot_network: "polkadot"
-polkadot_port: 33112
-polkadot_rpc_port: 7112
-polkadot_ws_port: 9112
+default_node_type: "validator"
+polkadot_pruning: 1000
+polkadot_database: paritydb
+polkadot_syncmode: warp
+polkadot_p2p_port: 33111
+polkadot_rpc_port: 9112
+polkadot_prom_port: 7112
 ...

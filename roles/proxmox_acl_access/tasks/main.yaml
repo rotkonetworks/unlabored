@@ -1,4 +1,14 @@
 ---
+- name: Check if node is part of a cluster
+  ansible.builtin.stat:
+    path: /etc/pve/corosync.conf
+  register: cluster_config
+
+- name: Set primary node and is_cluster fact
+  ansible.builtin.set_fact:
+    primary_node: "{{ cluster_config.stat.exists | ternary(groups['all'][0], inventory_hostname) }}"
+    is_cluster: "{{ cluster_config.stat.exists }}"
+
 - name: Acquire acl lists
   ansible.builtin.command:
     argv:
@@ -23,7 +33,5 @@
       - -role
       - "{{ item.roleid }}"
   with_items: "{{ proxmox_acl_list }}"
-  when:
-    - item not in current_group_acl
-
+  when: (item.group ~ item.path ~ item.roleid) not in current_group_acl | map('join', '') | list
 ...

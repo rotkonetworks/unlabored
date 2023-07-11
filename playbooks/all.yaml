@@ -4,8 +4,6 @@
   ansible.builtin.import_playbook: basic_installation.yaml
 - name: Proxmox Installation on debian
   ansible.builtin.import_playbook: proxmox_install_on_debian_host.yaml
-- name: Proxmox networking installation
-  ansible.builtin.import_playbook: proxmox_install_networking.yaml
 - name: Proxmox node installation
   ansible.builtin.import_playbook: proxmox_install_nodes.yaml
 - name: Monitoring

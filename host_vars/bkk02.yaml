@@ -1,16 +1,20 @@
 ---
 host_name: "bkk02.rotko.net"
 host_timezone: "Asia/Bangkok"
-ansible_host: "27.131.160.108"
+# ansible_host: "27.131.160.108"
+ansible_host: "27.131.160.106"
+ansible_port: "20782"
 role: "proxmox"
 
 kernel_modules:
   - k10temp
   - zfs
 
-default_need_port_forwarding: False
+default_need_routeros_port_forwarding: True
+default_need_iptables_port_forwarding: False
 default_gw_device: "enp4s0"
 default_storage: "tank"
+default_resource_pool: "bkk02_resource_pool"
 
 lxc_nodes:
   - host: "dot02"

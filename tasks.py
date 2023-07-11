@@ -6,10 +6,10 @@ import os
 assert Path.cwd() == Path(__file__).parent
 
 SSH_CONFIG_TARGET = Path(os.environ.get(
-    "SSH_CONFIG_TARGET", "~/.ssh/unlabore/config")).expanduser()
+    "SSH_CONFIG_TARGET", "~/.ssh/unlabored/config")).expanduser()
 SSH_CONFIG_USER = os.environ.get("SSH_CONFIG_USER", "root")
 SSH_CONFIG_IDENTITY = Path(os.environ.get(
-    "SSH_CONFIG_IDENTITY", "~/.ssh/unlabore/ansible_ssh_key")).expanduser()
+    "SSH_CONFIG_IDENTITY", "~/.ssh/unlabored/ansible_ssh_key")).expanduser()
 
 
 @task

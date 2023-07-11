@@ -1,0 +1,14 @@
+# Standards: 0.2
+---
+galaxy_info:
+  author: Rotko Networks <hq@rotko.net>
+  description: Install rustup and rustc
+  min_ansible_version: 3.0
+  platforms:
+    - name: Debian
+      versions:
+        - bullseye
+        - bookworm
+        - bookworm
+dependencies:
+...
