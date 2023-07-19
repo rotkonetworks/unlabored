@@ -1,5 +1,5 @@
 [Unit]
-Description="Polkadot service"
+Description="Polkadot bootnode service"
 After=network.target
 StartLimitIntervalSec=0
 
@@ -21,7 +21,7 @@ ExecStart={{ polkadot_base }}/polkadot \
      --execution wasm \
      --wasm-execution compiled \
      --pruning=archive \
-     --db-cache {{ ansible_memtotal_mb // 2 }} \
+     --db-cache {{ (ansible_memtotal_mb * 0.9) | int }}
      --base-path {{ polkadot_base }} \
      --no-prometheus \
      --no-mdns \

@@ -57,7 +57,7 @@
 
 - name: Copy Polkadot systemd service for a validator node
   ansible.builtin.template:
-    src: polkadot_val.service.template
+    src: polkadot_val.service.j2
     dest: "{{ polkadot_base }}/polkadot.service"
     owner: "{{ polkadot_user }}"
     group: "{{ polkadot_user }}"
@@ -67,13 +67,13 @@
 
 - name: Copy Polkadot service for an endpoint node
   ansible.builtin.template:
-    src: polkadot_rpc.service.template
+    src: polkadot_bootnode.service.j2
     dest: "{{ polkadot_base }}/polkadot.service"
     owner: "{{ polkadot_user }}"
     group: "{{ polkadot_user }}"
     mode: '0644'
   when:
-    - ansible_local['noderole']['node']['type'] == "rpc"
+    - ansible_local['noderole']['node']['type'] == "bootnode"
 
 - name: Symlink Polkadot service to systemd
   ansible.builtin.file:
