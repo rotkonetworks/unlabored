@@ -1,44 +1,41 @@
 ---
+---
 - name: Test connection to RouterOS
-  community.routeros.command:
+  community.network.routeros_command:
     commands: /system resource print
   register: connection_test
   failed_when: connection_test.failed
 
 - name: Fetch existing NAT rules
-  community.routeros.command:
+  community.network.routeros_command:
     commands: /ip firewall nat print without-paging
-  register: existing_nat_rules_raw
+  register: _existing_nat_rules_raw
 
 - name: Parse existing NAT rules
-  set_fact:
-    existing_nat_rules: "{{ existing_nat_rules_raw.stdout[0] | parse_nat_rules }}"
+  ansible.builtin.set_fact:
+    existing_nat_rules: "{{ _existing_nat_rules_raw.stdout[0] | parse_nat_rules }}"
 
 - name: Define new port forwarding rules
-  set_fact:
+  ansible.builtin.set_fact:
     new_port_forwards: "{{ lxc_nodes | map(attribute='port_forwards') | flatten(levels=1) }}"
 
 - name: Setup service-specific port forwards for NAT'd hosts
   when: lxc_nodes is defined
   block:
     - name: Add new rule if it doesn't exist
-      community.routeros.command:
-        commands: 
+      community.network.routeros_command:
+        commands:
           - /ip firewall nat add chain=dstnat action=dst-nat to-addresses="{{ item.to_host }}" protocol="{{ item.protocol }}" dst-port="{{ item.from_port }}" in-interface="{{ default_gw_device }}"
       loop: "{{ new_port_forwards }}"
-      register: rule_output
       when: item not in existing_nat_rules
-      changed_when: "'failure:' not in rule_output.stdout[0]"
 
     - name: Check if the masquerade already set
-      set_fact:
-        masq_exists: "{{ default_gw_device in existing_nat_rules_raw.stdout[0] }}"
+      ansible.builtin.set_fact:
+        masq_exists: "{{ default_gw_device in _existing_nat_rules_raw.stdout[0] }}"
 
     - name: Add masquerade rule
-      community.routeros.command:
+      community.network.routeros_command:
         commands:
           - /ip firewall nat add chain=srcnat action=masquerade out-interface="{{ default_gw_device }}"
-      register: masq_output
       when: not masq_exists
-      changed_when: "'failure:' not in masq_output.stdout[0]"
-...
+......
