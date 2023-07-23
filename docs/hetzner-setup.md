@@ -83,7 +83,7 @@ Replace `disk1`, `disk2`, `disk3`, and `disk4` with the appropriate PARTUUIDs.
 
 6. Create a ZFS dataset with custom settings for blockchain nodes:
 ```bash
-zfs create -o mountpoint=/mnt/tank -o sync=standard -o redundant_metadata=most -o atime=off -o logbias=latency -o recordsize=4k tank/main
+zfs create -o mountpoint=/mnt/tank -o sync=standard -o redundant_metadata=most -o atime=off -o logbias=latency -o recordsize=16k tank/main
 ```
 
 7. Check the status of the ZFS pool and dataset:

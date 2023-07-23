@@ -48,7 +48,7 @@ ansible-playbook playbooks/basic_installation.yaml
 ```bash
 lsblk -lo PARTUUID,NAME,SIZE,MOUNTPOINT
 zpool create -o ashift=12 tank 03d4d59a-762c-d149-8e97-1e58a9b01238 3f1fa082-74fd-a94e-83f4-23d4e8c8a157 872a679c-a649-0245-8a6c-e256041eb941 c16da6e1-2f17-8444-8e4a-0256d34655ee
-zfs create -o mountpoint=/mnt/tank -o sync=standard -o redundant_metadata=most -o atime=off -o logbias=latency -o recordsize=4k tank/main
+zfs create -o mountpoint=/mnt/tank -o sync=standard -o redundant_metadata=most -o atime=off -o logbias=latency -o recordsize=16k tank/main
 ```
 
 12. Apply the `proxmox_install_on_debian_host.yaml` playbook:
