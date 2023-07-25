@@ -7,6 +7,9 @@ proxmox_nodes
 routeros
 
 [proxmox_nodes:children]
+blockchain_clients
+
+[blockchain_clients:children]
 polkadot
 
 [polkadot]
