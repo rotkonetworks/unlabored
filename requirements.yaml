@@ -1,4 +1,8 @@
 ---
+collections:
+  - name: community.network
+    src: community.network
+
 roles:
   - name: geerlingguy.postfix
     src: geerlingguy.postfix
