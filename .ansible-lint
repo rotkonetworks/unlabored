@@ -19,6 +19,7 @@ skip_list:
 exclude_paths:
   - .later.yaml
   - ./ext_roles/
+  - ./roles/geerlingguy.postfix/
 offline: False
 kinds:
   - playbook: "playbooks/*.{yml,yaml}"
