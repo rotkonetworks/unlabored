@@ -11,6 +11,7 @@ kernel_modules:
   - zfs
 
 default_need_routeros_port_forwarding: True
+routeros_delegate_host: "bkk00"
 default_need_iptables_port_forwarding: False
 default_gw_device: "enp4s0"
 default_storage: "tank"

@@ -1,14 +1,15 @@
 ---
----
 - name: Test connection to RouterOS
   community.network.routeros_command:
     commands: /system resource print
+    delegate_to: "{{ routeros_delegate_host }}"
   register: connection_test
   failed_when: connection_test.failed
 
 - name: Fetch existing NAT rules
   community.network.routeros_command:
     commands: /ip firewall nat print without-paging
+    delegate_to: "{{ routeros_delegate_host }}"
   register: _existing_nat_rules_raw
 
 - name: Parse existing NAT rules
@@ -26,16 +27,19 @@
       community.network.routeros_command:
         commands:
           - /ip firewall nat add chain=dstnat action=dst-nat to-addresses="{{ item.to_host }}" protocol="{{ item.protocol }}" dst-port="{{ item.from_port }}" in-interface="{{ default_gw_device }}"
+        delegate_to: "{{ routeros_delegate_host }}"
       loop: "{{ new_port_forwards }}"
       when: item not in existing_nat_rules
 
     - name: Check if the masquerade already set
       ansible.builtin.set_fact:
         masq_exists: "{{ default_gw_device in _existing_nat_rules_raw.stdout[0] }}"
+      delegate_to: "{{ routeros_delegate_host }}"
 
     - name: Add masquerade rule
       community.network.routeros_command:
         commands:
           - /ip firewall nat add chain=srcnat action=masquerade out-interface="{{ default_gw_device }}"
+        delegate_to: "{{ routeros_delegate_host }}"
       when: not masq_exists
-......
+...

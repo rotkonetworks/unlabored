@@ -4,18 +4,28 @@
   hosts: proxmox_hosts
   gather_facts: True
   roles:
-    - role: setup_networking_routeros
-      when: default_need_routeros_port_forwarding
-
     - role: setup_networking_iptables
       when: default_need_iptables_port_forwarding
 
+- name: RouterOS setup
+  hosts: proxmox_hosts
+  gather_facts: True
+  tasks:
+    - name: Include RouterOS setup
+      include_role:
+        name: setup_networking_routeros
+      when: default_need_routeros_port_forwarding
+      run_once: true
+
+- name: Proxmox setup nodes
+  hosts: proxmox_hosts
+  gather_facts: True
+  roles:
     - role: proxmox_setup_nodes
 
 - name: Default tools and configurations
   hosts: proxmox_nodes
   gather_facts: True
-
   roles:
     - setup_set_default_locale
     - setup_set_timezone

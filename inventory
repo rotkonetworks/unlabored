@@ -4,13 +4,16 @@ rotko
 [rotko:children]
 proxmox_hosts
 proxmox_nodes
-routeros
+routers
 
 [proxmox_nodes:children]
 blockchain_clients
 
 [blockchain_clients:children]
 polkadot
+
+[routers:children]
+routeros
 
 [polkadot]
 ksm01
