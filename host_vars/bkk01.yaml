@@ -23,7 +23,7 @@ lxc_nodes:
       hostname: "{{ hostvars['dot01']['host_name'] }}"
       ostemplate: 'local:vztmpl/{{ default_container_template }}'
       netif: "{{ hostvars['dot01']['netif'] }}"
-      cores: 2
+      cores: 4
       memory: 30720
       swap: 15360
       password: "{{ default_password }}"
@@ -59,7 +59,7 @@ lxc_nodes:
       hostname: "{{ hostvars['ksm01']['host_name'] }}"
       ostemplate: 'local:vztmpl/{{ default_container_template }}'
       netif: "{{ hostvars['ksm01']['netif'] }}"
-      cores: 2
+      cores: 4
       memory: 30720
       swap: 15360
       password: "{{ default_password }}"
