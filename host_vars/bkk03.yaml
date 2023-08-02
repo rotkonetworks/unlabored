@@ -1,9 +1,8 @@
 ---
-host_name: "bkk04.rotko.net"
+host_name: "bkk03.rotko.net"
 host_timezone: "Asia/Bangkok"
-# ansible_host: "27.131.160.110"
 ansible_host: "27.131.160.106"
-ansible_port: "20784"
+ansible_port: "20783"
 role: "proxmox"
 
 kernel_modules:
@@ -15,63 +14,63 @@ routeros_delegate_host: "bkk00"
 default_need_iptables_port_forwarding: False
 default_gw_device: "enp9s0"
 default_storage: "tank"
-default_resource_pool: "bkk04_resource_pool"
+default_resource_pool: "bkk03_resource_pool"
 
 lxc_nodes:
-  - host: "dot04"
+  - host: "dot03"
     proxmox_config:
-      vmid: "114"
-      hostname: "{{ hostvars['dot04']['host_name'] }}"
+      vmid: "113"
+      hostname: "{{ hostvars['dot03']['host_name'] }}"
       ostemplate: 'local:vztmpl/{{ default_container_template }}'
-      netif: "{{ hostvars['dot04']['netif'] }}"
+      netif: "{{ hostvars['dot03']['netif'] }}"
       cores: 4
       memory: 32768
       swap: 16384
       password: "{{ default_password }}"
       disk: "{{ default_storage }}:20"
-      mounts: '{"mp0":"{{ default_storage }}:2500,mp={{ hostvars["dot04"]["polkadot_base"] }}"}'
+      mounts: '{"mp0":"{{ default_storage }}:2500,mp={{ hostvars["dot03"]["polkadot_base"] }}"}'
       onboot: True
       unprivileged: True
       validate_certs: False
-      description: "{{ hostvars['dot04']['polkadot_network'] }} {{ hostvars['dot04']['default_node_type'] }}: {{ hostvars['dot04']['host_name'] }}"
+      description: "{{ hostvars['dot03']['polkadot_network'] }} {{ hostvars['dot03']['default_node_type'] }}: {{ hostvars['dot03']['host_name'] }}"
       state: present
       features:
         - nesting=1
-  - host: "ksm04"
+  - host: "ksm03"
     proxmox_config:
-      vmid: "124"
-      hostname: "{{ hostvars['ksm04']['host_name'] }}"
+      vmid: "123"
+      hostname: "{{ hostvars['ksm03']['host_name'] }}"
       ostemplate: 'local:vztmpl/{{ default_container_template }}'
-      netif: "{{ hostvars['ksm04']['netif'] }}"
+      netif: "{{ hostvars['ksm03']['netif'] }}"
       cores: 4
       memory: 32768
       swap: 16384
       password: "{{ default_password }}"
       disk: "{{ default_storage }}:20"
-      mounts: '{"mp0":"{{ default_storage }}:3000,mp={{ hostvars["ksm04"]["polkadot_base"] }}"}'
+      mounts: '{"mp0":"{{ default_storage }}:3000,mp={{ hostvars["ksm03"]["polkadot_base"] }}"}'
       onboot: True
       unprivileged: True
       validate_certs: False
-      description: "{{ hostvars['ksm04']['polkadot_network'] }} {{ hostvars['ksm04']['default_node_type'] }}: {{ hostvars['ksm04']['host_name'] }}"
+      description: "{{ hostvars['ksm03']['polkadot_network'] }} {{ hostvars['ksm03']['default_node_type'] }}: {{ hostvars['ksm03']['host_name'] }}"
       state: present
       features:
         - nesting=1
-  - host: "wnd04"
+  - host: "wnd03"
     proxmox_config:
-      vmid: "134"
-      hostname: "{{ hostvars['wnd04']['host_name'] }}"
+      vmid: "133"
+      hostname: "{{ hostvars['wnd03']['host_name'] }}"
       ostemplate: 'local:vztmpl/{{ default_container_template }}'
-      netif: "{{ hostvars['wnd04']['netif'] }}"
+      netif: "{{ hostvars['wnd03']['netif'] }}"
       cores: 4
       memory: 32768
       swap: 16384
       password: "{{ default_password }}"
       disk: "{{ default_storage }}:20"
-      mounts: '{"mp0":"{{ default_storage }}:2000,mp={{ hostvars["wnd04"]["polkadot_base"] }}"}'
+      mounts: '{"mp0":"{{ default_storage }}:2000,mp={{ hostvars["wnd03"]["polkadot_base"] }}"}'
       onboot: True
       unprivileged: True
       validate_certs: False
-      description: "{{ hostvars['wnd04']['polkadot_network'] }} {{ hostvars['wnd04']['default_node_type'] }}: {{ hostvars['wnd04']['host_name'] }}"
+      description: "{{ hostvars['wnd03']['polkadot_network'] }} {{ hostvars['wnd03']['default_node_type'] }}: {{ hostvars['wnd03']['host_name'] }}"
       state: present
       features:
         - nesting=1
