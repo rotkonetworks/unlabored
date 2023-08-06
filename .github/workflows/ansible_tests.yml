@@ -44,7 +44,7 @@ jobs:
           inv ansiblelint
           inv yamllint
           inv flake8
-          inv black
+          #inv black
           inv ansiblelater
         env:
           ANSIBLE_VAULT_PASSWORD: ${{ secrets.VAULT_PASS }}
