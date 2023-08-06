@@ -7,7 +7,10 @@ log() {
 	echo "[$(date +'%Y-%m-%dT%H:%M:%S%z')]: $*" >&2
 }
 
-command -v python3 >/dev/null 2>&1 || { log "Python3 is required but it's not installed. Aborting."; exit 1; }
+command -v python3 >/dev/null 2>&1 || {
+	log "Python3 is required but it's not installed. Aborting."
+	exit 1
+}
 
 ssh_folder_path="$HOME/.ssh/unlabored"
 account_name=""
@@ -15,24 +18,24 @@ ssh_key_path=""
 
 usage() {
 	cat <<EOF
-Usage: $0 <command> [-a <account_name> -k <ssh_key_path>]
+  Usage: $0 <command> [-a <account_name> -k <ssh_key_path>]
 
-Commands:
-install       Run the installation.
-setup-ssh     Set up SSH.
-ssh-agent     Set up the SSH Agent service.
-all           Run everything (install, setup-ssh, ssh-agent).
+  Commands:
+  install       Run the installation.
+  setup-ssh     Set up SSH.
+  ssh-agent     Set up the SSH Agent service.
+  all           Run everything (install, setup-ssh, ssh-agent).
 
-Optional arguments:
--a <account_name> The username for the remote host.
--k <ssh_key_path> The path to the SSH private key to use for authentication.
+  Optional arguments:
+  -a <account_name> The username for the remote host.
+  -k <ssh_key_path> The path to the SSH private key to use for authentication.
 
-Example: $0 install -a root -k ~/.ssh/ansible_ssh_key
+  Example: $0 install -a root -k ~/.ssh/ansible_ssh_key
 
-Reqs: apt install python3 python3-venv python3-pip
-This script sets up a development environment for setting up proxmox using ansible.
+  Reqs: apt install python3 python3-venv python3-pip
+  This script sets up a development environment for setting up proxmox using ansible.
 EOF
-exit 1
+	exit 1
 }
 
 install() {
@@ -40,13 +43,13 @@ install() {
 	source ./venv/bin/activate
 	pip install -r ./requirements.txt
 	pip install -r ./requirements-dev.txt
-  ansible-galaxy role install -r requirements.yaml -p ./ext_roles
+	ansible-galaxy role install -r requirements.yaml -p ./ext_roles
 	pip install git+https://github.com/hitchhooker/AISTool
 }
 
 setup_ssh() {
 	if [ -z "${account_name}" ] || [ -z "${ssh_key_path}" ]; then
-  		usage
+		usage
 	fi
 
 	if [[ ! -f "$ssh_key_path" ]]; then
@@ -61,8 +64,8 @@ setup_ssh() {
 	export SSH_CONFIG_TARGET="$ssh_folder_path/config"
 	export SSH_CONFIG_USER="$account_name"
 	export SSH_CONFIG_IDENTITY="$ssh_folder_path/ansible_ssh_key"
-	if ! grep -qxF "Include $ssh_folder_path/config" ~/.ssh/config; then 
-		echo "Include $ssh_folder_path/config" >>~/.ssh/config; 
+	if ! grep -qxF "Include $ssh_folder_path/config" ~/.ssh/config; then
+		echo "Include $ssh_folder_path/config" >>~/.ssh/config
 	fi
 	inv sshconfig
 }
@@ -83,13 +86,13 @@ ssh_agent() {
 	done
 
 	cat <<EOF >~/.config/systemd/user/ssh-agent.service
-[Unit]
-Description=SSH authentication agent
-[Service]
-ExecStart=/usr/bin/ssh-agent -a %t/ssh-agent.socket -D
-Type=simple
-[Install]
-WantedBy=default.target
+  [Unit]
+  Description=SSH authentication agent
+  [Service]
+  ExecStart=/usr/bin/ssh-agent -a %t/ssh-agent.socket -D
+  Type=simple
+  [Install]
+  WantedBy=default.target
 EOF
 
 	systemctl --user daemon-reload
@@ -97,25 +100,29 @@ EOF
 }
 
 if [ $# -eq 0 ]; then
-  usage
-  exit 1
+	usage
+	exit 1
 fi
 
 command=$1
 shift
 
 while getopts "a:k:" option; do
-  case "${option}" in
-    a) account_name="${OPTARG}";;
-    k) ssh_key_path="${OPTARG}";;
-    *) usage ;;
-  esac
+	case "${option}" in
+	a) account_name="${OPTARG}" ;;
+	k) ssh_key_path="${OPTARG}" ;;
+	*) usage ;;
+	esac
 done
 
 case "${command}" in
-	install) install;;
-	setup-ssh) setup_ssh;;
-	ssh-agent) ssh_agent;;
-	all) install; setup_ssh; ssh_agent;;
-	*) usage ;;
+install) install ;;
+setup-ssh) setup_ssh ;;
+ssh-agent) ssh_agent ;;
+all)
+	install
+	setup_ssh
+	ssh_agent
+	;;
+*) usage ;;
 esac
