@@ -1,21 +1,21 @@
 ---
 ansible_host: "27.131.160.106"
-container_ip: "192.168.69.133"
-ansible_port: "2133"
-host_name: "wnd03.rotko.net"
+container_ip: "192.168.69.124"
+ansible_port: "2124"
+host_name: "ksm04.rotko.net"
 host_timezone: "Asia/Bangkok"
 netif: '{"net0":"name=eth0,gw={{ default_nat_network_forward_cidr.split("/")[0] }},ip={{ default_host_ip }}/24,bridge={{ default_nat_device }}"}'
 role: "polkadot"
 pinned_service: True
 
-polkadot_network: "westend"
+polkadot_network: kusama
 default_node_type: "bootnode"
-default_telemetry_name: "Rotko Networks - wnd03"
+default_telemetry_name: "Rotko Networks - ksm04"
 polkadot_pruning: "archive"
 polkadot_database: paritydb
 polkadot_syncmode: full
-polkadot_p2p_port: 33333
-polkadot_rpc_port: 9133
-polkadot_prom_port: 7133
-zabbix_ext_port: 10133
+polkadot_p2p_port: 33124
+polkadot_rpc_port: 9124
+polkadot_prom_port: 7124
+zabbix_ext_port: 10124
 ...
