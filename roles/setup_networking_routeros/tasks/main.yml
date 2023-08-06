@@ -1,6 +1,6 @@
 ---
 - name: Fetch existing NAT rules
-  community.network.routeros_command:
+  community.routeros.command:
     commands: /ip firewall nat print without-paging
   delegate_to: "{{ routeros_delegate_host }}"
   register: _existing_nat_rules_raw
@@ -29,7 +29,7 @@
   register: port_forwards_exist_check
 
 - name: Configure port forwards on RouterOS for each LXC node
-  community.network.routeros_command:
+  community.routeros.command:
     #    commands: "{{ item.port_forward | generate_routeros_command(public_ip) }}"
     commands: "{{ item.port_forward | generate_routeros_command(ansible_host) }}"
   loop: "{{ port_forwards_exist_check.results }}"

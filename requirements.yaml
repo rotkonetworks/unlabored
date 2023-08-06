@@ -1,9 +1,8 @@
 ---
 collections:
   - name: community.network
-    src: community.network
+    source: https://galaxy.ansible.com
 
 roles:
-  - name: geerlingguy.postfix
-    src: geerlingguy.postfix
+  - src: geerlingguy.postfix
 ...
