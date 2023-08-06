@@ -2,3 +2,4 @@ ansible
 hcloud
 proxmoxer
 pssh
+ansible-pylibssh

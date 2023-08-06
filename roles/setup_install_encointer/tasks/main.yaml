@@ -55,17 +55,25 @@
 - name: Refresh facts
   ansible.builtin.setup:
 
-- name: Copy Polkadot systemd service for specific node type
+- name: Copy Polkadot systemd service for a validator node
   ansible.builtin.template:
-    src: "{{ 'polkadot_' + node_type + '.service.j2' }}"
+    src: polkadot_val.service.j2
     dest: "{{ polkadot_base }}/polkadot.service"
     owner: "{{ polkadot_user }}"
     group: "{{ polkadot_user }}"
     mode: '0644'
-  vars:
-    node_type: "{{ ansible_local['noderole']['node']['type'] }}"
-  when: 
-    - node_type in ["validator", "bootnode", "endpoint"]
+  when:
+    - ansible_local['noderole']['node']['type'] == "validator"
+
+- name: Copy Polkadot service for an endpoint node
+  ansible.builtin.template:
+    src: polkadot_bootnode.service.j2
+    dest: "{{ polkadot_base }}/polkadot.service"
+    owner: "{{ polkadot_user }}"
+    group: "{{ polkadot_user }}"
+    mode: '0644'
+  when:
+    - ansible_local['noderole']['node']['type'] == "bootnode"
 
 - name: Symlink Polkadot service to systemd
   ansible.builtin.file:

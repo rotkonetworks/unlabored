@@ -1,0 +1,101 @@
+---
+- name: Ensure group {{ cumulus_user }} exists
+  ansible.builtin.group:
+    name: "{{ cumulus_user }}"
+    state: present
+    system: True
+  notify:
+    - Add type of service
+
+- name: Ensure user {{ cumulus_user }} exists
+  ansible.builtin.user:
+    append: True
+    comment: cumulus service user
+    create_home: False
+    group: "{{ cumulus_user }}"
+    groups: sudo
+    home: "{{ cumulus_base }}"
+    name: "{{ cumulus_user }}"
+    shell: "{{ default_shell }}"
+    state: present
+    system: True
+
+- name: Ensure user {{ cumulus_user }} owns {{ polkadot_base }}
+  ansible.builtin.file:
+    path: "{{ item }}"
+    owner: "{{ cumulus_user }}"
+    group: "{{ cumulus_user }}"
+    mode: '0755'
+    state: directory
+  with_items:
+    - "{{ cumulus_base }}"
+
+- name: Refresh facts
+  ansible.builtin.setup:
+
+- name: Install cumulus v{{ polkadot_version }}
+  ansible.builtin.get_url:
+    url: "{{ cumulus_download_url }}"
+    dest: "{{ cumulus_base }}/polkadot-v{{ polkadot_version }}"
+    mode: "u+rwx"
+    owner: "{{ cumulus_user }}"
+    group: "{{ cumulus_user }}"
+  when:
+    - ansible_local['noderole']['node']['pinned'] != "True"
+    - ansible_local['noderole']['node']['version'] != cumulus_version
+  notify:
+    - Add cumulus service version
+    - Add Service Pinned Status
+    - Stop cumulus
+    - Symlink cumulus release
+    - Symlink binary executable
+    - Systemd daemon-reload
+    - Restart cumulus
+
+- name: Refresh facts
+  ansible.builtin.setup:
+
+- name: Copy cumulus systemd service for a validator node
+  ansible.builtin.template:
+    src: cumulus_val.service.j2
+    dest: "{{ cumulus_base }}/cumulus.service"
+    owner: "{{ cumulus_user }}"
+    group: "{{ cumulus_user }}"
+    mode: '0644'
+  when:
+    - ansible_local['noderole']['node']['type'] == "validator"
+
+- name: Copy cumulus service for a bootnode
+  ansible.builtin.template:
+    src: cumulus_bootnode.service.j2
+    dest: "{{ cumulus_base }}/cumulus.service"
+    owner: "{{ cumulus_user }}"
+    group: "{{ cumulus_user }}"
+    mode: '0644'
+  when:
+    - ansible_local['noderole']['node']['type'] == "bootnode"
+
+- name: Copy cumulus service for a endpoint node 
+  ansible.builtin.template:
+    src: cumulus_bootnode.service.j2
+    dest: "{{ cumulus_base }}/cumulus.service"
+    owner: "{{ cumulus_user }}"
+    group: "{{ cumulus_user }}"
+    mode: '0644'
+  when:
+    - ansible_local['noderole']['node']['type'] == "endpoint"
+
+- name: Symlink cumulus service to systemd
+  ansible.builtin.file:
+    src: "{{ cumulus_base }}/cumulus.service"
+    dest: "/etc/systemd/system/cumulus.service"
+    state: link
+    force: True
+    owner: "root"
+    group: "root"
+    mode: '0644'
+  notify:
+    - Stop cumulus
+    - Systemd daemon-reload
+    - Restart cumulus
+...

@@ -10,11 +10,13 @@ pinned_service: True
 
 polkadot_network: kusama
 default_node_type: "validator"
-default_telemetry_name: "Kusama XI Validator"
+#default_telemetry_name: "Kusama XI Validator"
+default_telemetry_name: "Rotko Networks - {{ host_name.split('.')[0] }}"
 polkadot_pruning: 1000
 polkadot_database: paritydb
 polkadot_syncmode: warp
 polkadot_p2p_port: 33121
 polkadot_rpc_port: 9121
 polkadot_prom_port: 7121
+zabbix_ext_port: 10121
 ...
