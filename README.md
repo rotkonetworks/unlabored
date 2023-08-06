@@ -58,4 +58,4 @@ inv ansiblelint
 3. [Networking](docs/networking.md) - Thinking networking and firewall solutions
 4. [Playbooks](docs/playbooks.md) - An overview of the Ansible playbooks used for various tasks and how to execute them.
 5. [Data Sync](docs/data-sync.md) - A tutorial on synchronizing data between servers using `rsync` and `screen` commands.
-6. [Hetzner setup - extra](docs/hetzner-setup.md) - Instructions for setting up hetzner robot servers.
+6. [Rotko Networks Infrastructure](https://rotko.net/docs) - Overall docs for infrastructure this script is design to run for.
