@@ -18,61 +18,91 @@ default_storage: "tank"
 default_resource_pool: "bkk04_resource_pool"
 
 lxc_nodes:
-  - host: "dot04"
-    proxmox_config:
-      vmid: "114"
-      hostname: "{{ hostvars['dot04']['host_name'] }}"
-      ostemplate: 'local:vztmpl/{{ default_container_template }}'
-      netif: "{{ hostvars['dot04']['netif'] }}"
-      cores: 4
-      memory: 32768
-      swap: 16384
-      password: "{{ default_password }}"
-      disk: "{{ default_storage }}:20"
-      mounts: '{"mp0":"{{ default_storage }}:2500,mp={{ hostvars["dot04"]["polkadot_base"] }}"}'
-      onboot: True
-      unprivileged: True
-      validate_certs: False
-      description: "{{ hostvars['dot04']['polkadot_network'] }} {{ hostvars['dot04']['default_node_type'] }}: {{ hostvars['dot04']['host_name'] }}"
-      state: present
-      features:
-        - nesting=1
-  - host: "ksm04"
-    proxmox_config:
-      vmid: "124"
-      hostname: "{{ hostvars['ksm04']['host_name'] }}"
-      ostemplate: 'local:vztmpl/{{ default_container_template }}'
-      netif: "{{ hostvars['ksm04']['netif'] }}"
-      cores: 4
-      memory: 32768
-      swap: 16384
-      password: "{{ default_password }}"
-      disk: "{{ default_storage }}:20"
-      mounts: '{"mp0":"{{ default_storage }}:3000,mp={{ hostvars["ksm04"]["polkadot_base"] }}"}'
-      onboot: True
-      unprivileged: True
-      validate_certs: False
-      description: "{{ hostvars['ksm04']['polkadot_network'] }} {{ hostvars['ksm04']['default_node_type'] }}: {{ hostvars['ksm04']['host_name'] }}"
-      state: present
-      features:
-        - nesting=1
-  - host: "wnd04"
-    proxmox_config:
-      vmid: "134"
-      hostname: "{{ hostvars['wnd04']['host_name'] }}"
-      ostemplate: 'local:vztmpl/{{ default_container_template }}'
-      netif: "{{ hostvars['wnd04']['netif'] }}"
-      cores: 4
-      memory: 32768
-      swap: 16384
-      password: "{{ default_password }}"
-      disk: "{{ default_storage }}:20"
-      mounts: '{"mp0":"{{ default_storage }}:2000,mp={{ hostvars["wnd04"]["polkadot_base"] }}"}'
-      onboot: True
-      unprivileged: True
-      validate_certs: False
-      description: "{{ hostvars['wnd04']['polkadot_network'] }} {{ hostvars['wnd04']['default_node_type'] }}: {{ hostvars['wnd04']['host_name'] }}"
-      state: present
-      features:
-        - nesting=1
+  # - host: "dot04"
+  #   proxmox_config:
+  #     vmid: "114"
+  #     hostname: "{{ hostvars['dot04']['host_name'] }}"
+  #     ostemplate: 'local:vztmpl/{{ default_container_template }}'
+  #     netif: "{{ hostvars['dot04']['netif'] }}"
+  #     cores: 8
+  #     memory: 32768
+  #     swap: 16384
+  #     password: "{{ default_password }}"
+  #     disk: "{{ default_storage }}:20"
+  #     mounts: '{"mp0":"{{ default_storage }}:2500,mp={{ hostvars["dot04"]["polkadot_base"] }}"}'
+  #     onboot: True
+  #     unprivileged: True
+  #     validate_certs: False
+  #     description: "{{ hostvars['dot04']['polkadot_network'] }} {{ hostvars['dot04']['default_node_type'] }}: {{ hostvars['dot04']['host_name'] }}"
+  #     state: present
+  #     features:
+  #       - nesting=1
+  #   port_forwards:
+  #     - from_port: "{{ hostvars['dot04']['ansible_port'] }}"
+  #       to_host: "{{ hostvars['dot04']['container_ip'] }}:22"
+  #       protocol: "tcp"
+  #     - from_port: "{{ hostvars['dot04']['polkadot_rpc_port'] }}"
+  #       to_host: "{{ hostvars['dot04']['container_ip'] }}:{{ hostvars['dot04']['polkadot_rpc_port'] }}"
+  #       protocol: "tcp"
+  #     - from_port: "{{ hostvars['dot04']['polkadot_p2p_port'] }}"
+  #       to_host: "{{ hostvars['dot04']['container_ip'] }}:{{ hostvars['dot04']['polkadot_p2p_port'] }}"
+  #       protocol: "tcp"
+  # - host: "ksm04"
+  #   proxmox_config:
+  #     vmid: "124"
+  #     hostname: "{{ hostvars['ksm04']['host_name'] }}"
+  #     ostemplate: 'local:vztmpl/{{ default_container_template }}'
+  #     netif: "{{ hostvars['ksm04']['netif'] }}"
+  #     cores: 8
+  #     memory: 32768
+  #     swap: 16384
+  #     password: "{{ default_password }}"
+  #     disk: "{{ default_storage }}:20"
+  #     mounts: '{"mp0":"{{ default_storage }}:3000,mp={{ hostvars["ksm04"]["polkadot_base"] }}"}'
+  #     onboot: True
+  #     unprivileged: True
+  #     validate_certs: False
+  #     description: "{{ hostvars['ksm04']['polkadot_network'] }} {{ hostvars['ksm04']['default_node_type'] }}: {{ hostvars['ksm04']['host_name'] }}"
+  #     state: present
+  #     features:
+  #       - nesting=1
+  #   port_forwards:
+  #     - from_port: "{{ hostvars['ksm04']['ansible_port'] }}"
+  #       to_host: "{{ hostvars['ksm04']['container_ip'] }}:22"
+  #       protocol: "tcp"
+  #     - from_port: "{{ hostvars['ksm04']['polkadot_rpc_port'] }}"
+  #       to_host: "{{ hostvars['ksm04']['container_ip'] }}:{{ hostvars['ksm04']['polkadot_rpc_port'] }}"
+  #       protocol: "tcp"
+  #     - from_port: "{{ hostvars['ksm04']['polkadot_p2p_port'] }}"
+  #       to_host: "{{ hostvars['ksm04']['container_ip'] }}:{{ hostvars['ksm04']['polkadot_p2p_port'] }}"
+  #       protocol: "tcp"
+  # - host: "wnd04"
+  #   proxmox_config:
+  #     vmid: "134"
+  #     hostname: "{{ hostvars['wnd04']['host_name'] }}"
+  #     ostemplate: 'local:vztmpl/{{ default_container_template }}'
+  #     netif: "{{ hostvars['wnd04']['netif'] }}"
+  #     cores: 8
+  #     memory: 32768
+  #     swap: 16384
+  #     password: "{{ default_password }}"
+  #     disk: "{{ default_storage }}:20"
+  #     mounts: '{"mp0":"{{ default_storage }}:2000,mp={{ hostvars["wnd04"]["polkadot_base"] }}"}'
+  #     onboot: True
+  #     unprivileged: True
+  #     validate_certs: False
+  #     description: "{{ hostvars['wnd04']['polkadot_network'] }} {{ hostvars['wnd04']['default_node_type'] }}: {{ hostvars['wnd04']['host_name'] }}"
+  #     state: present
+  #     features:
+  #       - nesting=1
+  #   port_forwards:
+  #     - from_port: "{{ hostvars['wnd04']['ansible_port'] }}"
+  #       to_host: "{{ hostvars['wnd04']['container_ip'] }}:22"
+  #       protocol: "tcp"
+  #     - from_port: "{{ hostvars['wnd04']['polkadot_rpc_port'] }}"
+  #       to_host: "{{ hostvars['wnd04']['container_ip'] }}:{{ hostvars['wnd04']['polkadot_rpc_port'] }}"
+  #       protocol: "tcp"
+  #     - from_port: "{{ hostvars['wnd04']['polkadot_p2p_port'] }}"
+  #       to_host: "{{ hostvars['wnd04']['container_ip'] }}:{{ hostvars['wnd04']['polkadot_p2p_port'] }}"
+  #       protocol: "tcp"
 ...

@@ -12,8 +12,6 @@
   gather_facts: True
   roles:
     - role: setup_networking_routeros
-      delegate_to: bkk00
-      run_once: true
       when: default_need_routeros_port_forwarding
 
 - name: Proxmox setup nodes

@@ -10,41 +10,37 @@
     existing_nat_rules: "{{ _existing_nat_rules_raw.stdout[0] | parse_nat_rules }}"
   delegate_to: "{{ routeros_delegate_host }}"
 
-- name: Debug lxc_nodes
-  ansible.builtin.debug:
-    var: lxc_nodes
-
-- name: Debug existing_nat_rules
-  ansible.builtin.debug:
-    var: existing_nat_rules
-
-- name: Debug existing_nat_rules and lxc_nodes
-  ansible.builtin.debug:
-    msg:
-      - "Existing NAT Rules: {{ existing_nat_rules }}"
-      - "LXC Nodes: {{ lxc_nodes }}"
-
-- name: Check if port forwarding rule already exists for each port forward
-  ansible.builtin.set_fact:
-    port_forward_exists: "{% for rule in existing_nat_rules %}{% if rule.get('to-addresses') and rule.get('to-ports') and port_forward.to_host.split(':')[0] == rule['to-addresses'] and port_forward.to_host.split(':')[1] == rule['to-ports'] %}true{% endif %}{% endfor %}"
-  loop: "{{ lxc_nodes | map(attribute='port_forwards') | flatten(levels=1) }}"
-  loop_control:
-    loop_var: port_forward
-  register: port_forwards_exist
+# - name: Debug existing_nat_rules and lxc_nodes
+#   ansible.builtin.debug:
+#     msg:
+#       - "Existing NAT Rules: {{ existing_nat_rules }}"
+#       - "LXC Nodes: {{ lxc_nodes }}"
 
 - name: Construct RouterOS commands
   ansible.builtin.set_fact:
-    routeros_commands: "{{ lxc_nodes | map(attribute='port_forwards') | flatten | map('generate_routeros_command', hostvars[routeros_delegate_host].default_gw_device) | list }}"
+    routeros_commands: "{{ lxc_nodes | map(attribute='port_forwards') | flatten | map('generate_routeros_command', ansible_host) | list }}"
 
-- name: Debug routeros_commands
-  ansible.builtin.debug:
-    var: item
-  loop: "{{ routeros_commands }}"
+- name: Check if port forwarding rule already exists for each port forward
+  ansible.builtin.set_fact:
+    port_forward_exists: "{{ existing_nat_rules | port_forward_exists(port_forward) }}"
+  loop: "{{ lxc_nodes | map(attribute='port_forwards') | flatten(levels=1) }}"
+  loop_control:
+    loop_var: port_forward
+  register: port_forwards_exist_check
 
+- name: Configure port forwards on RouterOS for each LXC node
+  community.network.routeros_command:
+    #    commands: "{{ item.port_forward | generate_routeros_command(public_ip) }}"
+    commands: "{{ item.port_forward | generate_routeros_command(ansible_host) }}"
+  loop: "{{ port_forwards_exist_check.results }}"
+  when: item.ansible_facts.port_forward_exists == false
+  delegate_to: "{{ routeros_delegate_host }}"
+#
 # - name: Configure port forwards on RouterOS for each LXC node
 #   community.network.routeros_command:
-#     commands: "{{ item }}"
-#   loop: "{{ routeros_commands }}"
+#     commands: "{{ item.item }}"
+#   loop: "{{ port_forwards_exist_check.results }}"
+#   when: item.ansible_facts.port_forward_exists == false
 #   delegate_to: "{{ routeros_delegate_host }}"
-#   when: port_forwards_exist.results is undefined or item not in port_forwards_exist.results | map(attribute='ansible_facts.port_forward_exists') | list
+#
 ...

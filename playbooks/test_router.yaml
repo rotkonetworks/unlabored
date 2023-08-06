@@ -1,0 +1,9 @@
+# Standards: 0.2
+---
+- name: RouterOS setup
+  hosts: proxmox_hosts
+  gather_facts: True
+  roles:
+    - role: setup_networking_routeros
+      when: default_need_routeros_port_forwarding
+...

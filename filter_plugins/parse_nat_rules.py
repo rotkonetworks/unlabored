@@ -28,9 +28,16 @@ def parse_nat_rules(output):
     nat_rules = filter(None, map(parse_line, lines))
     return list(nat_rules)
 
+def port_forward_exists(existing_nat_rules, port_forward):
+    to_addresses, to_ports = port_forward['to_host'].split(':')
+    for rule in existing_nat_rules:
+        if rule.get('to-addresses') == to_addresses and rule.get('to-ports') == to_ports:
+            return True
+    return False
 
 class FilterModule(object):
     def filters(self):
         return {
             'parse_nat_rules': parse_nat_rules,
+            'port_forward_exists': port_forward_exists,
         }

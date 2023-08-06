@@ -24,8 +24,8 @@ dot02
 [proxmox_hosts]
 bkk01
 bkk02
-bkk03
-bkk04
+#bkk03
+#bkk04
 
 [routeros]
 bkk00
@@ -38,8 +38,8 @@ tok01
 [hardware]
 bkk01
 bkk02
-bkk03
-bkk04
+#bkk03
+#bkk04
 
 [access_management:children]
 hardware
