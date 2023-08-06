@@ -1,5 +1,5 @@
 hosts
-venv/
+.venv/
 pssh/output/
 testinventory
 later_plugins/__pycache__

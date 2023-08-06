@@ -1,5 +1,5 @@
 # flake8: noqa
-from invoke import task, Collection
+from invoke import task
 from pathlib import Path
 import os
 
@@ -84,7 +84,7 @@ def pin(ctx, target):
 
 @task
 def yamllint(ctx):
-    # paths = ["../.github/workflows", "playbooks"]:
+    # paths = [".github/workflows", "playbooks"]:
     paths = ["playbooks"]
     for folder in paths:
         ctx.run(f"yamllint -c ./.yamllint {folder}")

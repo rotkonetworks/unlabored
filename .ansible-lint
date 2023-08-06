@@ -19,6 +19,7 @@ skip_list:
 exclude_paths:
   - .later.yaml
   - ./ext_roles/
+  - ./venv/
   - ./roles/geerlingguy.postfix/
 offline: False
 kinds:
