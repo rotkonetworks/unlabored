@@ -40,7 +40,6 @@ jobs:
           export ANSIBLE_VAULT_PASSWORD_FILE=.vault_pass
 
           # Run all commands within "ansible" directory
-          cd ansible
           inv syntaxcheck
           inv ansiblelint
           inv yamllint
