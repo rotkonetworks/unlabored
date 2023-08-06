@@ -64,7 +64,7 @@
     mode: '0644'
   vars:
     node_type: "{{ ansible_local['noderole']['node']['type'] }}"
-  when: 
+  when:
     - node_type in ["validator", "bootnode", "endpoint"]
 
 - name: Symlink Polkadot service to systemd

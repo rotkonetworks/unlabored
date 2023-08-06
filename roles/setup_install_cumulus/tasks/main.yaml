@@ -55,35 +55,17 @@
 - name: Refresh facts
   ansible.builtin.setup:
 
-- name: Copy cumulus systemd service for a validator node
+- name: Copy Parachain systemd service for specific node type
   ansible.builtin.template:
-    src: cumulus_val.service.j2
+    src: "{{ 'cumulus_' + node_type + '.service.j2' }}"
     dest: "{{ cumulus_base }}/cumulus.service"
     owner: "{{ cumulus_user }}"
     group: "{{ cumulus_user }}"
     mode: '0644'
+  vars:
+    node_type: "{{ ansible_local['noderole']['node']['type'] }}"
   when:
-    - ansible_local['noderole']['node']['type'] == "validator"
-
-- name: Copy cumulus service for a bootnode
-  ansible.builtin.template:
-    src: cumulus_bootnode.service.j2
-    dest: "{{ cumulus_base }}/cumulus.service"
-    owner: "{{ cumulus_user }}"
-    group: "{{ cumulus_user }}"
-    mode: '0644'
-  when:
-    - ansible_local['noderole']['node']['type'] == "bootnode"
-
-- name: Copy cumulus service for a endpoint node 
-  ansible.builtin.template:
-    src: cumulus_bootnode.service.j2
-    dest: "{{ cumulus_base }}/cumulus.service"
-    owner: "{{ cumulus_user }}"
-    group: "{{ cumulus_user }}"
-    mode: '0644'
-  when:
-    - ansible_local['noderole']['node']['type'] == "endpoint"
+    - node_type in ["validator", "bootnode", "endpoint"]
 
 - name: Symlink cumulus service to systemd
   ansible.builtin.file:
