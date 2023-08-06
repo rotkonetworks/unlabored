@@ -179,4 +179,48 @@ lxc_nodes:
       - from_port: "{{ hostvars['wnd24']['polkadot_p2p_port'] }}"
         to_host: "{{ hostvars['wnd24']['container_ip'] }}:{{ hostvars['wnd24']['polkadot_p2p_port'] }}"
         protocol: "tcp"
+  - host: "ansible"
+    proxmox_config:
+      vmid: "999"
+      hostname: "{{ hostvars['ansible']['host_name'] }}"
+      ostemplate: 'local:vztmpl/{{ default_container_template }}'
+      netif: "{{ hostvars['ansible']['netif'] }}"
+      cores: 2
+      memory: 256
+      swap: 256
+      password: "{{ default_password }}"
+      disk: "{{ default_storage }}:20"
+      onboot: True
+      unprivileged: True
+      validate_certs: False
+      description: "ansible tower"
+      state: present
+      features:
+        - nesting=1
+    port_forwards:
+      - from_port: "{{ hostvars['ansible']['ansible_port'] }}"
+        to_host: "{{ hostvars['ansible']['container_ip'] }}:22"
+        protocol: "tcp"
+  - host: "monitor"
+    proxmox_config:
+      vmid: "998"
+      hostname: "{{ hostvars['ansible']['host_name'] }}"
+      ostemplate: 'local:vztmpl/{{ default_container_template }}'
+      netif: "{{ hostvars['ansible']['netif'] }}"
+      cores: 2
+      memory: 256
+      swap: 256
+      password: "{{ default_password }}"
+      disk: "{{ default_storage }}:20"
+      onboot: True
+      unprivileged: True
+      validate_certs: False
+      description: "monitoring"
+      state: present
+      features:
+        - nesting=1
+    port_forwards:
+      - from_port: "{{ hostvars['ansible']['ansible_port'] }}"
+        to_host: "{{ hostvars['ansible']['container_ip'] }}:22"
+        protocol: "tcp"
 ...
