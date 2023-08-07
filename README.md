@@ -34,7 +34,7 @@ For instance:
 
 To set up a shortcut and virtual environment, add the following alias to your bashrc or zshrc:
 ```bash
-alias unlabored='cd ~/src/unlabored && source ../venv/bin/activate'
+alias unlabored='cd ~/src/unlabored && source ../.venv/bin/activate'
 ```
 This alias will allow you to quickly navigate to the correct directory and activate the virtual environment.
 

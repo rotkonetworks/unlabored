@@ -54,8 +54,8 @@ def black(ctx):
 
 @task
 def flake8(ctx):
-    ctx.run("flake8 . --select=E9,F63,F7,F82 --show-source --statistics")
-    ctx.run("flake8 . --exit-zero --statistics")
+    ctx.run("flake8 . --select=E9,F63,F7,F82 --show-source --statistics --exclude .venv")
+    ctx.run("flake8 . --exit-zero --statistics --exclude .venv")
 
 
 @task

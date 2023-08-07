@@ -10,3 +10,7 @@ exclude = '''
   )/ | versioneer.py | _version.py
 )
 '''
+
+[tool.flake8]
+exclude = ".venv, versioneer.py, _version.py"
+per-file-ignores = ".venv/*: *"
