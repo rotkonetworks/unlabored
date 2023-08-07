@@ -5,11 +5,9 @@ import os
 
 assert Path.cwd() == Path(__file__).parent
 
-SSH_CONFIG_TARGET = Path(os.environ.get(
-    "SSH_CONFIG_TARGET", "~/.ssh/unlabored/config")).expanduser()
+SSH_CONFIG_TARGET = Path(os.environ.get("SSH_CONFIG_TARGET", "~/.ssh/unlabored/config")).expanduser()
 SSH_CONFIG_USER = os.environ.get("SSH_CONFIG_USER", "root")
-SSH_CONFIG_IDENTITY = Path(os.environ.get(
-    "SSH_CONFIG_IDENTITY", "~/.ssh/unlabored/ansible_ssh_key")).expanduser()
+SSH_CONFIG_IDENTITY = Path(os.environ.get("SSH_CONFIG_IDENTITY", "~/.ssh/unlabored/ansible_ssh_key")).expanduser()
 
 
 @task
@@ -21,8 +19,7 @@ def playbook(ctx, arg="--syntax-check"):
 @task
 def sshconfig(ctx):
     if SSH_CONFIG_IDENTITY.exists():
-        ctx.run(
-            f"AISTool -o {SSH_CONFIG_TARGET} --backup -u {SSH_CONFIG_USER} -i {SSH_CONFIG_IDENTITY} --forwardagent ./inventory")
+        ctx.run(f"AISTool -o {SSH_CONFIG_TARGET} --backup -u {SSH_CONFIG_USER} -i {SSH_CONFIG_IDENTITY} --forwardagent ./inventory")
     else:
         print(f"File not found: {SSH_CONFIG_IDENTITY}")
 
@@ -60,10 +57,8 @@ def flake8(ctx):
 
 @task
 def unpin(ctx, target):
-    ctx.run(
-        f"ssh {target} 'sudo sed -i \'s/pinned=True/pinned=False/g\' /etc/ansible/facts.d/noderole.fact'")
-    result = ctx.run(
-        f"ssh {target} 'grep \"pinned=False\" /etc/ansible/facts.d/noderole.fact'", warn=True)
+    ctx.run(f"ssh {target} 'sudo sed -i 's/pinned=True/pinned=False/g' /etc/ansible/facts.d/noderole.fact'")
+    result = ctx.run(f"ssh {target} 'grep \"pinned=False\" /etc/ansible/facts.d/noderole.fact'", warn=True)
     if result.ok:
         print(f"Unpin operation completed on {target}")
     else:
@@ -72,10 +67,8 @@ def unpin(ctx, target):
 
 @task
 def pin(ctx, target):
-    ctx.run(
-        f"ssh {target} 'sudo sed -i \'s/pinned=False/pinned=True/g\' /etc/ansible/facts.d/noderole.fact'")
-    result = ctx.run(
-        f"ssh {target} 'grep \"pinned=True\" /etc/ansible/facts.d/noderole.fact'", warn=True)
+    ctx.run(f"ssh {target} 'sudo sed -i 's/pinned=False/pinned=True/g' /etc/ansible/facts.d/noderole.fact'")
+    result = ctx.run(f"ssh {target} 'grep \"pinned=True\" /etc/ansible/facts.d/noderole.fact'", warn=True)
     if result.ok:
         print(f"Pin operation completed on {target}")
     else:
