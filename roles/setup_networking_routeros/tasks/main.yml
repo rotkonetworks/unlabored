@@ -30,17 +30,8 @@
 
 - name: Configure port forwards on RouterOS for each LXC node
   community.routeros.command:
-    #    commands: "{{ item.port_forward | generate_routeros_command(public_ip) }}"
     commands: "{{ item.port_forward | generate_routeros_command(ansible_host) }}"
   loop: "{{ port_forwards_exist_check.results }}"
-  when: item.ansible_facts.port_forward_exists == false
+  when: item.ansible_facts.port_forward_exists == False
   delegate_to: "{{ routeros_delegate_host }}"
-#
-# - name: Configure port forwards on RouterOS for each LXC node
-#   community.network.routeros_command:
-#     commands: "{{ item.item }}"
-#   loop: "{{ port_forwards_exist_check.results }}"
-#   when: item.ansible_facts.port_forward_exists == false
-#   delegate_to: "{{ routeros_delegate_host }}"
-#
 ...

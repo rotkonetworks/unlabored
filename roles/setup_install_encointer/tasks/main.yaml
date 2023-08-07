@@ -30,7 +30,7 @@
   with_items:
     - "{{ polkadot_base }}"
 
-- name: Refresh facts
+- name: Refresh facts before install
   ansible.builtin.setup:
 
 - name: Install polkadot v{{ polkadot_version }}
@@ -52,7 +52,7 @@
     - Systemd daemon-reload
     - Restart polkadot
 
-- name: Refresh facts
+- name: Refresh facts after install
   ansible.builtin.setup:
 
 - name: Copy Polkadot systemd service for a validator node

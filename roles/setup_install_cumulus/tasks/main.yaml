@@ -30,7 +30,7 @@
   with_items:
     - "{{ cumulus_base }}"
 
-- name: Refresh facts
+- name: Refresh facts before install
   ansible.builtin.setup:
 
 - name: Install cumulus v{{ polkadot_version }}
@@ -52,7 +52,7 @@
     - Systemd daemon-reload
     - Restart cumulus
 
-- name: Refresh facts
+- name: Refresh facts after install
   ansible.builtin.setup:
 
 - name: Copy Parachain systemd service for specific node type

@@ -52,7 +52,11 @@ rules:
   buildin: True
 
   # List of files to exclude
-  exclude_files: ["**/*.list","**/*.template"]
+  exclude_files:
+    - "**/*.list"
+    - "**/*.template"
+    - "ext_roles/**/*"
+
   # Examples:
   #  - molecule/
   #  - files/**/*.py

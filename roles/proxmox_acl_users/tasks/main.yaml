@@ -16,20 +16,20 @@
       ansible.builtin.shell:
         cmd: "set -o pipefail && pveum user list | awk '{print $2}' | grep -wo '[a-zA-Z0-9_-]*@pve' || true"
       register: pveum_user_list
-      changed_when: false
-      failed_when: false
+      changed_when: False
+      failed_when: False
       args:
         executable: /bin/bash
 
     - name: Set current users fact if users exist
       ansible.builtin.set_fact:
         current_users: "{{ pveum_user_list.stdout_lines }}"
-      when: pveum_user_list.stdout != ""
+      when: pveum_user_list.stdout
 
     - name: Set current users fact empty if no users exist
       ansible.builtin.set_fact:
         current_users: []
-      when: pveum_user_list.stdout == ""
+      when: not pveum_user_list.stdout
 
 - name: Check if user needs to be added or modified
   delegate_to: "{{ primary_node }}"
@@ -49,6 +49,6 @@
       - '"{{ item.comment }}"'
       - -group
       - "{{ item.groups }}"
-  when: item.name not in current_users and item.name != "" and (inventory_hostname == primary_node)
+  when: item.name not in current_users and item.name and (inventory_hostname == primary_node)
   with_items: "{{ proxmox_admin_accounts }}"
 ...
