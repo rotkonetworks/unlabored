@@ -3,41 +3,41 @@
   ansible.builtin.systemd:
     daemon_reload: True
 
-- name: Symlink Polkadot release
+- name: Symlink Encointer release
   ansible.builtin.file:
-    src: "{{ polkadot_base }}/polkadot-v{{ polkadot_version }}"
-    dest: "{{ polkadot_base }}/polkadot"
+    src: "{{ encointer_base }}/encointer-v{{ encointer_version }}"
+    dest: "{{ encointer_base }}/encointer"
     force: True
     state: link
-    owner: "{{ polkadot_user }}"
-    group: "{{ polkadot_user }}"
+    owner: "{{ encointer_user }}"
+    group: "{{ encointer_user }}"
 
 - name: Symlink binary executable
   ansible.builtin.file:
-    src: "{{ polkadot_base }}/polkadot-v{{ polkadot_version }}"
-    dest: "/usr/local/bin/polkadot"
+    src: "{{ encointer_base }}/encointer-v{{ encointer_version }}"
+    dest: "/usr/local/bin/encointer"
     force: True
     state: link
-    owner: "{{ polkadot_user }}"
-    group: "{{ polkadot_user }}"
+    owner: "{{ encointer_user }}"
+    group: "{{ encointer_user }}"
 
-- name: Stop Polkadot
+- name: Stop Encointer
   ansible.builtin.systemd:
-    name: polkadot
+    name: encointer
     daemon_reload: True
     state: stopped
     enabled: True
 
-- name: Restart Polkadot
+- name: Restart Encointer
   ansible.builtin.systemd:
-    name: polkadot
+    name: encointer
     daemon_reload: True
     state: restarted
     enabled: True
 
-- name: Start Polkadot
+- name: Start Encointer
   ansible.builtin.systemd:
-    name: polkadot
+    name: encointer
     daemon_reload: True
     state: started
     enabled: True

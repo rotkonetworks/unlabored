@@ -33,7 +33,7 @@
 - name: Refresh facts before install
   ansible.builtin.setup:
 
-- name: Install cumulus v{{ polkadot_version }}
+- name: Install Cumulus v{{ polkadot_version }}
   ansible.builtin.get_url:
     url: "{{ cumulus_download_url }}"
     dest: "{{ cumulus_base }}/polkadot-v{{ polkadot_version }}"
@@ -44,13 +44,13 @@
     - ansible_local['noderole']['node']['pinned'] != "True"
     - ansible_local['noderole']['node']['version'] != cumulus_version
   notify:
-    - Add cumulus service version
+    - Add Cumulus service version
     - Add Service Pinned Status
-    - Stop cumulus
-    - Symlink cumulus release
+    - Stop Cumulus
+    - Symlink Cumulus release
     - Symlink binary executable
     - Systemd daemon-reload
-    - Restart cumulus
+    - Restart Cumulus
 
 - name: Refresh facts after install
   ansible.builtin.setup:
@@ -65,9 +65,9 @@
   vars:
     node_type: "{{ ansible_local['noderole']['node']['type'] }}"
   when:
-    - node_type in ["validator", "bootnode", "endpoint"]
+    - node_type in ["collator", "bootnode", "endpoint"]
 
-- name: Symlink cumulus service to systemd
+- name: Symlink Cumulus service to systemd
   ansible.builtin.file:
     src: "{{ cumulus_base }}/cumulus.service"
     dest: "/etc/systemd/system/cumulus.service"
@@ -77,7 +77,7 @@
     group: "root"
     mode: '0644'
   notify:
-    - Stop cumulus
+    - Stop Cumulus
     - Systemd daemon-reload
-    - Restart cumulus
+    - Restart Cumulus
 ...

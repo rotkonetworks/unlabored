@@ -2,7 +2,7 @@
 ---
 galaxy_info:
   author: Rotko Networks <hq@rotko.net>
-  description: Install or upgrade Polkadot
+  description: Install or upgrade Collator
   min_ansible_version: 3.0
   platforms:
     - name: Debian

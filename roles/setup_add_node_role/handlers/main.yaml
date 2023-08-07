@@ -56,6 +56,34 @@
     mode: '0644'
   when: role == "binance"
 
+- name: Add Cumulus service version
+  community.general.ini_file:
+    create: True
+    no_extra_spaces: True
+    option: "version"
+    section: "node"
+    state: present
+    value: "{{ cumulus_version }}"
+    path: "{{ noderole_file }}"
+    owner: root
+    group: root
+    mode: '0644'
+  when: role == "cumulus"
+ 
+- name: Add Encointer service version
+  community.general.ini_file:
+    create: True
+    no_extra_spaces: True
+    option: "version"
+    section: "node"
+    state: present
+    value: "{{ encointer_version }}"
+    path: "{{ noderole_file }}"
+    owner: root
+    group: root
+    mode: '0644'
+  when: role == "encointer"
+
 - name: Add Fantom service version
   community.general.ini_file:
     create: True

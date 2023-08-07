@@ -1,91 +1,83 @@
 ---
-- name: Ensure group {{ polkadot_user }} exists
+- name: Ensure group {{ encointer_user }} exists
   ansible.builtin.group:
-    name: "{{ polkadot_user }}"
+    name: "{{ encointer_user }}"
     state: present
     system: True
   notify:
     - Add type of service
 
-- name: Ensure user {{ polkadot_user }} exists
+- name: Ensure user {{ encointer_user }} exists
   ansible.builtin.user:
     append: True
-    comment: polkadot service user
+    comment: encointer service user
     create_home: False
-    group: "{{ polkadot_user }}"
+    group: "{{ encointer_user }}"
     groups: sudo
-    home: "{{ polkadot_base }}"
-    name: "{{ polkadot_user }}"
+    home: "{{ encointer_base }}"
+    name: "{{ encointer_user }}"
     shell: "{{ default_shell }}"
     state: present
     system: True
 
-- name: Ensure user {{ polkadot_user }} owns {{ polkadot_base }}
+- name: Ensure user {{ encointer_user }} owns {{ encointer_base }}
   ansible.builtin.file:
     path: "{{ item }}"
-    owner: "{{ polkadot_user }}"
-    group: "{{ polkadot_user }}"
+    owner: "{{ encointer_user }}"
+    group: "{{ encointer_user }}"
     mode: '0755'
     state: directory
   with_items:
-    - "{{ polkadot_base }}"
+    - "{{ encointer_base }}"
 
 - name: Refresh facts before install
   ansible.builtin.setup:
 
-- name: Install polkadot v{{ polkadot_version }}
+- name: Install Encointer v{{ encointer_version }}
   ansible.builtin.get_url:
-    url: "{{ polkadot_download_url }}"
-    dest: "{{ polkadot_base }}/polkadot-v{{ polkadot_version }}"
+    url: "{{ encointer_download_url }}"
+    dest: "{{ encointer_base }}/encointer-v{{ encointer_version }}"
     mode: "u+rwx"
-    owner: "{{ polkadot_user }}"
-    group: "{{ polkadot_user }}"
+    owner: "{{ encointer_user }}"
+    group: "{{ encointer_user }}"
   when:
     - ansible_local['noderole']['node']['pinned'] != "True"
-    - ansible_local['noderole']['node']['version'] != polkadot_version
+    - ansible_local['noderole']['node']['version'] != encointer_version
   notify:
-    - Add Polkadot service version
+    - Add Encointer service version
     - Add Service Pinned Status
-    - Stop polkadot
-    - Symlink polkadot release
+    - Stop Encointer
+    - Symlink Encointer release
     - Symlink binary executable
     - Systemd daemon-reload
-    - Restart polkadot
+    - Restart Encointer
 
 - name: Refresh facts after install
   ansible.builtin.setup:
 
-- name: Copy Polkadot systemd service for a validator node
+- name: Copy Encointer systemd service for specific node type
   ansible.builtin.template:
-    src: polkadot_val.service.j2
-    dest: "{{ polkadot_base }}/polkadot.service"
-    owner: "{{ polkadot_user }}"
-    group: "{{ polkadot_user }}"
+    src: "{{ 'encointer_' + node_type + '.service.j2' }}"
+    dest: "{{ encointer_base }}/encointer.service"
+    owner: "{{ encointer_user }}"
+    group: "{{ encointer_user }}"
     mode: '0644'
+  vars:
+    node_type: "{{ ansible_local['noderole']['node']['type'] }}"
   when:
-    - ansible_local['noderole']['node']['type'] == "validator"
+    - node_type in ["collator", "bootnode", "endpoint"]
 
-- name: Copy Polkadot service for an endpoint node
-  ansible.builtin.template:
-    src: polkadot_bootnode.service.j2
-    dest: "{{ polkadot_base }}/polkadot.service"
-    owner: "{{ polkadot_user }}"
-    group: "{{ polkadot_user }}"
-    mode: '0644'
-  when:
-    - ansible_local['noderole']['node']['type'] == "bootnode"
-
-- name: Symlink Polkadot service to systemd
+- name: Symlink Encointer service to systemd
   ansible.builtin.file:
-    src: "{{ polkadot_base }}/polkadot.service"
-    dest: "/etc/systemd/system/polkadot.service"
+    src: "{{ encointer_base }}/encointer.service"
+    dest: "/etc/systemd/system/encointer.service"
     state: link
     force: True
     owner: "root"
     group: "root"
     mode: '0644'
   notify:
-    - Stop Polkadot
+    - Stop Encointer
     - Systemd daemon-reload
-    - Restart Polkadot
+    - Restart Encointer
 ...
