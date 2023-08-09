@@ -1,5 +1,5 @@
 ---
-polkadot_version: 0.9.43
+polkadot_version: 1.0.0
 polkadot_download_url: https://github.com/paritytech/polkadot/releases/download/v{{ polkadot_version }}/polkadot
 
 polkadot_service: polkadot
@@ -9,10 +9,10 @@ polkadot_log_level: info
 polkadot_network: polkadot
 # pruning options: archive(rpc), archive-canonical(rpc/finalized) 256(default), 1000(validator)
 default_node_type: validator
-default_telemetry_url: "wss://telemetry.w3f.community/submit/ 0"
-polkadot_pruning: 1000
+# polkadot_pruning: 1000
+# polkadot_syncmode: warp
 polkadot_database: paritydb
-polkadot_syncmode: warp
+default_telemetry_url: "wss://telemetry.w3f.community/submit/ 0"
 polkadot_p2p_port: 33100
 polkadot_rpc_port: 9100
 polkadot_prom_port: 7100
