@@ -28,7 +28,7 @@ lxc_nodes:
       swap: 8192
       password: "{{ default_password }}"
       disk: "{{ default_storage }}:20"
-      mounts: '{"mp0":"{{ default_storage }}:400,mp={{ hostvars["dot04"]["polkadot_base"] }}"}'
+      mounts: '{"mp0":"{{ default_storage }}:500,mp={{ hostvars["dot04"]["polkadot_base"] }}"}'
       onboot: True
       unprivileged: True
       validate_certs: False
@@ -54,7 +54,7 @@ lxc_nodes:
       swap: 8192
       password: "{{ default_password }}"
       disk: "{{ default_storage }}:20"
-      mounts: '{"mp0":"{{ default_storage }}:400,mp={{ hostvars["dot14"]["polkadot_base"] }}"}'
+      mounts: '{"mp0":"{{ default_storage }}:500,mp={{ hostvars["dot14"]["polkadot_base"] }}"}'
       onboot: True
       unprivileged: True
       validate_certs: False
@@ -109,7 +109,7 @@ lxc_nodes:
       swap: 8192
       password: "{{ default_password }}"
       disk: "{{ default_storage }}:20"
-      mounts: '{"mp0":"{{ default_storage }}:600,mp={{ hostvars["ksm04"]["polkadot_base"] }}"}'
+      mounts: '{"mp0":"{{ default_storage }}:700,mp={{ hostvars["ksm04"]["polkadot_base"] }}"}'
       onboot: True
       unprivileged: True
       validate_certs: False
@@ -135,7 +135,7 @@ lxc_nodes:
       swap: 8192
       password: "{{ default_password }}"
       disk: "{{ default_storage }}:20"
-      mounts: '{"mp0":"{{ default_storage }}:600,mp={{ hostvars["ksm14"]["polkadot_base"] }}"}'
+      mounts: '{"mp0":"{{ default_storage }}:700,mp={{ hostvars["ksm14"]["polkadot_base"] }}"}'
       onboot: True
       unprivileged: True
       validate_certs: False
@@ -190,7 +190,7 @@ lxc_nodes:
       swap: 8192
       password: "{{ default_password }}"
       disk: "{{ default_storage }}:20"
-      mounts: '{"mp0":"{{ default_storage }}:300,mp={{ hostvars["wnd14"]["polkadot_base"] }}"}'
+      mounts: '{"mp0":"{{ default_storage }}:500,mp={{ hostvars["wnd14"]["polkadot_base"] }}"}'
       onboot: True
       unprivileged: True
       validate_certs: False
