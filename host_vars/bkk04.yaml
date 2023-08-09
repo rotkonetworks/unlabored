@@ -17,13 +17,39 @@ default_storage: "tank"
 default_resource_pool: "bkk04_resource_pool"
 
 lxc_nodes:
+  - host: "dot04"
+    proxmox_config:
+      vmid: "214"
+      hostname: "{{ hostvars['dot04']['host_name'] }}"
+      ostemplate: 'local:vztmpl/{{ default_container_template }}'
+      netif: "{{ hostvars['dot04']['netif'] }}"
+      cores: 4
+      memory: 8192
+      swap: 8192
+      password: "{{ default_password }}"
+      disk: "{{ default_storage }}:20"
+      mounts: '{"mp0":"{{ default_storage }}:400,mp={{ hostvars["dot04"]["polkadot_base"] }}"}'
+      onboot: True
+      unprivileged: True
+      validate_certs: False
+      description: "{{ hostvars['dot04']['polkadot_network'] }} {{ hostvars['dot04']['default_node_type'] }}: {{ hostvars['dot04']['host_name'] }}"
+      state: present
+      features:
+        - nesting=1
+    port_forwards:
+      - from_port: "{{ hostvars['dot04']['ansible_port'] }}"
+        to_host: "{{ hostvars['dot04']['container_ip'] }}:22"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['dot04']['polkadot_p2p_port'] }}"
+        to_host: "{{ hostvars['dot04']['container_ip'] }}:{{ hostvars['dot04']['polkadot_p2p_port'] }}"
+        protocol: "tcp"
   - host: "dot14"
     proxmox_config:
       vmid: "214"
       hostname: "{{ hostvars['dot14']['host_name'] }}"
       ostemplate: 'local:vztmpl/{{ default_container_template }}'
       netif: "{{ hostvars['dot14']['netif'] }}"
-      cores: 8
+      cores: 4
       memory: 16384
       swap: 8192
       password: "{{ default_password }}"
@@ -43,34 +69,60 @@ lxc_nodes:
       - from_port: "{{ hostvars['dot14']['polkadot_p2p_port'] }}"
         to_host: "{{ hostvars['dot14']['container_ip'] }}:{{ hostvars['dot14']['polkadot_p2p_port'] }}"
         protocol: "tcp"
-  - host: "dot24"
+  # - host: "dot24"
+  #   proxmox_config:
+  #     vmid: "314"
+  #     hostname: "{{ hostvars['dot24']['host_name'] }}"
+  #     ostemplate: 'local:vztmpl/{{ default_container_template }}'
+  #     netif: "{{ hostvars['dot24']['netif'] }}"
+  #     cores: 8
+  #     memory: 16384
+  #     swap: 8192
+  #     password: "{{ default_password }}"
+  #     disk: "{{ default_storage }}:20"
+  #     mounts: '{"mp0":"{{ default_storage }}:1500,mp={{ hostvars["dot24"]["polkadot_base"] }}"}'
+  #     onboot: True
+  #     unprivileged: True
+  #     validate_certs: False
+  #     description: "{{ hostvars['dot24']['polkadot_network'] }} {{ hostvars['dot24']['default_node_type'] }}: {{ hostvars['dot24']['host_name'] }}"
+  #     state: present
+  #     features:
+  #       - nesting=1
+  #   port_forwards:
+  #     - from_port: "{{ hostvars['dot24']['ansible_port'] }}"
+  #       to_host: "{{ hostvars['dot24']['container_ip'] }}:22"
+  #       protocol: "tcp"
+  #     - from_port: "{{ hostvars['dot24']['polkadot_rpc_port'] }}"
+  #       to_host: "{{ hostvars['dot24']['container_ip'] }}:{{ hostvars['dot24']['polkadot_rpc_port'] }}"
+  #       protocol: "tcp"
+  #     - from_port: "{{ hostvars['dot24']['polkadot_p2p_port'] }}"
+  #       to_host: "{{ hostvars['dot24']['container_ip'] }}:{{ hostvars['dot24']['polkadot_p2p_port'] }}"
+  #       protocol: "tcp"
+  - host: "ksm04"
     proxmox_config:
-      vmid: "314"
-      hostname: "{{ hostvars['dot24']['host_name'] }}"
+      vmid: "124"
+      hostname: "{{ hostvars['ksm04']['host_name'] }}"
       ostemplate: 'local:vztmpl/{{ default_container_template }}'
-      netif: "{{ hostvars['dot24']['netif'] }}"
-      cores: 8
-      memory: 16384
+      netif: "{{ hostvars['ksm04']['netif'] }}"
+      cores: 4
+      memory: 8192
       swap: 8192
       password: "{{ default_password }}"
       disk: "{{ default_storage }}:20"
-      mounts: '{"mp0":"{{ default_storage }}:1500,mp={{ hostvars["dot24"]["polkadot_base"] }}"}'
+      mounts: '{"mp0":"{{ default_storage }}:600,mp={{ hostvars["ksm04"]["polkadot_base"] }}"}'
       onboot: True
       unprivileged: True
       validate_certs: False
-      description: "{{ hostvars['dot24']['polkadot_network'] }} {{ hostvars['dot24']['default_node_type'] }}: {{ hostvars['dot24']['host_name'] }}"
+      description: "{{ hostvars['ksm04']['polkadot_network'] }} {{ hostvars['ksm04']['default_node_type'] }}: {{ hostvars['ksm04']['host_name'] }}"
       state: present
       features:
         - nesting=1
     port_forwards:
-      - from_port: "{{ hostvars['dot24']['ansible_port'] }}"
-        to_host: "{{ hostvars['dot24']['container_ip'] }}:22"
+      - from_port: "{{ hostvars['ksm04']['ansible_port'] }}"
+        to_host: "{{ hostvars['ksm04']['container_ip'] }}:22"
         protocol: "tcp"
-      - from_port: "{{ hostvars['dot24']['polkadot_rpc_port'] }}"
-        to_host: "{{ hostvars['dot24']['container_ip'] }}:{{ hostvars['dot24']['polkadot_rpc_port'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['dot24']['polkadot_p2p_port'] }}"
-        to_host: "{{ hostvars['dot24']['container_ip'] }}:{{ hostvars['dot24']['polkadot_p2p_port'] }}"
+      - from_port: "{{ hostvars['ksm04']['polkadot_p2p_port'] }}"
+        to_host: "{{ hostvars['ksm04']['container_ip'] }}:{{ hostvars['ksm04']['polkadot_p2p_port'] }}"
         protocol: "tcp"
   - host: "ksm14"
     proxmox_config:
@@ -78,7 +130,7 @@ lxc_nodes:
       hostname: "{{ hostvars['ksm14']['host_name'] }}"
       ostemplate: 'local:vztmpl/{{ default_container_template }}'
       netif: "{{ hostvars['ksm14']['netif'] }}"
-      cores: 8
+      cores: 4
       memory: 16384
       swap: 8192
       password: "{{ default_password }}"
@@ -98,42 +150,42 @@ lxc_nodes:
       - from_port: "{{ hostvars['ksm14']['polkadot_p2p_port'] }}"
         to_host: "{{ hostvars['ksm14']['container_ip'] }}:{{ hostvars['ksm14']['polkadot_p2p_port'] }}"
         protocol: "tcp"
-  - host: "ksm24"
-    proxmox_config:
-      vmid: "324"
-      hostname: "{{ hostvars['ksm24']['host_name'] }}"
-      ostemplate: 'local:vztmpl/{{ default_container_template }}'
-      netif: "{{ hostvars['ksm24']['netif'] }}"
-      cores: 8
-      memory: 16384
-      swap: 8192
-      password: "{{ default_password }}"
-      disk: "{{ default_storage }}:20"
-      mounts: '{"mp0":"{{ default_storage }}:2500,mp={{ hostvars["ksm24"]["polkadot_base"] }}"}'
-      onboot: True
-      unprivileged: True
-      validate_certs: False
-      description: "{{ hostvars['ksm24']['polkadot_network'] }} {{ hostvars['ksm24']['default_node_type'] }}: {{ hostvars['ksm24']['host_name'] }}"
-      state: present
-      features:
-        - nesting=1
-    port_forwards:
-      - from_port: "{{ hostvars['ksm24']['ansible_port'] }}"
-        to_host: "{{ hostvars['ksm24']['container_ip'] }}:22"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['ksm24']['polkadot_rpc_port'] }}"
-        to_host: "{{ hostvars['ksm24']['container_ip'] }}:{{ hostvars['ksm24']['polkadot_rpc_port'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['ksm24']['polkadot_p2p_port'] }}"
-        to_host: "{{ hostvars['ksm24']['container_ip'] }}:{{ hostvars['ksm24']['polkadot_p2p_port'] }}"
-        protocol: "tcp"
+  # - host: "ksm24"
+  #   proxmox_config:
+  #     vmid: "324"
+  #     hostname: "{{ hostvars['ksm24']['host_name'] }}"
+  #     ostemplate: 'local:vztmpl/{{ default_container_template }}'
+  #     netif: "{{ hostvars['ksm24']['netif'] }}"
+  #     cores: 8
+  #     memory: 16384
+  #     swap: 8192
+  #     password: "{{ default_password }}"
+  #     disk: "{{ default_storage }}:20"
+  #     mounts: '{"mp0":"{{ default_storage }}:2500,mp={{ hostvars["ksm24"]["polkadot_base"] }}"}'
+  #     onboot: True
+  #     unprivileged: True
+  #     validate_certs: False
+  #     description: "{{ hostvars['ksm24']['polkadot_network'] }} {{ hostvars['ksm24']['default_node_type'] }}: {{ hostvars['ksm24']['host_name'] }}"
+  #     state: present
+  #     features:
+  #       - nesting=1
+  #   port_forwards:
+  #     - from_port: "{{ hostvars['ksm24']['ansible_port'] }}"
+  #       to_host: "{{ hostvars['ksm24']['container_ip'] }}:22"
+  #       protocol: "tcp"
+  #     - from_port: "{{ hostvars['ksm24']['polkadot_rpc_port'] }}"
+  #       to_host: "{{ hostvars['ksm24']['container_ip'] }}:{{ hostvars['ksm24']['polkadot_rpc_port'] }}"
+  #       protocol: "tcp"
+  #     - from_port: "{{ hostvars['ksm24']['polkadot_p2p_port'] }}"
+  #       to_host: "{{ hostvars['ksm24']['container_ip'] }}:{{ hostvars['ksm24']['polkadot_p2p_port'] }}"
+  #       protocol: "tcp"
   - host: "wnd14"
     proxmox_config:
       vmid: "234"
       hostname: "{{ hostvars['wnd14']['host_name'] }}"
       ostemplate: 'local:vztmpl/{{ default_container_template }}'
       netif: "{{ hostvars['wnd14']['netif'] }}"
-      cores: 8
+      cores: 4
       memory: 16384
       swap: 8192
       password: "{{ default_password }}"
@@ -153,74 +205,74 @@ lxc_nodes:
       - from_port: "{{ hostvars['wnd14']['polkadot_p2p_port'] }}"
         to_host: "{{ hostvars['wnd14']['container_ip'] }}:{{ hostvars['wnd14']['polkadot_p2p_port'] }}"
         protocol: "tcp"
-  - host: "wnd24"
-    proxmox_config:
-      vmid: "334"
-      hostname: "{{ hostvars['wnd24']['host_name'] }}"
-      ostemplate: 'local:vztmpl/{{ default_container_template }}'
-      netif: "{{ hostvars['wnd24']['netif'] }}"
-      cores: 8
-      memory: 16384
-      swap: 8192
-      password: "{{ default_password }}"
-      disk: "{{ default_storage }}:20"
-      mounts: '{"mp0":"{{ default_storage }}:1000,mp={{ hostvars["wnd24"]["polkadot_base"] }}"}'
-      onboot: True
-      unprivileged: True
-      validate_certs: False
-      description: "{{ hostvars['wnd24']['polkadot_network'] }} {{ hostvars['wnd24']['default_node_type'] }}: {{ hostvars['wnd24']['host_name'] }}"
-      state: present
-      features:
-        - nesting=1
-    port_forwards:
-      - from_port: "{{ hostvars['wnd24']['ansible_port'] }}"
-        to_host: "{{ hostvars['wnd24']['container_ip'] }}:22"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['wnd24']['polkadot_p2p_port'] }}"
-        to_host: "{{ hostvars['wnd24']['container_ip'] }}:{{ hostvars['wnd24']['polkadot_p2p_port'] }}"
-        protocol: "tcp"
-  - host: "ansible"
-    proxmox_config:
-      vmid: "999"
-      hostname: "{{ hostvars['ansible']['host_name'] }}"
-      ostemplate: 'local:vztmpl/{{ default_container_template }}'
-      netif: "{{ hostvars['ansible']['netif'] }}"
-      cores: 2
-      memory: 256
-      swap: 256
-      password: "{{ default_password }}"
-      disk: "{{ default_storage }}:20"
-      onboot: True
-      unprivileged: True
-      validate_certs: False
-      description: "ansible tower"
-      state: present
-      features:
-        - nesting=1
-    port_forwards:
-      - from_port: "{{ hostvars['ansible']['ansible_port'] }}"
-        to_host: "{{ hostvars['ansible']['container_ip'] }}:22"
-        protocol: "tcp"
-  - host: "monitor"
-    proxmox_config:
-      vmid: "998"
-      hostname: "{{ hostvars['ansible']['host_name'] }}"
-      ostemplate: 'local:vztmpl/{{ default_container_template }}'
-      netif: "{{ hostvars['ansible']['netif'] }}"
-      cores: 2
-      memory: 256
-      swap: 256
-      password: "{{ default_password }}"
-      disk: "{{ default_storage }}:20"
-      onboot: True
-      unprivileged: True
-      validate_certs: False
-      description: "monitoring"
-      state: present
-      features:
-        - nesting=1
-    port_forwards:
-      - from_port: "{{ hostvars['ansible']['ansible_port'] }}"
-        to_host: "{{ hostvars['ansible']['container_ip'] }}:22"
-        protocol: "tcp"
+  # - host: "wnd24"
+  #   proxmox_config:
+  #     vmid: "334"
+  #     hostname: "{{ hostvars['wnd24']['host_name'] }}"
+  #     ostemplate: 'local:vztmpl/{{ default_container_template }}'
+  #     netif: "{{ hostvars['wnd24']['netif'] }}"
+  #     cores: 8
+  #     memory: 16384
+  #     swap: 8192
+  #     password: "{{ default_password }}"
+  #     disk: "{{ default_storage }}:20"
+  #     mounts: '{"mp0":"{{ default_storage }}:1000,mp={{ hostvars["wnd24"]["polkadot_base"] }}"}'
+  #     onboot: True
+  #     unprivileged: True
+  #     validate_certs: False
+  #     description: "{{ hostvars['wnd24']['polkadot_network'] }} {{ hostvars['wnd24']['default_node_type'] }}: {{ hostvars['wnd24']['host_name'] }}"
+  #     state: present
+  #     features:
+  #       - nesting=1
+  #   port_forwards:
+  #     - from_port: "{{ hostvars['wnd24']['ansible_port'] }}"
+  #       to_host: "{{ hostvars['wnd24']['container_ip'] }}:22"
+  #       protocol: "tcp"
+  #     - from_port: "{{ hostvars['wnd24']['polkadot_p2p_port'] }}"
+  #       to_host: "{{ hostvars['wnd24']['container_ip'] }}:{{ hostvars['wnd24']['polkadot_p2p_port'] }}"
+  #       protocol: "tcp"
+  # - host: "ansible"
+  #   proxmox_config:
+  #     vmid: "999"
+  #     hostname: "{{ hostvars['ansible']['host_name'] }}"
+  #     ostemplate: 'local:vztmpl/{{ default_container_template }}'
+  #     netif: "{{ hostvars['ansible']['netif'] }}"
+  #     cores: 2
+  #     memory: 256
+  #     swap: 256
+  #     password: "{{ default_password }}"
+  #     disk: "{{ default_storage }}:20"
+  #     onboot: True
+  #     unprivileged: True
+  #     validate_certs: False
+  #     description: "ansible tower"
+  #     state: present
+  #     features:
+  #       - nesting=1
+  #   port_forwards:
+  #     - from_port: "{{ hostvars['ansible']['ansible_port'] }}"
+  #       to_host: "{{ hostvars['ansible']['container_ip'] }}:22"
+  #       protocol: "tcp"
+  # - host: "monitor"
+  #   proxmox_config:
+  #     vmid: "998"
+  #     hostname: "{{ hostvars['ansible']['host_name'] }}"
+  #     ostemplate: 'local:vztmpl/{{ default_container_template }}'
+  #     netif: "{{ hostvars['ansible']['netif'] }}"
+  #     cores: 2
+  #     memory: 256
+  #     swap: 256
+  #     password: "{{ default_password }}"
+  #     disk: "{{ default_storage }}:20"
+  #     onboot: True
+  #     unprivileged: True
+  #     validate_certs: False
+  #     description: "monitoring"
+  #     state: present
+  #     features:
+  #       - nesting=1
+  #   port_forwards:
+  #     - from_port: "{{ hostvars['ansible']['ansible_port'] }}"
+  #       to_host: "{{ hostvars['ansible']['container_ip'] }}:22"
+  #       protocol: "tcp"
 ...
