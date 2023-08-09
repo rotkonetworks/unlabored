@@ -8,45 +8,25 @@ routers
 
 [proxmox_nodes:children]
 blockchain_clients
-services
 
 [blockchain_clients:children]
 polkadot
-
-[services]
-ansible
-monitor
 
 [routers:children]
 routeros
 
 [polkadot]
-ksm01
-ksm02
 ksm03
-ksm04
 ksm13
-ksm14
 # ksm23
-# ksm24
-dot01
-dot02
 dot03
-dot04
 dot13
-dot14
 # dot23
-# dot24
 wnd13
-wnd14
 wnd23
-wnd24
 
 [proxmox_hosts]
-bkk01
-bkk02
 bkk03
-bkk04
 
 [routeros]
 bkk00
@@ -54,10 +34,7 @@ bkk00
 [unmanaged]
 
 [hardware]
-bkk01
-bkk02
 bkk03
-bkk04
 
 [access_management:children]
 hardware

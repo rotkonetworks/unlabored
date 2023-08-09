@@ -93,13 +93,13 @@
     - setup_install_polkadot
 
 - name: Install Cumulus services
-  hosts: polkadot
+  hosts: cumulus
   gather_facts: True
   roles:
     - setup_install_cumulus
 
 - name: Install Encointer services
-  hosts: polkadot
+  hosts: encointer
   gather_facts: True
   roles:
     - setup_install_encointer

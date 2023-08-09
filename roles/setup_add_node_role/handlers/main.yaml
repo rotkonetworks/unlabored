@@ -69,7 +69,7 @@
     group: root
     mode: '0644'
   when: role == "cumulus"
- 
+
 - name: Add Encointer service version
   community.general.ini_file:
     create: True
