@@ -91,4 +91,16 @@
   gather_facts: True
   roles:
     - setup_install_polkadot
+
+- name: Install Cumulus services
+  hosts: polkadot
+  gather_facts: True
+  roles:
+    - setup_install_cumulus
+
+- name: Install Encointer services
+  hosts: polkadot
+  gather_facts: True
+  roles:
+    - setup_install_encointer
 ...
