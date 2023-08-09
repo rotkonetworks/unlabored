@@ -7,23 +7,29 @@ Wants=network-online.target
 User={{ polkadot_user }}
 Group={{ polkadot_group }}
 ExecStart={{ polkadot_base }}/polkadot \
-  --name "{{ host_name.split('.')[0] }}" \
+  --name "{{ polkadot_telemetry_name }}" \
   --chain {{ polkadot_network }} \
   --base-path {{ polkadot_base_path }} \
+  --database paritydb \
   --state-pruning {{ state_pruning | default(256) }} \
-  --sync warp \
+  --log sync=warn,afg=warn,babe=warn \
+  --telemetry-url 'wss://telemetry-backend.w3f.community/submit 1' \
+  --telemetry-url 'wss://telemetry.polkadot.io/submit/ 1' \
   --listen-addr /ip6/::/tcp/{{ polkadot_p2p_port }} \
-  --listen-addr /ip6/::/tcp/{{ polkadot_p2p_port_ws }} \
+  --listen-addr /ip6/::/tcp/{{ polkadot_p2p_port }}/ws \
   --listen-addr /ip4/0.0.0.0/tcp/{{ polkadot_p2p_port }} \
-  --listen-addr /ip4/0.0.0.0/tcp/{{ polkadot_p2p_port_ws }} \
-  --public-addr /dns/{{ public_dns }}/tcp/{{ polkadot_p2p_port }} \
-  --public-addr /dns/{{ public_dns }}/tcp/{{ polkadot_p2p_port_wss }}/wss \
+  --listen-addr /ip4/0.0.0.0/tcp/{{ polkadot_p2p_port }}/ws \
+  --public-addr /dns/{{ polkadot_public_dns }}/tcp/{{ polkadot_p2p_port }} \
+  --public-addr /dns/{{ polkadot_public_dns }}/tcp/{{ polkadot_p2p_port }}/ws \
+  --public-addr /dns/{{ polkadot_public_dns }}/tcp/{{ polkadot_p2p_port }}/wss \
   --wasm-execution Compiled \
   --execution native-else-wasm \
+  --sync warp \
   --no-hardware-benchmarks \
   --ws-external \
   --rpc-external \
   --rpc-methods safe \
+  --prometheus-external \
   --rpc-cors all \
   --allow-private-ipv4
 
