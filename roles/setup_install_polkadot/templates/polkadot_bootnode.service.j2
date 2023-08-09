@@ -11,7 +11,7 @@ ExecStart={{ polkadot_base }}/polkadot \
   --chain {{ polkadot_network }} \
   --base-path {{ polkadot_base_path }} \
   --database paritydb \
-  --state-pruning {{ state_pruning | default(256) }} \
+  --state-pruning {{ polkadot_pruning | default(256) }} \
   --log sync=warn,afg=warn,babe=warn \
   --telemetry-url 'wss://telemetry-backend.w3f.community/submit 1' \
   --telemetry-url 'wss://telemetry.polkadot.io/submit/ 1' \
@@ -24,7 +24,7 @@ ExecStart={{ polkadot_base }}/polkadot \
   --public-addr /dns/{{ polkadot_public_dns }}/tcp/{{ polkadot_p2p_port }}/wss \
   --wasm-execution Compiled \
   --execution native-else-wasm \
-  --sync warp \
+  --sync {{ polkadot_syncmode | default(warp) }} \
   --no-hardware-benchmarks \
   --ws-external \
   --rpc-external \
