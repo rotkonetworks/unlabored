@@ -9,6 +9,7 @@ role: "polkadot"
 pinned_service: True
 
 default_telemetry_name: "Rotko Networks - {{ host_name.split('.')[0] }} {{ default_node_type | capitalize }}"
+default_public_dns: "{{ host_name }}"
 polkadot_network: polkadot
 polkadot_database: paritydb
 default_node_type: "bootnode"
