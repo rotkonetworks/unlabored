@@ -9,11 +9,11 @@
   failed_when: pveam_output.rc != 0
 
 - name: Extract container templates from output
-  set_fact:
+  ansible.builtin.set_fact:
     extracted_containers: "{{ pveam_output.stdout | regex_findall('local:vztmpl/(.*tar.gz)', multiline=True) }}"
 
 - name: Merge available containers
-  set_fact:
+  ansible.builtin.set_fact:
     pveam_available_containers: "{{ (pveam_available_containers | default([])) + extracted_containers }}"
 
 - name: Install required containers
@@ -23,7 +23,7 @@
       - download
       - local
       - "{{ item }}"
-  loop: 
+  loop:
     - "{{ default_container_template }}"
   when: item not in pveam_available_containers
   failed_when: pveam_output.rc != 0
