@@ -43,9 +43,9 @@ lxc_nodes:
   - host: "monitor"
     proxmox_config:
       vmid: "998"
-      hostname: "{{ hostvars['ansible']['host_name'] }}"
+      hostname: "{{ hostvars['monitor']['host_name'] }}"
       ostemplate: 'local:vztmpl/{{ default_container_template }}'
-      netif: "{{ hostvars['ansible']['netif'] }}"
+      netif: "{{ hostvars['monitor']['netif'] }}"
       cores: 1
       memory: 256
       swap: 256
@@ -59,8 +59,8 @@ lxc_nodes:
       features:
         - nesting=1
     port_forwards:
-      - from_port: "{{ hostvars['ansible']['ansible_port'] }}"
-        to_host: "{{ hostvars['ansible']['container_ip'] }}:22"
+      - from_port: "{{ hostvars['monitor']['ansible_port'] }}"
+        to_host: "{{ hostvars['monitor']['container_ip'] }}:22"
         protocol: "tcp"
   - host: "dot04"
     proxmox_config:
@@ -231,7 +231,7 @@ lxc_nodes:
       ostemplate: 'local:vztmpl/{{ default_container_template }}'
       netif: "{{ hostvars['wnd14']['netif'] }}"
       cores: 4
-      memory: 16384
+      memory: 8192
       swap: 8192
       password: "{{ default_password }}"
       disk: "{{ default_storage }}:20"
@@ -257,7 +257,7 @@ lxc_nodes:
       ostemplate: 'local:vztmpl/{{ default_container_template }}'
       netif: "{{ hostvars['wnd24']['netif'] }}"
       cores: 4
-      memory: 8192
+      memory: 16384
       swap: 8192
       password: "{{ default_password }}"
       disk: "{{ default_storage }}:20"
@@ -272,6 +272,9 @@ lxc_nodes:
     port_forwards:
       - from_port: "{{ hostvars['wnd24']['ansible_port'] }}"
         to_host: "{{ hostvars['wnd24']['container_ip'] }}:22"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['wnd24']['polkadot_rpc_port'] }}"
+        to_host: "{{ hostvars['wnd24']['container_ip'] }}:{{ hostvars['wnd24']['polkadot_rpc_port'] }}"
         protocol: "tcp"
       - from_port: "{{ hostvars['wnd24']['polkadot_p2p_port'] }}"
         to_host: "{{ hostvars['wnd24']['container_ip'] }}:{{ hostvars['wnd24']['polkadot_p2p_port'] }}"
