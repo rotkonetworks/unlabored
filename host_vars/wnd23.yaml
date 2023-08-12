@@ -10,7 +10,7 @@ pinned_service: True
 
 polkadot_network: "westend"
 default_node_type: "endpoint"
-default_telemetry_name: "Rotko Networks - wnd23"
+default_telemetry_name: "Rotko Networks - {{ host_name.split('.')[0] }} {{ default_node_type | capitalize }}"
 polkadot_pruning: "archive"
 polkadot_database: paritydb
 polkadot_syncmode: full

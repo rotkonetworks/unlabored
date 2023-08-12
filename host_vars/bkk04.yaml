@@ -64,7 +64,7 @@ lxc_nodes:
         protocol: "tcp"
   - host: "dot04"
     proxmox_config:
-      vmid: "214"
+      vmid: "114"
       hostname: "{{ hostvars['dot04']['host_name'] }}"
       ostemplate: 'local:vztmpl/{{ default_container_template }}'
       netif: "{{ hostvars['dot04']['netif'] }}"
