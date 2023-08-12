@@ -70,35 +70,35 @@ lxc_nodes:
       - from_port: "{{ hostvars['dot13']['polkadot_p2p_port'] }}"
         to_host: "{{ hostvars['dot13']['container_ip'] }}:{{ hostvars['dot13']['polkadot_p2p_port'] }}"
         protocol: "tcp"
-  # - host: "dot23"
-  #   proxmox_config:
-  #     vmid: "313"
-  #     hostname: "{{ hostvars['dot23']['host_name'] }}"
-  #     ostemplate: 'local:vztmpl/{{ default_container_template }}'
-  #     netif: "{{ hostvars['dot23']['netif'] }}"
-  #     cores: 8
-  #     memory: 16384
-  #     swap: 8192
-  #     password: "{{ default_password }}"
-  #     disk: "{{ default_storage }}:20"
-  #     mounts: '{"mp0":"{{ default_storage }}:1500,mp={{ hostvars["dot23"]["polkadot_base"] }}"}'
-  #     onboot: True
-  #     unprivileged: True
-  #     validate_certs: False
-  #     description: "{{ hostvars['dot23']['polkadot_network'] }} {{ hostvars['dot23']['default_node_type'] }}: {{ hostvars['dot23']['host_name'] }}"
-  #     state: present
-  #     features:
-  #       - nesting=1
-  #   port_forwards:
-  #     - from_port: "{{ hostvars['dot23']['ansible_port'] }}"
-  #       to_host: "{{ hostvars['dot23']['container_ip'] }}:22"
-  #       protocol: "tcp"
-  #     - from_port: "{{ hostvars['dot23']['polkadot_rpc_port'] }}"
-  #       to_host: "{{ hostvars['dot23']['container_ip'] }}:{{ hostvars['dot23']['polkadot_rpc_port'] }}"
-  #       protocol: "tcp"
-  #     - from_port: "{{ hostvars['dot23']['polkadot_p2p_port'] }}"
-  #       to_host: "{{ hostvars['dot23']['container_ip'] }}:{{ hostvars['dot23']['polkadot_p2p_port'] }}"
-  #       protocol: "tcp"
+  - host: "dot23"
+    proxmox_config:
+      vmid: "313"
+      hostname: "{{ hostvars['dot23']['host_name'] }}"
+      ostemplate: 'local:vztmpl/{{ default_container_template }}'
+      netif: "{{ hostvars['dot23']['netif'] }}"
+      cores: 8
+      memory: 16384
+      swap: 8192
+      password: "{{ default_password }}"
+      disk: "{{ default_storage }}:20"
+      mounts: '{"mp0":"{{ default_storage }}:1500,mp={{ hostvars["dot23"]["polkadot_base"] }}"}'
+      onboot: True
+      unprivileged: True
+      validate_certs: False
+      description: "{{ hostvars['dot23']['polkadot_network'] }} {{ hostvars['dot23']['default_node_type'] }}: {{ hostvars['dot23']['host_name'] }}"
+      state: present
+      features:
+        - nesting=1
+    port_forwards:
+      - from_port: "{{ hostvars['dot23']['ansible_port'] }}"
+        to_host: "{{ hostvars['dot23']['container_ip'] }}:22"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['dot23']['polkadot_rpc_port'] }}"
+        to_host: "{{ hostvars['dot23']['container_ip'] }}:{{ hostvars['dot23']['polkadot_rpc_port'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['dot23']['polkadot_p2p_port'] }}"
+        to_host: "{{ hostvars['dot23']['container_ip'] }}:{{ hostvars['dot23']['polkadot_p2p_port'] }}"
+        protocol: "tcp"
   - host: "ksm03"
     proxmox_config:
       vmid: "123"
@@ -151,35 +151,35 @@ lxc_nodes:
       - from_port: "{{ hostvars['ksm13']['polkadot_p2p_port'] }}"
         to_host: "{{ hostvars['ksm13']['container_ip'] }}:{{ hostvars['ksm13']['polkadot_p2p_port'] }}"
         protocol: "tcp"
-  # - host: "ksm23"
-  #   proxmox_config:
-  #     vmid: "323"
-  #     hostname: "{{ hostvars['ksm23']['host_name'] }}"
-  #     ostemplate: 'local:vztmpl/{{ default_container_template }}'
-  #     netif: "{{ hostvars['ksm23']['netif'] }}"
-  #     cores: 8
-  #     memory: 16384
-  #     swap: 8192
-  #     password: "{{ default_password }}"
-  #     disk: "{{ default_storage }}:20"
-  #     mounts: '{"mp0":"{{ default_storage }}:2500,mp={{ hostvars["ksm23"]["polkadot_base"] }}"}'
-  #     onboot: True
-  #     unprivileged: True
-  #     validate_certs: False
-  #     description: "{{ hostvars['ksm23']['polkadot_network'] }} {{ hostvars['ksm23']['default_node_type'] }}: {{ hostvars['ksm23']['host_name'] }}"
-  #     state: present
-  #     features:
-  #       - nesting=1
-  #   port_forwards:
-  #     - from_port: "{{ hostvars['ksm23']['ansible_port'] }}"
-  #       to_host: "{{ hostvars['ksm23']['container_ip'] }}:22"
-  #       protocol: "tcp"
-  #     - from_port: "{{ hostvars['ksm23']['polkadot_rpc_port'] }}"
-  #       to_host: "{{ hostvars['ksm23']['container_ip'] }}:{{ hostvars['ksm23']['polkadot_rpc_port'] }}"
-  #       protocol: "tcp"
-  #     - from_port: "{{ hostvars['ksm23']['polkadot_p2p_port'] }}"
-  #       to_host: "{{ hostvars['ksm23']['container_ip'] }}:{{ hostvars['ksm23']['polkadot_p2p_port'] }}"
-  #       protocol: "tcp"
+  - host: "ksm23"
+    proxmox_config:
+      vmid: "323"
+      hostname: "{{ hostvars['ksm23']['host_name'] }}"
+      ostemplate: 'local:vztmpl/{{ default_container_template }}'
+      netif: "{{ hostvars['ksm23']['netif'] }}"
+      cores: 8
+      memory: 16384
+      swap: 8192
+      password: "{{ default_password }}"
+      disk: "{{ default_storage }}:20"
+      mounts: '{"mp0":"{{ default_storage }}:2500,mp={{ hostvars["ksm23"]["polkadot_base"] }}"}'
+      onboot: True
+      unprivileged: True
+      validate_certs: False
+      description: "{{ hostvars['ksm23']['polkadot_network'] }} {{ hostvars['ksm23']['default_node_type'] }}: {{ hostvars['ksm23']['host_name'] }}"
+      state: present
+      features:
+        - nesting=1
+    port_forwards:
+      - from_port: "{{ hostvars['ksm23']['ansible_port'] }}"
+        to_host: "{{ hostvars['ksm23']['container_ip'] }}:22"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['ksm23']['polkadot_rpc_port'] }}"
+        to_host: "{{ hostvars['ksm23']['container_ip'] }}:{{ hostvars['ksm23']['polkadot_rpc_port'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['ksm23']['polkadot_p2p_port'] }}"
+        to_host: "{{ hostvars['ksm23']['container_ip'] }}:{{ hostvars['ksm23']['polkadot_p2p_port'] }}"
+        protocol: "tcp"
   - host: "wnd13"
     proxmox_config:
       vmid: "234"
