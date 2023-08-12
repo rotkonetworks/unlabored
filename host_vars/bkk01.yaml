@@ -13,7 +13,7 @@ default_need_routeros_port_forwarding: True
 routeros_delegate_host: "bkk00"
 default_need_iptables_port_forwarding: False
 default_gw_device: "enp4s0"
-default_storage: "tank"
+default_storage: "tank01"
 default_resource_pool: "bkk01_resource_pool"
 
 lxc_nodes:

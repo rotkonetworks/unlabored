@@ -23,7 +23,8 @@
       - download
       - local
       - "{{ item }}"
-  loop: "{{ default_container_template }}"
+  loop: 
+    - "{{ default_container_template }}"
   when: item not in pveam_available_containers
   failed_when: pveam_output.rc != 0
 ...
