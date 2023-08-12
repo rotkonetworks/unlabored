@@ -8,6 +8,7 @@ Type=simple
 Restart=on-failure
 RestartSec=10
 User={{ polkadot_user }}
+Group={{ polkadot_group }}
 SyslogIdentifier={{ polkadot_service }}
 LimitNOFILE={{ default_max_open_files_in_service }}
 SyslogFacility=local7
