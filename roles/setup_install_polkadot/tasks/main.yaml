@@ -33,6 +33,18 @@
 - name: Refresh facts before install
   ansible.builtin.setup:
 
+- name: Copy Polkadot systemd service for specific node type
+  ansible.builtin.template:
+    src: "{{ 'polkadot_' + node_type + '.service.j2' }}"
+    dest: "{{ polkadot_base }}/polkadot.service"
+    owner: "{{ polkadot_user }}"
+    group: "{{ polkadot_user }}"
+    mode: '0644'
+  vars:
+    node_type: "{{ ansible_local['noderole']['node']['type'] }}"
+  when:
+    - node_type in ["validator", "bootnode", "endpoint"]
+
 - name: Install polkadot v{{ polkadot_version }}
   ansible.builtin.get_url:
     url: "{{ polkadot_download_url }}"
@@ -46,26 +58,14 @@
   notify:
     - Add Polkadot service version
     - Add Service Pinned Status
-    - Stop polkadot
-    - Symlink polkadot release
+    - Stop Polkadot
+    - Symlink Polkadot release
     - Symlink binary executable
     - Systemd daemon-reload
-    - Restart polkadot
+    - Restart Polkadot
 
 - name: Refresh facts after install
   ansible.builtin.setup:
-
-- name: Copy Polkadot systemd service for specific node type
-  ansible.builtin.template:
-    src: "{{ 'polkadot_' + node_type + '.service.j2' }}"
-    dest: "{{ polkadot_base }}/polkadot.service"
-    owner: "{{ polkadot_user }}"
-    group: "{{ polkadot_user }}"
-    mode: '0644'
-  vars:
-    node_type: "{{ ansible_local['noderole']['node']['type'] }}"
-  when:
-    - node_type in ["validator", "bootnode", "endpoint"]
 
 - name: Symlink Polkadot service to systemd
   ansible.builtin.file:

@@ -4,6 +4,7 @@ polkadot_download_url: https://github.com/paritytech/polkadot/releases/download/
 
 polkadot_service: polkadot
 polkadot_user: "{{ service_users['polkadot'] }}"
+polkadot_group: "{{ service_users['polkadot'] }}"
 polkadot_base: /opt/polkadot
 polkadot_log_level: info
 polkadot_network: polkadot
