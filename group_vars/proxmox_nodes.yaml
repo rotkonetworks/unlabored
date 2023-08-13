@@ -25,6 +25,5 @@ default_packages:
   - htop
   - tmux
   - zsh
-  - exa
   - fd-find
 ...

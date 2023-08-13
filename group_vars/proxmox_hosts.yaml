@@ -39,4 +39,5 @@ default_packages:
   - curl
   - ncdu
   - logrotate
+  - zsh
 ...
