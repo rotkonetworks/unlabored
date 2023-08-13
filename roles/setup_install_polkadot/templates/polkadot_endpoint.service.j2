@@ -1,5 +1,5 @@
 [Unit]
-Description=Polkadot Bootnode
+Description="{{ host_name.split('.')[0] }} endpoint - Polkadot service"
 After=network-online.target
 Wants=network-online.target
 
@@ -7,17 +7,17 @@ Wants=network-online.target
 User={{ polkadot_user }}
 Group={{ polkadot_group }}
 ExecStart={{ polkadot_base }}/polkadot \
-  --name "{{ host_name.split('.')[0] }}" \
+  --name "{{ default_telemetry_name }}" \
   --chain {{ polkadot_network }} \
   --base-path {{ polkadot_base }} \
   --state-pruning archive \
   --sync full \
   --listen-addr /ip6/::/tcp/{{ polkadot_p2p_port }} \
-  --listen-addr /ip6/::/tcp/{{ polkadot_p2p_port }}/ws \
+  --listen-addr /ip6/::/tcp/{{ polkadot_rpc_port }}/ws \
   --listen-addr /ip4/0.0.0.0/tcp/{{ polkadot_p2p_port }} \
-  --listen-addr /ip4/0.0.0.0/tcp/{{ polkadot_p2p_port }}/ws \
+  --listen-addr /ip4/0.0.0.0/tcp/{{ polkadot_rpc_port }}/ws \
   --public-addr /dns/{{ default_public_dns }}/tcp/{{ polkadot_p2p_port }} \
-  --public-addr /dns/{{ default_public_dns }}/tcp/{{ polkadot_p2p_port }}/wss \
+  --public-addr /dns/{{ default_public_dns }}/tcp/{{ polkadot_proxy_port }}/wss \
   --wasm-execution Compiled \
   --execution native-else-wasm \
   --no-hardware-benchmarks \
