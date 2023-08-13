@@ -10,12 +10,6 @@
     existing_nat_rules: "{{ _existing_nat_rules_raw.stdout[0] | parse_nat_rules }}"
   delegate_to: "{{ routeros_delegate_host }}"
 
-# - name: Debug existing_nat_rules and lxc_nodes
-#   ansible.builtin.debug:
-#     msg:
-#       - "Existing NAT Rules: {{ existing_nat_rules }}"
-#       - "LXC Nodes: {{ lxc_nodes }}"
-
 - name: Construct RouterOS commands
   ansible.builtin.set_fact:
     routeros_commands: "{{ lxc_nodes | map(attribute='port_forwards') | flatten | map('generate_routeros_command', ansible_host) | list }}"
