@@ -10,7 +10,8 @@ def parse_line(line):
         return None
 
     # Handle rule ID (the first field) and fields with key=value format
-    nat_rule = {field.split("=")[0]: field.split("=")[1] for field in fields[1:] if "=" in field}
+    nat_rule = {field.split("=")[0]: field.split("=")[1]
+                for field in fields[1:] if "=" in field}
 
     # Handle fields without value
     for field in fields[1:]:
