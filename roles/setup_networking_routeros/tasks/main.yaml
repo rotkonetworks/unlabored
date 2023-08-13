@@ -8,11 +8,10 @@
 - name: Parse existing NAT rules
   ansible.builtin.set_fact:
     existing_nat_rules: "{{ _existing_nat_rules_raw.stdout[0] | parse_nat_rules }}"
-  delegate_to: "{{ routeros_delegate_host }}"
 
 - name: Construct RouterOS commands
   ansible.builtin.set_fact:
-    routeros_commands: "{{ lxc_nodes | map(attribute='port_forwards') | flatten | map('generate_routeros_command', ansible_host) | list }}"
+    routeros_commands: "{{ lxc_nodes | map(attribute='port_forwards') | flatten | map('generate_rule', 'nat', ansible_host) | list }}"
 
 - name: Check if port forwarding rule already exists for each port forward
   ansible.builtin.set_fact:
@@ -24,8 +23,8 @@
 
 - name: Configure port forwards on RouterOS for each LXC node
   community.routeros.command:
-    commands: "{{ item.port_forward | generate_routeros_command(ansible_host) }}"
+    commands: "{{ item.port_forward | generate_rule('nat', ansible_host) }}"
   loop: "{{ port_forwards_exist_check.results }}"
-  when: item.ansible_facts.port_forward_exists == False
+  when: not item.ansible_facts.port_forward_exists
   delegate_to: "{{ routeros_delegate_host }}"
 ...
