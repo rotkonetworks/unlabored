@@ -37,11 +37,11 @@ lxc_nodes:
       features:
         - nesting=1
     port_forwards:
-      - from_port: "{{ hostvars['ksm01']['ansible_port'] }}"
-        to_host: "{{ hostvars['ksm01']['container_ip'] }}:22"
+      - from_port: "{{ hostvars['dot02']['ansible_port'] }}"
+        to_host: "{{ hostvars['dot02']['container_ip'] }}:22"
         protocol: "tcp"
-      - from_port: "{{ hostvars['ksm01']['polkadot_p2p_port'] }}"
-        to_host: "{{ hostvars['ksm01']['container_ip'] }}:{{ hostvars['ksm01']['polkadot_p2p_port'] }}"
+      - from_port: "{{ hostvars['dot02']['polkadot_p2p_port'] }}"
+        to_host: "{{ hostvars['dot02']['container_ip'] }}:{{ hostvars['dot02']['polkadot_p2p_port'] }}"
         protocol: "tcp"
   - host: "ksm02"
     proxmox_config:
@@ -63,10 +63,10 @@ lxc_nodes:
       features:
         - nesting=1
     port_forwards:
-      - from_port: "{{ hostvars['ksm01']['ansible_port'] }}"
-        to_host: "{{ hostvars['ksm01']['container_ip'] }}:22"
+      - from_port: "{{ hostvars['ksm02']['ansible_port'] }}"
+        to_host: "{{ hostvars['ksm02']['container_ip'] }}:22"
         protocol: "tcp"
-      - from_port: "{{ hostvars['ksm01']['polkadot_p2p_port'] }}"
-        to_host: "{{ hostvars['ksm01']['container_ip'] }}:{{ hostvars['ksm01']['polkadot_p2p_port'] }}"
+      - from_port: "{{ hostvars['ksm02']['polkadot_p2p_port'] }}"
+        to_host: "{{ hostvars['ksm02']['container_ip'] }}:{{ hostvars['ksm02']['polkadot_p2p_port'] }}"
         protocol: "tcp"
 ...
