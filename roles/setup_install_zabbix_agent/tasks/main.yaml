@@ -43,6 +43,16 @@
     - { src: "ansiblefacts.py.template", dest: "{{ zabbix_agent_script_path }}/ansiblefacts.py", mode: "0755" }
     - { src: "ansiblefacts.conf.template", dest: "{{ zabbix_agent_confd_path }}/ansiblefacts.conf", mode: "0644" }
 
+- name: Deploy Prometheus UserParameter for Zabbix
+  ansible.builtin.template:
+    src: prometheus_params.conf.template
+    dest: "{{ zabbix_agent_confd_path }}/prometheus_params.conf"
+    owner: root
+    group: root
+    mode: '0644'
+  notify:
+    - Restart zabbix-agent
+
 - name: Enable Zabbix Agent service
   ansible.builtin.systemd:
     name: zabbix-agent

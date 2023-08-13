@@ -1,0 +1,1 @@
+UserParameter=prometheus[*],curl -s http://localhost:9091/metrics | awk -v metric="$1" '$1==metric {print $2}'
