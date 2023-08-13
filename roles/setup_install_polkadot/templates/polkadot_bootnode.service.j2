@@ -9,9 +9,9 @@ Group={{ polkadot_group }}
 ExecStart={{ polkadot_base }}/polkadot \
   --name "{{ default_telemetry_name }}" \
   --chain {{ polkadot_network }} \
-  --base-path {{ polkadot_base_path }} \
+  --base-path {{ polkadot_base }} \
   --database paritydb \
-  --state-pruning {{ polkadot_pruning | default(256) }} \
+  --state-pruning 256 \
   --log sync=warn,afg=warn,babe=warn \
   --telemetry-url 'wss://telemetry-backend.w3f.community/submit 1' \
   --telemetry-url 'wss://telemetry.polkadot.io/submit/ 1' \
@@ -20,13 +20,12 @@ ExecStart={{ polkadot_base }}/polkadot \
   --listen-addr /ip4/0.0.0.0/tcp/{{ polkadot_p2p_port }} \
   --listen-addr /ip4/0.0.0.0/tcp/{{ polkadot_p2p_port }}/ws \
   --public-addr /dns/{{ default_public_dns }}/tcp/{{ polkadot_p2p_port }} \
-  --public-addr /dns/{{ polkadot_public_dns }}/tcp/{{ polkadot_p2p_port }}/ws \
-  --public-addr /dns/{{ polkadot_public_dns }}/tcp/{{ polkadot_p2p_port }}/wss \
+  --public-addr /dns/{{ default_public_dns }}/tcp/{{ polkadot_p2p_port }}/ws \
+  --public-addr /dns/{{ default_public_dns }}/tcp/{{ polkadot_p2p_port }}/wss \
   --wasm-execution Compiled \
   --execution native-else-wasm \
-  --sync {{ polkadot_syncmode | default(warp) }} \
+  --sync warp \
   --no-hardware-benchmarks \
-  --ws-external \
   --rpc-external \
   --rpc-methods safe \
   --prometheus-external \
