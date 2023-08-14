@@ -22,30 +22,30 @@ routeros
 
 [polkadot]
 ksm01
-ksm02
-ksm03
-ksm04
-ksm13
-ksm14
-ksm23
-ksm24
 dot01
+ksm02
 dot02
-dot03
+# ksm03
+# ksm13
+# ksm23
+# dot03
+# dot13
+# dot23
+# wnd13
+# wnd23
+ksm04
+ksm14
+ksm24
 dot04
-dot13
 dot14
-dot23
 dot24
-wnd13
 wnd14
-wnd23
 wnd24
 
 [proxmox_hosts]
 bkk01
 bkk02
-bkk03
+# bkk03
 bkk04
 
 [routeros]
@@ -56,7 +56,7 @@ bkk00
 [hardware]
 bkk01
 bkk02
-bkk03
+# bkk03
 bkk04
 
 [access_management:children]

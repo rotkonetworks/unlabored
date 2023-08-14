@@ -19,7 +19,7 @@ ExecStart={{ polkadot_base }}/polkadot \
      --database {{ polkadot_database }} \
      --sync {{ polkadot_syncmode }} \
      --name "{{ hostvars[inventory_hostname]['default_telemetry_name'] | default(host_name) }}" \
-     --telemetry-url "{{ hostvars[inventory_hostname]['default_telemetry_url'] | default('wss://telemetry.w3f.community/submit/ 0') }}" \
+     --telemetry-url 'wss://telemetry-backend.w3f.community/submit 1' \
      --port {{ polkadot_p2p_port }} \
      --rpc-port {{ polkadot_rpc_port }} \
      --prometheus-port {{ polkadot_prom_port }} \

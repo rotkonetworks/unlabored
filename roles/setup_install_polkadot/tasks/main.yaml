@@ -1,37 +1,31 @@
 ---
+
 - name: Ensure group {{ polkadot_user }} exists
   ansible.builtin.group:
     name: "{{ polkadot_user }}"
     state: present
     system: True
-  notify:
-    - Add type of service
 
-- name: Ensure user {{ polkadot_user }} exists
+- name: Ensure user {{ polkadot_user }} exists without unnecessary privileges
   ansible.builtin.user:
     append: True
     comment: polkadot service user
     create_home: False
     group: "{{ polkadot_user }}"
-    groups: sudo
+    groups: []
     home: "{{ polkadot_base }}"
     name: "{{ polkadot_user }}"
-    shell: "{{ default_shell }}"
+    shell: "/sbin/nologin"  # Deny login for the service user
     state: present
     system: True
 
 - name: Ensure user {{ polkadot_user }} owns {{ polkadot_base }}
   ansible.builtin.file:
-    path: "{{ item }}"
+    path: "{{ polkadot_base }}"
     owner: "{{ polkadot_user }}"
     group: "{{ polkadot_user }}"
-    mode: '0755'
+    mode: '0750'  # Only the owner should have write permission, group read, others none.
     state: directory
-  with_items:
-    - "{{ polkadot_base }}"
-
-- name: Refresh facts before install
-  ansible.builtin.setup:
 
 - name: Copy Polkadot systemd service for specific node type
   ansible.builtin.template:
@@ -39,33 +33,35 @@
     dest: "{{ polkadot_base }}/polkadot.service"
     owner: "{{ polkadot_user }}"
     group: "{{ polkadot_user }}"
-    mode: '0644'
+    mode: '0640'
   vars:
     node_type: "{{ ansible_local['noderole']['node']['type'] }}"
-  when:
-    - node_type in ["validator", "bootnode", "endpoint"]
+  when: node_type in ["validator", "bootnode", "endpoint"]
 
 - name: Install polkadot v{{ polkadot_version }}
-  ansible.builtin.get_url:
-    url: "{{ polkadot_download_url }}"
-    dest: "{{ polkadot_base }}/polkadot-v{{ polkadot_version }}"
-    mode: "u+rwx"
-    owner: "{{ polkadot_user }}"
-    group: "{{ polkadot_user }}"
+  block:
+    - name: Download Polkadot
+      ansible.builtin.get_url:
+        url: "{{ polkadot_download_url }}"
+        dest: "{{ polkadot_base }}/polkadot-v{{ polkadot_version }}"
+        mode: "u+r-x"
+        owner: "{{ polkadot_user }}"
+        group: "{{ polkadot_user }}"
+      register: download_result
+
+    - name: Notify handlers if Polkadot is downloaded
+      command: echo "Polkadot v{{ polkadot_version }} has been downloaded"
+      notify:
+        - Stop Polkadot
+        - Symlink Polkadot release
+        - Symlink binary executable
+        - Systemd daemon-reload
+        - Restart Polkadot
+      when: download_result.changed
+      changed_when: false
   when:
     - ansible_local['noderole']['node']['pinned'] != "True"
     - ansible_local['noderole']['node']['version'] != polkadot_version
-  notify:
-    - Add Polkadot service version
-    - Add Service Pinned Status
-    - Stop Polkadot
-    - Symlink Polkadot release
-    - Symlink binary executable
-    - Systemd daemon-reload
-    - Restart Polkadot
-
-- name: Refresh facts after install
-  ansible.builtin.setup:
 
 - name: Symlink Polkadot service to systemd
   ansible.builtin.file:
@@ -76,8 +72,4 @@
     owner: "root"
     group: "root"
     mode: '0644'
-  notify:
-    - Stop Polkadot
-    - Systemd daemon-reload
-    - Restart Polkadot
 ...
