@@ -1,30 +1,55 @@
 ---
-- name: Fetch existing NAT rules
+- name: Fetch existing firewall rules
   community.routeros.command:
-    commands: /ip firewall nat print without-paging
+    commands:
+      - /ip firewall filter print without-paging
+      - /ip firewall nat print without-paging
   delegate_to: "{{ routeros_delegate_host }}"
-  register: _existing_nat_rules_raw
+  register: _existing_firewall_rules_raw
 
-- name: Parse existing NAT rules
+- name: Parse existing firewall rules
   ansible.builtin.set_fact:
-    existing_nat_rules: "{{ _existing_nat_rules_raw.stdout[0] | parse_nat_rules }}"
+    existing_firewall_rules: "{{ (_existing_firewall_rules_raw.stdout[0] + _existing_firewall_rules_raw.stdout[1]) | parse_firewall_rules }}"
+  delegate_to: "{{ routeros_delegate_host }}"
+  when: _existing_firewall_rules_raw is defined
 
-- name: Construct RouterOS commands
+- name: Construct RouterOS NAT commands
   ansible.builtin.set_fact:
-    routeros_commands: "{{ lxc_nodes | map(attribute='port_forwards') | flatten | map('generate_rule', 'nat', ansible_host) | list }}"
+    routeros_nat_commands: "{{ lxc_nodes | map(attribute='port_forwards') | flatten | map('generate_rule', 'nat', ansible_host) | list }}"
+  when: existing_firewall_rules is defined
+
+- name: Construct RouterOS filter commands
+  ansible.builtin.set_fact:
+    routeros_filter_commands: "{{ lxc_nodes | map(attribute='port_forwards') | flatten | map('generate_rule', 'filter') | list }}"
+  when: existing_firewall_rules is defined
 
 - name: Check if port forwarding rule already exists for each port forward
   ansible.builtin.set_fact:
-    port_forward_exists: "{{ existing_nat_rules | port_forward_exists(port_forward) }}"
+    port_forward_exists: "{{ existing_firewall_rules | port_forward_exists(port_forward) }}"
   loop: "{{ lxc_nodes | map(attribute='port_forwards') | flatten(levels=1) }}"
   loop_control:
     loop_var: port_forward
   register: port_forwards_exist_check
 
+- name: Check if firewall filter rule already exists for each port forward
+  ansible.builtin.set_fact:
+    filter_exists: "{{ existing_firewall_rules | firewall_filter_exists(port_forward) }}"
+  loop: "{{ lxc_nodes | map(attribute='port_forwards') | flatten(levels=1) }}"
+  loop_control:
+    loop_var: port_forward
+  register: filter_exist_check
+
 - name: Configure port forwards on RouterOS for each LXC node
   community.routeros.command:
     commands: "{{ item.port_forward | generate_rule('nat', ansible_host) }}"
   loop: "{{ port_forwards_exist_check.results }}"
-  when: not item.ansible_facts.port_forward_exists
+  when: item.ansible_facts.port_forward_exists == False
+  delegate_to: "{{ routeros_delegate_host }}"
+
+- name: Configure firewall filter rules on RouterOS for each LXC node
+  community.routeros.command:
+    commands: "{{ item.port_forward | generate_rule('filter') }}"
+  loop: "{{ filter_exist_check.results }}"
+  when: item.ansible_facts.filter_exists == False
   delegate_to: "{{ routeros_delegate_host }}"
 ...
