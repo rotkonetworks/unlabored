@@ -31,18 +31,18 @@
   ansible.builtin.systemd:
     daemon_reload: True
 
-- name: Restart Polkadot
-  ansible.builtin.systemd:
-    name: polkadot
-    daemon_reload: True
-    state: restarted
-    enabled: True
-
 - name: Stop Polkadot
   ansible.builtin.systemd:
     name: polkadot
     daemon_reload: True
     state: stopped
+    enabled: True
+
+- name: Restart Polkadot
+  ansible.builtin.systemd:
+    name: polkadot
+    daemon_reload: True
+    state: restarted
     enabled: True
 
 - name: Start Polkadot

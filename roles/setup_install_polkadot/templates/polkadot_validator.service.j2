@@ -14,6 +14,7 @@ LimitNOFILE={{ default_max_open_files_in_service }}
 SyslogFacility=local7
 KillSignal=SIGHUP
 ExecStart={{ polkadot_base }}/polkadot \
+     --validator \
      --base-path {{ polkadot_base }} \
      --chain {{ polkadot_network }} \
      --database {{ polkadot_database }} \

@@ -72,4 +72,10 @@
     owner: "root"
     group: "root"
     mode: '0644'
+  notify:
+    - Stop Polkadot
+    - Symlink Polkadot release
+    - Symlink binary executable
+    - Systemd daemon-reload
+    - Restart Polkadot
 ...
