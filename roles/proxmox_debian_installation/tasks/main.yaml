@@ -7,6 +7,13 @@
       - qemu-system-data
     state: absent
 
+- name: Install Proxmox kernel
+  ansible.builtin.apt:
+    pkg:
+      - pve-kernel
+    state: present
+  notify: Reboot machine
+
 - name: Install Proxmox Debian Packages
   ansible.builtin.apt:
     pkg:
@@ -16,4 +23,16 @@
     autoclean: True
     autoremove: False
     state: present
+
+- name: Remove Debian default kernel
+  ansible.builtin.apt:
+    pkg:
+      - linux-image-amd64
+      - "linux-image-6.1*"
+    state: absent
+
+- name: Remove os-prober
+  ansible.builtin.apt:
+    pkg: os-prober
+    state: absent
 ...
