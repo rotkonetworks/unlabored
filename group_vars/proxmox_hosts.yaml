@@ -32,7 +32,6 @@ default_packages:
   - zfsutils-linux
   - zfs-dkms
   - zfs-zed
-  - spl
   - kmod
   - rsync
   - screen
