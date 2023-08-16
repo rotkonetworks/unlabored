@@ -17,12 +17,9 @@ routeros
 
 [polkadot]
 ksm03
-ksm13
-# ksm23
+ksm23
 dot03
-dot13
-# dot23
-wnd13
+dot23
 wnd23
 
 [proxmox_hosts]
