@@ -1,5 +1,4 @@
 ---
-
 - name: Ensure group {{ polkadot_user }} exists
   ansible.builtin.group:
     name: "{{ polkadot_user }}"
@@ -27,16 +26,18 @@
     mode: '0750'
     state: directory
 
+- name: Gather facts
+  ansible.builtin.setup:
+
 - name: Copy Polkadot systemd service for specific node type
   ansible.builtin.template:
-    src: "{{ 'polkadot_' + node_type + '.service.j2' }}"
+    src: "{{ 'polkadot_' + default_node_type + '.service.j2' }}"
     dest: "{{ polkadot_base }}/polkadot.service"
     owner: "{{ polkadot_user }}"
     group: "{{ polkadot_user }}"
     mode: '0640'
-  vars:
-    node_type: "{{ ansible_local['noderole']['node']['type'] }}"
-  when: node_type in ["validator", "bootnode", "endpoint"]
+  when: default_node_type in ["validator", "bootnode", "endpoint"]
+  notify: Add type of service fact
 
 - name: Symlink Polkadot service to systemd
   ansible.builtin.file:
@@ -48,22 +49,38 @@
     group: "root"
     mode: '0644'
 
-- name: Install polkadot v{{ polkadot_version }}
+- name: Install Polkadot v{{ polkadot_version }}
   ansible.builtin.get_url:
     url: "{{ polkadot_download_url }}"
     dest: "{{ polkadot_base }}/polkadot-v{{ polkadot_version }}"
-    mode: "u+r-x"
+    mode: "u+r+x"
     owner: "{{ polkadot_user }}"
     group: "{{ polkadot_user }}"
   register: download_result
   notify:
-  - Stop Polkadot
-  - Symlink Polkadot release
-  - Symlink binary executable
-  - Symlink Polkadot service to systemd
-  - Systemd daemon-reload
-  - Start Polkadot
+    - Add Service Pinned Status
+    - Add Polkadot service version
+    - Stop Polkadot
+    - Symlink Polkadot release
+    - Symlink binary executable
+    - Symlink Polkadot service to systemd
+    - Systemd daemon-reload
+    - Start Polkadot
   when:
     - ansible_local['noderole']['node']['pinned'] != "True"
     - ansible_local['noderole']['node']['version'] != polkadot_version
+
+- name: Flush handlers to ensure all prior tasks in handlers are executed
+  meta: flush_handlers
+
+- name: Verify Polkadot version
+  command: "{{ polkadot_base }}/polkadot --version"
+  register: polkadot_version_result
+  changed_when: False
+  failed_when: "'{{ polkadot_version }}' not in polkadot_version_result.stdout"
+
+- name: Ensure Polkadot service is running
+  ansible.builtin.systemd:
+    name: polkadot
+    state: started
 ...

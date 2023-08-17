@@ -5,7 +5,7 @@
     state: present
     system: True
   notify:
-    - Add type of service
+    - Add type of service fact
 
 - name: Ensure user {{ encointer_user }} exists
   ansible.builtin.user:

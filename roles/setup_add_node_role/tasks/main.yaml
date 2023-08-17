@@ -22,10 +22,10 @@
     - not noderole_result.stat.exists
   with_items:
     - { section: "node", option: "role", value: "{{ role }}" }
-    - { section: "node", option: "version", value: "undefined" }
-    - { section: "node", option: "go_version", value: "undefined" }
+    - { section: "node", option: "version", value: "" }
+    - { section: "node", option: "go_version", value: "" }
     - { section: "node", option: "pinned", value: "False" }
-    - { section: "node", option: "type", value: "undefined" }
+    - { section: "node", option: "type", value: "" }
 
 - name: Add default lighthouse fact to /etc/ansible/facts.d/noderole
   community.general.ini_file:
