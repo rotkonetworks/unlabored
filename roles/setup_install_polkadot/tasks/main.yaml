@@ -15,7 +15,7 @@
     groups: []
     home: "{{ polkadot_base }}"
     name: "{{ polkadot_user }}"
-    shell: "/sbin/nologin"  # Deny login for the service user
+    shell: "/sbin/nologin"
     state: present
     system: True
 
@@ -38,24 +38,6 @@
     node_type: "{{ ansible_local['noderole']['node']['type'] }}"
   when: node_type in ["validator", "bootnode", "endpoint"]
 
-- name: Install polkadot v{{ polkadot_version }}
-  ansible.builtin.get_url:
-    url: "{{ polkadot_download_url }}"
-    dest: "{{ polkadot_base }}/polkadot-v{{ polkadot_version }}"
-    mode: "u+r-x"
-    owner: "{{ polkadot_user }}"
-    group: "{{ polkadot_user }}"
-  register: download_result
-  notify:
-    - Stop Polkadot
-    - Symlink Polkadot release
-    - Symlink binary executable
-    - Systemd daemon-reload
-    - Restart Polkadot
-  when:
-    - ansible_local['noderole']['node']['pinned'] != "True"
-    - ansible_local['noderole']['node']['version'] != polkadot_version
-
 - name: Symlink Polkadot service to systemd
   ansible.builtin.file:
     src: "{{ polkadot_base }}/polkadot.service"
@@ -65,10 +47,23 @@
     owner: "root"
     group: "root"
     mode: '0644'
+
+- name: Install polkadot v{{ polkadot_version }}
+  ansible.builtin.get_url:
+    url: "{{ polkadot_download_url }}"
+    dest: "{{ polkadot_base }}/polkadot-v{{ polkadot_version }}"
+    mode: "u+r-x"
+    owner: "{{ polkadot_user }}"
+    group: "{{ polkadot_user }}"
+  register: download_result
   notify:
-    - Stop Polkadot
-    - Symlink Polkadot release
-    - Symlink binary executable
-    - Systemd daemon-reload
-    - Restart Polkadot
+  - Stop Polkadot
+  - Symlink Polkadot release
+  - Symlink binary executable
+  - Symlink Polkadot service to systemd
+  - Systemd daemon-reload
+  - Start Polkadot
+  when:
+    - ansible_local['noderole']['node']['pinned'] != "True"
+    - ansible_local['noderole']['node']['version'] != polkadot_version
 ...
