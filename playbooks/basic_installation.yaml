@@ -7,6 +7,7 @@
   roles:
     - setup_set_hostname
     - setup_set_timezone
+    - setup_debian_repository
     - setup_install_basic_tools
     - setup_install_postfix
     - setup_disable_services

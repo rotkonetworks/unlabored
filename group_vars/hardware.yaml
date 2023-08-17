@@ -28,4 +28,5 @@ default_packages:
   - kmod
   - logrotate
   - rsync
+  - nvme-cli
 ...

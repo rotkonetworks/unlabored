@@ -15,5 +15,4 @@
     mode: '0644'
     state: present
   with_items: "{{ kernel_modules }}"
-
 ...

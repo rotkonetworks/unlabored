@@ -1,0 +1,39 @@
+---
+- name: Set Debian Bookworm sources
+  ansible.builtin.copy:
+    dest: /etc/apt/sources.list
+    content: |
+      deb https://ftp.debian.org/debian/ bookworm contrib main non-free non-free-firmware
+      deb https://ftp.debian.org/debian/ bookworm-updates contrib main non-free non-free-firmware
+      deb https://ftp.debian.org/debian/ bookworm-proposed-updates contrib main non-free non-free-firmware
+      deb https://ftp.debian.org/debian/ bookworm-backports contrib main non-free non-free-firmware
+      deb https://security.debian.org/debian-security/ bookworm-security contrib main non-free non-free-firmware
+    backup: yes
+    owner: root
+    group: root
+    mode: '0644'
+  when:
+    - ansible_distribution == 'Debian'
+    - ansible_distribution_release == 'bookworm'
+  notify:
+    - Update APT cache
+
+- name: Set Debian Bullseye sources
+  ansible.builtin.copy:
+    dest: /etc/apt/sources.list
+    content: |
+      deb https://ftp.debian.org/debian/ bullseye contrib main non-free non-free
+      deb https://ftp.debian.org/debian/ bullseye-updates contrib main non-free non-free
+      deb https://ftp.debian.org/debian/ bullseye-proposed-updates contrib main non-free non-free
+      deb https://ftp.debian.org/debian/ bullseye-backports contrib main non-free non-free
+      deb https://security.debian.org/debian-security/ bullseye-security contrib main non-free non-free
+    backup: yes
+    owner: root
+    group: root
+    mode: '0644'
+  when:
+    - ansible_distribution == 'Debian'
+    - ansible_distribution_release == 'bullseye'
+  notify:
+    - Update APT cache
+...

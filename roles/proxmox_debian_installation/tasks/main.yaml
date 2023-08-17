@@ -10,7 +10,7 @@
 - name: Install Proxmox kernel
   ansible.builtin.apt:
     pkg:
-      - pve-kernel
+      - pve-kernel-6.2
     state: present
   notify: Reboot machine
 

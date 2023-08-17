@@ -24,7 +24,7 @@
     path: "{{ polkadot_base }}"
     owner: "{{ polkadot_user }}"
     group: "{{ polkadot_user }}"
-    mode: '0750'  # Only the owner should have write permission, group read, others none.
+    mode: '0750'
     state: directory
 
 - name: Copy Polkadot systemd service for specific node type
@@ -39,26 +39,19 @@
   when: node_type in ["validator", "bootnode", "endpoint"]
 
 - name: Install polkadot v{{ polkadot_version }}
-  block:
-    - name: Download Polkadot
-      ansible.builtin.get_url:
-        url: "{{ polkadot_download_url }}"
-        dest: "{{ polkadot_base }}/polkadot-v{{ polkadot_version }}"
-        mode: "u+r-x"
-        owner: "{{ polkadot_user }}"
-        group: "{{ polkadot_user }}"
-      register: download_result
-
-    - name: Notify handlers if Polkadot is downloaded
-      command: echo "Polkadot v{{ polkadot_version }} has been downloaded"
-      notify:
-        - Stop Polkadot
-        - Symlink Polkadot release
-        - Symlink binary executable
-        - Systemd daemon-reload
-        - Restart Polkadot
-      when: download_result.changed
-      changed_when: false
+  ansible.builtin.get_url:
+    url: "{{ polkadot_download_url }}"
+    dest: "{{ polkadot_base }}/polkadot-v{{ polkadot_version }}"
+    mode: "u+r-x"
+    owner: "{{ polkadot_user }}"
+    group: "{{ polkadot_user }}"
+  register: download_result
+  notify:
+    - Stop Polkadot
+    - Symlink Polkadot release
+    - Symlink binary executable
+    - Systemd daemon-reload
+    - Restart Polkadot
   when:
     - ansible_local['noderole']['node']['pinned'] != "True"
     - ansible_local['noderole']['node']['version'] != polkadot_version
