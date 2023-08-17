@@ -1,5 +1,6 @@
 # filter_plugins/parse_routeros_firewall.py
 
+
 def extract_comment(line):
     """Extracts comment if present."""
     if ";;;" not in line:
@@ -18,8 +19,7 @@ def determine_rule_type(line):
 
 def parse_rule_fields(fields):
     """Parses fields into a rule dictionary."""
-    rule = {field.split("=")[0]: field.split("=")[1]
-            for field in fields if "=" in field}
+    rule = {field.split("=")[0]: field.split("=")[1] for field in fields if "=" in field}
     for field in fields:
         if "=" not in field:
             rule[field] = True
@@ -54,8 +54,8 @@ def rule_matches_port_forward(rule, port_forward):
 
 
 def rule_matches_filter_details(rule, filter_details):
-    dst_port = filter_details.get('from_port')
-    protocol = filter_details.get('protocol')
+    dst_port = filter_details.get("from_port")
+    protocol = filter_details.get("protocol")
     return rule.get("dst-port") == dst_port and rule.get("protocol") == protocol
 
 

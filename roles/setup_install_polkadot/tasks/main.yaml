@@ -71,13 +71,13 @@
     - ansible_local['noderole']['node']['version'] != polkadot_version
 
 - name: Flush handlers to ensure all prior tasks in handlers are executed
-  meta: flush_handlers
+  ansible.builtin.meta: flush_handlers
 
 - name: Verify Polkadot version
-  command: "{{ polkadot_base }}/polkadot --version"
+  ansible.builtin.command: "{{ polkadot_base }}/polkadot --version"
   register: polkadot_version_result
   changed_when: False
-  failed_when: "'{{ polkadot_version }}' not in polkadot_version_result.stdout"
+  failed_when: "polkadot_version not in polkadot_version_result.stdout"
 
 - name: Ensure Polkadot service is running
   ansible.builtin.systemd:
