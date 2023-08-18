@@ -118,7 +118,7 @@ all_users:
 
 # Proxmox management
 proxmox_default_admin_account: "ansible_admin@pve"
-proxmox_default_admin_comment: "Ansible promox account"
+proxmox_default_admin_comment: "Ansible proxmox account"
 proxmox_default_admin_group: "rot_admin"
 proxmox_default_admin_group_comment: "Rotko admin group"
 proxmox_default_admin_token: "admin_token"
