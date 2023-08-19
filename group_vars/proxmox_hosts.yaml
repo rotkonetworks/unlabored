@@ -26,6 +26,7 @@ default_packages:
   - dmraid
   - net-tools
   - libuser
+  - libssl-dev
   - iptables-persistent
   - bind9-dnsutils
   - bridge-utils
