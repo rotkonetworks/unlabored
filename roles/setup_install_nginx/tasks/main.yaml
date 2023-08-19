@@ -1,0 +1,29 @@
+---
+- name: Copy file with owner and permissions
+  ansible.builtin.template:
+    src: nginx.j2
+    dest: "/etc/nginx/sites-available/{{ default_public_dns }}"
+    mode: '0755'
+  notify: Reload nginx
+
+- name: Link site into sites enabled
+  ansible.builtin.file:
+    src: "/etc/nginx/sites-available/{{ default_public_dns }}"
+    dest: "/etc/nginx/sites-enabled/{{ default_public_dns }}"
+    state: link
+  notify: Reload nginx
+
+- name: Issue certificate
+  ansible.builtin.command:
+    cmd: certbot --nginx --non-interactive --agree-tos --domains "{{ default_public_dns }}" --email "{{ default_certificate_email }}"
+  register: certbot_result
+  changed_when: "'Congratulations' in certbot_result.stdout"
+
+- name: Upgrade nginx conf to use https
+  ansible.builtin.template:
+    src: nginx-https.j2
+    dest: "/etc/nginx/sites-available/{{ default_public_dns }}"
+    mode: '0755'
+  when: certbot_result is changed
+  notify: Reload nginx
+...

@@ -1,0 +1,64 @@
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    server_name {{ default_public_dns }};
+
+    # SSL/TLS settings
+    ssl_certificate /etc/letsencrypt/live/{{ default_public_dns }}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/{{ default_public_dns }}/privkey.pem;
+
+    # Strong SSL settings
+    ssl_protocols TLSv1.3;
+    ssl_ciphers 'TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384';
+    ssl_prefer_server_ciphers off;
+    ssl_session_cache shared:SSL:10m;
+    ssl_session_timeout 10m;
+    ssl_session_tickets off;
+
+    # OCSP Stapling
+    ssl_stapling on;
+    ssl_stapling_verify on;
+    resolver 1.1.1.1 1.0.0.1 valid=300s;
+    resolver_timeout 5s;
+
+    # Disable any limits to prevent potential DoS attacks
+    client_max_body_size 0;
+    proxy_request_buffering off;
+
+    # Harden the server headers
+    server_tokens off;
+
+    # Real IP from cloud provider's load balancers
+    # set_real_ip_from {{ cloud_provider_ip_range }};
+    # real_ip_header X-Real-IP;
+
+    location / {
+        proxy_pass http://127.0.0.1:{{ default_rpc_port }};
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+
+        # Security headers
+        add_header X-Frame-Options DENY;
+        add_header X-Content-Type-Options nosniff;
+        add_header X-XSS-Protection "1; mode=block";
+        add_header Referrer-Policy no-referrer;
+        add_header Strict-Transport-Security "max-age=63072000; includeSubDomains; preload";
+    }
+
+    # Deny hidden files
+    location ~ /\. {
+        deny all;
+    }
+}
+
+# Optional: Redirect HTTP traffic to HTTPS
+server {
+    listen 80;
+    listen [::]:80;
+    server_name {{ default_public_dns }};
+    return 301 https://$host$request_uri;
+}

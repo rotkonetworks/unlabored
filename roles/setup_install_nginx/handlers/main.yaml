@@ -1,0 +1,13 @@
+---
+- name: Check nginx configuration
+  ansible.builtin.command:
+    cmd: nginx -t
+  listen: Reload nginx
+
+- name: Restart nginx service
+  ansible.builtin.systemd:
+    daemon_reload: yes
+    name: nginx
+    state: restarted
+  listen: Reload nginx
+...

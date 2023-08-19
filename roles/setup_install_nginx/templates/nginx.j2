@@ -1,0 +1,8 @@
+server {
+    listen 80;
+    listen [::]:80;
+    server_name {{ default_public_dns }};
+    location / {
+      try_files $uri $uri/ =404;
+    }
+}
