@@ -23,20 +23,13 @@
     extra_args: --break-system-packages
   when: certbot_dns_porkbun_installed.stdout == ""
 
-- name: Include Porkbun API credentials from Vault
-  ansible.builtin.include_vars:
-    file: files/porkbun_keys.yaml
-    name: porkbun_creds
-  no_log: true
-  no_log: true
-
 - name: Obtain certificate using DNS-01 challenge
   ansible.builtin.command:
     cmd: >
       certbot certonly --non-interactive --agree-tos --email "{{ default_certificate_email }}" 
       --preferred-challenges dns --authenticator dns-porkbun 
-      --dns-porkbun-key "{{ porkbun_creds.porkbun_api_key }}" 
-      --dns-porkbun-secret "{{ porkbun_creds.porkbun_secret_key }}" 
+      --dns-porkbun-key "{{ porkbun_api_key }}" 
+      --dns-porkbun-secret "{{ porkbun_secret_key }}" 
       --dns-porkbun-propagation-seconds 60 
       -d "{{ default_public_dns }}"
   register: certbot_result
