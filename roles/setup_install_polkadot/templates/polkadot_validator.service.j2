@@ -22,7 +22,7 @@ ExecStart={{ polkadot_base }}/polkadot \
      --name "{{ hostvars[inventory_hostname]['default_telemetry_name'] | default(host_name) }}" \
      --telemetry-url 'wss://telemetry-backend.w3f.community/submit 1' \
      --port {{ polkadot_p2p_port }} \
-     --rpc-port {{ polkadot_rpc_port }} \
+     --rpc-port {{ default_rpc_port }} \
      --prometheus-port {{ polkadot_prom_port }} \
      --execution wasm \
      --wasm-execution compiled \

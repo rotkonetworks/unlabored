@@ -15,7 +15,7 @@ default_node_type: validator
 polkadot_database: paritydb
 default_telemetry_url: "wss://telemetry-backend.w3f.community/submit/ 1"
 polkadot_p2p_port: 33100
-polkadot_rpc_port: 9100
-polkadot_secure_rpc_port: 42100
+default_rpc_port: 9100
+default_secure_rpc_port: 42100
 polkadot_prom_port: 7100
 ...

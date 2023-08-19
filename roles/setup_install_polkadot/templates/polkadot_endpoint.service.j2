@@ -13,11 +13,11 @@ ExecStart={{ polkadot_base }}/polkadot \
   --state-pruning archive \
   --sync full \
   --listen-addr /ip6/::/tcp/{{ polkadot_p2p_port }} \
-  --listen-addr /ip6/::/tcp/{{ polkadot_rpc_port }}/ws \
+  --listen-addr /ip6/::/tcp/{{ default_rpc_port }}/ws \
   --listen-addr /ip4/0.0.0.0/tcp/{{ polkadot_p2p_port }} \
-  --listen-addr /ip4/0.0.0.0/tcp/{{ polkadot_rpc_port }}/ws \
+  --listen-addr /ip4/0.0.0.0/tcp/{{ default_rpc_port }}/ws \
   --public-addr /dns/{{ default_public_dns }}/tcp/{{ polkadot_p2p_port }} \
-  --public-addr /dns/{{ default_public_dns }}/tcp/{{ polkadot_secure_rpc_port }}/wss \
+  --public-addr /dns/{{ default_public_dns }}/tcp/{{ default_secure_rpc_port }}/wss \
   --wasm-execution Compiled \
   --execution native-else-wasm \
   --no-hardware-benchmarks \
