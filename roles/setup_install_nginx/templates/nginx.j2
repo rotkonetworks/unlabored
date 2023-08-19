@@ -1,8 +1,12 @@
 server {
     listen {{ default_secure_rpc_port }};
-    listen [::]:{{ default_secure_rpc_port }};
     server_name {{ default_public_dns }};
+
+    location /.well-known/acme-challenge/ {
+        root /path/to/acme-challenge-directory;
+    }
+
     location / {
-      try_files $uri $uri/ =404;
+        try_files $uri $uri/ =404;
     }
 }

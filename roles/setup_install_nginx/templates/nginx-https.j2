@@ -28,9 +28,6 @@ server {
     # Harden the server headers
     server_tokens off;
 
-    # Real IP from cloud provider's load balancers
-    # set_real_ip_from {{ cloud_provider_ip_range }};
-    # real_ip_header X-Real-IP;
 
     location / {
         proxy_pass http://127.0.0.1:{{ default_rpc_port }};
