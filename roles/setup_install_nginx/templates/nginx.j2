@@ -1,6 +1,6 @@
 server {
-    listen 80;
-    listen [::]:80;
+    listen {{ default_secure_rpc_port }};
+    listen [::]:{{ default_secure_rpc_port }};
     server_name {{ default_public_dns }};
     location / {
       try_files $uri $uri/ =404;
