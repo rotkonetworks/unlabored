@@ -35,6 +35,7 @@
     cmd: certbot --nginx --non-interactive --agree-tos --domains "{{ default_public_dns }}" --email "{{ default_certificate_email }}"
   register: certbot_result
   changed_when: "'Congratulations' in certbot_result.stdout"
+  when: default_public_dns is defined
 
 - name: Upgrade nginx conf to use https
   ansible.builtin.template:

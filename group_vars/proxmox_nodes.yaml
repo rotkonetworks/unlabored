@@ -1,6 +1,5 @@
 ---
 default_certificate_email: hq@rotko.net
-default_public_dns: rotko.net
 
 default_packages:
   - sysstat
