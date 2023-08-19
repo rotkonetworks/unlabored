@@ -91,6 +91,7 @@
   gather_facts: True
   roles:
     - setup_install_polkadot
+    - setup_install_nginx
 
 - name: Install Cumulus services
   hosts: cumulus
@@ -103,12 +104,4 @@
   gather_facts: True
   roles:
     - setup_install_encointer
-
-- name: Install reverse proxy and SSL
-  hosts: proxmox_nodes
-  gather_facts: True
-  roles:
-    - setup_install_nginx
-    - setup_install_certbot
-    - setup_configure_nginx
 ...
