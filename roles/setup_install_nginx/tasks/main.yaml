@@ -1,4 +1,21 @@
 ---
+- name: Install nginx and certbot
+  ansible.builtin.package:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - nginx
+    - python3-certbot-nginx
+    - certbot
+
+- name: Ensure necessary folders exists
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+  loop:
+    - /etc/nginx/sites-available
+    - /etc/nginx/sites-enabled
+
 - name: Copy file with owner and permissions
   ansible.builtin.template:
     src: nginx.j2

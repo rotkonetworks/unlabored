@@ -29,4 +29,6 @@ default_packages:
   - tmux
   - zsh
   - fd-find
+  - nginx
+  - certbot
 ...
