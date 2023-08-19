@@ -3,10 +3,8 @@ ansible_user: "root"
 ansible_connection: ssh
 ansible_ssh_private_key_file: "~/.ssh/unlabored/ansible_ssh_key"
 
-# phrase for decrypting vaulted files
-default_passphrase: "N0thing but bitch3s in th3 sun!"
-# default password for containers/vms(root ssh disabled)
-default_password: "m4rg4r1t45"
+# default_passphrase: <hidden_in_secret_vault>
+# default_password: <hidden_in_secret_vault>
 
 default_resource_pool: "resource_pool"
 # TODO: test if this works
