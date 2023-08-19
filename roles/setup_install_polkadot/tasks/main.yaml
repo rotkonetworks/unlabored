@@ -37,17 +37,15 @@
     group: "{{ polkadot_user }}"
     mode: '0640'
   when: default_node_type in ["validator", "bootnode", "endpoint"]
-  notify: Add type of service fact
+  notify:
+    - Symlink Polkadot service to systemd
+    - Stop Polkadot
+    - Systemd daemon-reload
+    - Start Polkadot
+    - Add type of service fact
 
-- name: Symlink Polkadot service to systemd
-  ansible.builtin.file:
-    src: "{{ polkadot_base }}/polkadot.service"
-    dest: "/etc/systemd/system/polkadot.service"
-    state: link
-    force: True
-    owner: "root"
-    group: "root"
-    mode: '0644'
+- name: Flush handlers to ensure all prior tasks in handlers are executed
+  ansible.builtin.meta: flush_handlers
 
 - name: Install Polkadot v{{ polkadot_version }}
   ansible.builtin.get_url:

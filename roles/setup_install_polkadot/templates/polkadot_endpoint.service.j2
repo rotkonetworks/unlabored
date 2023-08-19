@@ -18,7 +18,6 @@ ExecStart={{ polkadot_base }}/polkadot \
   --listen-addr /ip4/0.0.0.0/tcp/{{ default_rpc_port }}/ws \
   --public-addr /dns/{{ default_public_dns }}/tcp/{{ polkadot_p2p_port }} \
   --public-addr /dns/{{ default_public_dns }}/tcp/{{ default_secure_rpc_port }}/wss \
-  --port {{ polkadot_p2p_port }} \
   --rpc-port {{ default_rpc_port }} \
   --prometheus-port {{ polkadot_prom_port }} \
   --wasm-execution Compiled \
