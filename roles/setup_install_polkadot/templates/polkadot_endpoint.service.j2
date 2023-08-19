@@ -17,7 +17,7 @@ ExecStart={{ polkadot_base }}/polkadot \
   --listen-addr /ip4/0.0.0.0/tcp/{{ polkadot_p2p_port }} \
   --listen-addr /ip4/0.0.0.0/tcp/{{ polkadot_rpc_port }}/ws \
   --public-addr /dns/{{ default_public_dns }}/tcp/{{ polkadot_p2p_port }} \
-  --public-addr /dns/{{ default_public_dns }}/tcp/{{ polkadot_proxy_port }}/wss \
+  --public-addr /dns/{{ default_public_dns }}/tcp/{{ polkadot_secure_rpc_port }}/wss \
   --wasm-execution Compiled \
   --execution native-else-wasm \
   --no-hardware-benchmarks \
