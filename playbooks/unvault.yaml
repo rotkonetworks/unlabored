@@ -1,0 +1,8 @@
+---
+- hosts: proxmox_hosts
+  tasks:
+    - name: Decrypt and Print Proxmox Admin Token
+      debug:
+        var: api_token_secret
+      vars:
+        api_token_secret: "{{ ansible_local.proxmox.api.token | unvault(default_passphrase) }}"
