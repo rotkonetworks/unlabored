@@ -10,11 +10,16 @@
     - python3-pip
   register: packages_installed
 
-- name: Check for certbot_dns_porkbun plugin installation
+- name: Check certbot plugins
   ansible.builtin.shell:
-    cmd: set -o pipefail && certbot plugins | grep dns-porkbun
-  register: certbot_dns_porkbun_installed
-  failed_when: certbot_dns_porkbun_installed.rc > 1
+    cmd: certbot plugins || true
+  register: certbot_plugins_output
+
+- name: Assert certbot_dns_porkbun plugin is installed
+  ansible.builtin.assert:
+    that:
+      - "'dns-porkbun' in certbot_plugins_output.stdout"
+    fail_msg: "The certbot_dns_porkbun plugin is not installed!"
 
 - name: Install certbot_dns_porkbun plugin if absent
   ansible.builtin.pip:
