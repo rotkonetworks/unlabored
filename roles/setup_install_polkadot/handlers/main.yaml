@@ -1,10 +1,4 @@
 ---
-- name: Stop Polkadot
-  ansible.builtin.systemd:
-    name: polkadot
-    state: stopped
-    enabled: True
-
 - name: Symlink Polkadot release
   ansible.builtin.file:
     src: "{{ polkadot_base }}/polkadot-v{{ polkadot_version }}"
@@ -32,6 +26,12 @@
     owner: "root"
     group: "root"
     mode: '0644'
+
+- name: Stop Polkadot
+  ansible.builtin.systemd:
+    name: polkadot
+    state: stopped
+    enabled: True
 
 - name: Systemd daemon-reload
   ansible.builtin.systemd:

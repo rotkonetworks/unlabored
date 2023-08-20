@@ -58,10 +58,10 @@
   notify:
     - Add Service Pinned Status
     - Add Polkadot service version
-    - Stop Polkadot
+    - Symlink Polkadot service to systemd
     - Symlink Polkadot release
     - Symlink binary executable
-    - Symlink Polkadot service to systemd
+    - Stop Polkadot
     - Systemd daemon-reload
     - Start Polkadot
   when:
