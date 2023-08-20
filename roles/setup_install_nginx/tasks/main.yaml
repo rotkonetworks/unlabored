@@ -15,18 +15,12 @@
     cmd: certbot plugins || true
   register: certbot_plugins_output
 
-- name: Assert certbot_dns_porkbun plugin is installed
-  ansible.builtin.assert:
-    that:
-      - "'dns-porkbun' in certbot_plugins_output.stdout"
-    fail_msg: "The certbot_dns_porkbun plugin is not installed!"
-
 - name: Install certbot_dns_porkbun plugin if absent
   ansible.builtin.pip:
     name: certbot_dns_porkbun
     state: present
     extra_args: --break-system-packages
-  when: not certbot_dns_porkbun_installed.stdout
+  when: "'dns-porkbun' not in certbot_plugins_output.stdout"
 
 - name: Obtain certificate using DNS-01 challenge
   ansible.builtin.command:
