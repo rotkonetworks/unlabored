@@ -44,7 +44,7 @@
     - Start Polkadot
     - Add type of service fact
 
-- name: Flush handlers to ensure all prior tasks in handlers are executed
+- name: Flush handlers after Polkadot service copy
   ansible.builtin.meta: flush_handlers
 
 - name: Install Polkadot v{{ polkadot_version }}
@@ -68,7 +68,7 @@
     - ansible_local['noderole']['node']['pinned'] != "True"
     - ansible_local['noderole']['node']['version'] != polkadot_version
 
-- name: Flush handlers to ensure all prior tasks in handlers are executed
+- name: Flush handlers after Polkadot install
   ansible.builtin.meta: flush_handlers
 
 - name: Verify Polkadot version

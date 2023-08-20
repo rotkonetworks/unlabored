@@ -12,7 +12,7 @@
 
 - name: Check for certbot_dns_porkbun plugin installation
   ansible.builtin.shell:
-    cmd: certbot plugins | grep dns-porkbun
+    cmd: set -o pipefail && certbot plugins | grep dns-porkbun
   register: certbot_dns_porkbun_installed
   failed_when: certbot_dns_porkbun_installed.rc > 1
 
@@ -21,25 +21,26 @@
     name: certbot_dns_porkbun
     state: present
     extra_args: --break-system-packages
-  when: certbot_dns_porkbun_installed.stdout == ""
+  when: not certbot_dns_porkbun_installed.stdout
 
 - name: Obtain certificate using DNS-01 challenge
   ansible.builtin.command:
     cmd: >
-      certbot certonly --non-interactive --agree-tos --email "{{ default_certificate_email }}" 
-      --preferred-challenges dns --authenticator dns-porkbun 
-      --dns-porkbun-key "{{ porkbun_api_key }}" 
-      --dns-porkbun-secret "{{ porkbun_secret_key }}" 
-      --dns-porkbun-propagation-seconds 60 
+      certbot certonly --non-interactive --agree-tos --email "{{ default_certificate_email }}"
+      --preferred-challenges dns --authenticator dns-porkbun
+      --dns-porkbun-key "{{ porkbun_api_key }}"
+      --dns-porkbun-secret "{{ porkbun_secret_key }}"
+      --dns-porkbun-propagation-seconds 60
       -d "{{ default_public_dns }}"
   register: certbot_result
   changed_when: "'Congratulations' in certbot_result.stdout"
-  no_log: true
+  no_log: True
 
 - name: Ensure NGINX configuration directories exist
   ansible.builtin.file:
     path: "/etc/nginx/{{ item }}"
     state: directory
+    mode: '0755'
   loop:
     - sites-available
     - sites-enabled
