@@ -17,8 +17,9 @@ default_node_type: "bootnode"
 # polkadot_syncmode: warp
 polkadot_p2p_port: 33234
 polkadot_p2p_port_ws: 34234
+polkadot_p2p_port_wss: 35234
 default_rpc_port: 9234
-polkadot_prom_port: 7234
 default_secure_rpc_port: 42234
+polkadot_prom_port: 7234
 zabbix_ext_port: 10234
 ...

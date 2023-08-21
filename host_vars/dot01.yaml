@@ -16,7 +16,9 @@ polkadot_database: paritydb
 polkadot_syncmode: warp
 polkadot_p2p_port: 33111
 polkadot_p2p_port_ws: 34111
+polkadot_p2p_port_wss: 35111
 default_rpc_port: 9111
+default_secure_rpc_port: 42111
 polkadot_prom_port: 7111
 zabbix_ext_port: 10111
 ...
