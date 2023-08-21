@@ -16,6 +16,7 @@ polkadot_pruning: "archive"
 polkadot_database: paritydb
 polkadot_syncmode: full
 polkadot_p2p_port: 33333
+polkadot_p2p_port_ws: 34333
 default_rpc_port: 9333
 polkadot_prom_port: 7333
 zabbix_ext_port: 10333

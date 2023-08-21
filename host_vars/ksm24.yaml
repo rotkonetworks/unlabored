@@ -16,6 +16,7 @@ polkadot_pruning: "archive"
 polkadot_database: paritydb
 polkadot_syncmode: full
 polkadot_p2p_port: 33324
+polkadot_p2p_port_ws: 34324
 default_rpc_port: 9324
 polkadot_prom_port: 7324
 default_secure_rpc_port: 42324
