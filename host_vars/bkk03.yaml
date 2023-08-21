@@ -130,38 +130,6 @@ lxc_nodes:
       - from_port: "{{ hostvars['ksm23']['polkadot_p2p_port'] }}"
         to_host: "{{ hostvars['ksm23']['container_ip'] }}:{{ hostvars['ksm23']['polkadot_p2p_port'] }}"
         protocol: "tcp"
-  - host: "wnd13"
-    proxmox_config:
-      vmid: "233"
-      hostname: "{{ hostvars['wnd13']['host_name'] }}"
-      ostemplate: 'local:vztmpl/{{ default_container_template }}'
-      netif: "{{ hostvars['wnd13']['netif'] }}"
-      cores: 4
-      memory: 8192
-      swap: 8192
-      password: "{{ default_password }}"
-      disk: "{{ default_storage }}:20"
-      mounts: '{"mp0":"{{ default_storage }}:500,mp={{ hostvars["wnd13"]["polkadot_base"] }}"}'
-      onboot: True
-      unprivileged: True
-      validate_certs: False
-      description: "{{ hostvars['wnd13']['polkadot_network'] }} {{ hostvars['wnd13']['default_node_type'] }}: {{ hostvars['wnd13']['host_name'] }}"
-      state: present
-      features:
-        - nesting=1
-    port_forwards:
-      - from_port: "{{ hostvars['wnd13']['ansible_port'] }}"
-        to_host: "{{ hostvars['wnd13']['container_ip'] }}:22"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['wnd13']['default_rpc_port'] }}"
-        to_host: "{{ hostvars['wnd13']['container_ip'] }}:{{ hostvars['wnd13']['default_rpc_port'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['wnd13']['default_secure_rpc_port'] }}"
-        to_host: "{{ hostvars['wnd13']['container_ip'] }}:{{ hostvars['wnd13']['default_secure_rpc_port'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['wnd13']['polkadot_p2p_port'] }}"
-        to_host: "{{ hostvars['wnd13']['container_ip'] }}:{{ hostvars['wnd13']['polkadot_p2p_port'] }}"
-        protocol: "tcp"
   - host: "wnd23"
     proxmox_config:
       vmid: "333"
