@@ -18,13 +18,16 @@
     state: present
     system: True
 
-- name: Ensure user {{ polkadot_user }} owns {{ polkadot_base }}
+- name: Ensure user {{ polkadot_user }} owns directories
   ansible.builtin.file:
-    path: "{{ polkadot_base }}"
+    path: "{{ item }}"
     owner: "{{ polkadot_user }}"
     group: "{{ polkadot_user }}"
     mode: '0750'
     state: directory
+  loop:
+    - "{{ polkadot_base }}"
+    - "{{ polkadot_storage }}"
 
 - name: Gather facts
   ansible.builtin.setup:

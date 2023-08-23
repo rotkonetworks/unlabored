@@ -273,7 +273,7 @@ lxc_nodes:
       swap: 8192
       password: "{{ default_password }}"
       disk: "{{ default_storage }}:20"
-      mounts: '{"mp0":"{{ default_storage }}:500,mp={{ hostvars["wnd14"]["polkadot_base"] }}"}'
+      mounts: '{"mp0":"{{ default_storage }}:500,mp={{ hostvars["wnd14"]["polkadot_storage"] }}"}'
       onboot: True
       unprivileged: True
       validate_certs: False
