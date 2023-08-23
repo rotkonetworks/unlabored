@@ -13,8 +13,8 @@ default_public_dns: "{{ host_name }}"
 polkadot_network: "westend"
 polkadot_database: paritydb
 default_node_type: "bootnode"
-# polkadot_pruning: 256
-# polkadot_syncmode: warp
+polkadot_pruning: 256
+polkadot_syncmode: fast
 polkadot_p2p_port: 33234
 polkadot_p2p_port_ws: 34234
 polkadot_p2p_port_wss: 35234
