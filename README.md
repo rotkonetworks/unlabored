@@ -1,8 +1,5 @@
 ![unlabored logo](assets/unlabored-logo.webp)
 # unlabored
-Effortless Proxmox-Ansible deployment infrastructure for blockchain application.
-
-## Overview
 
 unlabored is designed to streamline the deployment and maintenance of
 blockchain infrastructures on Proxmox using Ansible. The project comes with an
