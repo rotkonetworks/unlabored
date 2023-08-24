@@ -2,12 +2,36 @@
 # unlabored
 Effortless Proxmox-Ansible deployment infrastructure for blockchain application.
 
+## Overview
+
+unlabored is designed to streamline the deployment and maintenance of
+blockchain infrastructures on Proxmox using Ansible. The project comes with an
+array of roles, catering to various blockchain applications and Proxmox
+configurations.
+
 ## Installation:
-```bash
-sudo apt install python3 python3-venv python3-pip
-git clone https://github.com/rotkonetworks/unlabored && cd unlabored
-./install_unlabored <command> -a <account_name> -k <ssh_key_path>
-```
+
+1. **Fork the Repository**:
+   - First, visit the original repository on GitHub at
+   `https://github.com/rotkonetworks/unlabored`.
+   - In the top-right corner, you'll see a button labeled "Fork". Click on this
+   to create your own copy of the repository.
+
+2. **Install Necessary Dependencies**: Open a terminal and run the following
+commands to install necessary software: ```bash sudo apt update sudo apt
+install python3 python3-venv python3-pip ```
+
+3. **Clone Your Forked Repository**: Replace `<your_github_username>` with your
+actual GitHub username. ```bash git clone
+https://github.com/<your_github_username>/unlabored && cd unlabored ```
+
+4. **Install the Unlabored Application**: Run the installation script. Make
+sure to replace `<command>`, `<account_name>`, and `<ssh_key_path>` with the
+appropriate values.
+   ```bash
+   ./install_unlabored <command> -a <account_name> -k <ssh_key_path>
+   ```
+
 The `<command>` can be:
 
 - ```install```: It sets up a Python virtual environment, installs necessary
