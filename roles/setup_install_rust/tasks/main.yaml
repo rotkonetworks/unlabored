@@ -6,7 +6,7 @@
     state: present
 
 - name: Check if Rust directories exist
-  stat:
+  ansible.builtin.stat:
     path: "/usr/local/cargo"
   register: rust_directories
   tags:
