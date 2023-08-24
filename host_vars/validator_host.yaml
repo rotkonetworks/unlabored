@@ -11,9 +11,9 @@ kernel_modules:
 
 default_kvm_host: "192.168.69.201"
 default_kvm_port: "20791"
-default_need_routeros_port_forwarding: True # True if Mikrotik router is used
+default_need_routeros_port_forwarding: True  # True if Mikrotik router is used
 routeros_delegate_host: "bkk00"
-default_need_iptables_port_forwarding: False # True if use routerless setup(cloud/vps/vds)
+default_need_iptables_port_forwarding: False  # True if use routerless setup(cloud/vps/vds)
 default_gw_device: "enp4s0"
 default_storage: "tank01"
 default_resource_pool: "bkk01_resource_pool"
@@ -26,8 +26,8 @@ lxc_nodes:
       ostemplate: 'local:vztmpl/{{ default_container_template }}'
       netif: "{{ hostvars['dot01']['netif'] }}"
       cores: 4
-      memory: 30720
-      swap: 15360
+      memory: 32768
+      swap: 16384
       password: "{{ default_password }}"
       disk: "{{ default_storage }}:20"
       mounts: '{"mp0":"{{ default_storage }}:600,mp={{ hostvars["dot01"]["polkadot_base"] }}"}'
@@ -52,8 +52,8 @@ lxc_nodes:
       ostemplate: 'local:vztmpl/{{ default_container_template }}'
       netif: "{{ hostvars['ksm01']['netif'] }}"
       cores: 4
-      memory: 30720
-      swap: 15360
+      memory: 32768
+      swap: 16384
       password: "{{ default_password }}"
       disk: "{{ default_storage }}:20"
       mounts: '{"mp0":"{{ default_storage }}:800,mp={{ hostvars["ksm01"]["polkadot_base"] }}"}'
