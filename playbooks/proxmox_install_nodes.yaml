@@ -90,6 +90,8 @@
   hosts: polkadot
   gather_facts: True
   roles:
+    - setup_install_rust
+    - setup_install_websocat
     - setup_install_polkadot
     - setup_install_nginx
 
@@ -97,11 +99,17 @@
   hosts: cumulus
   gather_facts: True
   roles:
+    - setup_install_rust
+    - setup_install_websocat
     - setup_install_cumulus
+    - setup_install_nginx
 
 - name: Install Encointer services
   hosts: encointer
   gather_facts: True
   roles:
+    - setup_install_rust
+    - setup_install_websocat
     - setup_install_encointer
+    - setup_install_nginx
 ...

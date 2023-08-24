@@ -5,5 +5,8 @@
   gather_facts: True
   roles:
     - setup_add_node_role
+    - setup_install_rust
+    - setup_install_websocat
     - setup_install_encointer
+    - setup_install_nginx
 ...
