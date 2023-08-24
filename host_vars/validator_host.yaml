@@ -11,9 +11,9 @@ kernel_modules:
 
 default_kvm_host: "192.168.69.201"
 default_kvm_port: "20791"
-default_need_routeros_port_forwarding: True
+default_need_routeros_port_forwarding: True # True if Mikrotik router is used
 routeros_delegate_host: "bkk00"
-default_need_iptables_port_forwarding: False
+default_need_iptables_port_forwarding: False # True if use routerless setup(cloud/vps/vds)
 default_gw_device: "enp4s0"
 default_storage: "tank01"
 default_resource_pool: "bkk01_resource_pool"

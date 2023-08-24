@@ -21,25 +21,19 @@ monitor
 routeros
 
 [polkadot]
-ksm04
-ksm14
-ksm24
-dot04
-dot14
-dot24
-wnd14
-wnd24
+ksm01
+dot01
 
 [proxmox_hosts]
-bkk04
+validator_host
 
 [routeros]
-bkk00
+router
 
 [unmanaged]
 
 [hardware]
-bkk04
+validator_host
 
 [access_management:children]
 hardware
