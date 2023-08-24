@@ -1,49 +1,50 @@
 # Standards: 0.2
 ---
-- name: Install OpenSSL development package
+- name: Install required dependencies
   ansible.builtin.package:
     name: libssl-dev
     state: present
 
-- name: Check if Rust directories exist
-  ansible.builtin.stat:
-    path: "/usr/local/cargo"
-  register: rust_directories
-  tags:
-    - rust
+- name: Check if Rust is already installed
+  ansible.builtin.command:
+    cmd: /usr/local/cargo/bin/rustup --version
+  register: rust_check
+  failed_when: false
+  changed_when: false
 
-- name: Download Rust installer
+- name: Download Rust installer if not present
   ansible.builtin.get_url:
     url: https://sh.rustup.rs
     dest: "/tmp/sh.rustup.rs"
     mode: '0755'
-    force: 'yes'
-  when: not rust_directories.stat.exists
-  tags:
-    - rust
+    force: no
 
-- name: Install Rust to custom directories
-  ansible.builtin.command:
-    cmd: |
-      env CARGO_HOME=/usr/local/cargo RUSTUP_HOME=/usr/local/rustup /tmp/sh.rustup.rs -y --no-modify-path
+- name: Install Rust if not present
+  ansible.builtin.shell:
+    cmd: sh /tmp/sh.rustup.rs -y --no-modify-path
   environment:
     CARGO_HOME: "/usr/local/cargo"
     RUSTUP_HOME: "/usr/local/rustup"
-  when: not rust_directories.stat.exists
-  tags:
-    - rust
+  when: rust_check.rc != 0
 
-- name: Set Rust environment variables
-  ansible.builtin.blockinfile:
+- name: Ensure Rust's cargo is globally accessible
+  ansible.builtin.lineinfile:
     path: "/etc/profile.d/rust.sh"
-    block: |
-      export CARGO_HOME=/usr/local/cargo
-      export RUSTUP_HOME=/usr/local/rustup
-      export PATH=/usr/local/cargo/bin:$PATH
+    line: "export PATH=/usr/local/cargo/bin:$PATH"
     create: yes
     owner: root
     group: root
     mode: '0644'
-  tags:
-    - rust
+
+- name: Update Rust toolchain to stable
+  ansible.builtin.shell:
+    cmd: "/usr/local/cargo/bin/rustup default stable"
+
+- name: Update Rust toolchain
+  ansible.builtin.shell:
+    cmd: "/usr/local/cargo/bin/rustup update"
+
+- name: Add the nightly and WebAssembly targets
+  ansible.builtin.shell:
+    cmd: "/usr/local/cargo/bin/rustup update nightly"
 ...
