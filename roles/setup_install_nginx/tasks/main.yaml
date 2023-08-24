@@ -44,6 +44,23 @@
     - sites-available
     - sites-enabled
 
+- name: Generate Pre-Shared Key (PSK)
+  command:
+    cmd: openssl rand -base64 32
+    warn: no
+  register: psk_output
+  changed_when: false
+
+- set_fact:
+    default_nginx_psk: "{{ psk_output.stdout }}"
+
+- name: Store PSK in a secure file
+  ansible.builtin.copy:
+    content: "{{ default_nginx_psk }}"
+    dest: "/etc/nginx/psk.txt"
+    mode: '0600'
+  no_log: True
+
 - name: Apply HTTPS configuration to NGINX
   ansible.builtin.template:
     src: https-{{ default_node_type }}.j2
