@@ -1,12 +1,12 @@
-![unlabored](https://github.com/rotkonetworks/unlabored/assets/15621959/8c057833-e22b-4dfd-a92b-20adc9b929ec)
+![unlabored logo](assets/unlabored-logo.webp)
 # unlabored
-effortless proxmox-ansible infra for blockchains
+Effortless Proxmox-Ansible deployment infrastructure for blockchain application.
 
 ## Installation:
 ```bash
 sudo apt install python3 python3-venv python3-pip
-git clone repo && cd repo
-./unlabored <command> -a <account_name> -k <ssh_key_path>
+git clone https://github.com/rotkonetworks/unlabored && cd unlabored
+./install_unlabored <command> -a <account_name> -k <ssh_key_path>
 ```
 The `<command>` can be:
 
@@ -26,23 +26,22 @@ path to your SSH private key, respectively.
 
 For instance:
 ```bash
-./unlabored install -a root -k ~/.ssh/ansible_ssh_key
+./install_unlabored install -a root -k ~/.ssh/ansible_ssh_key
 ```
-
 
 ## Shortcut and Virtual Environment
 
 To set up a shortcut and virtual environment, add the following alias to your bashrc or zshrc:
 ```bash
-alias unlabored='cd ~/src/unlabored && source ../.venv/bin/activate'
+alias unlabored='cd /path/to/unlabored && source ../.venv/bin/activate'
 ```
 This alias will allow you to quickly navigate to the correct directory and activate the virtual environment.
 
 ## Updating SSH configs
 ```bash
-invoke sshconfig
+inv sshconfig
 ```
-This will update your SSH configs to include any changes that have been made to the repository.
+This will invoke your SSH configs to include any changes that have been made to the repository.
 
 ## Linting
 ```bash
