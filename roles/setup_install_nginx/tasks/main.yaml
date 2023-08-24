@@ -45,13 +45,14 @@
     - sites-enabled
 
 - name: Generate Pre-Shared Key (PSK)
-  command:
+  ansible.builtin.command:
     cmd: openssl rand -base64 32
-    warn: no
+    warn: False
   register: psk_output
-  changed_when: false
+  changed_when: False
 
-- set_fact:
+- name: Store PSK in a fact
+  ansible.builtin.set_fact:
     default_nginx_psk: "{{ psk_output.stdout }}"
 
 - name: Store PSK in a secure file
