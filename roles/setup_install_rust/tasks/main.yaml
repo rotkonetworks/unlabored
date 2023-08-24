@@ -9,15 +9,15 @@
   ansible.builtin.command:
     cmd: /usr/local/cargo/bin/rustup --version
   register: rust_check
-  failed_when: false
-  changed_when: false
+  failed_when: False
+  changed_when: False
 
 - name: Download Rust installer if not present
   ansible.builtin.get_url:
     url: https://sh.rustup.rs
     dest: "/tmp/sh.rustup.rs"
     mode: '0755'
-    force: no
+    force: False
 
 - name: Install Rust if not present
   ansible.builtin.shell:
@@ -31,7 +31,7 @@
   ansible.builtin.lineinfile:
     path: "/etc/profile.d/rust.sh"
     line: "export PATH=/usr/local/cargo/bin:$PATH"
-    create: yes
+    create: True
     owner: root
     group: root
     mode: '0644'
