@@ -71,4 +71,42 @@ lxc_nodes:
       - from_port: "{{ hostvars['ksm02']['polkadot_p2p_port'] }}"
         to_host: "{{ hostvars['ksm02']['container_ip'] }}:{{ hostvars['ksm02']['polkadot_p2p_port'] }}"
         protocol: "tcp"
+  - host: "wnd12"
+    proxmox_config:
+      vmid: "232"
+      hostname: "{{ hostvars['wnd12']['host_name'] }}"
+      ostemplate: 'local:vztmpl/{{ default_container_template }}'
+      netif: "{{ hostvars['wnd12']['netif'] }}"
+      cores: 4
+      memory: 8192
+      swap: 8192
+      password: "{{ default_password }}"
+      disk: "{{ default_storage }}:20"
+      mounts: '{"mp0":"{{ default_storage }}:300,mp={{ hostvars["wnd12"]["polkadot_storage"] }}"}'
+      onboot: True
+      unprivileged: True
+      validate_certs: False
+      description: "{{ hostvars['wnd12']['polkadot_network'] }} {{ hostvars['wnd12']['default_node_type'] }}: {{ hostvars['wnd12']['host_name'] }}"
+      state: present
+      features:
+        - nesting=1
+    port_forwards:
+      - from_port: "{{ hostvars['wnd12']['ansible_port'] }}"
+        to_host: "{{ hostvars['wnd12']['container_ip'] }}:22"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['wnd12']['default_rpc_port'] }}"
+        to_host: "{{ hostvars['wnd12']['container_ip'] }}:{{ hostvars['wnd12']['default_rpc_port'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['wnd12']['default_secure_rpc_port'] }}"
+        to_host: "{{ hostvars['wnd12']['container_ip'] }}:{{ hostvars['wnd12']['default_secure_rpc_port'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['wnd12']['polkadot_p2p_port'] }}"
+        to_host: "{{ hostvars['wnd12']['container_ip'] }}:{{ hostvars['wnd12']['polkadot_p2p_port'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['wnd12']['polkadot_p2p_port_ws'] }}"
+        to_host: "{{ hostvars['wnd12']['container_ip'] }}:{{ hostvars['wnd12']['polkadot_p2p_port_ws'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['wnd12']['polkadot_p2p_port_wss'] }}"
+        to_host: "{{ hostvars['wnd12']['container_ip'] }}:{{ hostvars['wnd12']['polkadot_p2p_port_wss'] }}"
+        protocol: "tcp"
 ...
