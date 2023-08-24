@@ -1,26 +1,49 @@
 # Standards: 0.2
 ---
-- name: Install golang {{ default_golang_version }}
-  ansible.builtin.unarchive:
-    src: "{{ default_golang_dl_base_url }}{{ default_golang_version }}.{{ default_golang_os }}-{{ default_golang_arch }}.tar.gz"
-    dest: "{{ default_golang_base_path }}"
-    remote_src: True
-    # creates: "{{ default_golang_GOROOT }}"
-  when:
-    - ansible_local['noderole']['node']['go_version'] != default_golang_version
-  notify:
-    - Add Golang version
+- name: Install OpenSSL development package
+  ansible.builtin.package:
+    name: libssl-dev
+    state: present
 
-- name: Export golang environment variables
-  ansible.builtin.lineinfile:
-    path: "/etc/profile"
-    line: "{{ item }}"
+- name: Check if Rust directories exist
+  stat:
+    path: "/usr/local/cargo"
+  register: rust_directories
+  tags:
+    - rust
+
+- name: Download Rust installer
+  ansible.builtin.get_url:
+    url: https://sh.rustup.rs
+    dest: "/tmp/sh.rustup.rs"
+    mode: '0755'
+    force: 'yes'
+  when: not rust_directories.stat.exists
+  tags:
+    - rust
+
+- name: Install Rust to custom directories
+  ansible.builtin.command:
+    cmd: |
+      env CARGO_HOME=/usr/local/cargo RUSTUP_HOME=/usr/local/rustup /tmp/sh.rustup.rs -y --no-modify-path
+  environment:
+    CARGO_HOME: "/usr/local/cargo"
+    RUSTUP_HOME: "/usr/local/rustup"
+  when: not rust_directories.stat.exists
+  tags:
+    - rust
+
+- name: Set Rust environment variables
+  ansible.builtin.blockinfile:
+    path: "/etc/profile.d/rust.sh"
+    block: |
+      export CARGO_HOME=/usr/local/cargo
+      export RUSTUP_HOME=/usr/local/rustup
+      export PATH=/usr/local/cargo/bin:$PATH
+    create: yes
     owner: root
     group: root
     mode: '0644'
-    state: present
-  with_items:
-    - "export GOROOT={{ default_golang_GOROOT }}"
-    - "export GOPATH=$HOME/go"
-    - "export PATH=$GOPATH/bin:$GOROOT/bin:$PATH"
+  tags:
+    - rust
 ...

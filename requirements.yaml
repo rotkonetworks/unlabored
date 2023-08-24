@@ -2,6 +2,8 @@
 collections:
   - name: community.network
     source: https://galaxy.ansible.com
+  - name: community.general
+    source: https://galaxy.ansible.com
 
 roles:
   - src: geerlingguy.postfix
