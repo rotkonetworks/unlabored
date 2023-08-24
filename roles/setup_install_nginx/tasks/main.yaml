@@ -47,7 +47,6 @@
 - name: Generate Pre-Shared Key (PSK)
   ansible.builtin.command:
     cmd: openssl rand -base64 32
-    warn: False
   register: psk_output
   changed_when: False
 
