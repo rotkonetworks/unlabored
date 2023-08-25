@@ -31,11 +31,11 @@ lxc_nodes:
       swap: 8192
       password: "{{ default_password }}"
       disk: "{{ default_storage }}:20"
-      mounts: '{"mp0":"{{ default_storage }}:500,mp={{ hostvars["dot03"]["polkadot_base"] }}"}'
+      mounts: '{"mp0":"{{ default_storage }}:500,mp={{ hostvars["dot03"]["default_base"] }}"}'
       onboot: True
       unprivileged: True
       validate_certs: False
-      description: "{{ hostvars['dot03']['polkadot_network'] }} {{ hostvars['dot03']['default_node_type'] }}: {{ hostvars['dot03']['host_name'] }}"
+      description: "{{ hostvars['dot03']['default_network'] }} {{ hostvars['dot03']['default_node_type'] }}: {{ hostvars['dot03']['host_name'] }}"
       state: present
       features:
         - nesting=1
@@ -43,8 +43,8 @@ lxc_nodes:
       - from_port: "{{ hostvars['dot03']['ansible_port'] }}"
         to_host: "{{ hostvars['dot03']['container_ip'] }}:22"
         protocol: "tcp"
-      - from_port: "{{ hostvars['dot03']['polkadot_p2p_port'] }}"
-        to_host: "{{ hostvars['dot03']['container_ip'] }}:{{ hostvars['dot03']['polkadot_p2p_port'] }}"
+      - from_port: "{{ hostvars['dot03']['default_p2p_port'] }}"
+        to_host: "{{ hostvars['dot03']['container_ip'] }}:{{ hostvars['dot03']['default_p2p_port'] }}"
         protocol: "tcp"
       - from_port: "{{ hostvars['dot03']['default_secure_rpc_port'] }}"
         to_host: "{{ hostvars['dot03']['container_ip'] }}:{{ hostvars['dot03']['default_secure_rpc_port'] }}"
@@ -60,11 +60,11 @@ lxc_nodes:
       swap: 8192
       password: "{{ default_password }}"
       disk: "{{ default_storage }}:20"
-      mounts: '{"mp0":"{{ default_storage }}:1500,mp={{ hostvars["dot23"]["polkadot_base"] }}"}'
+      mounts: '{"mp0":"{{ default_storage }}:1500,mp={{ hostvars["dot23"]["default_base"] }}"}'
       onboot: True
       unprivileged: True
       validate_certs: False
-      description: "{{ hostvars['dot23']['polkadot_network'] }} {{ hostvars['dot23']['default_node_type'] }}: {{ hostvars['dot23']['host_name'] }}"
+      description: "{{ hostvars['dot23']['default_network'] }} {{ hostvars['dot23']['default_node_type'] }}: {{ hostvars['dot23']['host_name'] }}"
       state: present
       features:
         - nesting=1
@@ -78,8 +78,8 @@ lxc_nodes:
       - from_port: "{{ hostvars['dot23']['default_secure_rpc_port'] }}"
         to_host: "{{ hostvars['dot23']['container_ip'] }}:{{ hostvars['dot23']['default_secure_rpc_port'] }}"
         protocol: "tcp"
-      - from_port: "{{ hostvars['dot23']['polkadot_p2p_port'] }}"
-        to_host: "{{ hostvars['dot23']['container_ip'] }}:{{ hostvars['dot23']['polkadot_p2p_port'] }}"
+      - from_port: "{{ hostvars['dot23']['default_p2p_port'] }}"
+        to_host: "{{ hostvars['dot23']['container_ip'] }}:{{ hostvars['dot23']['default_p2p_port'] }}"
         protocol: "tcp"
   - host: "ksm03"
     proxmox_config:
@@ -92,11 +92,11 @@ lxc_nodes:
       swap: 8192
       password: "{{ default_password }}"
       disk: "{{ default_storage }}:20"
-      mounts: '{"mp0":"{{ default_storage }}:700,mp={{ hostvars["ksm03"]["polkadot_base"] }}"}'
+      mounts: '{"mp0":"{{ default_storage }}:700,mp={{ hostvars["ksm03"]["default_base"] }}"}'
       onboot: True
       unprivileged: True
       validate_certs: False
-      description: "{{ hostvars['ksm03']['polkadot_network'] }} {{ hostvars['ksm03']['default_node_type'] }}: {{ hostvars['ksm03']['host_name'] }}"
+      description: "{{ hostvars['ksm03']['default_network'] }} {{ hostvars['ksm03']['default_node_type'] }}: {{ hostvars['ksm03']['host_name'] }}"
       state: present
       features:
         - nesting=1
@@ -104,8 +104,8 @@ lxc_nodes:
       - from_port: "{{ hostvars['ksm03']['ansible_port'] }}"
         to_host: "{{ hostvars['ksm03']['container_ip'] }}:22"
         protocol: "tcp"
-      - from_port: "{{ hostvars['ksm03']['polkadot_p2p_port'] }}"
-        to_host: "{{ hostvars['ksm03']['container_ip'] }}:{{ hostvars['ksm03']['polkadot_p2p_port'] }}"
+      - from_port: "{{ hostvars['ksm03']['default_p2p_port'] }}"
+        to_host: "{{ hostvars['ksm03']['container_ip'] }}:{{ hostvars['ksm03']['default_p2p_port'] }}"
         protocol: "tcp"
       - from_port: "{{ hostvars['ksm03']['default_secure_rpc_port'] }}"
         to_host: "{{ hostvars['ksm03']['container_ip'] }}:{{ hostvars['ksm03']['default_secure_rpc_port'] }}"
@@ -121,11 +121,11 @@ lxc_nodes:
       swap: 8192
       password: "{{ default_password }}"
       disk: "{{ default_storage }}:20"
-      mounts: '{"mp0":"{{ default_storage }}:2500,mp={{ hostvars["ksm23"]["polkadot_base"] }}"}'
+      mounts: '{"mp0":"{{ default_storage }}:2500,mp={{ hostvars["ksm23"]["default_base"] }}"}'
       onboot: True
       unprivileged: True
       validate_certs: False
-      description: "{{ hostvars['ksm23']['polkadot_network'] }} {{ hostvars['ksm23']['default_node_type'] }}: {{ hostvars['ksm23']['host_name'] }}"
+      description: "{{ hostvars['ksm23']['default_network'] }} {{ hostvars['ksm23']['default_node_type'] }}: {{ hostvars['ksm23']['host_name'] }}"
       state: present
       features:
         - nesting=1
@@ -136,8 +136,8 @@ lxc_nodes:
       - from_port: "{{ hostvars['ksm23']['default_secure_rpc_port'] }}"
         to_host: "{{ hostvars['ksm23']['container_ip'] }}:{{ hostvars['ksm23']['default_secure_rpc_port'] }}"
         protocol: "tcp"
-      - from_port: "{{ hostvars['ksm23']['polkadot_p2p_port'] }}"
-        to_host: "{{ hostvars['ksm23']['container_ip'] }}:{{ hostvars['ksm23']['polkadot_p2p_port'] }}"
+      - from_port: "{{ hostvars['ksm23']['default_p2p_port'] }}"
+        to_host: "{{ hostvars['ksm23']['container_ip'] }}:{{ hostvars['ksm23']['default_p2p_port'] }}"
         protocol: "tcp"
   - host: "wnd23"
     proxmox_config:
@@ -150,11 +150,11 @@ lxc_nodes:
       swap: 8192
       password: "{{ default_password }}"
       disk: "{{ default_storage }}:20"
-      mounts: '{"mp0":"{{ default_storage }}:1200,mp={{ hostvars["wnd23"]["polkadot_base"] }}"}'
+      mounts: '{"mp0":"{{ default_storage }}:1200,mp={{ hostvars["wnd23"]["default_base"] }}"}'
       onboot: True
       unprivileged: True
       validate_certs: False
-      description: "{{ hostvars['wnd23']['polkadot_network'] }} {{ hostvars['wnd23']['default_node_type'] }}: {{ hostvars['wnd23']['host_name'] }}"
+      description: "{{ hostvars['wnd23']['default_network'] }} {{ hostvars['wnd23']['default_node_type'] }}: {{ hostvars['wnd23']['host_name'] }}"
       state: present
       features:
         - nesting=1
@@ -168,7 +168,7 @@ lxc_nodes:
       - from_port: "{{ hostvars['wnd23']['default_secure_rpc_port'] }}"
         to_host: "{{ hostvars['wnd23']['container_ip'] }}:{{ hostvars['wnd23']['default_secure_rpc_port'] }}"
         protocol: "tcp"
-      - from_port: "{{ hostvars['wnd23']['polkadot_p2p_port'] }}"
-        to_host: "{{ hostvars['wnd23']['container_ip'] }}:{{ hostvars['wnd23']['polkadot_p2p_port'] }}"
+      - from_port: "{{ hostvars['wnd23']['default_p2p_port'] }}"
+        to_host: "{{ hostvars['wnd23']['container_ip'] }}:{{ hostvars['wnd23']['default_p2p_port'] }}"
         protocol: "tcp"
 ...

@@ -1,25 +1,25 @@
 ---
-polkadot_version: 1.0.0
-polkadot_download_url: https://github.com/paritytech/polkadot/releases/download/v{{ polkadot_version }}/polkadot
+default_client_version: 1.0.0
+default_download_url: https://github.com/paritytech/polkadot/releases/download/v{{ default_client_version }}/polkadot
 
-polkadot_service: polkadot
-polkadot_user: "{{ service_users['polkadot'] }}"
-polkadot_group: "{{ service_users['polkadot'] }}"
-polkadot_base: /opt/polkadot
-polkadot_storage: "{{ polkadot_base }}/chains"
-polkadot_log_level: info
-polkadot_network: polkadot
+default_service: polkadot
+default_user: "{{ service_users['polkadot'] }}"
+default_group: "{{ service_users['polkadot'] }}"
+default_base: /opt/polkadot
+default_storage: "{{ default_base }}/chains"
+default_log_level: info
+default_network: polkadot
 default_node_type: validator
 # pruning options: archive(rpc), archive-canonical(rpc/finalized) 256(default), 1000(validator)
-# polkadot_pruning: 1000
-# polkadot_syncmode: warp
-polkadot_database: paritydb
+# default_pruning: 1000
+# default_syncmode: warp
+default_database: paritydb
 default_telemetry_url: "wss://telemetry-backend.w3f.community/submit/ 1"
-polkadot_p2p_port: 33100
-polkadot_p2p_port_ws: 34100
-polkadot_p2p_port_wss: 35100
+default_p2p_port: 33100
+default_p2p_port_ws: 34100
+default_p2p_port_wss: 35100
 default_rpc_port: 9100
 default_secure_rpc_port: 42100
-polkadot_prom_port: 7100
+default_prom_port: 7100
 zabbix_ext_port: 10100
 ...

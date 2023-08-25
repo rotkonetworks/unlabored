@@ -244,7 +244,7 @@
     option: "version"
     section: "node"
     state: present
-    value: "{{ polkadot_version }}"
+    value: "{{ default_client_version }}"
     path: "{{ noderole_file }}"
     owner: root
     group: root

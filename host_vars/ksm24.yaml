@@ -10,16 +10,16 @@ pinned_service: True
 
 default_telemetry_name: "Rotko Networks - {{ host_name.split('.')[0] }} {{ default_node_type | capitalize }}"
 default_public_dns: "{{ host_name }}"
-polkadot_network: kusama
+default_network: kusama
 default_node_type: "endpoint"
-polkadot_pruning: "archive"
-polkadot_database: paritydb
-polkadot_syncmode: full
-polkadot_p2p_port: 33324
-polkadot_p2p_port_ws: 34324
-polkadot_p2p_port_wss: 35324
+default_pruning: "archive"
+default_database: paritydb
+default_syncmode: full
+default_p2p_port: 33324
+default_p2p_port_ws: 34324
+default_p2p_port_wss: 35324
 default_rpc_port: 9324
 default_secure_rpc_port: 42324
-polkadot_prom_port: 7324
+default_prom_port: 7324
 zabbix_ext_port: 10324
 ...

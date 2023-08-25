@@ -8,17 +8,17 @@ netif: '{"net0":"name=eth0,gw={{ default_nat_network_forward_cidr.split("/")[0] 
 role: "polkadot"
 pinned_service: True
 
-polkadot_network: kusama
+default_network: kusama
 default_node_type: "validator"
 default_telemetry_name: "Rotko Networks - {{ host_name.split('.')[0] }} {{ default_node_type | capitalize }}"
-polkadot_pruning: 1000
-polkadot_database: paritydb
-polkadot_syncmode: warp
-polkadot_p2p_port: 33123
-polkadot_p2p_port_ws: 34123
-polkadot_p2p_port_wss: 35123
+default_pruning: 1000
+default_database: paritydb
+default_syncmode: warp
+default_p2p_port: 33123
+default_p2p_port_ws: 34123
+default_p2p_port_wss: 35123
 default_rpc_port: 9123
 default_secure_rpc_port: 42123
-polkadot_prom_port: 7123
+default_prom_port: 7123
 zabbix_ext_port: 10123
 ...

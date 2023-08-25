@@ -1,25 +1,25 @@
 ---
 - name: Symlink Polkadot release
   ansible.builtin.file:
-    src: "{{ polkadot_base }}/polkadot-v{{ polkadot_version }}"
-    dest: "{{ polkadot_base }}/polkadot"
+    src: "{{ default_base }}/polkadot-v{{ default_client_version }}"
+    dest: "{{ default_base }}/polkadot"
     force: True
     state: link
-    owner: "{{ polkadot_user }}"
-    group: "{{ polkadot_user }}"
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
 
 - name: Symlink binary executable
   ansible.builtin.file:
-    src: "{{ polkadot_base }}/polkadot-v{{ polkadot_version }}"
+    src: "{{ default_base }}/polkadot-v{{ default_client_version }}"
     dest: "/usr/local/bin/polkadot"
     force: True
     state: link
-    owner: "{{ polkadot_user }}"
-    group: "{{ polkadot_user }}"
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
 
 - name: Symlink Polkadot service to systemd
   ansible.builtin.file:
-    src: "{{ polkadot_base }}/polkadot.service"
+    src: "{{ default_base }}/polkadot.service"
     dest: "/etc/systemd/system/polkadot.service"
     state: link
     force: True

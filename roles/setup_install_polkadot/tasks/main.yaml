@@ -1,43 +1,43 @@
 ---
-- name: Ensure group {{ polkadot_user }} exists
+- name: Ensure group {{ default_user }} exists
   ansible.builtin.group:
-    name: "{{ polkadot_user }}"
+    name: "{{ default_user }}"
     state: present
     system: True
 
-- name: Ensure user {{ polkadot_user }} exists without unnecessary privileges
+- name: Ensure user {{ default_user }} exists without unnecessary privileges
   ansible.builtin.user:
     append: True
     comment: polkadot service user
     create_home: False
-    group: "{{ polkadot_user }}"
+    group: "{{ default_user }}"
     groups: []
-    home: "{{ polkadot_base }}"
-    name: "{{ polkadot_user }}"
+    home: "{{ default_base }}"
+    name: "{{ default_user }}"
     shell: "/sbin/nologin"
     state: present
     system: True
 
-- name: Ensure user {{ polkadot_user }} owns directories
+- name: Ensure user {{ default_user }} owns directories
   ansible.builtin.file:
     path: "{{ item }}"
-    owner: "{{ polkadot_user }}"
-    group: "{{ polkadot_user }}"
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
     mode: '0750'
     state: directory
   loop:
-    - "{{ polkadot_base }}"
-    - "{{ polkadot_storage }}"
+    - "{{ default_base }}"
+    - "{{ default_storage }}"
 
 - name: Gather facts
   ansible.builtin.setup:
 
 - name: Copy Polkadot systemd service for specific node type
   ansible.builtin.template:
-    src: "{{ 'polkadot_' + default_node_type + '.service.j2' }}"
-    dest: "{{ polkadot_base }}/polkadot.service"
-    owner: "{{ polkadot_user }}"
-    group: "{{ polkadot_user }}"
+    src: "{{ 'default_' + default_node_type + '.service.j2' }}"
+    dest: "{{ default_base }}/polkadot.service"
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
     mode: '0640'
   when: default_node_type in ["validator", "bootnode", "endpoint"]
   notify:
@@ -50,13 +50,13 @@
 - name: Flush handlers after Polkadot service copy
   ansible.builtin.meta: flush_handlers
 
-- name: Install Polkadot v{{ polkadot_version }}
+- name: Install Polkadot v{{ default_client_version }}
   ansible.builtin.get_url:
-    url: "{{ polkadot_download_url }}"
-    dest: "{{ polkadot_base }}/polkadot-v{{ polkadot_version }}"
+    url: "{{ default_download_url }}"
+    dest: "{{ default_base }}/polkadot-v{{ default_client_version }}"
     mode: "u+r+x"
-    owner: "{{ polkadot_user }}"
-    group: "{{ polkadot_user }}"
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
   register: download_result
   notify:
     - Add Service Pinned Status
@@ -69,16 +69,16 @@
     - Start Polkadot
   when:
     - ansible_local['noderole']['node']['pinned'] != "True"
-    - ansible_local['noderole']['node']['version'] != polkadot_version
+    - ansible_local['noderole']['node']['version'] != default_client_version
 
 - name: Flush handlers after Polkadot install
   ansible.builtin.meta: flush_handlers
 
 - name: Verify Polkadot version
-  ansible.builtin.command: "{{ polkadot_base }}/polkadot --version"
-  register: polkadot_version_result
+  ansible.builtin.command: "{{ default_base }}/polkadot --version"
+  register: default_client_version_result
   changed_when: False
-  failed_when: "polkadot_version not in polkadot_version_result.stdout"
+  failed_when: "default_client_version not in default_client_version_result.stdout"
 
 - name: Ensure Polkadot service is running
   ansible.builtin.systemd:

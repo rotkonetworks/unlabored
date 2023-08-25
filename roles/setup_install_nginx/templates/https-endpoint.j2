@@ -1,6 +1,6 @@
 server {
-    listen {{ polkadot_p2p_port_wss }} ssl http2;
-    listen [::]:{{ polkadot_p2p_port_wss }} ssl http2;
+    listen {{ default_p2p_port_wss }} ssl http2;
+    listen [::]:{{ default_p2p_port_wss }} ssl http2;
     server_name {{ default_public_dns }};
     
     # SSL/TLS settings
@@ -30,7 +30,7 @@ server {
 
 
     location / {
-        proxy_pass http://127.0.0.1:{{ polkadot_p2p_port_ws }};
+        proxy_pass http://127.0.0.1:{{ default_p2p_port_ws }};
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection "upgrade";
