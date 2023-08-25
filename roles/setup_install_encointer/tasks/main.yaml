@@ -1,0 +1,87 @@
+---
+- name: Ensure group {{ encointer_user }} exists
+  ansible.builtin.group:
+    name: "{{ encointer_user }}"
+    state: present
+    system: True
+
+- name: Ensure user {{ encointer_user }} exists without unnecessary privileges
+  ansible.builtin.user:
+    append: True
+    comment: encointer service user
+    create_home: False
+    group: "{{ encointer_user }}"
+    groups: []
+    home: "{{ encointer_base }}"
+    name: "{{ encointer_user }}"
+    shell: "/sbin/nologin"
+    state: present
+    system: True
+
+- name: Ensure user {{ encointer_user }} owns directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    owner: "{{ encointer_user }}"
+    group: "{{ encointer_user }}"
+    mode: '0750'
+    state: directory
+  loop:
+    - "{{ encointer_base }}"
+    - "{{ encointer_storage }}"
+
+- name: Gather facts
+  ansible.builtin.setup:
+
+- name: Copy Encointer systemd service for specific node type
+  ansible.builtin.template:
+    src: "{{ 'encointer_' + default_node_type + '.service.j2' }}"
+    dest: "{{ encointer_base }}/encointer.service"
+    owner: "{{ encointer_user }}"
+    group: "{{ encointer_user }}"
+    mode: '0640'
+  when: default_node_type in ["collator", "bootnode", "endpoint"]
+  notify:
+    - Symlink Encointer service to systemd
+    - Stop Encointer
+    - Systemd daemon-reload
+    - Start Encointer
+    - Add type of service fact
+
+- name: Flush handlers after Encointer service copy
+  ansible.builtin.meta: flush_handlers
+
+- name: Install Encointer v{{ encointer_version }}
+  ansible.builtin.get_url:
+    url: "{{ encointer_download_url }}"
+    dest: "{{ encointer_base }}/encointer-v{{ encointer_version }}"
+    mode: "u+r+x"
+    owner: "{{ encointer_user }}"
+    group: "{{ encointer_user }}"
+  register: download_result
+  notify:
+    - Add Service Pinned Status
+    - Add Encointer service version
+    - Symlink Encointer service to systemd
+    - Symlink Encointer release
+    - Symlink binary executable
+    - Stop Encointer
+    - Systemd daemon-reload
+    - Start Encointer
+  when:
+    - ansible_local['noderole']['node']['pinned'] != "True"
+    - ansible_local['noderole']['node']['version'] != encointer_version
+
+- name: Flush handlers after Encointer install
+  ansible.builtin.meta: flush_handlers
+
+- name: Verify Encointer version
+  ansible.builtin.command: "{{ encointer_base }}/encointer --version"
+  register: encointer_version_result
+  changed_when: False
+  failed_when: "encointer_version not in encointer_version_result.stdout"
+
+- name: Ensure Encointer service is running
+  ansible.builtin.systemd:
+    name: encointer
+    state: started
+...

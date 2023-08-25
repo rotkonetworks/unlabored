@@ -1,0 +1,45 @@
+---
+- name: Symlink Encointer release
+  ansible.builtin.file:
+    src: "{{ encointer_base }}/encointer-v{{ encointer_version }}"
+    dest: "{{ encointer_base }}/encointer"
+    force: True
+    state: link
+    owner: "{{ encointer_user }}"
+    group: "{{ encointer_user }}"
+
+- name: Symlink binary executable
+  ansible.builtin.file:
+    src: "{{ encointer_base }}/encointer-v{{ encointer_version }}"
+    dest: "/usr/local/bin/encointer"
+    force: True
+    state: link
+    owner: "{{ encointer_user }}"
+    group: "{{ encointer_user }}"
+
+- name: Symlink Encointer service to systemd
+  ansible.builtin.file:
+    src: "{{ encointer_base }}/encointer.service"
+    dest: "/etc/systemd/system/encointer.service"
+    state: link
+    force: True
+    owner: "root"
+    group: "root"
+    mode: '0644'
+
+- name: Stop Encointer
+  ansible.builtin.systemd:
+    name: encointer
+    state: stopped
+    enabled: True
+
+- name: Systemd daemon-reload
+  ansible.builtin.systemd:
+    daemon_reload: True
+
+- name: Start Encointer
+  ansible.builtin.systemd:
+    name: encointer
+    state: started
+    enabled: True
+...

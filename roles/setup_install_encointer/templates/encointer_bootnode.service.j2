@@ -1,0 +1,41 @@
+[Unit]
+Description="{{ host_name.split('.')[0] }} bootnode - Encointer service"
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User={{ encointer_user }}
+Group={{ encointer_group }}
+ExecStart={{ encointer_base }}/encointer \
+  --name "{{ default_telemetry_name }}" \
+  --chain {{ encointer_network }} \
+  --base-path {{ encointer_base }} \
+  --database paritydb \
+  --state-pruning 256 \
+  --log sync=warn,afg=warn,babe=warn \
+  --telemetry-url 'wss://telemetry-backend.w3f.community/submit 1' \
+  --telemetry-url 'wss://telemetry.encointer.io/submit/ 1' \
+  --listen-addr /ip6/::/tcp/{{ encointer_p2p_port }} \
+  --listen-addr /ip6/::/tcp/{{ encointer_p2p_port_ws }}/ws \
+  --listen-addr /ip4/0.0.0.0/tcp/{{ encointer_p2p_port }} \
+  --listen-addr /ip4/0.0.0.0/tcp/{{ encointer_p2p_port_ws }}/ws \
+  --public-addr /dns/{{ default_public_dns }}/tcp/{{ encointer_p2p_port }} \
+  --public-addr /dns/{{ default_public_dns }}/tcp/{{ encointer_p2p_port_ws }}/ws \
+  --public-addr /dns/{{ default_public_dns }}/tcp/{{ encointer_p2p_port_wss }}/wss \
+  --rpc-port {{ default_rpc_port }} \
+  --prometheus-port {{ encointer_prom_port }} \
+  --wasm-execution Compiled \
+  --execution native-else-wasm \
+  --sync {{ encointer_syncmode | default('warp') }} \
+  --no-hardware-benchmarks \
+  --rpc-external \
+  --rpc-methods safe \
+  --prometheus-external \
+  --rpc-cors all \
+  --allow-private-ipv4
+
+Restart=always
+RestartSec=120
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,32 @@
+[Unit]
+Description="{{ host_name.split('.')[0] }} Collator - Encointer service"
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=on-failure
+RestartSec=10
+User={{ encointer_user }}
+Group={{ encointer_group }}
+SyslogIdentifier={{ encointer_service }}
+LimitNOFILE={{ default_max_open_files_in_service }}
+SyslogFacility=local7
+KillSignal=SIGHUP
+ExecStart={{ encointer_base }}/encointer \
+     --base-path {{ encointer_base }} \
+     --chain {{ encointer_network }} \
+     --database {{ encointer_database }} \
+     --sync {{ encointer_syncmode }} \
+     --name "{{ hostvars[inventory_hostname]['default_telemetry_name'] | default(host_name) }}" \
+     --telemetry-url 'wss://telemetry-backend.w3f.community/submit 1' \
+     --port {{ encointer_p2p_port }} \
+     --rpc-port {{ default_rpc_port }} \
+     --prometheus-port {{ encointer_prom_port }} \
+     --execution wasm \
+     --wasm-execution compiled \
+     --pruning 1000 \
+     --db-cache {{ ansible_memtotal_mb // 2 }}
+
+[Install]
+WantedBy=multi-user.target
