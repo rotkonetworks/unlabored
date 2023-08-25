@@ -1,37 +1,36 @@
 [Unit]
-Description="Polkadot bootnode service"
-After=network.target
-StartLimitIntervalSec=0
+Description="{{ host_name.split('.')[0] }} endpoint - Cumulus service"
+After=network-online.target
+Wants=network-online.target
 
 [Service]
-Type=simple
-Restart=on-failure
-RestartSec=10
-User={{ polkadot_user }}
-SyslogIdentifier={{ polkadot_service }}
-LimitNOFILE={{ default_max_open_files_in_service }}
-SyslogFacility=local7
-KillSignal=SIGHUP
-ExecStart={{ polkadot_base }}/polkadot \
-     --unsafe-rpc-external \
-     --unsafe-ws-external \
-     --rpc-cors=all \
-     --port {{ polkadot_p2p_port }} \
-     --rpc-port {{ default_rpc_port }} \
-     --execution wasm \
-     --wasm-execution compiled \
-     --pruning=archive \
-     --db-cache {{ (ansible_memtotal_mb * 0.9) | int }}
-     --base-path {{ polkadot_base }} \
-     --no-prometheus \
-     --no-mdns \
-     --chain {{ polkadot_network }} \
-     --name "{{ host_name.split('.')[0] }}" \
-     --disable-log-color \
-     --max-parallel-downloads 20 \
-     --max-runtime-instances 16 \
-     --out-peers 50 \
-     --rpc-max-response-size 30 \
-     --ws-max-connections 800
+User={{ cumulus_user }}
+Group={{ cumulus_group }}
+ExecStart={{ cumulus_base }}/cumulus \
+  --name "{{ default_telemetry_name }}" \
+  --chain {{ cumulus_network }} \
+  --base-path {{ cumulus_base }} \
+  --state-pruning archive \
+  --sync full \
+  --listen-addr /ip6/::/tcp/{{ cumulus_p2p_port }} \
+  --listen-addr /ip6/::/tcp/{{ cumulus_p2p_port_ws }}/ws \
+  --listen-addr /ip4/0.0.0.0/tcp/{{ cumulus_p2p_port }} \
+  --listen-addr /ip4/0.0.0.0/tcp/{{ cumulus_p2p_port_ws }}/ws \
+  --public-addr /dns/{{ default_public_dns }}/tcp/{{ cumulus_p2p_port }} \
+  --public-addr /dns/{{ default_public_dns }}/tcp/{{ cumulus_p2p_port_ws }}/ws \
+  --public-addr /dns/{{ default_public_dns }}/tcp/{{ cumulus_p2p_port_wss }}/wss \
+  --rpc-port {{ default_rpc_port }} \
+  --prometheus-port {{ cumulus_prom_port }} \
+  --wasm-execution Compiled \
+  --execution native-else-wasm \
+  --no-hardware-benchmarks \
+  --rpc-external \
+  --rpc-methods safe \
+  --rpc-cors all \
+  --allow-private-ipv4
+
+Restart=always
+RestartSec=120
+
 [Install]
 WantedBy=multi-user.target

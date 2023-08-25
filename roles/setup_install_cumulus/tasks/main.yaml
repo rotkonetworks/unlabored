@@ -4,80 +4,84 @@
     name: "{{ cumulus_user }}"
     state: present
     system: True
-  notify:
-    - Add type of service fact
 
-- name: Ensure user {{ cumulus_user }} exists
+- name: Ensure user {{ cumulus_user }} exists without unnecessary privileges
   ansible.builtin.user:
     append: True
     comment: cumulus service user
     create_home: False
     group: "{{ cumulus_user }}"
-    groups: sudo
+    groups: []
     home: "{{ cumulus_base }}"
     name: "{{ cumulus_user }}"
-    shell: "{{ default_shell }}"
+    shell: "/sbin/nologin"
     state: present
     system: True
 
-- name: Ensure user {{ cumulus_user }} owns {{ polkadot_base }}
+- name: Ensure user {{ cumulus_user }} owns directories
   ansible.builtin.file:
     path: "{{ item }}"
     owner: "{{ cumulus_user }}"
     group: "{{ cumulus_user }}"
-    mode: '0755'
+    mode: '0750'
     state: directory
-  with_items:
+  loop:
     - "{{ cumulus_base }}"
+    - "{{ cumulus_storage }}"
 
-- name: Refresh facts before install
+- name: Gather facts
   ansible.builtin.setup:
 
-- name: Install Cumulus v{{ polkadot_version }}
-  ansible.builtin.get_url:
-    url: "{{ cumulus_download_url }}"
-    dest: "{{ cumulus_base }}/polkadot-v{{ polkadot_version }}"
-    mode: "u+rwx"
-    owner: "{{ cumulus_user }}"
-    group: "{{ cumulus_user }}"
-  when:
-    - ansible_local['noderole']['node']['pinned'] != "True"
-    - ansible_local['noderole']['node']['version'] != cumulus_version
-  notify:
-    - Add Cumulus service version
-    - Add Service Pinned Status
-    - Stop Cumulus
-    - Symlink Cumulus release
-    - Symlink binary executable
-    - Systemd daemon-reload
-    - Restart Cumulus
-
-- name: Refresh facts after install
-  ansible.builtin.setup:
-
-- name: Copy Parachain systemd service for specific node type
+- name: Copy Cumulus systemd service for specific node type
   ansible.builtin.template:
-    src: "{{ 'cumulus_' + node_type + '.service.j2' }}"
+    src: "{{ 'cumulus_' + default_node_type + '.service.j2' }}"
     dest: "{{ cumulus_base }}/cumulus.service"
     owner: "{{ cumulus_user }}"
     group: "{{ cumulus_user }}"
-    mode: '0644'
-  vars:
-    node_type: "{{ ansible_local['noderole']['node']['type'] }}"
-  when:
-    - node_type in ["collator", "bootnode", "endpoint"]
-
-- name: Symlink Cumulus service to systemd
-  ansible.builtin.file:
-    src: "{{ cumulus_base }}/cumulus.service"
-    dest: "/etc/systemd/system/cumulus.service"
-    state: link
-    force: True
-    owner: "root"
-    group: "root"
-    mode: '0644'
+    mode: '0640'
+  when: default_node_type in ["collator", "bootnode", "endpoint"]
   notify:
+    - Symlink Cumulus service to systemd
     - Stop Cumulus
     - Systemd daemon-reload
-    - Restart Cumulus
+    - Start Cumulus
+    - Add type of service fact
+
+- name: Flush handlers after Cumulus service copy
+  ansible.builtin.meta: flush_handlers
+
+- name: Install Cumulus v{{ cumulus_version }}
+  ansible.builtin.get_url:
+    url: "{{ cumulus_download_url }}"
+    dest: "{{ cumulus_base }}/cumulus-v{{ cumulus_version }}"
+    mode: "u+r+x"
+    owner: "{{ cumulus_user }}"
+    group: "{{ cumulus_user }}"
+  register: download_result
+  notify:
+    - Add Service Pinned Status
+    - Add Cumulus service version
+    - Symlink Cumulus service to systemd
+    - Symlink Cumulus release
+    - Symlink binary executable
+    - Stop Cumulus
+    - Systemd daemon-reload
+    - Start Cumulus
+  when:
+    - ansible_local['noderole']['node']['pinned'] != "True"
+    - ansible_local['noderole']['node']['version'] != cumulus_version
+
+- name: Flush handlers after Cumulus install
+  ansible.builtin.meta: flush_handlers
+
+- name: Verify Cumulus version
+  ansible.builtin.command: "{{ cumulus_base }}/cumulus --version"
+  register: cumulus_version_result
+  changed_when: False
+  failed_when: "cumulus_version not in cumulus_version_result.stdout"
+
+- name: Ensure Cumulus service is running
+  ansible.builtin.systemd:
+    name: cumulus
+    state: started
 ...

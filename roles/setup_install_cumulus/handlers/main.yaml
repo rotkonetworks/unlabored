@@ -1,44 +1,45 @@
 ---
+- name: Symlink Cumulus release
+  ansible.builtin.file:
+    src: "{{ cumulus_base }}/cumulus-v{{ cumulus_version }}"
+    dest: "{{ cumulus_base }}/cumulus"
+    force: True
+    state: link
+    owner: "{{ cumulus_user }}"
+    group: "{{ cumulus_user }}"
+
+- name: Symlink binary executable
+  ansible.builtin.file:
+    src: "{{ cumulus_base }}/cumulus-v{{ cumulus_version }}"
+    dest: "/usr/local/bin/cumulus"
+    force: True
+    state: link
+    owner: "{{ cumulus_user }}"
+    group: "{{ cumulus_user }}"
+
+- name: Symlink Cumulus service to systemd
+  ansible.builtin.file:
+    src: "{{ cumulus_base }}/cumulus.service"
+    dest: "/etc/systemd/system/cumulus.service"
+    state: link
+    force: True
+    owner: "root"
+    group: "root"
+    mode: '0644'
+
+- name: Stop Cumulus
+  ansible.builtin.systemd:
+    name: cumulus
+    state: stopped
+    enabled: True
+
 - name: Systemd daemon-reload
   ansible.builtin.systemd:
     daemon_reload: True
 
-- name: Symlink Polkadot release
-  ansible.builtin.file:
-    src: "{{ polkadot_base }}/polkadot-v{{ polkadot_version }}"
-    dest: "{{ polkadot_base }}/polkadot"
-    force: True
-    state: link
-    owner: "{{ polkadot_user }}"
-    group: "{{ polkadot_user }}"
-
-- name: Symlink binary executable
-  ansible.builtin.file:
-    src: "{{ polkadot_base }}/polkadot-v{{ polkadot_version }}"
-    dest: "/usr/local/bin/polkadot"
-    force: True
-    state: link
-    owner: "{{ polkadot_user }}"
-    group: "{{ polkadot_user }}"
-
-- name: Stop Polkadot
+- name: Start Cumulus
   ansible.builtin.systemd:
-    name: polkadot
-    daemon_reload: True
-    state: stopped
-    enabled: True
-
-- name: Restart Polkadot
-  ansible.builtin.systemd:
-    name: polkadot
-    daemon_reload: True
-    state: restarted
-    enabled: True
-
-- name: Start Polkadot
-  ansible.builtin.systemd:
-    name: polkadot
-    daemon_reload: True
+    name: cumulus
     state: started
     enabled: True
 ...

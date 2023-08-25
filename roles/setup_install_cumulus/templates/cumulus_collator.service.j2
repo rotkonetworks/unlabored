@@ -1,5 +1,5 @@
 [Unit]
-Description="{{ host_name.split('.')[0] }} - Polkadot service"
+Description="{{ host_name.split('.')[0] }} Collator - Cumulus service"
 After=network.target
 StartLimitIntervalSec=0
 
@@ -7,21 +7,22 @@ StartLimitIntervalSec=0
 Type=simple
 Restart=on-failure
 RestartSec=10
-User={{ polkadot_user }}
-SyslogIdentifier={{ polkadot_service }}
+User={{ cumulus_user }}
+Group={{ cumulus_group }}
+SyslogIdentifier={{ cumulus_service }}
 LimitNOFILE={{ default_max_open_files_in_service }}
 SyslogFacility=local7
 KillSignal=SIGHUP
-ExecStart={{ polkadot_base }}/polkadot \
-     --base-path {{ polkadot_base }} \
-     --chain {{ polkadot_network }} \
-     --database {{ polkadot_database }} \
-     --sync {{ polkadot_syncmode }} \
+ExecStart={{ cumulus_base }}/cumulus \
+     --base-path {{ cumulus_base }} \
+     --chain {{ cumulus_network }} \
+     --database {{ cumulus_database }} \
+     --sync {{ cumulus_syncmode }} \
      --name "{{ hostvars[inventory_hostname]['default_telemetry_name'] | default(host_name) }}" \
-     --telemetry-url "{{ hostvars[inventory_hostname]['default_telemetry_url'] | default('wss://telemetry.w3f.community/submit/ 0') }}" \
-     --port {{ polkadot_p2p_port }} \
+     --telemetry-url 'wss://telemetry-backend.w3f.community/submit 1' \
+     --port {{ cumulus_p2p_port }} \
      --rpc-port {{ default_rpc_port }} \
-     --prometheus-port {{ polkadot_prom_port }} \
+     --prometheus-port {{ cumulus_prom_port }} \
      --execution wasm \
      --wasm-execution compiled \
      --pruning 1000 \
