@@ -22,15 +22,28 @@ monitor
 routeros
 
 [cumulus]
-dot34
-dot44
-dot54
-ksm34
-ksm44
-ksm54
-wnd34
-wnd44
-wnd54
+mint14
+mint24
+pbr14
+pbr14
+pnft14
+pnft24
+mine14
+mine24
+kbr14
+kbr24
+knft14
+knft24
+wmint14
+wmint24
+wbr14
+wbr24
+wnft14
+wnft24
+
+[encointer]
+enc14
+enc24
 
 [polkadot]
 ksm01
