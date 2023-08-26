@@ -5,9 +5,9 @@
     name: libssl-dev
     state: present
 
-- name: Check if Rust is already installed
+- name: Check if Rust is already installed for the user
   ansible.builtin.command:
-    cmd: /usr/local/cargo/bin/rustup --version
+    cmd: "{{ ansible_env.HOME }}/.cargo/bin/rustup --version"
   register: rust_check
   failed_when: False
   changed_when: False
@@ -18,33 +18,23 @@
     dest: "/tmp/sh.rustup.rs"
     mode: '0755'
     force: False
-
-- name: Install Rust if not present
-  ansible.builtin.shell:
-    cmd: sh /tmp/sh.rustup.rs -y --no-modify-path
-  environment:
-    CARGO_HOME: "/usr/local/cargo"
-    RUSTUP_HOME: "/usr/local/rustup"
   when: rust_check.rc != 0
 
-- name: Ensure Rust's cargo is globally accessible
-  ansible.builtin.lineinfile:
-    path: "/etc/profile.d/rust.sh"
-    line: "export PATH=/usr/local/cargo/bin:$PATH"
-    create: True
-    owner: root
-    group: root
-    mode: '0644'
+- name: Install Rust for the user if not present
+  ansible.builtin.shell:
+    cmd: sh /tmp/sh.rustup.rs -y
+  when: rust_check.rc != 0
+  notify: Add Rust to PATH
 
 - name: Update Rust toolchain to stable
-  ansible.builtin.shell:
-    cmd: "/usr/local/cargo/bin/rustup default stable"
+  ansible.builtin.command:
+    cmd: "{{ ansible_env.HOME }}/.cargo/bin/rustup default stable"
 
 - name: Update Rust toolchain
-  ansible.builtin.shell:
-    cmd: "/usr/local/cargo/bin/rustup update"
+  ansible.builtin.command:
+    cmd: "{{ ansible_env.HOME }}/.cargo/bin/rustup update"
 
 - name: Add the nightly and WebAssembly targets
-  ansible.builtin.shell:
-    cmd: "/usr/local/cargo/bin/rustup update nightly"
+  ansible.builtin.command:
+    cmd: "{{ ansible_env.HOME }}/.cargo/bin/rustup update nightly"
 ...

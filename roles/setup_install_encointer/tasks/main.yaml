@@ -1,33 +1,33 @@
 ---
-- name: Ensure group {{ encointer_user }} exists
+- name: Ensure group {{ default_user }} exists
   ansible.builtin.group:
-    name: "{{ encointer_user }}"
+    name: "{{ default_user }}"
     state: present
     system: True
 
-- name: Ensure user {{ encointer_user }} exists without unnecessary privileges
+- name: Ensure user {{ default_user }} exists without unnecessary privileges
   ansible.builtin.user:
     append: True
     comment: encointer service user
     create_home: False
-    group: "{{ encointer_user }}"
+    group: "{{ default_user }}"
     groups: []
-    home: "{{ encointer_base }}"
-    name: "{{ encointer_user }}"
+    home: "{{ default_base }}"
+    name: "{{ default_user }}"
     shell: "/sbin/nologin"
     state: present
     system: True
 
-- name: Ensure user {{ encointer_user }} owns directories
+- name: Ensure user {{ default_user }} owns directories
   ansible.builtin.file:
     path: "{{ item }}"
-    owner: "{{ encointer_user }}"
-    group: "{{ encointer_user }}"
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
     mode: '0750'
     state: directory
   loop:
-    - "{{ encointer_base }}"
-    - "{{ encointer_storage }}"
+    - "{{ default_base }}"
+    - "{{ default_storage }}"
 
 - name: Gather facts
   ansible.builtin.setup:
@@ -35,9 +35,9 @@
 - name: Copy Encointer systemd service for specific node type
   ansible.builtin.template:
     src: "{{ 'encointer_' + default_node_type + '.service.j2' }}"
-    dest: "{{ encointer_base }}/encointer.service"
-    owner: "{{ encointer_user }}"
-    group: "{{ encointer_user }}"
+    dest: "{{ default_base }}/encointer.service"
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
     mode: '0640'
   when: default_node_type in ["collator", "bootnode", "endpoint"]
   notify:
@@ -50,13 +50,13 @@
 - name: Flush handlers after Encointer service copy
   ansible.builtin.meta: flush_handlers
 
-- name: Install Encointer v{{ encointer_version }}
+- name: Install Encointer v{{ default_version }}
   ansible.builtin.get_url:
-    url: "{{ encointer_download_url }}"
-    dest: "{{ encointer_base }}/encointer-v{{ encointer_version }}"
+    url: "{{ default_download_url }}"
+    dest: "{{ default_base }}/encointer-v{{ default_version }}"
     mode: "u+r+x"
-    owner: "{{ encointer_user }}"
-    group: "{{ encointer_user }}"
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
   register: download_result
   notify:
     - Add Service Pinned Status
@@ -69,16 +69,16 @@
     - Start Encointer
   when:
     - ansible_local['noderole']['node']['pinned'] != "True"
-    - ansible_local['noderole']['node']['version'] != encointer_version
+    - ansible_local['noderole']['node']['version'] != default_version
 
 - name: Flush handlers after Encointer install
   ansible.builtin.meta: flush_handlers
 
 - name: Verify Encointer version
-  ansible.builtin.command: "{{ encointer_base }}/encointer --version"
-  register: encointer_version_result
+  ansible.builtin.command: "{{ default_base }}/encointer --version"
+  register: default_version_result
   changed_when: False
-  failed_when: "encointer_version not in encointer_version_result.stdout"
+  failed_when: "default_version not in default_version_result.stdout"
 
 - name: Ensure Encointer service is running
   ansible.builtin.systemd:

@@ -1,33 +1,33 @@
 ---
-- name: Ensure group {{ cumulus_user }} exists
+- name: Ensure group {{ default_user }} exists
   ansible.builtin.group:
-    name: "{{ cumulus_user }}"
+    name: "{{ default_user }}"
     state: present
     system: True
 
-- name: Ensure user {{ cumulus_user }} exists without unnecessary privileges
+- name: Ensure user {{ default_user }} exists without unnecessary privileges
   ansible.builtin.user:
     append: True
     comment: cumulus service user
     create_home: False
-    group: "{{ cumulus_user }}"
+    group: "{{ default_user }}"
     groups: []
-    home: "{{ cumulus_base }}"
-    name: "{{ cumulus_user }}"
+    home: "{{ default_base }}"
+    name: "{{ default_user }}"
     shell: "/sbin/nologin"
     state: present
     system: True
 
-- name: Ensure user {{ cumulus_user }} owns directories
+- name: Ensure user {{ default_user }} owns directories
   ansible.builtin.file:
     path: "{{ item }}"
-    owner: "{{ cumulus_user }}"
-    group: "{{ cumulus_user }}"
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
     mode: '0750'
     state: directory
   loop:
-    - "{{ cumulus_base }}"
-    - "{{ cumulus_storage }}"
+    - "{{ default_base }}"
+    - "{{ default_storage }}"
 
 - name: Gather facts
   ansible.builtin.setup:
@@ -35,9 +35,9 @@
 - name: Copy Cumulus systemd service for specific node type
   ansible.builtin.template:
     src: "{{ 'cumulus_' + default_node_type + '.service.j2' }}"
-    dest: "{{ cumulus_base }}/cumulus.service"
-    owner: "{{ cumulus_user }}"
-    group: "{{ cumulus_user }}"
+    dest: "{{ default_base }}/cumulus.service"
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
     mode: '0640'
   when: default_node_type in ["collator", "bootnode", "endpoint"]
   notify:
@@ -50,13 +50,13 @@
 - name: Flush handlers after Cumulus service copy
   ansible.builtin.meta: flush_handlers
 
-- name: Install Cumulus v{{ cumulus_version }}
+- name: Install Cumulus v{{ default_version }}
   ansible.builtin.get_url:
-    url: "{{ cumulus_download_url }}"
-    dest: "{{ cumulus_base }}/cumulus-v{{ cumulus_version }}"
+    url: "{{ default_download_url }}"
+    dest: "{{ default_base }}/cumulus-v{{ default_version }}"
     mode: "u+r+x"
-    owner: "{{ cumulus_user }}"
-    group: "{{ cumulus_user }}"
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
   register: download_result
   notify:
     - Add Service Pinned Status
@@ -69,16 +69,16 @@
     - Start Cumulus
   when:
     - ansible_local['noderole']['node']['pinned'] != "True"
-    - ansible_local['noderole']['node']['version'] != cumulus_version
+    - ansible_local['noderole']['node']['version'] != default_version
 
 - name: Flush handlers after Cumulus install
   ansible.builtin.meta: flush_handlers
 
 - name: Verify Cumulus version
-  ansible.builtin.command: "{{ cumulus_base }}/cumulus --version"
-  register: cumulus_version_result
+  ansible.builtin.command: "{{ default_base }}/cumulus --version"
+  register: default_version_result
   changed_when: False
-  failed_when: "cumulus_version not in cumulus_version_result.stdout"
+  failed_when: "default_version not in default_version_result.stdout"
 
 - name: Ensure Cumulus service is running
   ansible.builtin.systemd:

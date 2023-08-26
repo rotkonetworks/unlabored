@@ -12,6 +12,7 @@ services
 
 [blockchain_clients:children]
 cumulus
+encointer
 polkadot
 
 [services]
