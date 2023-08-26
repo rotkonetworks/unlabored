@@ -171,4 +171,232 @@ lxc_nodes:
       - from_port: "{{ hostvars['wnd23']['default_p2p_port'] }}"
         to_host: "{{ hostvars['wnd23']['container_ip'] }}:{{ hostvars['wnd23']['default_p2p_port'] }}"
         protocol: "tcp"
+  - host: "pbr13"
+    proxmox_config:
+      vmid: "543"
+      hostname: "{{ hostvars['pbr13']['host_name'] }}"
+      ostemplate: 'local:vztmpl/{{ default_container_template }}'
+      netif: "{{ hostvars['pbr13']['netif'] }}"
+      cores: 4
+      memory: 8192
+      swap: 8192
+      password: "{{ default_password }}"
+      disk: "{{ default_storage }}:20"
+      mounts: '{"mp0":"{{ default_storage }}:100,mp={{ hostvars["pbr13"]["default_storage"] }}"}'
+      onboot: True
+      unprivileged: True
+      validate_certs: False
+      description: "{{ hostvars['pbr13']['default_network'] }} {{ hostvars['pbr13']['default_node_type'] }}: {{ hostvars['pbr13']['host_name'] }}"
+      state: present
+      features:
+        - nesting=1
+    port_forwards:
+      - from_port: "{{ hostvars['pbr13']['ansible_port'] }}"
+        to_host: "{{ hostvars['pbr13']['container_ip'] }}:22"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['pbr13']['default_rpc_port'] }}"
+        to_host: "{{ hostvars['pbr13']['container_ip'] }}:{{ hostvars['pbr13']['default_rpc_port'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['pbr13']['default_secure_rpc_port'] }}"
+        to_host: "{{ hostvars['pbr13']['container_ip'] }}:{{ hostvars['pbr13']['default_secure_rpc_port'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['pbr13']['default_p2p_port'] }}"
+        to_host: "{{ hostvars['pbr13']['container_ip'] }}:{{ hostvars['pbr13']['default_p2p_port'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['pbr13']['default_p2p_port_ws'] }}"
+        to_host: "{{ hostvars['pbr13']['container_ip'] }}:{{ hostvars['pbr13']['default_p2p_port_ws'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['pbr13']['default_p2p_port_wss'] }}"
+        to_host: "{{ hostvars['pbr13']['container_ip'] }}:{{ hostvars['pbr13']['default_p2p_port_wss'] }}"
+        protocol: "tcp"
+  - host: "kbr13"
+    proxmox_config:
+      vmid: "553"
+      hostname: "{{ hostvars['kbr13']['host_name'] }}"
+      ostemplate: 'local:vztmpl/{{ default_container_template }}'
+      netif: "{{ hostvars['kbr13']['netif'] }}"
+      cores: 4
+      memory: 8192
+      swap: 8192
+      password: "{{ default_password }}"
+      disk: "{{ default_storage }}:20"
+      mounts: '{"mp0":"{{ default_storage }}:150,mp={{ hostvars["kbr13"]["default_storage"] }}"}'
+      onboot: True
+      unprivileged: True
+      validate_certs: False
+      description: "{{ hostvars['kbr13']['default_network'] }} {{ hostvars['kbr13']['default_node_type'] }}: {{ hostvars['kbr13']['host_name'] }}"
+      state: present
+      features:
+        - nesting=1
+    port_forwards:
+      - from_port: "{{ hostvars['kbr13']['ansible_port'] }}"
+        to_host: "{{ hostvars['kbr13']['container_ip'] }}:22"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['kbr13']['default_rpc_port'] }}"
+        to_host: "{{ hostvars['kbr13']['container_ip'] }}:{{ hostvars['kbr13']['default_rpc_port'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['kbr13']['default_secure_rpc_port'] }}"
+        to_host: "{{ hostvars['kbr13']['container_ip'] }}:{{ hostvars['kbr13']['default_secure_rpc_port'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['kbr13']['default_p2p_port'] }}"
+        to_host: "{{ hostvars['kbr13']['container_ip'] }}:{{ hostvars['kbr13']['default_p2p_port'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['kbr13']['default_p2p_port_ws'] }}"
+        to_host: "{{ hostvars['kbr13']['container_ip'] }}:{{ hostvars['kbr13']['default_p2p_port_ws'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['kbr13']['default_p2p_port_wss'] }}"
+        to_host: "{{ hostvars['kbr13']['container_ip'] }}:{{ hostvars['kbr13']['default_p2p_port_wss'] }}"
+        protocol: "tcp"
+  - host: "wbr13"
+    proxmox_config:
+      vmid: "564"
+      hostname: "{{ hostvars['wbr13']['host_name'] }}"
+      ostemplate: 'local:vztmpl/{{ default_container_template }}'
+      netif: "{{ hostvars['wbr13']['netif'] }}"
+      cores: 4
+      memory: 8192
+      swap: 8192
+      password: "{{ default_password }}"
+      disk: "{{ default_storage }}:20"
+      mounts: '{"mp0":"{{ default_storage }}:50,mp={{ hostvars["wbr13"]["default_storage"] }}"}'
+      onboot: True
+      unprivileged: True
+      validate_certs: False
+      description: "{{ hostvars['wbr13']['default_network'] }} {{ hostvars['wbr13']['default_node_type'] }}: {{ hostvars['wbr13']['host_name'] }}"
+      state: present
+      features:
+        - nesting=1
+    port_forwards:
+      - from_port: "{{ hostvars['wbr13']['ansible_port'] }}"
+        to_host: "{{ hostvars['wbr13']['container_ip'] }}:22"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['wbr13']['default_rpc_port'] }}"
+        to_host: "{{ hostvars['wbr13']['container_ip'] }}:{{ hostvars['wbr13']['default_rpc_port'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['wbr13']['default_secure_rpc_port'] }}"
+        to_host: "{{ hostvars['wbr13']['container_ip'] }}:{{ hostvars['wbr13']['default_secure_rpc_port'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['wbr13']['default_p2p_port'] }}"
+        to_host: "{{ hostvars['wbr13']['container_ip'] }}:{{ hostvars['wbr13']['default_p2p_port'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['wbr13']['default_p2p_port_ws'] }}"
+        to_host: "{{ hostvars['wbr13']['container_ip'] }}:{{ hostvars['wbr13']['default_p2p_port_ws'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['wbr13']['default_p2p_port_wss'] }}"
+        to_host: "{{ hostvars['wbr13']['container_ip'] }}:{{ hostvars['wbr13']['default_p2p_port_wss'] }}"
+        protocol: "tcp"
+  - host: "pch13"
+    proxmox_config:
+      vmid: "574"
+      hostname: "{{ hostvars['pch13']['host_name'] }}"
+      ostemplate: 'local:vztmpl/{{ default_container_template }}'
+      netif: "{{ hostvars['pch13']['netif'] }}"
+      cores: 4
+      memory: 8192
+      swap: 8192
+      password: "{{ default_password }}"
+      disk: "{{ default_storage }}:20"
+      mounts: '{"mp0":"{{ default_storage }}:100,mp={{ hostvars["pch13"]["default_storage"] }}"}'
+      onboot: True
+      unprivileged: True
+      validate_certs: False
+      description: "{{ hostvars['pch13']['default_network'] }} {{ hostvars['pch13']['default_node_type'] }}: {{ hostvars['pch13']['host_name'] }}"
+      state: present
+      features:
+        - nesting=1
+    port_forwards:
+      - from_port: "{{ hostvars['pch13']['ansible_port'] }}"
+        to_host: "{{ hostvars['pch13']['container_ip'] }}:22"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['pch13']['default_rpc_port'] }}"
+        to_host: "{{ hostvars['pch13']['container_ip'] }}:{{ hostvars['pch13']['default_rpc_port'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['pch13']['default_secure_rpc_port'] }}"
+        to_host: "{{ hostvars['pch13']['container_ip'] }}:{{ hostvars['pch13']['default_secure_rpc_port'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['pch13']['default_p2p_port'] }}"
+        to_host: "{{ hostvars['pch13']['container_ip'] }}:{{ hostvars['pch13']['default_p2p_port'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['pch13']['default_p2p_port_ws'] }}"
+        to_host: "{{ hostvars['pch13']['container_ip'] }}:{{ hostvars['pch13']['default_p2p_port_ws'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['pch13']['default_p2p_port_wss'] }}"
+        to_host: "{{ hostvars['pch13']['container_ip'] }}:{{ hostvars['pch13']['default_p2p_port_wss'] }}"
+        protocol: "tcp"
+  - host: "kch13"
+    proxmox_config:
+      vmid: "574"
+      hostname: "{{ hostvars['kch13']['host_name'] }}"
+      ostemplate: 'local:vztmpl/{{ default_container_template }}'
+      netif: "{{ hostvars['kch13']['netif'] }}"
+      cores: 4
+      memory: 8192
+      swap: 8192
+      password: "{{ default_password }}"
+      disk: "{{ default_storage }}:20"
+      mounts: '{"mp0":"{{ default_storage }}:150,mp={{ hostvars["kch13"]["default_storage"] }}"}'
+      onboot: True
+      unprivileged: True
+      validate_certs: False
+      description: "{{ hostvars['kch13']['default_network'] }} {{ hostvars['kch13']['default_node_type'] }}: {{ hostvars['kch13']['host_name'] }}"
+      state: present
+      features:
+        - nesting=1
+    port_forwards:
+      - from_port: "{{ hostvars['kch13']['ansible_port'] }}"
+        to_host: "{{ hostvars['kch13']['container_ip'] }}:22"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['kch13']['default_rpc_port'] }}"
+        to_host: "{{ hostvars['kch13']['container_ip'] }}:{{ hostvars['kch13']['default_rpc_port'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['kch13']['default_secure_rpc_port'] }}"
+        to_host: "{{ hostvars['kch13']['container_ip'] }}:{{ hostvars['kch13']['default_secure_rpc_port'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['kch13']['default_p2p_port'] }}"
+        to_host: "{{ hostvars['kch13']['container_ip'] }}:{{ hostvars['kch13']['default_p2p_port'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['kch13']['default_p2p_port_ws'] }}"
+        to_host: "{{ hostvars['kch13']['container_ip'] }}:{{ hostvars['kch13']['default_p2p_port_ws'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['kch13']['default_p2p_port_wss'] }}"
+        to_host: "{{ hostvars['kch13']['container_ip'] }}:{{ hostvars['kch13']['default_p2p_port_wss'] }}"
+        protocol: "tcp"
+- host: "wch13"
+    proxmox_config:
+      vmid: "574"
+      hostname: "{{ hostvars['wch13']['host_name'] }}"
+      ostemplate: 'local:vztmpl/{{ default_container_template }}'
+      netif: "{{ hostvars['wch13']['netif'] }}"
+      cores: 4
+      memory: 8192
+      swap: 8192
+      password: "{{ default_password }}"
+      disk: "{{ default_storage }}:20"
+      mounts: '{"mp0":"{{ default_storage }}:50,mp={{ hostvars["wch13"]["default_storage"] }}"}'
+      onboot: True
+      unprivileged: True
+      validate_certs: False
+      description: "{{ hostvars['wch13']['default_network'] }} {{ hostvars['wch13']['default_node_type'] }}: {{ hostvars['wch13']['host_name'] }}"
+      state: present
+      features:
+        - nesting=1
+    port_forwards:
+      - from_port: "{{ hostvars['wch13']['ansible_port'] }}"
+        to_host: "{{ hostvars['wch13']['container_ip'] }}:22"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['wch13']['default_rpc_port'] }}"
+        to_host: "{{ hostvars['wch13']['container_ip'] }}:{{ hostvars['wch13']['default_rpc_port'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['wch13']['default_secure_rpc_port'] }}"
+        to_host: "{{ hostvars['wch13']['container_ip'] }}:{{ hostvars['wch13']['default_secure_rpc_port'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['wch13']['default_p2p_port'] }}"
+        to_host: "{{ hostvars['wch13']['container_ip'] }}:{{ hostvars['wch13']['default_p2p_port'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['wch13']['default_p2p_port_ws'] }}"
+        to_host: "{{ hostvars['wch13']['container_ip'] }}:{{ hostvars['wch13']['default_p2p_port_ws'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['wch13']['default_p2p_port_wss'] }}"
+        to_host: "{{ hostvars['wch13']['container_ip'] }}:{{ hostvars['wch13']['default_p2p_port_wss'] }}"
+        protocol: "tcp"
 ...
