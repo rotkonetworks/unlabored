@@ -21,6 +21,7 @@ ExecStart={{ encointer_base }}/encointer \
   --public-addr /dns/{{ default_public_dns }}/tcp/{{ encointer_p2p_port_wss }}/wss \
   --rpc-port {{ default_rpc_port }} \
   --prometheus-port {{ encointer_prom_port }} \
+  --relay-chain-rpc-urls {{ default_relay_rpc }} {{ default_relay_rpc_fallback }} \
   --wasm-execution Compiled \
   --execution native-else-wasm \
   --no-hardware-benchmarks \
