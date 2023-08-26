@@ -34,7 +34,7 @@
 
 - name: Copy Polkadot systemd service for specific node type
   ansible.builtin.template:
-    src: "{{ 'default_' + default_node_type + '.service.j2' }}"
+    src: "{{ 'polkadot_' + default_node_type + '.service.j2' }}"
     dest: "{{ default_base }}/polkadot.service"
     owner: "{{ default_user }}"
     group: "{{ default_user }}"
