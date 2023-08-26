@@ -25,19 +25,10 @@ For parachains, the base logic is used, e.g., `wch` would be calculated as `west
 - **x4x**: Polkadot Bridge Hub
 - **x5x**: Kusama Bridge Hub
 - **x6x**: Westend Bridge Hub
-- **x7x**: Polkadot NFT Hub
-- **x8x**: Kusama NFT Hub
-- **x9x**: Westend NFT Hub
+- **x7x**: Polkadot Collectives Hub
+- **x8x**: Kusama Collectives Hub
+- **x9x**: Westend Collectives Hub
 
 ### Third Digit - Chain or Server:
 
-- **xx4**: Identifier for `bkk04` server.
-
-
-## Host naming
-
-- **0x**: Validator
-- **1x**: Bootnode
-- **2x**: RPC endpoint
-
-- **x4**: Identifier for `bkk04` server.
+- **xx4**: Identifier for `bkk04` host server.
