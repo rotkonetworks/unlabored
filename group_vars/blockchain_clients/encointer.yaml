@@ -9,7 +9,7 @@ default_base: /opt/encointer
 default_storage: "{{ default_base }}/chains"
 default_log_level: info
 default_network: encointer
-default_node_type: bootnode # collator, bootnode, endpoint
+default_node_type: bootnode  # collator, bootnode, endpoint
 default_database: paritydb
 default_telemetry_url: "wss://telemetry-backend.w3f.community/submit/ 1"
 default_p2p_port: 33000
