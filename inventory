@@ -23,27 +23,17 @@ routeros
 
 [cumulus]
 mint14
-mint24
 pbr14
-pbr14
-pnft14
-pnft24
+pch14
 mine14
-mine24
 kbr14
-kbr24
-knft14
-knft24
+kch14
 wmint14
-wmint24
 wbr14
-wbr24
-wnft14
-wnft24
+wch14
 
 [encointer]
 enc14
-enc24
 
 [polkadot]
 ksm01

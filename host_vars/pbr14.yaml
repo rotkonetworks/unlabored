@@ -1,8 +1,8 @@
 ---
 ansible_host: "27.131.160.106"
 container_ip: "192.168.69.244"
-ansible_port: "2514"
-host_name: "dot44.rotko.net"
+ansible_port: "2544"
+host_name: "pbr14.rotko.net"
 host_timezone: "Asia/Bangkok"
 netif: '{"net0":"name=eth0,gw={{ default_nat_network_forward_cidr.split("/")[0] }},ip={{ default_host_ip }}/24,bridge={{ default_nat_device }}"}'
 role: "cumulus"
@@ -17,11 +17,11 @@ default_database: paritydb
 default_node_type: "bootnode"
 # default_pruning: 256
 # default_syncmode: warp
-default_p2p_port: 33514
-default_p2p_port_ws: 34514
-default_p2p_port_wss: 35514
-default_rpc_port: 9514
-default_secure_rpc_port: 42514
-default_prom_port: 7514
-zabbix_ext_port: 10514
+default_p2p_port: 33544
+default_p2p_port_ws: 34544
+default_p2p_port_wss: 35544
+default_rpc_port: 9544
+default_secure_rpc_port: 42544
+default_prom_port: 7544
+zabbix_ext_port: 10544
 ...

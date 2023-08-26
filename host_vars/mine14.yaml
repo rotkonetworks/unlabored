@@ -1,8 +1,8 @@
 ---
 ansible_host: "27.131.160.106"
-container_ip: "192.168.69.245"
+container_ip: "192.168.69.242"
 ansible_port: "2524"
-host_name: "ksm44.rotko.net"
+host_name: "mine14.rotko.net"
 host_timezone: "Asia/Bangkok"
 netif: '{"net0":"name=eth0,gw={{ default_nat_network_forward_cidr.split("/")[0] }},ip={{ default_host_ip }}/24,bridge={{ default_nat_device }}"}'
 role: "cumulus"
@@ -10,7 +10,7 @@ pinned_service: True
 
 default_telemetry_name: "Rotko Networks - {{ host_name.split('.')[0] }} {{ default_node_type | capitalize }}"
 default_public_dns: "{{ host_name }}"
-default_network: "bridge-hub-kusama"
+default_network: "statemint"
 default_relay_rpc: "ws://{{host_vars[ksm14]['container_ip']}}:{{host_vars[ksm14]['default_rpc_port']}}"
 default_relay_rpc_fallback: "ws://{{host_vars[ksm24]['container_ip']}}:{{host_vars[ksm24]['default_rpc_port']}}"
 default_database: paritydb
