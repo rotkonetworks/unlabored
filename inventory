@@ -24,14 +24,14 @@ routeros
 
 [cumulus]
 mint14
-pbr14
-pch14
+pbr13
+pch13
 mine14
-kbr14
-kch14
+kbr13
+kch13
 wmint14
-wbr14
-wch14
+wbr13
+wch13
 
 [encointer]
 enc14

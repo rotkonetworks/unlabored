@@ -1,8 +1,8 @@
 ---
 ansible_host: "27.131.160.106"
-container_ip: "192.168.69.244"
-ansible_port: "2544"
-host_name: "pbr14.rotko.net"
+container_ip: "192.168.69.247"
+ansible_port: "2573"
+host_name: "pch13.rotko.net"
 host_timezone: "Asia/Bangkok"
 netif: '{"net0":"name=eth0,gw={{ default_nat_network_forward_cidr.split("/")[0] }},ip={{ default_host_ip }}/24,bridge={{ default_nat_device }}"}'
 role: "cumulus"
@@ -10,18 +10,18 @@ pinned_service: True
 
 default_telemetry_name: "Rotko Networks - {{ host_name.split('.')[0] }} {{ default_node_type | capitalize }}"
 default_public_dns: "{{ host_name }}"
-default_network: "bridge-hub-polkadot"
+default_network: "collectives-polkadot"
 default_relay_rpc: "ws://{{ host_vars[dot14]['container_ip'] }}:{{ host_vars[dot14]['default_rpc_port'] }}"
 default_relay_rpc_fallback: "ws://{{ host_vars[dot24]['container_ip'] }}:{{ host_vars[dot24]['default_rpc_port'] }}"
 default_database: paritydb
 default_node_type: "bootnode"
 # default_pruning: 256
 # default_syncmode: warp
-default_p2p_port: 33544
-default_p2p_port_ws: 34544
-default_p2p_port_wss: 35544
-default_rpc_port: 9544
-default_secure_rpc_port: 42544
-default_prom_port: 7544
-zabbix_ext_port: 10544
+default_p2p_port: 33573
+default_p2p_port_ws: 34573
+default_p2p_port_wss: 35573
+default_rpc_port: 9573
+default_secure_rpc_port: 42573
+default_prom_port: 7573
+zabbix_ext_port: 10573
 ...
