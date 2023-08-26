@@ -249,7 +249,7 @@ lxc_nodes:
         protocol: "tcp"
   - host: "wbr13"
     proxmox_config:
-      vmid: "564"
+      vmid: "563"
       hostname: "{{ hostvars['wbr13']['host_name'] }}"
       ostemplate: 'local:vztmpl/{{ default_container_template }}'
       netif: "{{ hostvars['wbr13']['netif'] }}"
@@ -287,7 +287,7 @@ lxc_nodes:
         protocol: "tcp"
   - host: "pch13"
     proxmox_config:
-      vmid: "574"
+      vmid: "573"
       hostname: "{{ hostvars['pch13']['host_name'] }}"
       ostemplate: 'local:vztmpl/{{ default_container_template }}'
       netif: "{{ hostvars['pch13']['netif'] }}"
@@ -325,7 +325,7 @@ lxc_nodes:
         protocol: "tcp"
   - host: "kch13"
     proxmox_config:
-      vmid: "574"
+      vmid: "583"
       hostname: "{{ hostvars['kch13']['host_name'] }}"
       ostemplate: 'local:vztmpl/{{ default_container_template }}'
       netif: "{{ hostvars['kch13']['netif'] }}"
@@ -361,9 +361,9 @@ lxc_nodes:
       - from_port: "{{ hostvars['kch13']['default_p2p_port_wss'] }}"
         to_host: "{{ hostvars['kch13']['container_ip'] }}:{{ hostvars['kch13']['default_p2p_port_wss'] }}"
         protocol: "tcp"
-- host: "wch13"
+  - host: "wch13"
     proxmox_config:
-      vmid: "574"
+      vmid: "593"
       hostname: "{{ hostvars['wch13']['host_name'] }}"
       ostemplate: 'local:vztmpl/{{ default_container_template }}'
       netif: "{{ hostvars['wch13']['netif'] }}"
