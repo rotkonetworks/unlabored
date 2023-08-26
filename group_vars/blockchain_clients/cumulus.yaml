@@ -1,0 +1,22 @@
+---
+default_client_version: 1.0.0
+default_download_url: https://github.com/paritytech/cumulus/releases/download/v{{ default_client_version }}/polkadot-parachain
+
+default_service: cumulus
+default_user: "{{ service_users['cumulus'] }}"
+default_group: "{{ service_users['cumulus'] }}"
+default_base: /opt/cumulus
+default_storage: "{{ default_base }}/chains"
+default_log_level: info
+default_network: statemine
+default_node_type: bootnode # collator, bootnode, endpoint
+default_database: paritydb
+default_telemetry_url: "wss://telemetry-backend.w3f.community/submit/ 1"
+default_p2p_port: 33400
+default_p2p_port_ws: 34400
+default_p2p_port_wss: 35400
+default_rpc_port: 9400
+default_secure_rpc_port: 42400
+default_prom_port: 7400
+zabbix_ext_port: 10400
+...

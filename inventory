@@ -11,8 +11,9 @@ blockchain_clients
 services
 
 [blockchain_clients:children]
-polkadot
 cumulus
+encointer
+polkadot
 
 [services]
 ansible

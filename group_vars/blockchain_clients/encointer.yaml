@@ -1,0 +1,22 @@
+---
+default_client_version: 1.5.1
+default_download_url: https://github.com/paritytech/encointer/releases/download/v{{ default_client_version }}/encointer-node-notee
+
+default_service: encointer
+default_user: "{{ service_users['encointer'] }}"
+default_group: "{{ service_users['encointer'] }}"
+default_base: /opt/encointer
+default_storage: "{{ default_base }}/chains"
+default_log_level: info
+default_network: encointer
+default_node_type: bootnode # collator, bootnode, endpoint
+default_database: paritydb
+default_telemetry_url: "wss://telemetry-backend.w3f.community/submit/ 1"
+default_p2p_port: 33000
+default_p2p_port_ws: 34000
+default_p2p_port_wss: 30400
+default_rpc_port: 9000
+default_secure_rpc_port: 42000
+default_prom_port: 7000
+zabbix_ext_port: 10000
+...
