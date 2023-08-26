@@ -24,6 +24,7 @@ ExecStart={{ cumulus_base }}/cumulus \
   --public-addr /dns/{{ default_public_dns }}/tcp/{{ cumulus_p2p_port_wss }}/wss \
   --rpc-port {{ default_rpc_port }} \
   --prometheus-port {{ cumulus_prom_port }} \
+  --relay-chain-rpc-urls {{ default_relay_rpc }} {{ default_relay_rpc_fallback }} \
   --wasm-execution Compiled \
   --execution native-else-wasm \
   --sync {{ cumulus_syncmode | default('warp') }} \
