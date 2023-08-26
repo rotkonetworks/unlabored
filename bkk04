@@ -11,6 +11,7 @@ blockchain_clients
 services
 
 [blockchain_clients:children]
+cumulus
 polkadot
 
 [services]
@@ -19,6 +20,17 @@ monitor
 
 [routers:children]
 routeros
+
+[cumulus]
+dot34
+dot44
+dot54
+ksm34
+ksm44
+ksm54
+wnd34
+wnd44
+wnd54
 
 [polkadot]
 ksm04
