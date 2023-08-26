@@ -24,14 +24,8 @@ routeros
 
 [cumulus]
 mint14
-pbr14
-pch14
 mine14
-kbr14
-kch14
 wmint14
-wbr14
-wch14
 ; mint24
 ; pbr24
 ; pch24

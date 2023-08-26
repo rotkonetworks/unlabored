@@ -10,10 +10,19 @@ routers
 blockchain_clients
 
 [blockchain_clients:children]
+cumulus
 polkadot
 
 [routers:children]
 routeros
+
+[cumulus]
+pbr13
+kbr13
+wbr13
+pch13
+kch13
+wch13
 
 [polkadot]
 ksm03
