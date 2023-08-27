@@ -18,7 +18,6 @@ routeros
 [polkadot]
 ksm02
 dot02
-wnd12
 
 [proxmox_hosts]
 bkk02
