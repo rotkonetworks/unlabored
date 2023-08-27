@@ -1,12 +1,13 @@
 ---
 default_client_version: 1.0.0
-default_download_url: https://github.com/paritytech/cumulus/releases/download/v{{ default_client_version }}/polkadot-parachain
+default_download_url: "https://github.com/paritytech/cumulus/releases/download/v{{ default_client_version }}/polkadot-parachain:"
 
 default_service: cumulus
 default_user: "{{ service_users['cumulus'] }}"
 default_group: "{{ service_users['cumulus'] }}"
-default_base: /opt/cumulus
-default_storage: "{{ default_base }}/chains"
+default_base_path: /opt/cumulus
+default_storage: "{{ default_base_path }}/chains"
+default_database_path: "{{ default_base_path }}/chains"
 default_log_level: info
 default_network: statemine
 default_node_type: bootnode  # collator, bootnode, endpoint

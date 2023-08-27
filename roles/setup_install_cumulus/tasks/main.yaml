@@ -12,7 +12,7 @@
     create_home: False
     group: "{{ default_user }}"
     groups: []
-    home: "{{ default_base }}"
+    home: "{{ default_base_path }}"
     name: "{{ default_user }}"
     shell: "/sbin/nologin"
     state: present
@@ -26,8 +26,8 @@
     mode: '0750'
     state: directory
   loop:
-    - "{{ default_base }}"
-    - "{{ default_storage }}"
+    - "{{ default_base_path }}"
+    - "{{ default_database_path }}"
 
 - name: Gather facts
   ansible.builtin.setup:
@@ -35,7 +35,7 @@
 - name: Copy Cumulus systemd service for specific node type
   ansible.builtin.template:
     src: "{{ 'cumulus_' + default_node_type + '.service.j2' }}"
-    dest: "{{ default_base }}/cumulus.service"
+    dest: "{{ default_base_path }}/cumulus.service"
     owner: "{{ default_user }}"
     group: "{{ default_user }}"
     mode: '0640'
@@ -53,7 +53,7 @@
 - name: Install Cumulus v{{ default_version }}
   ansible.builtin.get_url:
     url: "{{ default_download_url }}"
-    dest: "{{ default_base }}/cumulus-v{{ default_version }}"
+    dest: "{{ default_base_path }}/cumulus-v{{ default_version }}"
     mode: "u+r+x"
     owner: "{{ default_user }}"
     group: "{{ default_user }}"
@@ -75,7 +75,7 @@
   ansible.builtin.meta: flush_handlers
 
 - name: Verify Cumulus version
-  ansible.builtin.command: "{{ default_base }}/cumulus --version"
+  ansible.builtin.command: "{{ default_base_path }}/cumulus --version"
   register: default_version_result
   changed_when: False
   failed_when: "default_version not in default_version_result.stdout"

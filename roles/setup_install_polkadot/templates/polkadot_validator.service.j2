@@ -13,9 +13,9 @@ SyslogIdentifier={{ default_service }}
 LimitNOFILE={{ default_max_open_files_in_service }}
 SyslogFacility=local7
 KillSignal=SIGHUP
-ExecStart={{ default_base }}/polkadot \
+ExecStart={{ default_base_path }}/polkadot \
      --validator \
-     --base-path {{ default_base }} \
+     --base-path {{ default_base_path }} \
      --chain {{ default_network }} \
      --database {{ default_database }} \
      --sync {{ default_syncmode }} \

@@ -5,8 +5,9 @@ default_download_url: https://github.com/paritytech/encointer/releases/download/
 default_service: encointer
 default_user: "{{ service_users['encointer'] }}"
 default_group: "{{ service_users['encointer'] }}"
-default_base: /opt/encointer
-default_storage: "{{ default_base }}/chains"
+default_base_path: /opt/encointer
+default_storage: "{{ default_base_path }}/chains"
+default_database_path: "{{ default_base_path }}/chains"
 default_log_level: info
 default_network: encointer
 default_node_type: bootnode  # collator, bootnode, endpoint

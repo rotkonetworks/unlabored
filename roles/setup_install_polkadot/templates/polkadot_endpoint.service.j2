@@ -6,10 +6,10 @@ Wants=network-online.target
 [Service]
 User={{ default_user }}
 Group={{ default_group }}
-ExecStart={{ default_base }}/polkadot \
+ExecStart={{ default_base_path }}/polkadot \
   --name "{{ default_telemetry_name }}" \
   --chain {{ default_network }} \
-  --base-path {{ default_base }} \
+  --base-path {{ default_base_path }} \
   --state-pruning archive \
   --sync full \
   --listen-addr /ip6/::/tcp/{{ default_p2p_port }} \

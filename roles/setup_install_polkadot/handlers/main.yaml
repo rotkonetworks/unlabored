@@ -1,8 +1,8 @@
 ---
 - name: Symlink Polkadot release
   ansible.builtin.file:
-    src: "{{ default_base }}/polkadot-v{{ default_client_version }}"
-    dest: "{{ default_base }}/polkadot"
+    src: "{{ default_base_path }}/polkadot-v{{ default_client_version }}"
+    dest: "{{ default_base_path }}/polkadot"
     force: True
     state: link
     owner: "{{ default_user }}"
@@ -10,7 +10,7 @@
 
 - name: Symlink binary executable
   ansible.builtin.file:
-    src: "{{ default_base }}/polkadot-v{{ default_client_version }}"
+    src: "{{ default_base_path }}/polkadot-v{{ default_client_version }}"
     dest: "/usr/local/bin/polkadot"
     force: True
     state: link
@@ -19,7 +19,7 @@
 
 - name: Symlink Polkadot service to systemd
   ansible.builtin.file:
-    src: "{{ default_base }}/polkadot.service"
+    src: "{{ default_base_path }}/polkadot.service"
     dest: "/etc/systemd/system/polkadot.service"
     state: link
     force: True

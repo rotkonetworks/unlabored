@@ -5,8 +5,8 @@ default_download_url: https://github.com/paritytech/polkadot/releases/download/v
 default_service: polkadot
 default_user: "{{ service_users['polkadot'] }}"
 default_group: "{{ service_users['polkadot'] }}"
-default_base: /opt/polkadot
-default_storage: "{{ default_base }}/chains"
+default_base_path: /opt/polkadot
+default_database_path: "{{ default_base_path }}/chains"
 default_log_level: info
 default_network: polkadot
 default_node_type: validator

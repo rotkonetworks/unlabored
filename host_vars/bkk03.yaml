@@ -31,7 +31,7 @@ lxc_nodes:
       swap: 8192
       password: "{{ default_password }}"
       disk: "{{ default_storage }}:20"
-      mounts: '{"mp0":"{{ default_storage }}:1500,mp={{ hostvars["dot23"]["default_base"] }}"}'
+      mounts: '{"mp0":"{{ default_storage }}:1500,mp={{ hostvars["dot23"]["default_database_path"] }}"}'
       onboot: True
       unprivileged: True
       validate_certs: False
@@ -63,7 +63,7 @@ lxc_nodes:
       swap: 8192
       password: "{{ default_password }}"
       disk: "{{ default_storage }}:20"
-      mounts: '{"mp0":"{{ default_storage }}:2500,mp={{ hostvars["ksm23"]["default_base"] }}"}'
+      mounts: '{"mp0":"{{ default_storage }}:2500,mp={{ hostvars["ksm23"]["default_base_path"] }}"}'
       onboot: True
       unprivileged: True
       validate_certs: False
@@ -92,7 +92,7 @@ lxc_nodes:
       swap: 8192
       password: "{{ default_password }}"
       disk: "{{ default_storage }}:20"
-      mounts: '{"mp0":"{{ default_storage }}:1200,mp={{ hostvars["wnd23"]["default_base"] }}"}'
+      mounts: '{"mp0":"{{ default_storage }}:1200,mp={{ hostvars["wnd23"]["default_base_path"] }}"}'
       onboot: True
       unprivileged: True
       validate_certs: False
@@ -124,7 +124,7 @@ lxc_nodes:
       swap: 8192
       password: "{{ default_password }}"
       disk: "{{ default_storage }}:20"
-      mounts: '{"mp0":"{{ default_storage }}:100,mp={{ hostvars["pbr13"]["default_storage"] }}"}'
+      mounts: '{"mp0":"{{ default_storage }}:100,mp={{ hostvars["pbr13"]["default_database_path"] }}"}'
       onboot: True
       unprivileged: True
       validate_certs: False
@@ -162,7 +162,7 @@ lxc_nodes:
       swap: 8192
       password: "{{ default_password }}"
       disk: "{{ default_storage }}:20"
-      mounts: '{"mp0":"{{ default_storage }}:150,mp={{ hostvars["kbr13"]["default_storage"] }}"}'
+      mounts: '{"mp0":"{{ default_storage }}:150,mp={{ hostvars["kbr13"]["default_database_path"] }}"}'
       onboot: True
       unprivileged: True
       validate_certs: False
@@ -200,7 +200,7 @@ lxc_nodes:
       swap: 8192
       password: "{{ default_password }}"
       disk: "{{ default_storage }}:20"
-      mounts: '{"mp0":"{{ default_storage }}:50,mp={{ hostvars["wbr13"]["default_storage"] }}"}'
+      mounts: '{"mp0":"{{ default_storage }}:50,mp={{ hostvars["wbr13"]["default_database_path"] }}"}'
       onboot: True
       unprivileged: True
       validate_certs: False
@@ -238,7 +238,7 @@ lxc_nodes:
       swap: 8192
       password: "{{ default_password }}"
       disk: "{{ default_storage }}:20"
-      mounts: '{"mp0":"{{ default_storage }}:100,mp={{ hostvars["pch13"]["default_storage"] }}"}'
+      mounts: '{"mp0":"{{ default_storage }}:100,mp={{ hostvars["pch13"]["default_database_path"] }}"}'
       onboot: True
       unprivileged: True
       validate_certs: False
@@ -276,7 +276,7 @@ lxc_nodes:
       swap: 8192
       password: "{{ default_password }}"
       disk: "{{ default_storage }}:20"
-      mounts: '{"mp0":"{{ default_storage }}:150,mp={{ hostvars["kch13"]["default_storage"] }}"}'
+      mounts: '{"mp0":"{{ default_storage }}:150,mp={{ hostvars["kch13"]["default_database_path"] }}"}'
       onboot: True
       unprivileged: True
       validate_certs: False
@@ -314,7 +314,7 @@ lxc_nodes:
       swap: 8192
       password: "{{ default_password }}"
       disk: "{{ default_storage }}:20"
-      mounts: '{"mp0":"{{ default_storage }}:50,mp={{ hostvars["wch13"]["default_storage"] }}"}'
+      mounts: '{"mp0":"{{ default_storage }}:50,mp={{ hostvars["wch13"]["default_database_path"] }}"}'
       onboot: True
       unprivileged: True
       validate_certs: False

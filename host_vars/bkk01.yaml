@@ -30,7 +30,7 @@ lxc_nodes:
       swap: 15360
       password: "{{ default_password }}"
       disk: "{{ default_storage }}:20"
-      mounts: '{"mp0":"{{ default_storage }}:600,mp={{ hostvars["dot01"]["default_base"] }}"}'
+      mounts: '{"mp0":"{{ default_storage }}:600,mp={{ hostvars["dot01"]["default_base_path"] }}"}'
       onboot: True
       unprivileged: True
       validate_certs: False
@@ -56,7 +56,7 @@ lxc_nodes:
       swap: 15360
       password: "{{ default_password }}"
       disk: "{{ default_storage }}:20"
-      mounts: '{"mp0":"{{ default_storage }}:800,mp={{ hostvars["ksm01"]["default_base"] }}"}'
+      mounts: '{"mp0":"{{ default_storage }}:800,mp={{ hostvars["ksm01"]["default_base_path"] }}"}'
       onboot: True
       unprivileged: True
       validate_certs: False
