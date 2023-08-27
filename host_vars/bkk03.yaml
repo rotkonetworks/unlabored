@@ -63,7 +63,7 @@ lxc_nodes:
       swap: 8192
       password: "{{ default_password }}"
       disk: "{{ default_storage }}:20"
-      mounts: '{"mp0":"{{ default_storage }}:2500,mp={{ hostvars["ksm23"]["default_base_path"] }}"}'
+      mounts: '{"mp0":"{{ default_storage }}:2500,mp={{ hostvars["ksm23"]["default_database_path"] }}"}'
       onboot: True
       unprivileged: True
       validate_certs: False
@@ -92,7 +92,7 @@ lxc_nodes:
       swap: 8192
       password: "{{ default_password }}"
       disk: "{{ default_storage }}:20"
-      mounts: '{"mp0":"{{ default_storage }}:1200,mp={{ hostvars["wnd23"]["default_base_path"] }}"}'
+      mounts: '{"mp0":"{{ default_storage }}:1200,mp={{ hostvars["wnd23"]["default_database_path"] }}"}'
       onboot: True
       unprivileged: True
       validate_certs: False
