@@ -16,8 +16,13 @@ routeros_delegate_host: "bkk00"
 default_need_iptables_port_forwarding: False
 default_container_template: "debian-12-standard_12.0-1_amd64.tar.zst"
 default_gw_device: "enp9s0"
-default_storage: "tank03"
 default_resource_pool: "bkk03_resource_pool"
+# storage
+default_storage: "tank03"
+default_storage_mountpoint: "/mnt/tank"
+default_storage_type: "zfspool"
+default_storage_content: "images,rootdir"
+default_storage_sparse: 1
 
 lxc_nodes:
   - host: "dot23"
