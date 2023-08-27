@@ -1,25 +1,25 @@
 ---
 - name: Symlink Encointer release
   ansible.builtin.file:
-    src: "{{ encointer_base }}/encointer-v{{ encointer_version }}"
-    dest: "{{ encointer_base }}/encointer"
+    src: "{{ default_base_path }}/encointer-v{{ default_version }}"
+    dest: "{{ default_base_path }}/encointer"
     force: True
     state: link
-    owner: "{{ encointer_user }}"
-    group: "{{ encointer_user }}"
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
 
 - name: Symlink binary executable
   ansible.builtin.file:
-    src: "{{ encointer_base }}/encointer-v{{ encointer_version }}"
+    src: "{{ default_base_path }}/encointer-v{{ default_version }}"
     dest: "/usr/local/bin/encointer"
     force: True
     state: link
-    owner: "{{ encointer_user }}"
-    group: "{{ encointer_user }}"
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
 
 - name: Symlink Encointer service to systemd
   ansible.builtin.file:
-    src: "{{ encointer_base }}/encointer.service"
+    src: "{{ default_base_path }}/encointer.service"
     dest: "/etc/systemd/system/encointer.service"
     state: link
     force: True

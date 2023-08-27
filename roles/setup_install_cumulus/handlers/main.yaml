@@ -1,25 +1,25 @@
 ---
 - name: Symlink Cumulus release
   ansible.builtin.file:
-    src: "{{ cumulus_base }}/cumulus-v{{ cumulus_version }}"
-    dest: "{{ cumulus_base }}/cumulus"
+    src: "{{ default_base_path }}/cumulus-v{{ default_version }}"
+    dest: "{{ default_base_path }}/cumulus"
     force: True
     state: link
-    owner: "{{ cumulus_user }}"
-    group: "{{ cumulus_user }}"
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
 
 - name: Symlink binary executable
   ansible.builtin.file:
-    src: "{{ cumulus_base }}/cumulus-v{{ cumulus_version }}"
+    src: "{{ default_base_path }}/cumulus-v{{ default_version }}"
     dest: "/usr/local/bin/cumulus"
     force: True
     state: link
-    owner: "{{ cumulus_user }}"
-    group: "{{ cumulus_user }}"
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
 
 - name: Symlink Cumulus service to systemd
   ansible.builtin.file:
-    src: "{{ cumulus_base }}/cumulus.service"
+    src: "{{ default_base_path }}/cumulus.service"
     dest: "/etc/systemd/system/cumulus.service"
     state: link
     force: True

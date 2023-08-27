@@ -4,30 +4,30 @@ After=network-online.target
 Wants=network-online.target
 
 [Service]
-User={{ cumulus_user }}
-Group={{ cumulus_group }}
-ExecStart={{ cumulus_base }}/cumulus \
+User={{ default_user }}
+Group={{ default_group }}
+ExecStart={{ default_base_path }}/cumulus \
   --name "{{ default_telemetry_name }}" \
-  --chain {{ cumulus_network }} \
-  --base-path {{ cumulus_base }} \
+  --chain {{ default_network }} \
+  --base-path {{ default_base_path }} \
   --database paritydb \
   --state-pruning 256 \
   --log sync=warn,afg=warn,babe=warn \
   --telemetry-url 'wss://telemetry-backend.w3f.community/submit 1' \
   --telemetry-url 'wss://telemetry.cumulus.io/submit/ 1' \
-  --listen-addr /ip6/::/tcp/{{ cumulus_p2p_port }} \
-  --listen-addr /ip6/::/tcp/{{ cumulus_p2p_port_ws }}/ws \
-  --listen-addr /ip4/0.0.0.0/tcp/{{ cumulus_p2p_port }} \
-  --listen-addr /ip4/0.0.0.0/tcp/{{ cumulus_p2p_port_ws }}/ws \
-  --public-addr /dns/{{ default_public_dns }}/tcp/{{ cumulus_p2p_port }} \
-  --public-addr /dns/{{ default_public_dns }}/tcp/{{ cumulus_p2p_port_ws }}/ws \
-  --public-addr /dns/{{ default_public_dns }}/tcp/{{ cumulus_p2p_port_wss }}/wss \
+  --listen-addr /ip6/::/tcp/{{ default_p2p_port }} \
+  --listen-addr /ip6/::/tcp/{{ default_p2p_port_ws }}/ws \
+  --listen-addr /ip4/0.0.0.0/tcp/{{ default_p2p_port }} \
+  --listen-addr /ip4/0.0.0.0/tcp/{{ default_p2p_port_ws }}/ws \
+  --public-addr /dns/{{ default_public_dns }}/tcp/{{ default_p2p_port }} \
+  --public-addr /dns/{{ default_public_dns }}/tcp/{{ default_p2p_port_ws }}/ws \
+  --public-addr /dns/{{ default_public_dns }}/tcp/{{ default_p2p_port_wss }}/wss \
   --rpc-port {{ default_rpc_port }} \
-  --prometheus-port {{ cumulus_prom_port }} \
+  --prometheus-port {{ default_prom_port }} \
   --relay-chain-rpc-urls {{ default_relay_rpc }} {{ default_relay_rpc_fallback }} \
   --wasm-execution Compiled \
   --execution native-else-wasm \
-  --sync {{ cumulus_syncmode | default('warp') }} \
+  --sync {{ default_syncmode | default('warp') }} \
   --no-hardware-benchmarks \
   --rpc-external \
   --rpc-methods safe \
