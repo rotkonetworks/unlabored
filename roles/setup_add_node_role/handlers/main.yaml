@@ -63,7 +63,7 @@
     option: "version"
     section: "node"
     state: present
-    value: "{{ cumulus_version }}"
+    value: "{{ default_version }}"
     path: "{{ noderole_file }}"
     owner: root
     group: root
@@ -77,7 +77,7 @@
     option: "version"
     section: "node"
     state: present
-    value: "{{ encointer_version }}"
+    value: "{{ default_version }}"
     path: "{{ noderole_file }}"
     owner: root
     group: root

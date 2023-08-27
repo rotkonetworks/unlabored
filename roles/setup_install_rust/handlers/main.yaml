@@ -1,16 +1,15 @@
 ---
-- name: Add Rust to PATH
-  block:
-    - name: Add Rust to PATH in .bashrc
-      lineinfile:
-        path: "{{ ansible_env.HOME }}/.bashrc"
-        line: 'export PATH=$HOME/.cargo/bin:$PATH'
-        state: present
+- name: Add Rust to PATH for bash
+  lineinfile:
+    path: "{{ ansible_env.HOME }}/.bashrc"
+    line: 'export PATH=$HOME/.cargo/bin:$PATH'
+    state: present
+  when: "'/usr/bin/bash' in ansible_facts['shell']"
 
-    - name: Add Rust to PATH in .zshrc
-      lineinfile:
-        path: "{{ ansible_env.HOME }}/.zshrc"
-        line: 'export PATH=$HOME/.cargo/bin:$PATH'
-        state: present
-  when: ansible_facts['shell'] == "/usr/bin/zsh"
+- name: Add Rust to PATH for zsh
+  lineinfile:
+    path: "{{ ansible_env.HOME }}/.zshrc"
+    line: 'export PATH=$HOME/.cargo/bin:$PATH'
+    state: present
+  when: "'/usr/bin/zsh' in ansible_facts['shell']"
 ...

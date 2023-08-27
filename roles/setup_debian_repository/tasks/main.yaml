@@ -6,7 +6,6 @@
       deb https://ftp.debian.org/debian/ bookworm contrib main
       deb https://ftp.debian.org/debian/ bookworm-updates contrib main
       deb https://ftp.debian.org/debian/ bookworm-proposed-updates contrib main
-      deb https://ftp.debian.org/debian/ bookworm-backports contrib main
       deb https://security.debian.org/debian-security/ bookworm-security contrib main
     backup: yes
     owner: root
@@ -25,7 +24,6 @@
       deb https://ftp.debian.org/debian/ bullseye contrib main
       deb https://ftp.debian.org/debian/ bullseye-updates contrib
       deb https://ftp.debian.org/debian/ bullseye-proposed-updates contrib main
-      deb https://ftp.debian.org/debian/ bullseye-backports contrib main non-free
       deb https://security.debian.org/debian-security/ bullseye-security contrib main
     backup: yes
     owner: root

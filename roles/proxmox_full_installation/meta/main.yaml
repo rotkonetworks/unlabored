@@ -19,6 +19,7 @@ dependencies:
   - role: proxmox_acl_access
   - role: proxmox_acl_tokens
   - role: proxmox_install_container_templates
+  - role: proxmox_setup_storage
   - role: setup_user_management
 
 # Disabled for now

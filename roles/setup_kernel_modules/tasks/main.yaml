@@ -7,11 +7,30 @@
   changed_when: false
   when: "'zfs' in kernel_modules"
 
+- name: Ensure /etc/apt/sources.list.d directory exists
+  ansible.builtin.file:
+    path: /etc/apt/sources.list.d
+    state: directory
+    mode: '0755'
+  become: yes
+
+- name: Ensure bookworm-backports.list file exists
+  ansible.builtin.file:
+    path: "/etc/apt/sources.list.d/bookworm-backports.list"
+    state: touch
+    owner: root
+    group: root
+    mode: '0644'
+  when: zfs_module_check.rc != 0 and zfs_module_check is defined
+
 - name: Add bookworm-backports repo for ZFS
   ansible.builtin.lineinfile:
     path: "/etc/apt/sources.list.d/bookworm-backports.list"
     line: "{{ item }}"
     state: present
+    owner: root
+    group: root
+    mode: '0644'
   loop:
     - "deb http://deb.debian.org/debian bookworm-backports main contrib"
     - "deb-src http://deb.debian.org/debian bookworm-backports main contrib"

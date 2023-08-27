@@ -1,8 +1,6 @@
 ---
 - name: Install websocat using cargo
-  ansible.builtin.command: /usr/local/cargo/bin/cargo install websocat
-  args:
-    creates: /usr/local/cargo/bin/websocat
+  ansible.builtin.command: cargo install websocat
   tags:
     - websocat
 ...

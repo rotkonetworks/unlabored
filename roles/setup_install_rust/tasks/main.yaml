@@ -24,7 +24,9 @@
   ansible.builtin.shell:
     cmd: sh /tmp/sh.rustup.rs -y
   when: rust_check.rc != 0
-  notify: Add Rust to PATH
+  notify:
+  - Add Rust to PATH for bash
+  - Add Rust to PATH for zsh
 
 - name: Update Rust toolchain to stable
   ansible.builtin.command:

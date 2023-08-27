@@ -2,7 +2,7 @@
 ansible_host: "27.131.160.106"
 container_ip: "192.168.69.244"
 ansible_port: "2543"
-host_name: "pbr14.rotko.net"
+host_name: "pbr13.rotko.net"
 host_timezone: "Asia/Bangkok"
 netif: '{"net0":"name=eth0,gw={{ default_nat_network_forward_cidr.split("/")[0] }},ip={{ default_host_ip }}/24,bridge={{ default_nat_device }}"}'
 role: "cumulus"

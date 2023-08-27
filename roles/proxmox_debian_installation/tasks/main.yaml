@@ -7,6 +7,25 @@
       - qemu-system-data
     state: absent
 
+- name: Check if firmware-ath9k-htc is installed
+  ansible.builtin.command:
+    cmd: dpkg -l | grep firmware-ath9k-htc
+  register: firmware_check
+  changed_when: False
+  failed_when: False
+
+- name: Remove conflicting firmware package
+  ansible.builtin.apt:
+    name: firmware-ath9k-htc
+    state: absent
+  when: firmware_check.stdout | length > 0
+
+- name: Fix broken dependencies
+  ansible.builtin.command:
+    cmd: apt --fix-broken install -y
+  become: yes
+  when: firmware_check.stdout | length > 0
+
 - name: Install Proxmox kernel
   ansible.builtin.apt:
     pkg:
