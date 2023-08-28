@@ -63,7 +63,7 @@
     option: "version"
     section: "node"
     state: present
-    value: "{{ default_version }}"
+    value: "{{ default_client_version }}"
     path: "{{ noderole_file }}"
     owner: root
     group: root
@@ -77,7 +77,7 @@
     option: "version"
     section: "node"
     state: present
-    value: "{{ default_version }}"
+    value: "{{ default_client_version }}"
     path: "{{ noderole_file }}"
     owner: root
     group: root
