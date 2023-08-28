@@ -1,7 +1,7 @@
 # Standards: 0.2
 ---
 - name: Check if zfs module is available
-  command: modprobe -n -v zfs
+  ansible.builtin.command: modprobe -n -v zfs
   register: zfs_module_check
   ignore_errors: true
   changed_when: false
@@ -37,12 +37,15 @@
   when: zfs_module_check.rc != 0 and zfs_module_check is defined
 
 - name: Setup apt preferences for ZFS
-  copy:
+  ansible.builtin.copy:
     dest: "/etc/apt/preferences.d/90_zfs"
     content: |
       Package: src:zfs-linux
       Pin: release n=bookworm-backports
       Pin-Priority: 990
+    owner: root
+    group: root
+    mode: '0644'
   when: zfs_module_check.rc != 0 and zfs_module_check is defined
 
 - name: Update apt cache

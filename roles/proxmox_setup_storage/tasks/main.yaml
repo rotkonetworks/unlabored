@@ -1,17 +1,17 @@
 # Standards: 0.2
 ---
 - name: Check if the storage is already defined in Proxmox
-  command: pvesm status
+  ansible.builtin.command: pvesm status
   register: pvesm_output
   changed_when: false
   check_mode: no
 
 - name: Add {{ default_storage }} storage to Proxmox if it doesn't exist
-  command: >
-    pvesm add {{ default_storage_type }} {{ default_storage }} 
-    -pool {{ default_storage }} 
-    -mountpoint {{ default_storage_mountpoint }} 
-    -content {{ default_storage_content }} 
+  ansible.builtin.command: >
+    pvesm add {{ default_storage_type }} {{ default_storage }}
+    -pool {{ default_storage }}
+    -mountpoint {{ default_storage_mountpoint }}
+    -content {{ default_storage_content }}
     -sparse {{ default_storage_sparse }}
   when: default_storage not in pvesm_output.stdout
 ...

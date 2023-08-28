@@ -1,5 +1,7 @@
+---
 default_storage: "tank"
 default_storage_mountpoint: "/mnt/tank"
 default_storage_type: "zfspool"
 default_storage_content: "images,rootdir"
 default_storage_sparse: 1
+...

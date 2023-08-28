@@ -6,11 +6,12 @@
     state: present
 
 - name: Check if Rust is already installed for the user
-  stat:
+  ansible.builtin.stat:
     path: "{{ ansible_env.HOME }}/.cargo/bin/rustup"
   register: rust_installed
 
 - name: Download and verify Rust installer if not present
+  when: not rust_installed.stat.exists
   block:
     - name: Download Rust installer
       ansible.builtin.get_url:
@@ -26,8 +27,6 @@
         get_checksum: yes
       register: rust_installer_checksum
       failed_when: rust_installer_checksum.stat.checksum != '<expected_checksum>'
-
-  when: not rust_installed.stat.exists
 
 - name: Install Rust for the user if not present
   ansible.builtin.shell:

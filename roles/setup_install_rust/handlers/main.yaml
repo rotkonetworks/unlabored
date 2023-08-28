@@ -1,18 +1,24 @@
 ---
 - name: Add Rust to PATH for bash
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: "{{ ansible_env.HOME }}/.bashrc"
     line: 'export PATH=$HOME/.cargo/bin:$PATH'
     state: present
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_id }}"
+    mode: "0644"
     create: yes
   when: "'/usr/bin/bash' in ansible_user_shell"
   become: no
 
 - name: Add Rust to PATH for zsh
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: "{{ ansible_env.HOME }}/.zshrc"
     line: 'export PATH=$HOME/.cargo/bin:$PATH'
     state: present
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_id }}"
+    mode: "0644"
     create: yes
   when: "'/usr/bin/zsh' in ansible_user_shell"
   become: no
