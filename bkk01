@@ -17,7 +17,6 @@ routeros
 
 [polkadot]
 ksm01
-ksm11
 dot01
 
 [proxmox_hosts]
