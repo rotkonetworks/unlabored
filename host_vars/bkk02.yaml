@@ -71,80 +71,80 @@ lxc_nodes:
       - from_port: "{{ hostvars['ksm02']['default_p2p_port'] }}"
         to_host: "{{ hostvars['ksm02']['container_ip'] }}:{{ hostvars['ksm02']['default_p2p_port'] }}"
         protocol: "tcp"
-  - host: "dot11"
+  - host: "dot12"
     proxmox_config:
       vmid: "221"
-      hostname: "{{ hostvars['dot11']['host_name'] }}"
+      hostname: "{{ hostvars['dot12']['host_name'] }}"
       ostemplate: 'local:vztmpl/{{ default_container_template }}'
-      netif: "{{ hostvars['dot11']['netif'] }}"
+      netif: "{{ hostvars['dot12']['netif'] }}"
       cores: 4
       memory: 16384
       swap: 8192
       password: "{{ default_password }}"
       disk: "{{ default_storage }}:20"
-      mounts: '{"mp0":"{{ default_storage }}:700,mp={{ hostvars["dot11"]["default_database_path"] }}"}'
+      mounts: '{"mp0":"{{ default_storage }}:700,mp={{ hostvars["dot12"]["default_database_path"] }}"}'
       onboot: True
       unprivileged: True
       validate_certs: False
-      description: "{{ hostvars['dot11']['default_network'] }} {{ hostvars['dot11']['default_node_type'] }}: {{ hostvars['dot11']['host_name'] }}"
+      description: "{{ hostvars['dot12']['default_network'] }} {{ hostvars['dot12']['default_node_type'] }}: {{ hostvars['dot12']['host_name'] }}"
       state: present
       features:
         - nesting=1
     port_forwards:
-      - from_port: "{{ hostvars['dot11']['ansible_port'] }}"
-        to_host: "{{ hostvars['dot11']['container_ip'] }}:22"
+      - from_port: "{{ hostvars['dot12']['ansible_port'] }}"
+        to_host: "{{ hostvars['dot12']['container_ip'] }}:22"
         protocol: "tcp"
-      - from_port: "{{ hostvars['dot11']['default_rpc_port'] }}"
-        to_host: "{{ hostvars['dot11']['container_ip'] }}:{{ hostvars['dot11']['default_rpc_port'] }}"
+      - from_port: "{{ hostvars['dot12']['default_rpc_port'] }}"
+        to_host: "{{ hostvars['dot12']['container_ip'] }}:{{ hostvars['dot12']['default_rpc_port'] }}"
         protocol: "tcp"
-      - from_port: "{{ hostvars['dot11']['default_secure_rpc_port'] }}"
-        to_host: "{{ hostvars['dot11']['container_ip'] }}:{{ hostvars['dot11']['default_secure_rpc_port'] }}"
+      - from_port: "{{ hostvars['dot12']['default_secure_rpc_port'] }}"
+        to_host: "{{ hostvars['dot12']['container_ip'] }}:{{ hostvars['dot12']['default_secure_rpc_port'] }}"
         protocol: "tcp"
-      - from_port: "{{ hostvars['dot11']['default_p2p_port'] }}"
-        to_host: "{{ hostvars['dot11']['container_ip'] }}:{{ hostvars['dot11']['default_p2p_port'] }}"
+      - from_port: "{{ hostvars['dot12']['default_p2p_port'] }}"
+        to_host: "{{ hostvars['dot12']['container_ip'] }}:{{ hostvars['dot12']['default_p2p_port'] }}"
         protocol: "tcp"
-      - from_port: "{{ hostvars['dot11']['default_p2p_port_ws'] }}"
-        to_host: "{{ hostvars['dot11']['container_ip'] }}:{{ hostvars['dot11']['default_p2p_port_ws'] }}"
+      - from_port: "{{ hostvars['dot12']['default_p2p_port_ws'] }}"
+        to_host: "{{ hostvars['dot12']['container_ip'] }}:{{ hostvars['dot12']['default_p2p_port_ws'] }}"
         protocol: "tcp"
-      - from_port: "{{ hostvars['dot11']['default_p2p_port_wss'] }}"
-        to_host: "{{ hostvars['dot11']['container_ip'] }}:{{ hostvars['dot11']['default_p2p_port_wss'] }}"
+      - from_port: "{{ hostvars['dot12']['default_p2p_port_wss'] }}"
+        to_host: "{{ hostvars['dot12']['container_ip'] }}:{{ hostvars['dot12']['default_p2p_port_wss'] }}"
         protocol: "tcp"
-  - host: "wnd11"
+  - host: "wnd12"
     proxmox_config:
       vmid: "221"
-      hostname: "{{ hostvars['wnd11']['host_name'] }}"
+      hostname: "{{ hostvars['wnd12']['host_name'] }}"
       ostemplate: 'local:vztmpl/{{ default_container_template }}'
-      netif: "{{ hostvars['wnd11']['netif'] }}"
+      netif: "{{ hostvars['wnd12']['netif'] }}"
       cores: 4
       memory: 8192
       swap: 8192
       password: "{{ default_password }}"
       disk: "{{ default_storage }}:20"
-      mounts: '{"mp0":"{{ default_storage }}:700,mp={{ hostvars["wnd11"]["default_database_path"] }}"}'
+      mounts: '{"mp0":"{{ default_storage }}:700,mp={{ hostvars["wnd12"]["default_database_path"] }}"}'
       onboot: True
       unprivileged: True
       validate_certs: False
-      description: "{{ hostvars['wnd11']['default_network'] }} {{ hostvars['wnd11']['default_node_type'] }}: {{ hostvars['wnd11']['host_name'] }}"
+      description: "{{ hostvars['wnd12']['default_network'] }} {{ hostvars['wnd12']['default_node_type'] }}: {{ hostvars['wnd12']['host_name'] }}"
       state: present
       features:
         - nesting=1
     port_forwards:
-      - from_port: "{{ hostvars['wnd11']['ansible_port'] }}"
-        to_host: "{{ hostvars['wnd11']['container_ip'] }}:22"
+      - from_port: "{{ hostvars['wnd12']['ansible_port'] }}"
+        to_host: "{{ hostvars['wnd12']['container_ip'] }}:22"
         protocol: "tcp"
-      - from_port: "{{ hostvars['wnd11']['default_rpc_port'] }}"
-        to_host: "{{ hostvars['wnd11']['container_ip'] }}:{{ hostvars['wnd11']['default_rpc_port'] }}"
+      - from_port: "{{ hostvars['wnd12']['default_rpc_port'] }}"
+        to_host: "{{ hostvars['wnd12']['container_ip'] }}:{{ hostvars['wnd12']['default_rpc_port'] }}"
         protocol: "tcp"
-      - from_port: "{{ hostvars['wnd11']['default_secure_rpc_port'] }}"
-        to_host: "{{ hostvars['wnd11']['container_ip'] }}:{{ hostvars['wnd11']['default_secure_rpc_port'] }}"
+      - from_port: "{{ hostvars['wnd12']['default_secure_rpc_port'] }}"
+        to_host: "{{ hostvars['wnd12']['container_ip'] }}:{{ hostvars['wnd12']['default_secure_rpc_port'] }}"
         protocol: "tcp"
-      - from_port: "{{ hostvars['wnd11']['default_p2p_port'] }}"
-        to_host: "{{ hostvars['wnd11']['container_ip'] }}:{{ hostvars['wnd11']['default_p2p_port'] }}"
+      - from_port: "{{ hostvars['wnd12']['default_p2p_port'] }}"
+        to_host: "{{ hostvars['wnd12']['container_ip'] }}:{{ hostvars['wnd12']['default_p2p_port'] }}"
         protocol: "tcp"
-      - from_port: "{{ hostvars['wnd11']['default_p2p_port_ws'] }}"
-        to_host: "{{ hostvars['wnd11']['container_ip'] }}:{{ hostvars['wnd11']['default_p2p_port_ws'] }}"
+      - from_port: "{{ hostvars['wnd12']['default_p2p_port_ws'] }}"
+        to_host: "{{ hostvars['wnd12']['container_ip'] }}:{{ hostvars['wnd12']['default_p2p_port_ws'] }}"
         protocol: "tcp"
-      - from_port: "{{ hostvars['wnd11']['default_p2p_port_wss'] }}"
-        to_host: "{{ hostvars['wnd11']['container_ip'] }}:{{ hostvars['wnd11']['default_p2p_port_wss'] }}"
+      - from_port: "{{ hostvars['wnd12']['default_p2p_port_wss'] }}"
+        to_host: "{{ hostvars['wnd12']['container_ip'] }}:{{ hostvars['wnd12']['default_p2p_port_wss'] }}"
         protocol: "tcp"
 ...
