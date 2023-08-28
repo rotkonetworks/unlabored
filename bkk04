@@ -41,10 +41,8 @@ enc14
 ; enc24
 
 [polkadot]
-ksm04
 ksm14
 ksm24
-dot04
 dot14
 dot24
 wnd14

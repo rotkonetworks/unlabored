@@ -11,8 +11,8 @@ pinned_service: True
 default_telemetry_name: "Rotko Networks - {{ host_name.split('.')[0] }} {{ default_node_type | capitalize }}"
 default_public_dns: "{{ host_name }}"
 default_network: "westmint"
-default_relay_rpc: "ws://{{ host_vars[wnd14]['container_ip'] }}:{{ host_vars[wnd14]['default_rpc_port'] }}"
-default_relay_rpc_fallback: "ws://{{ host_vars[wnd24]['container_ip'] }}:{{ host_vars[wnd24]['default_rpc_port'] }}"
+default_relay_rpc: "ws://{{ hostvars['wnd14']['container_ip'] }}:{{ hostvars['wnd14']['default_rpc_port'] }}"
+default_relay_rpc_fallback: "ws://{{ hostvars['wnd24']['container_ip'] }}:{{ hostvars['wnd24']['default_rpc_port'] }}"
 default_database: paritydb
 default_node_type: "bootnode"
 default_pruning: 256

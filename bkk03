@@ -11,7 +11,6 @@ blockchain_clients
 
 [blockchain_clients:children]
 cumulus
-polkadot
 
 [routers:children]
 routeros
@@ -23,11 +22,6 @@ wbr13
 pch13
 kch13
 wch13
-
-[polkadot]
-ksm23
-dot23
-wnd23
 
 [proxmox_hosts]
 bkk03
