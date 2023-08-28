@@ -38,9 +38,12 @@ enc14
 
 [polkadot]
 ksm01
+ksm11
 dot01
 ksm02
 dot02
+dot12
+wnd12
 ksm23
 dot23
 wnd23

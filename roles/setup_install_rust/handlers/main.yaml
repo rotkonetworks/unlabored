@@ -4,12 +4,16 @@
     path: "{{ ansible_env.HOME }}/.bashrc"
     line: 'export PATH=$HOME/.cargo/bin:$PATH'
     state: present
-  when: "'/usr/bin/bash' in ansible_facts['shell']"
+    create: yes
+  when: "'/usr/bin/bash' in ansible_user_shell"
+  become: no
 
 - name: Add Rust to PATH for zsh
   lineinfile:
     path: "{{ ansible_env.HOME }}/.zshrc"
     line: 'export PATH=$HOME/.cargo/bin:$PATH'
     state: present
-  when: "'/usr/bin/zsh' in ansible_facts['shell']"
+    create: yes
+  when: "'/usr/bin/zsh' in ansible_user_shell"
+  become: no
 ...

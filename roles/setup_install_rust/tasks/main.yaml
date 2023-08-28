@@ -6,37 +6,49 @@
     state: present
 
 - name: Check if Rust is already installed for the user
-  ansible.builtin.command:
-    cmd: "{{ ansible_env.HOME }}/.cargo/bin/rustup --version"
-  register: rust_check
-  failed_when: False
-  changed_when: False
+  stat:
+    path: "{{ ansible_env.HOME }}/.cargo/bin/rustup"
+  register: rust_installed
 
-- name: Download Rust installer if not present
-  ansible.builtin.get_url:
-    url: https://sh.rustup.rs
-    dest: "/tmp/sh.rustup.rs"
-    mode: '0755'
-    force: False
-  when: rust_check.rc != 0
+- name: Download and verify Rust installer if not present
+  block:
+    - name: Download Rust installer
+      ansible.builtin.get_url:
+        url: https://sh.rustup.rs
+        dest: "/tmp/sh.rustup.rs"
+        mode: '0755'
+        force: False
+
+    # This is a placeholder; in reality, you would fetch a real checksum or signature and verify it.
+    - name: Verify Rust installer checksum
+      ansible.builtin.stat:
+        path: "/tmp/sh.rustup.rs"
+        get_checksum: yes
+      register: rust_installer_checksum
+      failed_when: rust_installer_checksum.stat.checksum != '<expected_checksum>'
+
+  when: not rust_installed.stat.exists
 
 - name: Install Rust for the user if not present
   ansible.builtin.shell:
     cmd: sh /tmp/sh.rustup.rs -y
-  when: rust_check.rc != 0
+  when: not rust_installed.stat.exists
   notify:
-  - Add Rust to PATH for bash
-  - Add Rust to PATH for zsh
+    - Add Rust to PATH for bash
+    - Add Rust to PATH for zsh
 
 - name: Update Rust toolchain to stable
   ansible.builtin.command:
     cmd: "{{ ansible_env.HOME }}/.cargo/bin/rustup default stable"
+  when: rust_installed.stat.exists
 
 - name: Update Rust toolchain
   ansible.builtin.command:
     cmd: "{{ ansible_env.HOME }}/.cargo/bin/rustup update"
+  when: rust_installed.stat.exists
 
 - name: Add the nightly and WebAssembly targets
   ansible.builtin.command:
     cmd: "{{ ansible_env.HOME }}/.cargo/bin/rustup update nightly"
+  when: rust_installed.stat.exists
 ...
