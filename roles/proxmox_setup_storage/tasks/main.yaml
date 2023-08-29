@@ -3,8 +3,8 @@
 - name: Check if the storage is already defined in Proxmox
   ansible.builtin.command: pvesm status
   register: pvesm_output
-  changed_when: false
-  check_mode: no
+  changed_when: False
+  check_mode: False
 
 - name: Add {{ default_storage }} storage to Proxmox if it doesn't exist
   ansible.builtin.command: >

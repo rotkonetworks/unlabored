@@ -23,7 +23,8 @@
 - name: Fix broken dependencies
   ansible.builtin.command:
     cmd: apt --fix-broken install -y
-  become: yes
+  become: True
+  become_user: root
   when: firmware_check.stdout | length > 0
 
 - name: Install Proxmox kernel

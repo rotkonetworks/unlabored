@@ -3,8 +3,8 @@
 - name: Check if zfs module is available
   ansible.builtin.command: modprobe -n -v zfs
   register: zfs_module_check
-  ignore_errors: true
-  changed_when: false
+  ignore_errors: True
+  changed_when: False
   when: "'zfs' in kernel_modules"
 
 - name: Ensure /etc/apt/sources.list.d directory exists
@@ -12,7 +12,9 @@
     path: /etc/apt/sources.list.d
     state: directory
     mode: '0755'
-  become: yes
+  become: True
+  become_user: root
+  when: zfs_module_check.rc != 0 and zfs_module_check is defined
 
 - name: Ensure bookworm-backports.list file exists
   ansible.builtin.file:
