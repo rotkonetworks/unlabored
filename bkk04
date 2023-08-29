@@ -10,8 +10,6 @@ routers
 cumulus
 encointer
 polkadot
-ansible
-monitor
 
 [routers]
 bkk00
@@ -42,6 +40,10 @@ dot14
 dot24
 wnd14
 wnd24
+
+[services]
+ansible
+monitor
 
 [proxmox_hosts]
 bkk04
