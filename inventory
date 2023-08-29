@@ -7,20 +7,14 @@ proxmox_nodes
 routers
 
 [proxmox_nodes:children]
-blockchain_clients
-services
-
-[blockchain_clients:children]
 cumulus
 encointer
 polkadot
-
-[services]
 ansible
 monitor
 
-[routers:children]
-routeros
+[routers]
+bkk00
 
 [cumulus]
 mint14
@@ -55,9 +49,6 @@ bkk01
 bkk02
 bkk03
 bkk04
-
-[routeros]
-bkk00
 
 [unmanaged]
 

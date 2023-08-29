@@ -4,13 +4,9 @@ rotko
 [rotko:children]
 proxmox_hosts
 proxmox_nodes
-reference_nodes
 routers
 
 [proxmox_nodes:children]
-blockchain_clients
-
-[blockchain_clients:children]
 cumulus
 
 [routers:children]
@@ -39,11 +35,3 @@ bkk03
 hardware
 proxmox_nodes
 unmanaged
-
-[reference_nodes]
-ksm14
-dot14
-wnd14
-wnd24
-dot24
-ksm24

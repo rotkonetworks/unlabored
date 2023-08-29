@@ -6,8 +6,7 @@ default_service: encointer
 default_user: "{{ service_users['encointer'] }}"
 default_group: "{{ service_users['encointer'] }}"
 default_base_path: /opt/encointer
-default_storage: "{{ default_base_path }}/chains"
-default_database_path: "{{ default_base_path }}/chains"
+default_database_path: "/opt/encointer/chains"
 default_log_level: info
 default_network: encointer
 default_node_type: bootnode  # collator, bootnode, endpoint
