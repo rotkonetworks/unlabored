@@ -84,20 +84,6 @@
     mode: '0644'
   when: role == "encointer"
 
-- name: Add Fantom service version
-  community.general.ini_file:
-    create: True
-    no_extra_spaces: True
-    option: "version"
-    section: "node"
-    state: present
-    value: "{{ fantom_version }}"
-    path: "{{ noderole_file }}"
-    owner: root
-    group: root
-    mode: '0644'
-  when: role == "fantom"
-
 - name: Add Golang version
   community.general.ini_file:
     create: True
@@ -110,7 +96,7 @@
     owner: root
     group: root
     mode: '0644'
-  when: role in ["arbitrum", "avalanche", "defikingdom", "fantom", "ethereum", "erigon", "evmos", "kava", "klaytn", "optimism", "polygon"]
+  when: role in ["arbitrum", "avalanche", "defikingdom", "ethereum", "erigon", "evmos", "kava", "klaytn", "optimism", "polygon"]
 
 - name: Add Ethereum service version
   community.general.ini_file:
