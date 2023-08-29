@@ -11,7 +11,6 @@ pinned_service: True
 default_network: kusama
 default_node_type: "validator"
 # default_telemetry_name: "Rotko Networks - {{ host_name.split('.')[0] }} {{ default_node_type | capitalize }}"
-
 # temporary replacement node for ksm01
 default_telemetry_name: "Kusama XI Validator"
 default_pruning: 1000
