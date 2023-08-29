@@ -9,8 +9,8 @@ routers
 [proxmox_nodes:children]
 cumulus
 
-[routers:children]
-routeros
+[routers]
+bkk00
 
 [cumulus]
 pbr13
@@ -22,9 +22,6 @@ wch13
 
 [proxmox_hosts]
 bkk03
-
-[routeros]
-bkk00
 
 [unmanaged]
 
