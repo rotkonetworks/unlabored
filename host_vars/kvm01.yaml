@@ -1,0 +1,9 @@
+---
+ansible_host: "27.131.160.106"
+container_ip: "192.168.69.201"
+ansible_port: "20791"
+host_name: "kvm01.rotko.net"
+host_timezone: "Asia/Bangkok"
+role: "kvm"
+pinned_service: False
+...
