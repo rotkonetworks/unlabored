@@ -1,6 +1,6 @@
 ---
 default_client_version: 1.5.1
-default_download_url: https://github.com/paritytech/encointer/releases/download/v{{ default_client_version }}/encointer-node-notee
+default_download_url: https://github.com/encointer/encointer-node/releases/download/{{ default_client_version }}/encointer-client-notee
 
 default_service: encointer
 default_user: "{{ service_users['encointer'] }}"
