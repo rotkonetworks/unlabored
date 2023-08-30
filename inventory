@@ -51,6 +51,9 @@ bkk03
 bkk04
 
 [unmanaged]
+bkk05
+kvm01
+kvm02
 
 [hardware]
 bkk01
