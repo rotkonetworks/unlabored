@@ -2,12 +2,12 @@ server {
     listen {{ default_p2p_port_wss }} ssl http2;
     listen [::]:{{ default_p2p_port_wss }} ssl http2;
     server_name {{ default_public_dns }};
-    
+
     # SSL/TLS settings
     ssl_certificate /etc/letsencrypt/live/{{ default_public_dns }}/fullchain.pem;
     ssl_certificate_key /etc/letsencrypt/live/{{ default_public_dns }}/privkey.pem;
 
-    # Strong SSL settings
+    # SSL protocols and ciphers
     ssl_protocols TLSv1.3;
     ssl_ciphers 'TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384';
     ssl_prefer_server_ciphers off;
@@ -21,14 +21,7 @@ server {
     resolver 1.1.1.1 1.0.0.1 valid=300s;
     resolver_timeout 5s;
 
-    # Disable any limits to prevent potential DoS attacks
-    client_max_body_size 0;
-    proxy_request_buffering off;
-
-    # Harden the server headers
-    server_tokens off;
-
-
+    # WebSocket Proxying
     location / {
         proxy_pass http://127.0.0.1:{{ default_p2p_port_ws }};
         proxy_http_version 1.1;
@@ -49,7 +42,7 @@ server {
     ssl_certificate /etc/letsencrypt/live/{{ default_public_dns }}/fullchain.pem;
     ssl_certificate_key /etc/letsencrypt/live/{{ default_public_dns }}/privkey.pem;
 
-    # Strong SSL settings
+    # SSL protocols and ciphers
     ssl_protocols TLSv1.3;
     ssl_ciphers 'TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384';
     ssl_prefer_server_ciphers off;
@@ -63,14 +56,7 @@ server {
     resolver 1.1.1.1 1.0.0.1 valid=300s;
     resolver_timeout 5s;
 
-    # Disable any limits to prevent potential DoS attacks
-    client_max_body_size 0;
-    proxy_request_buffering off;
-
-    # Harden the server headers
-    server_tokens off;
-
-
+    # WebSocket Proxying
     location / {
         proxy_pass http://127.0.0.1:{{ default_rpc_port }};
         proxy_http_version 1.1;
@@ -81,3 +67,4 @@ server {
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     }
 }
+

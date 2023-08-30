@@ -26,14 +26,6 @@ server {
     resolver 1.1.1.1 1.0.0.1 valid=300s;
     resolver_timeout 5s;
 
-    # Disable any limits to prevent potential DoS attacks
-    client_max_body_size 0;
-    proxy_request_buffering off;
-
-    # Harden the server headers
-    server_tokens off;
-
-
     location / {
         proxy_pass http://127.0.0.1:{{ default_p2p_port_ws }};
         proxy_http_version 1.1;
@@ -67,14 +59,6 @@ server {
     ssl_stapling_verify on;
     resolver 1.1.1.1 1.0.0.1 valid=300s;
     resolver_timeout 5s;
-
-    # Disable any limits to prevent potential DoS attacks
-    client_max_body_size 0;
-    proxy_request_buffering off;
-
-    # Harden the server headers
-    server_tokens off;
-
 
     location / {
         if ($api_key_valid = 0) {
