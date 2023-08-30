@@ -64,35 +64,6 @@ lxc_nodes:
       - from_port: "{{ hostvars['monitor']['ansible_port'] }}"
         to_host: "{{ hostvars['monitor']['container_ip'] }}:22"
         protocol: "tcp"
-  - host: "dot04"
-    proxmox_config:
-      vmid: "114"
-      hostname: "{{ hostvars['dot04']['host_name'] }}"
-      ostemplate: 'local:vztmpl/{{ default_container_template }}'
-      netif: "{{ hostvars['dot04']['netif'] }}"
-      cores: 4
-      memory: 8192
-      swap: 8192
-      password: "{{ default_password }}"
-      disk: "{{ default_storage }}:20"
-      mounts: '{"mp0":"{{ default_storage }}:500,mp={{ hostvars["dot04"]["default_base_path"] }}"}'
-      onboot: True
-      unprivileged: True
-      validate_certs: False
-      description: "{{ hostvars['dot04']['default_network'] }} {{ hostvars['dot04']['default_node_type'] }}: {{ hostvars['dot04']['host_name'] }}"
-      state: present
-      features:
-        - nesting=1
-    port_forwards:
-      - from_port: "{{ hostvars['dot04']['ansible_port'] }}"
-        to_host: "{{ hostvars['dot04']['container_ip'] }}:22"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['dot04']['default_p2p_port'] }}"
-        to_host: "{{ hostvars['dot04']['container_ip'] }}:{{ hostvars['dot04']['default_p2p_port'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['ksm14']['default_secure_rpc_port'] }}"
-        to_host: "{{ hostvars['ksm14']['container_ip'] }}:{{ hostvars['ksm14']['default_secure_rpc_port'] }}"
-        protocol: "tcp"
   - host: "dot14"
     proxmox_config:
       vmid: "214"
@@ -445,5 +416,81 @@ lxc_nodes:
         protocol: "tcp"
       - from_port: "{{ hostvars['wmint14']['default_p2p_port_wss'] }}"
         to_host: "{{ hostvars['wmint14']['container_ip'] }}:{{ hostvars['wmint14']['default_p2p_port_wss'] }}"
+        protocol: "tcp"
+  - host: "wmint14"
+    proxmox_config:
+      vmid: "534"
+      hostname: "{{ hostvars['wmint14']['host_name'] }}"
+      ostemplate: 'local:vztmpl/{{ default_container_template }}'
+      netif: "{{ hostvars['wmint14']['netif'] }}"
+      cores: 4
+      memory: 8192
+      swap: 8192
+      password: "{{ default_password }}"
+      disk: "{{ default_storage }}:20"
+      mounts: '{"mp0":"{{ default_storage }}:50,mp={{ hostvars["wmint14"]["default_database_path"] }}"}'
+      onboot: True
+      unprivileged: True
+      validate_certs: False
+      description: "{{ hostvars['wmint14']['default_network'] }} {{ hostvars['wmint14']['default_node_type'] }}: {{ hostvars['wmint14']['host_name'] }}"
+      state: present
+      features:
+        - nesting=1
+    port_forwards:
+      - from_port: "{{ hostvars['wmint14']['ansible_port'] }}"
+        to_host: "{{ hostvars['wmint14']['container_ip'] }}:22"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['wmint14']['default_rpc_port'] }}"
+        to_host: "{{ hostvars['wmint14']['container_ip'] }}:{{ hostvars['wmint14']['default_rpc_port'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['wmint14']['default_secure_rpc_port'] }}"
+        to_host: "{{ hostvars['wmint14']['container_ip'] }}:{{ hostvars['wmint14']['default_secure_rpc_port'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['wmint14']['default_p2p_port'] }}"
+        to_host: "{{ hostvars['wmint14']['container_ip'] }}:{{ hostvars['wmint14']['default_p2p_port'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['wmint14']['default_p2p_port_ws'] }}"
+        to_host: "{{ hostvars['wmint14']['container_ip'] }}:{{ hostvars['wmint14']['default_p2p_port_ws'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['wmint14']['default_p2p_port_wss'] }}"
+        to_host: "{{ hostvars['wmint14']['container_ip'] }}:{{ hostvars['wmint14']['default_p2p_port_wss'] }}"
+        protocol: "tcp"
+  - host: "enc14"
+    proxmox_config:
+      vmid: "504"
+      hostname: "{{ hostvars['enc14']['host_name'] }}"
+      ostemplate: 'local:vztmpl/{{ default_container_template }}'
+      netif: "{{ hostvars['enc14']['netif'] }}"
+      cores: 4
+      memory: 8192
+      swap: 8192
+      password: "{{ default_password }}"
+      disk: "{{ default_storage }}:20"
+      mounts: '{"mp0":"{{ default_storage }}:100,mp={{ hostvars["enc14"]["default_database_path"] }}"}'
+      onboot: True
+      unprivileged: True
+      validate_certs: False
+      description: "{{ hostvars['enc14']['default_network'] }} {{ hostvars['enc14']['default_node_type'] }}: {{ hostvars['enc14']['host_name'] }}"
+      state: present
+      features:
+        - nesting=1
+    port_forwards:
+      - from_port: "{{ hostvars['enc14']['ansible_port'] }}"
+        to_host: "{{ hostvars['enc14']['container_ip'] }}:22"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['enc14']['default_rpc_port'] }}"
+        to_host: "{{ hostvars['enc14']['container_ip'] }}:{{ hostvars['enc14']['default_rpc_port'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['enc14']['default_secure_rpc_port'] }}"
+        to_host: "{{ hostvars['enc14']['container_ip'] }}:{{ hostvars['enc14']['default_secure_rpc_port'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['enc14']['default_p2p_port'] }}"
+        to_host: "{{ hostvars['enc14']['container_ip'] }}:{{ hostvars['enc14']['default_p2p_port'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['enc14']['default_p2p_port_ws'] }}"
+        to_host: "{{ hostvars['enc14']['container_ip'] }}:{{ hostvars['enc14']['default_p2p_port_ws'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['enc14']['default_p2p_port_wss'] }}"
+        to_host: "{{ hostvars['enc14']['container_ip'] }}:{{ hostvars['enc14']['default_p2p_port_wss'] }}"
         protocol: "tcp"
 ...
