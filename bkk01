@@ -6,14 +6,11 @@ proxmox_hosts
 proxmox_nodes
 routers
 
-[proxmox_nodes:children]
-blockchain_clients
-
-[blockchain_clients:children]
+[proxmox_nodes]
 polkadot
 
-[routers:children]
-routeros
+[routers]
+bkk00
 
 [polkadot]
 ksm01
@@ -21,9 +18,6 @@ dot01
 
 [proxmox_hosts]
 bkk01
-
-[routeros]
-bkk00
 
 [unmanaged]
 
