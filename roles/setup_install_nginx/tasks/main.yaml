@@ -44,22 +44,30 @@
     - sites-available
     - sites-enabled
 
-- name: Generate Pre-Shared Key (PSK)
+- name: Check if PSK already exists
+  ansible.builtin.stat:
+    path: "/etc/nginx/psk.txt"
+  register: psk_stat
+
+- name: Generate Pre-Shared Key (PSK) if not existing
   ansible.builtin.command:
     cmd: openssl rand -base64 32
   register: psk_output
   changed_when: False
+  when: psk_stat.exists == False
 
-- name: Store PSK in a fact
+- name: Store PSK in a fact if newly generated
   ansible.builtin.set_fact:
     default_nginx_psk: "{{ psk_output.stdout }}"
+  when: psk_stat.exists == False
 
-- name: Store PSK in a secure file
+- name: Store PSK in a secure file if newly generated
   ansible.builtin.copy:
     content: "{{ default_nginx_psk }}"
     dest: "/etc/nginx/psk.txt"
     mode: '0600'
   no_log: True
+  when: psk_stat.exists == False
 
 - name: Apply HTTPS configuration to NGINX
   ansible.builtin.template:
