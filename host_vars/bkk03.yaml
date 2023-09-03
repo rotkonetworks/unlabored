@@ -68,7 +68,7 @@ lxc_nodes:
       swap: 8192
       password: "{{ default_password }}"
       disk: "{{ default_storage }}:20"
-      mounts: '{"mp0":"{{ default_storage }}:1500,mp={{ hostvars["ksm23"]["default_base_path"] }}"}'
+      mounts: '{"mp0":"{{ default_storage }}:2500,mp={{ hostvars["ksm23"]["default_base_path"] }}"}'
       onboot: True
       unprivileged: True
       validate_certs: False
@@ -272,44 +272,6 @@ lxc_nodes:
         protocol: "tcp"
       - from_port: "{{ hostvars['pch13']['default_p2p_port_wss'] }}"
         to_host: "{{ hostvars['pch13']['container_ip'] }}:{{ hostvars['pch13']['default_p2p_port_wss'] }}"
-        protocol: "tcp"
-  - host: "kch13"
-    proxmox_config:
-      vmid: "583"
-      hostname: "{{ hostvars['kch13']['host_name'] }}"
-      ostemplate: 'local:vztmpl/{{ default_container_template }}'
-      netif: "{{ hostvars['kch13']['netif'] }}"
-      cores: 4
-      memory: 8192
-      swap: 8192
-      password: "{{ default_password }}"
-      disk: "{{ default_storage }}:20"
-      mounts: '{"mp0":"{{ default_storage }}:150,mp={{ hostvars["kch13"]["default_database_path"] }}"}'
-      onboot: True
-      unprivileged: True
-      validate_certs: False
-      description: "{{ hostvars['kch13']['default_network'] }} {{ hostvars['kch13']['default_node_type'] }}: {{ hostvars['kch13']['host_name'] }}"
-      state: present
-      features:
-        - nesting=1
-    port_forwards:
-      - from_port: "{{ hostvars['kch13']['ansible_port'] }}"
-        to_host: "{{ hostvars['kch13']['container_ip'] }}:22"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['kch13']['default_rpc_port'] }}"
-        to_host: "{{ hostvars['kch13']['container_ip'] }}:{{ hostvars['kch13']['default_rpc_port'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['kch13']['default_secure_rpc_port'] }}"
-        to_host: "{{ hostvars['kch13']['container_ip'] }}:{{ hostvars['kch13']['default_secure_rpc_port'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['kch13']['default_p2p_port'] }}"
-        to_host: "{{ hostvars['kch13']['container_ip'] }}:{{ hostvars['kch13']['default_p2p_port'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['kch13']['default_p2p_port_ws'] }}"
-        to_host: "{{ hostvars['kch13']['container_ip'] }}:{{ hostvars['kch13']['default_p2p_port_ws'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['kch13']['default_p2p_port_wss'] }}"
-        to_host: "{{ hostvars['kch13']['container_ip'] }}:{{ hostvars['kch13']['default_p2p_port_wss'] }}"
         protocol: "tcp"
   - host: "wch13"
     proxmox_config:
