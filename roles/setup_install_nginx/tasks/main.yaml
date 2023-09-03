@@ -81,4 +81,9 @@
     dest: "/etc/nginx/streams-enabled/{{ default_public_dns }}"
     state: link
   notify: Reload nginx
+
+- name: Include loadbalancer tasks for endpoints
+  include_role:
+    name: loadbalancer
+  when: default_node_type == 'endpoint'
 ...
