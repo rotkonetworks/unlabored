@@ -41,8 +41,8 @@
     state: directory
     mode: '0755'
   loop:
-    - sites-available
-    - sites-enabled
+    - streams-available
+    - streams-enabled
 
 - name: Check if PSK already exists
   ansible.builtin.stat:
@@ -72,13 +72,13 @@
 - name: Apply HTTPS configuration to NGINX
   ansible.builtin.template:
     src: https-{{ default_node_type }}.j2
-    dest: "/etc/nginx/sites-available/{{ default_public_dns }}"
+    dest: "/etc/nginx/streams-available/{{ default_public_dns }}"
     mode: '0755'
 
 - name: Enable HTTPS configuration for NGINX
   ansible.builtin.file:
-    src: "/etc/nginx/sites-available/{{ default_public_dns }}"
-    dest: "/etc/nginx/sites-enabled/{{ default_public_dns }}"
+    src: "/etc/nginx/streams-available/{{ default_public_dns }}"
+    dest: "/etc/nginx/streams-enabled/{{ default_public_dns }}"
     state: link
   notify: Reload nginx
 ...
