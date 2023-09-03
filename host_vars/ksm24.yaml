@@ -10,6 +10,7 @@ pinned_service: True
 
 default_telemetry_name: "Rotko Networks - {{ host_name.split('.')[0] }} {{ default_node_type | capitalize }}"
 default_public_dns: "{{ host_name }}"
+default_public_dns_lb: "kusama.rotko.net"
 default_network: kusama
 default_node_type: "endpoint"
 default_pruning: "archive"
