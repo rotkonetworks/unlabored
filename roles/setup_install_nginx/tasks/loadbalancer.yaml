@@ -9,6 +9,12 @@
     primary_node: "{{ lb_groups[default_public_dns_lb] | sort | first }}"
   run_once: true
 
+- name: Debug lb_groups and primary_node
+  debug:
+    msg: 
+      - "lb_groups: {{ lb_groups }}"
+      - "primary_node: {{ primary_node }}"
+
 - name: Obtain certificate for loadbalancer using DNS-01 challenge (Only on the primary node)
   ansible.builtin.command:
     cmd: >
@@ -41,19 +47,19 @@
     state: directory
     mode: '0755'
   loop:
-    - streams-available
-    - streams-enabled
+    - sites-available
+    - sites-enabled
 
 - name: Apply HTTPS configuration to NGINX
   ansible.builtin.template:
     src: https-{{ default_node_type }}-lb.j2
-    dest: "/etc/nginx/streams-available/{{ default_public_dns_lb }}"
+    dest: "/etc/nginx/sites-available/{{ default_public_dns_lb }}"
     mode: '0755'
 
 - name: Enable HTTPS configuration for NGINX
   ansible.builtin.file:
-    src: "/etc/nginx/streams-available/{{ default_public_dns_lb }}"
-    dest: "/etc/nginx/streams-enabled/{{ default_public_dns_lb }}"
+    src: "/etc/nginx/sites-available/{{ default_public_dns_lb }}"
+    dest: "/etc/nginx/sites-enabled/{{ default_public_dns_lb }}"
     state: link
   notify: Reload nginx
 ...

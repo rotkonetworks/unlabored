@@ -41,49 +41,65 @@
     state: directory
     mode: '0755'
   loop:
-    - streams-available
-    - streams-enabled
+    - sites-available
+    - sites-enabled
 
 - name: Check if PSK already exists
   ansible.builtin.stat:
     path: "/etc/nginx/psk.txt"
   register: psk_stat
+  no_log: True
 
 - name: Generate Pre-Shared Key (PSK) if not existing
   ansible.builtin.command:
     cmd: openssl rand -base64 32
   register: psk_output
   changed_when: False
-  when: psk_stat.exists == False
+  when: not psk_stat.stat.exists
+  no_log: True
 
 - name: Store PSK in a fact if newly generated
   ansible.builtin.set_fact:
     default_nginx_psk: "{{ psk_output.stdout }}"
-  when: psk_stat.exists == False
+  when: not psk_stat.stat.exists
+  no_log: True
 
+    # TODO: use vault instead of txt files
 - name: Store PSK in a secure file if newly generated
   ansible.builtin.copy:
     content: "{{ default_nginx_psk }}"
     dest: "/etc/nginx/psk.txt"
     mode: '0600'
   no_log: True
-  when: psk_stat.exists == False
+  when: not psk_stat.stat.exists
+
+- name: Get PSK from file
+  ansible.builtin.slurp:
+    src: "/etc/nginx/psk.txt"
+  register: psk_slurp
+  no_log: True
+  when: psk_stat.stat.exists
+
+- name: Store existing PSK in a fact
+  ansible.builtin.set_fact:
+    default_nginx_psk: "{{ psk_slurp.content | b64decode }}"
+  when: psk_stat.stat.exists
+  no_log: True
 
 - name: Apply HTTPS configuration to NGINX
   ansible.builtin.template:
     src: https-{{ default_node_type }}.j2
-    dest: "/etc/nginx/streams-available/{{ default_public_dns }}"
+    dest: "/etc/nginx/sites-available/{{ default_public_dns }}"
     mode: '0755'
 
 - name: Enable HTTPS configuration for NGINX
   ansible.builtin.file:
-    src: "/etc/nginx/streams-available/{{ default_public_dns }}"
-    dest: "/etc/nginx/streams-enabled/{{ default_public_dns }}"
+    src: "/etc/nginx/sites-available/{{ default_public_dns }}"
+    dest: "/etc/nginx/sites-enabled/{{ default_public_dns }}"
     state: link
   notify: Reload nginx
 
 - name: Include loadbalancer tasks for endpoints
-  include_role:
-    name: loadbalancer
+  import_tasks: loadbalancer.yaml
   when: default_node_type == 'endpoint'
 ...
