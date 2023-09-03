@@ -23,7 +23,6 @@ server {
 
     # WebSocket Proxying
     location / {
-        limit_req zone=zone burst=5;
         proxy_buffers 16 4k;
         proxy_buffer_size 2k;
         proxy_pass http://127.0.0.1:{{ default_p2p_port_ws }};
@@ -61,7 +60,6 @@ server {
 
     # WebSocket Proxying
     location / {
-        limit_req zone=zone burst=5;
         proxy_buffers 16 4k;
         proxy_buffer_size 2k;
         proxy_pass http://127.0.0.1:{{ default_rpc_port }};

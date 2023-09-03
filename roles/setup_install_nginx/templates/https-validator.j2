@@ -3,7 +3,6 @@ map $http_x_api_key $api_key_valid {
     "{{ default_nginx_psk }}" 1;
 }
 
-limit_req_zone  "$http_x_forwarded_for" zone=zone:10m rate=2r/s;
 
 server {
     listen {{ default_p2p_port_wss }} ssl http2;
@@ -68,7 +67,6 @@ server {
         if ($api_key_valid = 0) {
             return 401;
         }
-        limit_req zone=zone burst=5;
         proxy_pass http://127.0.0.1:{{ default_rpc_port }};
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
