@@ -1,0 +1,29 @@
+stream {
+	map $ssl_preread_server_name $name_backend {
+	    polkadot.rotko.net polkadot_backend;
+	    kusama.rotko.net   kusama_backend;
+	    westend.rotko.net  westend_backend;
+	}
+
+	upstream polkadot_backend {
+	    server 192.168.69.13:42313;
+	    server 192.168.69.14:42314;
+	}
+
+	upstream kusama_backend {
+	    server 192.168.69.23:42323;
+	    server 192.168.69.24:42324;
+	}
+
+	upstream westend_backend {
+	    server 192.168.69.33:42333;
+	    server 192.168.69.34:42334;
+	}
+
+	server {
+	    listen 443;
+	    proxy_pass $name_backend;
+	    ssl_preread on;
+
+	}
+}

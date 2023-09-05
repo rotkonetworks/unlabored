@@ -64,7 +64,7 @@
   when: not psk_stat.stat.exists
   no_log: True
 
-    # TODO: use vault instead of txt files
+# TODO: use vault instead of txt files
 - name: Store PSK in a secure file if newly generated
   ansible.builtin.copy:
     content: "{{ default_nginx_psk }}"
@@ -100,6 +100,6 @@
   notify: Reload nginx
 
 - name: Include loadbalancer tasks for endpoints
-  import_tasks: loadbalancer.yaml
+  ansible.builtin.import_tasks: loadbalancer.yaml
   when: default_node_type == 'endpoint'
 ...

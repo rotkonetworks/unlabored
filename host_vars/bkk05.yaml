@@ -1,7 +1,7 @@
 ---
-ansible_host: "27.131.160.107"
+ansible_host: "27.131.160.106"
 container_ip: "192.168.69.105"
-ansible_port: "22"
+ansible_port: "20785"
 host_name: "bkk05.rotko.net"
 host_timezone: "Asia/Bangkok"
 role: "webserver"

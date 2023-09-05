@@ -1,21 +1,24 @@
 ---
-- name: Group nodes by default_public_dns_lb
-  set_fact:
-    lb_groups: "{{ groups['all'] | lb_grouping(hostvars) }}"
-  run_once: true
+# Store the grouping of domains to respective hosts
+- name: Set domain groups based on public DNS LB
+  ansible.builtin.set_fact:
+    # Filter plugin to group hosts by same load balancer domain value
+    domain_groups: "{{ hostvars | group_by_domain }}"
 
-- name: Determine primary node for LB group
-  set_fact:
-    primary_node: "{{ lb_groups[default_public_dns_lb] | sort | first }}"
-  run_once: true
+# Generate the stream configs
+- name: Generate stream configurations from domain groups and host variables
+  ansible.builtin.set_fact:
+    # Filter plugin to generate nginx config for bypassing load balancer
+    stream_configs: "{{ hostvars | generate_stream_configs(domain_groups) }}"
 
-- name: Debug lb_groups and primary_node
-  debug:
-    msg: 
-      - "lb_groups: {{ lb_groups }}"
-      - "primary_node: {{ primary_node }}"
+# Debug generated stream configurations
+# TODO: add stream-bypass-lb into server running loadbalancer
+- name: Debug what would be in the template
+  ansible.builtin.debug:
+    msg: "{{ lookup('template', 'stream-bypass-lb.j2') }}"
 
-- name: Obtain certificate for loadbalancer using DNS-01 challenge (Only on the primary node)
+# Obtain certificate only on the primary node for each domain
+- name: Obtain certificate for loadbalancer using DNS-01 challenge
   ansible.builtin.command:
     cmd: >
       certbot certonly --non-interactive --agree-tos --email "{{ default_certificate_email }}"
@@ -26,21 +29,11 @@
       -d "{{ default_public_dns_lb }}"
   register: certbot_lb_result
   changed_when: "'Congratulations' in certbot_lb_result.stdout"
-  when: 
+  when:
     - default_node_type == 'endpoint'
-    - inventory_hostname == primary_node
+    - inventory_hostname == domain_groups[default_public_dns_lb][0]
 
-- name: Synchronize certificates to other nodes in the LB group (Only on the primary node)
-  ansible.builtin.synchronize:
-    src: /etc/letsencrypt/live/{{ default_public_dns_lb }}/
-    dest: /etc/letsencrypt/live/{{ default_public_dns_lb }}/
-    delegate_to: "{{ item }}"
-  loop: "{{ lb_groups[default_public_dns_lb] | list }}"
-  when: 
-    - default_node_type == 'endpoint'
-    - inventory_hostname == primary_node
-    - item != primary_node
-
+# Setup NGINX configuration directories
 - name: Ensure NGINX configuration directories exist
   ansible.builtin.file:
     path: "/etc/nginx/{{ item }}"
@@ -50,16 +43,106 @@
     - sites-available
     - sites-enabled
 
+# Configure NGINX for HTTPS
 - name: Apply HTTPS configuration to NGINX
   ansible.builtin.template:
     src: https-{{ default_node_type }}-lb.j2
     dest: "/etc/nginx/sites-available/{{ default_public_dns_lb }}"
     mode: '0755'
 
+# Enable the HTTPS configuration in NGINX
 - name: Enable HTTPS configuration for NGINX
   ansible.builtin.file:
     src: "/etc/nginx/sites-available/{{ default_public_dns_lb }}"
     dest: "/etc/nginx/sites-enabled/{{ default_public_dns_lb }}"
     state: link
+  notify: Reload nginx
+
+# Archive certificate directory on the primary node
+- name: Archive certificate directory on primary node
+  ansible.builtin.archive:
+    path: "/etc/letsencrypt/archive/{{ default_public_dns_lb }}"
+    dest: "/tmp/{{ default_public_dns_lb }}.tar.gz"
+    format: gz
+  when:
+    - default_node_type == 'endpoint'
+    - inventory_hostname == domain_groups[default_public_dns_lb][0]
+
+# Fetch the certificate archive from the primary node
+- name: Fetch the certificate archive from primary node
+  ansible.builtin.fetch:
+    src: "/tmp/{{ default_public_dns_lb }}.tar.gz"
+    dest: "/tmp/"
+    flat: True
+  when:
+    - default_node_type == 'endpoint'
+    - inventory_hostname == domain_groups[default_public_dns_lb][0]
+
+# Copy the archive to secondary nodes
+- name: Copy certificate archive to secondary nodes
+  ansible.builtin.copy:
+    src: "/tmp/{{ default_public_dns_lb }}.tar.gz"
+    dest: "/tmp/"
+  when:
+    - default_node_type == 'endpoint'
+    - inventory_hostname != domain_groups[default_public_dns_lb][0]
+
+# Ensure certificate directory exists on secondary nodes
+- name: Ensure certificate directory exists on secondary nodes
+  ansible.builtin.file:
+    path: "/etc/letsencrypt/archive/{{ default_public_dns_lb }}"
+    state: directory
+    mode: '0755'
+  when:
+    - default_node_type == 'endpoint'
+    - inventory_hostname != domain_groups[default_public_dns_lb][0]
+
+# Extract the archive on the secondary nodes
+- name: Extract certificate archive on secondary nodes
+  ansible.builtin.unarchive:
+    src: "/tmp/{{ default_public_dns_lb }}.tar.gz"
+    dest: "/etc/letsencrypt/archive/{{ default_public_dns_lb }}/"
+    extra_opts: [--strip-components=1]
+  when:
+    - default_node_type == 'endpoint'
+    - inventory_hostname != domain_groups[default_public_dns_lb][0]
+
+# Get the latest certificate files based on file timestamp
+- name: Identify latest certificate files
+  ansible.builtin.find:
+    paths: "/etc/letsencrypt/archive/{{ default_public_dns_lb }}"
+    patterns:
+      - "cert*.pem"
+      - "chain*.pem"
+      - "fullchain*.pem"
+      - "privkey*.pem"
+    recurse: False
+    age: "-60d"
+    file_type: file
+  register: latest_cert_files
+  when:
+    - default_node_type == 'endpoint'
+    - inventory_hostname != domain_groups[default_public_dns_lb][0]
+
+# Ensure existance of directory for live certificates
+- name: Ensure live certificate directory exists
+  ansible.builtin.file:
+    path: "/etc/letsencrypt/live/{{ default_public_dns_lb }}"
+    state: directory
+    mode: '0755'
+  when:
+    - default_node_type == 'endpoint'
+    - inventory_hostname != domain_groups[default_public_dns_lb][0]
+
+# Ensure symbolic links in the live directory based on the latest files
+- name: Create symbolic links for latest certificate files
+  ansible.builtin.file:
+    src: '/etc/letsencrypt/archive/{{ default_public_dns_lb }}/{{ item.path | basename }}'
+    dest: '/etc/letsencrypt/live/{{ default_public_dns_lb }}/{{ item.path | basename | regex_replace(''\d+'', '''') }}'
+    state: link
+  loop: "{{ latest_cert_files.files }}"
+  when:
+    - default_node_type == 'endpoint'
+    - inventory_hostname != domain_groups[default_public_dns_lb][0]
   notify: Reload nginx
 ...

@@ -1,0 +1,22 @@
+stream {
+
+    map $ssl_preread_server_name $name_backend {
+    {% for config in stream_configs %}
+        {{ config.domain }} {{ config.domain | replace('.', '_') }}_backend;
+    {% endfor %}
+    }
+
+    {% for config in stream_configs %}
+    upstream {{ config.domain | replace('.', '_') }}_backend {
+    {% for backend in config.backends %}
+        server {{ backend }};
+    {% endfor %}
+    }
+    {% endfor %}
+
+    server {
+        listen 443;
+        proxy_pass $name_backend;
+        ssl_preread on;
+    }
+}
