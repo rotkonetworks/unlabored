@@ -60,9 +60,10 @@
 
 # Archive certificate directory on the primary node
 - name: Archive certificate directory on primary node
-  ansible.builtin.archive:
+  community.general.archive:
     path: "/etc/letsencrypt/archive/{{ default_public_dns_lb }}"
     dest: "/tmp/{{ default_public_dns_lb }}.tar.gz"
+    mode: '0600'
     format: gz
   when:
     - default_node_type == 'endpoint'
@@ -73,6 +74,7 @@
   ansible.builtin.fetch:
     src: "/tmp/{{ default_public_dns_lb }}.tar.gz"
     dest: "/tmp/"
+    mode: '0600'
     flat: True
   when:
     - default_node_type == 'endpoint'
@@ -83,6 +85,7 @@
   ansible.builtin.copy:
     src: "/tmp/{{ default_public_dns_lb }}.tar.gz"
     dest: "/tmp/"
+    mode: '0600'
   when:
     - default_node_type == 'endpoint'
     - inventory_hostname != domain_groups[default_public_dns_lb][0]
@@ -92,7 +95,7 @@
   ansible.builtin.file:
     path: "/etc/letsencrypt/archive/{{ default_public_dns_lb }}"
     state: directory
-    mode: '0755'
+    mode: '0700'
   when:
     - default_node_type == 'endpoint'
     - inventory_hostname != domain_groups[default_public_dns_lb][0]
@@ -129,7 +132,7 @@
   ansible.builtin.file:
     path: "/etc/letsencrypt/live/{{ default_public_dns_lb }}"
     state: directory
-    mode: '0755'
+    mode: '0700'
   when:
     - default_node_type == 'endpoint'
     - inventory_hostname != domain_groups[default_public_dns_lb][0]
