@@ -1,6 +1,6 @@
 ---
-default_client_version: 1.5.1
-default_download_url: https://github.com/encointer/encointer-node/releases/download/{{ default_client_version }}/encointer-client-notee
+default_client_version: 1.5.0
+default_download_url: https://github.com/encointer/encointer-parachain/releases/download/{{ default_client_version }}/encointer-collator
 
 default_service: encointer
 default_user: "{{ service_users['encointer'] }}"
