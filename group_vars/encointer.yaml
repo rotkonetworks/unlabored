@@ -8,7 +8,7 @@ default_group: "{{ service_users['encointer'] }}"
 default_base_path: /opt/encointer
 default_database_path: "/opt/encointer/chains"
 default_log_level: info
-default_network: encointer
+default_network: "encointer-kusama"
 default_node_type: bootnode  # collator, bootnode, endpoint
 default_database: paritydb
 default_telemetry_url: "wss://telemetry-backend.w3f.community/submit/ 1"
