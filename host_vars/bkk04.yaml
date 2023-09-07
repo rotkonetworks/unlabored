@@ -24,7 +24,7 @@ lxc_nodes:
     proxmox_config:
       vmid: "999"
       hostname: "{{ hostvars['ansible']['host_name'] }}"
-      ostemplate: 'local:vztmpl/{{ default_container_template }}'
+      ostemplate: "local:vztmpl/{{ hostvars['ansible']['default_container_template'] }}"
       netif: "{{ hostvars['ansible']['netif'] }}"
       cores: 1
       memory: 256
@@ -41,6 +41,31 @@ lxc_nodes:
     port_forwards:
       - from_port: "{{ hostvars['ansible']['ansible_port'] }}"
         to_host: "{{ hostvars['ansible']['container_ip'] }}:22"
+        protocol: "tcp"
+  - host: "matrix"
+    proxmox_config:
+      vmid: "969"
+      hostname: "{{ hostvars['matrix']['host_name'] }}"
+      ostemplate: 'local:vztmpl/{{ default_container_template }}'
+      netif: "{{ hostvars['matrix']['netif'] }}"
+      cores: 2
+      memory: 512
+      swap: 512
+      password: "{{ default_password }}"
+      disk: "{{ default_storage }}:20"
+      onboot: True
+      unprivileged: True
+      validate_certs: False
+      description: "conduit server for matrix"
+      state: present
+      features:
+        - nesting=1
+    port_forwards:
+      - from_port: "{{ hostvars['matrix']['ansible_port'] }}"
+        to_host: "{{ hostvars['matrix']['container_ip'] }}:22"
+        protocol: "tcp"
+      - from_port: "8448"
+        to_host: "{{ hostvars['matrix']['container_ip'] }}:8448"
         protocol: "tcp"
   - host: "monitor"
     proxmox_config:

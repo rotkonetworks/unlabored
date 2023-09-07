@@ -13,6 +13,7 @@ polkadot
 
 [proxmox_nodes]
 ansible
+matrix
 monitor
 
 [routers]
