@@ -14,7 +14,7 @@ ExecStart={{ default_base_path }}/cumulus \
   --state-pruning 256 \
   --log sync=warn,afg=warn,babe=warn \
   --telemetry-url 'wss://telemetry-backend.w3f.community/submit 1' \
-  --telemetry-url 'wss://telemetry.cumulus.io/submit/ 1' \
+  --telemetry-url 'wss://telemetry.polkadot.io/submit/ 1' \
   --listen-addr /ip4/0.0.0.0/tcp/{{ default_p2p_port }} \
   --listen-addr /ip4/0.0.0.0/tcp/{{ default_p2p_port_ws }}/ws \
   --public-addr /dns/{{ default_public_dns }}/tcp/{{ default_p2p_port }} \
