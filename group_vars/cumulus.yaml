@@ -9,7 +9,7 @@ default_base_path: /opt/cumulus
 default_storage: "{{ default_base_path }}/chains"
 default_database_path: "{{ default_base_path }}/chains"
 default_log_level: info
-default_network: statemine
+default_network: asset-hub-polkadot
 default_node_type: bootnode  # collator, bootnode, endpoint
 default_database: paritydb
 default_telemetry_url: "wss://telemetry-backend.w3f.community/submit/ 1"
