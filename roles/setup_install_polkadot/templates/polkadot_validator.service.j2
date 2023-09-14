@@ -24,9 +24,9 @@ ExecStart={{ default_base_path }}/polkadot \
      --port {{ default_p2p_port }} \
      --rpc-port {{ default_rpc_port }} \
      --prometheus-port {{ default_prom_port }} \
-     --execution wasm \
      --wasm-execution compiled \
      --pruning 1000 \
+     --workers-path {{ default_auxiliary_binary_path }} \
      --db-cache {{ ansible_memtotal_mb // 2 }}
 
 [Install]

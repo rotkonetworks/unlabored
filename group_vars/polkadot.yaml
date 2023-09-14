@@ -1,6 +1,9 @@
 ---
-default_client_version: 1.0.0
-default_download_url: https://github.com/paritytech/polkadot/releases/download/v{{ default_client_version }}/polkadot
+default_client_version: 1.1.0
+default_download_url: https://github.com/paritytech/polkadot-sdk/releases/download/polkadot-v{{ default_client_version }}/polkadot
+default_download_url_prepare: https://github.com/paritytech/polkadot-sdk/releases/download/polkadot-v{{ default_client_version }}/polkadot-prepare-worker
+default_download_url_execute: https://github.com/paritytech/polkadot-sdk/releases/download/polkadot-v{{ default_client_version }}/polkadot-execute-worker
+default_auxiliary_binary_path: /usr/libexec
 
 default_service: polkadot
 default_user: "{{ service_users['polkadot'] }}"

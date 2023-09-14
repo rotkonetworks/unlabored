@@ -50,6 +50,30 @@
 - name: Flush handlers after Polkadot service copy
   ansible.builtin.meta: flush_handlers
 
+- name: Install worker binaries v{{ default_client_version }}
+  when:
+    - ansible_local['noderole']['node']['pinned'] != "True"
+    - ansible_local['noderole']['node']['version'] != default_client_version
+    - ansible_local['noderole']['node']['type'] == "validator"
+  block:
+    - name: Install prepare worker binary v{{ default_client_version }}
+      ansible.builtin.get_url:
+        url: "{{ default_download_url_prepare }}"
+        dest: "{{ default_auxiliary_binary_path }}/polkadot-prepare-worker"
+        mode: "u+r+x"
+        owner: "{{ default_user }}"
+        group: "{{ default_user }}"
+      register: download_result_prepare_worker
+
+    - name: Install execute worker binary v{{ default_client_version }}
+      ansible.builtin.get_url:
+        url: "{{ default_download_url_execute }}"
+        dest: "{{ default_auxiliary_binary_path }}/polkadot-execute-worker"
+        mode: "u+r+x"
+        owner: "{{ default_user }}"
+        group: "{{ default_user }}"
+      register: download_result_execute_worker
+
 - name: Install Polkadot v{{ default_client_version }}
   ansible.builtin.get_url:
     url: "{{ default_download_url }}"
