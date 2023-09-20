@@ -1,14 +1,19 @@
 ---
 dependencies:
+  - role: setup_install_rust
   - role: setup_install_tendermint
 
 galaxy_info:
-  author: Rotko Networks
-  description: Role to set up Penumbra
-  company: Rotko Networks
+  author: Rotko Networks <hq@rotko.net>
+  description: Secure and methodical setup of Penumbra using best practices.
+  company: Rotko Networks Ltd
   license: MIT
   min_ansible_version: 2.9
   platforms:
+    - name: Ubuntu
+      versions:
+        - bionic
+        - focal
     - name: Debian
       versions:
         - bookworm
@@ -17,4 +22,6 @@ galaxy_info:
     - penumbra
     - setup
     - installation
-
+    - security
+    - rust
+    - tendermint
