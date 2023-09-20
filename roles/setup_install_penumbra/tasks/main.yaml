@@ -1,0 +1,72 @@
+---
+- name: Update APT cache and install prerequisites
+  block:
+    - name: Update APT cache
+      ansible.builtin.apt:
+        update_cache: yes
+      become: yes
+
+    - name: Install build prerequisites
+      ansible.builtin.apt:
+        name:
+          - build-essential
+          - pkg-config
+          - libssl-dev
+          - clang
+          - git-lfs
+        state: present
+      become: yes
+
+  rescue:
+    - name: Log error
+      ansible.builtin.debug:
+        msg: "Error occurred during APT operations"
+
+- name: Ensure git-lfs is correctly installed
+  ansible.builtin.command:
+    cmd: git lfs install
+    warn: no
+
+- name: Clone the penumbra repository
+  ansible.builtin.git:
+    repo: '{{ penumbra_git_repo }}'
+    dest: '{{ penumbra_dest_dir }}'
+    version: '{{ penumbra_version }}'
+    clone: yes
+    update: yes
+
+- name: Build software
+  block:
+    - name: Build pcli client software
+      ansible.builtin.shell:
+        cmd: |
+          pushd {{ penumbra_dest_dir }}
+          cargo build --release --bin pcli
+          popd
+      register: build_output
+      changed_when: '"Compiling" in build_output.stdout'
+
+    - name: Display pcli build output (if there's any change)
+      ansible.builtin.debug:
+        var: build_output.stdout_lines
+      when: build_output.changed
+
+    - name: Build pd node software
+      ansible.builtin.shell:
+        cmd: |
+          pushd {{ penumbra_dest_dir }}
+          cargo build --release --bin pd
+          popd
+      register: build_pd_output
+      changed_when: '"Compiling" in build_pd_output.stdout'
+
+    - name: Display pd build output (if there's any change)
+      ansible.builtin.debug:
+        var: build_pd_output.stdout_lines
+      when: build_pd_output.changed
+
+  rescue:
+    - name: Log build errors
+      ansible.builtin.debug:
+        msg: "Error occurred during software build"
+...

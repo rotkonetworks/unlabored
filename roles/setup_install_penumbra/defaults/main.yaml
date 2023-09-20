@@ -1,0 +1,4 @@
+---
+penumbra_version: v0.60.0
+penumbra_git_repo: https://github.com/penumbra-zone/penumbra
+penumbra_base_dir: /opt/penumbra

@@ -1,0 +1,20 @@
+---
+dependencies:
+  - role: setup_install_tendermint
+
+galaxy_info:
+  author: Rotko Networks
+  description: Role to set up Penumbra
+  company: Rotko Networks
+  license: MIT
+  min_ansible_version: 2.9
+  platforms:
+    - name: Debian
+      versions:
+        - bookworm
+        - bullseye
+  galaxy_tags:
+    - penumbra
+    - setup
+    - installation
+
