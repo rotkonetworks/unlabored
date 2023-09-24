@@ -1,0 +1,14 @@
+stream {
+    upstream backend {
+        least_time first_byte; # Load balancing using the least_time method
+        server {{ default_endpoint_dns_1 }}:{{ default_endpoint_dns_1_port }};
+        server {{ default_endpoint_dns_2 }}:{{ default_endpoint_dns_2_port }};
+    }
+
+    server {
+        listen 443;
+        listen [::]:443;
+        proxy_pass backend;
+        proxy_protocol on;
+    }
+}
