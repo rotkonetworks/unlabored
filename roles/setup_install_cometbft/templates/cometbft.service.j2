@@ -1,0 +1,15 @@
+[Unit]
+Description=CometBFT systemd service
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+User={{ cometbft_user }}
+WorkingDirectory={{ cometbft_home_path }}
+ExecStart={{ cometbft_home_path }}/go/bin/cometbft node --proxy_app=kvstore
+ExecStop=kill -9 $MAINPID
+Restart=always
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target

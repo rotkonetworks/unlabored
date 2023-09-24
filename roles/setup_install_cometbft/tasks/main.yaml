@@ -1,0 +1,98 @@
+---
+- name: Ensure group and user exist for {{ cometbft_user }}
+  block:
+    - name: Ensure group exists {{ cometbft_user }}
+      ansible.builtin.group:
+        name: "{{ cometbft_user }}"
+        state: present
+        system: True
+
+    - name: Ensure user exists {{ cometbft_user }}
+      ansible.builtin.user:
+        append: True
+        comment: CometBFT service user
+        create_home: True
+        group: "{{ cometbft_user }}"
+        groups: sudo
+        home: "{{ cometbft_home_path }}"
+        name: "{{ cometbft_user }}"
+        shell: "{{ default_shell }}"
+        state: present
+        system: True
+
+- name: Update .profile for Go env
+  ansible.builtin.blockinfile:
+    path: "{{ cometbft_home_path }}/.profile"
+    owner: "{{ cometbft_user }}"
+    group: "{{ cometbft_user }}"
+    create: True
+    mode: '0644'
+    block: |
+      GOPATH="$HOME/go"
+      PATH="$GOPATH/bin:$PATH"
+      PATH="$PATH:/usr/local/go/bin"
+
+- name: Ensure cometbft base directory exists
+  ansible.builtin.file:
+    path: "{{ item }}"
+    owner: "{{ cometbft_user }}"
+    group: "{{ cometbft_user }}"
+    mode: '0755'
+    state: directory
+  loop:
+    - "{{ cometbft_config_path }}"
+    - "{{ cometbft_home_path }}"
+    - "{{ cometbft_log_path }}"
+    - "{{ cometbft_src_path }}"
+    - "{{ cometbft_storage_path }}"
+
+- name: Acquire cometbft source
+  ansible.builtin.git:
+    repo: "https://github.com/cometbft/cometbft.git"
+    dest: "{{ cometbft_src_path }}"
+    depth: 1
+    force: True
+    clone: True
+  become: True
+  become_user: "{{ cometbft_user }}"
+
+- name: Compile and Install cometbft
+  ansible.builtin.shell:
+    cmd: |
+      . "{{ cometbft_home_path }}/.profile"
+      make install
+    chdir: "{{ cometbft_src_path }}"
+  become: True
+  become_user: "{{ cometbft_user }}"
+  register: cometbft_install
+  when: ansible_local['noderole']['node']['pinned'] != "True" and ansible_local['noderole']['node']['version'] != cometbft_version
+
+- name: Copy cometbft systemd service to a host (assuming you have a service template like evmos)
+  ansible.builtin.template:
+    src: cometbft.service.j2
+    dest: "{{ cometbft_home_path }}/cometbft.service"
+    owner: "{{ cometbft_user }}"
+    group: "{{ cometbft_user }}"
+    mode: '0644'
+
+- name: Install cometbft v{{ cometbft_version }}
+  ansible.builtin.copy:
+    src: "{{ cometbft_home_path }}/go/bin/cometbft"
+    dest: "{{ cometbft_home_path }}/cometbft-v{{ cometbft_version }}"
+    remote_src: True
+    mode: '0755'
+    group: "{{ cometbft_user }}"
+    owner: "{{ cometbft_user }}"
+  become: True
+  become_user: "{{ cometbft_user }}"
+  register: cometbft_version_install
+  when: ansible_local['noderole']['node']['pinned'] != "True" and ansible_local['noderole']['node']['version'] != cometbft_version
+  notify:
+    - Symlink cometbft client
+    - Symlink cometbft service
+    - Systemd daemon-reload
+    - Stop cometbft
+    - Start cometbft
+    - Add Service Pinned Status
+    - Add CometBFT service version
+---

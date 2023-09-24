@@ -1,0 +1,44 @@
+---
+- name: Systemd daemon-reload for cometbft
+  ansible.builtin.systemd:
+    daemon_reload: True
+
+- name: Restart cometbft
+  ansible.builtin.systemd:
+    name: cometbft
+    daemon_reload: True
+    state: restarted
+    enabled: True
+
+- name: Stop cometbft
+  ansible.builtin.systemd:
+    name: cometbft
+    daemon_reload: True
+    state: stopped
+    enabled: True
+
+- name: Start cometbft
+  ansible.builtin.systemd:
+    name: cometbft
+    daemon_reload: True
+    state: started
+    enabled: True
+
+- name: Symlink cometbft binary
+  ansible.builtin.file:
+    src: "{{ cometbft_home_path }}/cometbft-v{{ cometbft_version }}"
+    dest: "{{ cometbft_home_path }}/cometbft"
+    force: True
+    state: link
+    owner: "{{ cometbft_user }}"
+    group: "{{ cometbft_user }}"
+
+- name: Symlink cometbft service
+  ansible.builtin.file:
+    src: "{{ cometbft_home_path }}/cometbft.service"
+    dest: "/etc/systemd/system/cometbft.service"
+    force: True
+    state: link
+    owner: "root"
+    group: "root"
+...
