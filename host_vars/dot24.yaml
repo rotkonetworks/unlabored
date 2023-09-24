@@ -14,7 +14,7 @@ default_public_dns_lb: "polkadot.rotko.net"
 default_network: "polkadot"
 default_node_type: "endpoint"
 default_pruning: "archive"
-default_database: paritydb
+default_database: rocksdb
 default_syncmode: full
 default_p2p_port: 33314
 default_p2p_port_ws: 34314
