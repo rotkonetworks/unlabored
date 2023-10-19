@@ -25,11 +25,36 @@ default_storage_content: "images,rootdir"
 default_storage_sparse: 1
 
 lxc_nodes:
+  - host: "ibp"
+    proxmox_config:
+      vmid: "997"
+      hostname: "{{ hostvars['monitor']['host_name'] }}"
+      ostemplate: "local:vztmpl/{{ default_container_template }}"
+      netif: "{{ hostvars['monitor']['netif'] }}"
+      cores: 1
+      memory: 256
+      swap: 256
+      password: "{{ default_password }}"
+      disk: "{{ default_storage }}:20"
+      onboot: True
+      unprivileged: True
+      validate_certs: False
+      description: "ibp monitoring"
+      state: present
+      features:
+        - nesting=1
+    port_forwards:
+      - from_port: "{{ hostvars['monitor']['ansible_port'] }}"
+        to_host: "{{ hostvars['monitor']['container_ip'] }}:22"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['monitor']['zabbix_port'] }}"
+        to_host: "{{ hostvars['monitor']['container_ip'] }}:10050"
+        protocol: "tcp"
   - host: "dot23"
     proxmox_config:
       vmid: "313"
       hostname: "{{ hostvars['dot23']['host_name'] }}"
-      ostemplate: 'local:vztmpl/{{ default_container_template }}'
+      ostemplate: "local:vztmpl/{{ default_container_template }}"
       netif: "{{ hostvars['dot23']['netif'] }}"
       cores: 8
       memory: 16384
@@ -61,7 +86,7 @@ lxc_nodes:
     proxmox_config:
       vmid: "323"
       hostname: "{{ hostvars['ksm23']['host_name'] }}"
-      ostemplate: 'local:vztmpl/{{ default_container_template }}'
+      ostemplate: "local:vztmpl/{{ default_container_template }}"
       netif: "{{ hostvars['ksm23']['netif'] }}"
       cores: 8
       memory: 16384
@@ -93,7 +118,7 @@ lxc_nodes:
     proxmox_config:
       vmid: "333"
       hostname: "{{ hostvars['wnd23']['host_name'] }}"
-      ostemplate: 'local:vztmpl/{{ default_container_template }}'
+      ostemplate: "local:vztmpl/{{ default_container_template }}"
       netif: "{{ hostvars['wnd23']['netif'] }}"
       cores: 8
       memory: 16384
@@ -125,7 +150,7 @@ lxc_nodes:
     proxmox_config:
       vmid: "543"
       hostname: "{{ hostvars['pbr13']['host_name'] }}"
-      ostemplate: 'local:vztmpl/{{ default_container_template }}'
+      ostemplate: "local:vztmpl/{{ default_container_template }}"
       netif: "{{ hostvars['pbr13']['netif'] }}"
       cores: 4
       memory: 8192
@@ -163,7 +188,7 @@ lxc_nodes:
     proxmox_config:
       vmid: "553"
       hostname: "{{ hostvars['kbr13']['host_name'] }}"
-      ostemplate: 'local:vztmpl/{{ default_container_template }}'
+      ostemplate: "local:vztmpl/{{ default_container_template }}"
       netif: "{{ hostvars['kbr13']['netif'] }}"
       cores: 4
       memory: 8192
@@ -201,7 +226,7 @@ lxc_nodes:
     proxmox_config:
       vmid: "563"
       hostname: "{{ hostvars['wbr13']['host_name'] }}"
-      ostemplate: 'local:vztmpl/{{ default_container_template }}'
+      ostemplate: "local:vztmpl/{{ default_container_template }}"
       netif: "{{ hostvars['wbr13']['netif'] }}"
       cores: 4
       memory: 8192
@@ -239,7 +264,7 @@ lxc_nodes:
     proxmox_config:
       vmid: "573"
       hostname: "{{ hostvars['pch13']['host_name'] }}"
-      ostemplate: 'local:vztmpl/{{ default_container_template }}'
+      ostemplate: "local:vztmpl/{{ default_container_template }}"
       netif: "{{ hostvars['pch13']['netif'] }}"
       cores: 4
       memory: 8192
@@ -277,7 +302,7 @@ lxc_nodes:
     proxmox_config:
       vmid: "593"
       hostname: "{{ hostvars['wch13']['host_name'] }}"
-      ostemplate: 'local:vztmpl/{{ default_container_template }}'
+      ostemplate: "local:vztmpl/{{ default_container_template }}"
       netif: "{{ hostvars['wch13']['netif'] }}"
       cores: 4
       memory: 8192
@@ -311,4 +336,3 @@ lxc_nodes:
       - from_port: "{{ hostvars['wch13']['default_p2p_port_wss'] }}"
         to_host: "{{ hostvars['wch13']['container_ip'] }}:{{ hostvars['wch13']['default_p2p_port_wss'] }}"
         protocol: "tcp"
-...

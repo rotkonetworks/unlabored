@@ -15,6 +15,7 @@ polkadot
 ansible
 matrix
 monitor
+ibp
 
 [routers]
 bkk00
@@ -47,10 +48,6 @@ ksm14
 ksm24
 wnd14
 wnd24
-
-[services]
-ansible
-monitor
 
 [proxmox_hosts]
 bkk01
