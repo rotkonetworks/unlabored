@@ -1,0 +1,21 @@
+---
+wg_dir: /etc/wireguard
+wg_port: 51820
+wg_address: 10.10.1.1/16
+wg_hostname: "{{ inventory_hostname }}"
+wg_peers: []
+# - name: peer1
+#   allowed_ip: "10.10.0.1/16"
+#   publickey: "asdasdasdadsasdasd"
+# - name: peer2
+#   allowed_ip: "10.10.0.1/16"
+#   publickey: "000000000000000000"
+#   keepalive: 30
+# - name: peer3
+#   allowed_ip: "10.10.0.1/16"
+#   publickey: "111111111111111111"
+wg_server_ip: "{{ wg_address | ansible.utils.ipaddr('network') | ansible.utils.ipmath(1) }}"
+wg_interface_addr: "{{ ansible_default_ipv4.address | default(ansible_all_ipv4_addresses[0]) }}/{{ ansible_default_ipv4.netmask }}"
+wg_peers_allowed_ips: '{{ ([(_wg_interface_addr | ansible.utils.ipaddr(''network/prefix''))] + (wireguard_additional_routes | default([]))) | join(", ") }}'
+wg_pskkey: romeblockchainlabs
+...

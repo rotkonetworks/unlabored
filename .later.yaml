@@ -70,6 +70,7 @@ rules:
     - "LINT0007"
     - "LINT0008"
     - "ANSIBLE0013"
+    - "ANSIBLE0002"
 
   # List of rule ID's that should be displayed as a warning instead of an error. By default,
   # only rules whose version is higher than the current default version are marked as warnings.

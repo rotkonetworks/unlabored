@@ -1,0 +1,77 @@
+---
+# Reworked tasks for Prometheus setup
+
+- name: Fetch the latest version of Prometheus
+  ansible.builtin.shell:
+    cmd: |
+      set -o pipefail
+      wget $(curl -s https://api.github.com/repos/prometheus/prometheus/releases/latest | grep "tag_name" | awk '{print "https://github.com/prometheus/prometheus/releases/download/" substr($2, 2, length($2)-3) "/prometheus-" substr($2, 3, length($2)-4) ".linux-amd64.tar.gz"}')
+      tar xvf prometheus-*.tar.gz
+
+- name: Move Prometheus binaries to the desired location
+  ansible.builtin.shell:
+    cmd: |
+      mv ./prometheus-*.linux-amd64/prometheus /usr/local/bin/
+      mv ./prometheus-*.linux-amd64/promtool /usr/local/bin/
+      cp -r ./prometheus-*.linux-amd64/consoles /etc/prometheus
+      cp -r ./prometheus-*.linux-amd64/console_libraries /etc/prometheus
+
+- name: Ensure Prometheus group exists
+  ansible.builtin.group:
+    name: prometheus
+    state: present
+
+- name: Ensure Prometheus user exists and is a member of the Prometheus group
+  ansible.builtin.user:
+    name: prometheus
+    state: present
+    group: prometheus
+
+- name: Create necessary Prometheus directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: prometheus
+    group: prometheus
+    mode: "0755"
+  loop:
+    - /etc/prometheus/
+    - /var/lib/prometheus/
+
+- name: Clean up downloaded Prometheus packages
+  ansible.builtin.shell:
+    cmd: rm -rf ./prometheus*
+
+- name: Deploy Prometheus configuration
+  ansible.builtin.copy:
+    src: files/prometheus.yml
+    dest: /etc/prometheus/prometheus.yml
+    owner: prometheus
+    group: prometheus
+    mode: "0755"
+
+- name: Validate Prometheus configuration
+  ansible.builtin.shell:
+    cmd: promtool check config /etc/prometheus/prometheus.yml
+
+- name: Manage Prometheus service
+  block:
+    - name: Check if Prometheus service is already set up
+      ansible.builtin.stat:
+        path: /etc/systemd/system/prometheus.service
+      register: servicestatus
+
+    - name: Set up Prometheus service
+      ansible.builtin.template:
+        src: files/prometheus.service
+        dest: /etc/systemd/system/prometheus.service
+        mode: "0644"
+      when: not servicestatus.stat.exists
+
+    - name: Handle Prometheus service state
+      ansible.builtin.systemd:
+        name: prometheus
+        daemon_reload: yes
+        enabled: yes
+        state: "{{ 'started' if not servicestatus.stat.exists else 'restarted' }}"
+...

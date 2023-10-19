@@ -1,0 +1,68 @@
+---
+# tasks/main.yaml for WireGuard
+
+- name: Check if necessary files exist
+  ansible.builtin.stat:
+    path: "{{ item }}"
+  loop:
+    - /etc/wireguard/wg0.conf
+    - /etc/wireguard/private.key
+  register: file_status
+
+- name: Set Umask for session
+  ansible.builtin.shell:
+    cmd: "umask 077"
+  changed_when: False
+
+- name: Generate the VPN private key (admin)
+  ansible.builtin.shell:
+    cmd: wg genkey
+    creates: /etc/wireguard/private.key
+  register: WG_PRIVATE_KEY
+  when: file_status.results[0].stat.exists == False
+
+- name: Generate the VPN public keys (admin)
+  ansible.builtin.shell:
+    cmd: wg pubkey
+    args:
+      stdin: "{{ WG_PRIVATE_KEY.stdout }}"
+    creates: /etc/wireguard/public.key
+  when: file_status.results[0].stat.exists == False
+
+- name: Register the VPN public keys (admin)
+  ansible.builtin.set_fact:
+    WG_PUB_KEY: "{{ lookup('file', '/etc/wireguard/public.key') }}"
+  when: file_status.results[0].stat.exists == False
+
+- name: Configure wireguard files
+  ansible.builtin.template:
+    src: wg0.conf.j2
+    dest: /etc/wireguard/wg0.conf
+    mode: "0755"
+  when: file_status.results[0].stat.exists == False
+  notify:
+    - Restart wireguard
+
+- name: Copy peer file with owner and permissions
+  ansible.builtin.template:
+    src: wg0-peers.conf.j2
+    dest: /etc/wireguard/wg0.conf
+    mode: "0755"
+  when: inventory_hostname not in groups['monitoring']
+
+- name: Firewall settings
+  community.general.ufw:
+    rule: allow
+    interface_in: wg0
+    port: "{{ WG_PORT if inventory_hostname in groups['monitoring'] else omit }}"
+  failed_when: False
+
+- name: Enable wireguard service
+  ansible.builtin.systemd:
+    name: wg-quick@wg0
+    enabled: True
+    masked: False
+  when: file_status.results[0].stat.exists == False
+  notify:
+    - Start wireguard
+...

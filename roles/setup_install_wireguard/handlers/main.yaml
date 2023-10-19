@@ -1,0 +1,14 @@
+# handlers/main.yaml
+---
+- name: Restart Wireguard
+  ansible.builtin.systemd:
+    name: wg-quick@wg0
+    state: restarted
+    daemon_reload: yes
+
+- name: Start Wireguard
+  ansible.builtin.systemd:
+    name: wg-quick@wg0
+    state: started
+    daemon_reload: yes
+...

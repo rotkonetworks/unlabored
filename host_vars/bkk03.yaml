@@ -336,3 +336,4 @@ lxc_nodes:
       - from_port: "{{ hostvars['wch13']['default_p2p_port_wss'] }}"
         to_host: "{{ hostvars['wch13']['container_ip'] }}:{{ hostvars['wch13']['default_p2p_port_wss'] }}"
         protocol: "tcp"
+...
