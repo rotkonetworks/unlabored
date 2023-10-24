@@ -6,6 +6,7 @@ proxmox_hosts
 proxmox_nodes
 routers
 referrence_nodes
+services
 
 [proxmox_nodes:children]
 cumulus
@@ -31,6 +32,9 @@ wnd23
 
 [proxmox_hosts]
 bkk03
+
+[services]
+ibp
 
 [unmanaged]
 
