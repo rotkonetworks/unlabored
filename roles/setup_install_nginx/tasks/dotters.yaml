@@ -3,40 +3,28 @@
 - name: Install SSH key
   ansible.builtin.copy:
     content: "{{ default_dotters_private_key }}"
+    force: yes
     dest: '/root/.ssh/dotters_key'
     mode: '0600'
 
-# Add SSH key to agent without password
-- name: Add SSH key to agent without password
-  ansible.builtin.shell: |
-    set -o pipefail
-    eval $(ssh-agent -s)
-    ssh-add /root/.ssh/dotters_key
-  environment:
-    SSH_AUTH_SOCK: /tmp/ssh-agent.sock
-  when: default_dotters_private_key_pw is not defined
-
-# Add SSH key to agent with password
-- name: Add SSH key to agent with password
-  ansible.builtin.shell: |
-    set -o pipefail
-    eval $(ssh-agent -s)
-    echo "{{ default_dotters_private_key_pw }}" | sshpass ssh-add /root/.ssh/dotters_key
-  environment:
-    SSH_AUTH_SOCK: /tmp/ssh-agent.sock
-  no_log: true
-  when: default_dotters_private_key_pw is defined
+- name: Ensure /opt/github exists
+  ansible.builtin.file:
+    path: /opt/github
+    state: directory
+    mode: '0755'
 
 - name: Install/Update dotters.network SSL
   become: true
   block:
     - name: Git update
       ansible.builtin.git:
-        repo: 'git@github.com:GATOTECH-LTD/dotters-ssl.git'
+        repo: '{{ default_dotters_repository }}'
         dest: '/opt/github/dotters-ssl'
         key_file: '/root/.ssh/dotters_key'
         update: yes
         force: yes
+      environment:
+        GIT_SSH_COMMAND: "ssh -i /root/.ssh/dotters_key -o IdentitiesOnly=yes"
       tags:
       - skip_ansible_lint
 
@@ -45,6 +33,8 @@
         set -o pipefail
         openssl x509 -enddate -noout -in /opt/github/dotters-ssl/cert/cert.pem | cut -f2 -d'='
       register: expiration_date_new_dotters
+      args:
+        executable: /bin/bash
 
 # Ensure destination directories exist
 - name: Ensure directories exist for archive and live certificates
@@ -62,6 +52,7 @@
     src: "/opt/github/dotters-ssl/cert/{{ item }}"
     dest: "/etc/letsencrypt/archive/dotters.network/{{ item }}"
     mode: '0644'
+    remote_src: yes
   loop:
     - cert.pem
     - chain.pem

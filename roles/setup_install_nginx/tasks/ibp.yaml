@@ -3,34 +3,38 @@
 - name: Install SSH key
   ansible.builtin.copy:
     content: "{{ default_ibp_private_key }}"
+    force: yes
     dest: '/root/.ssh/ibp_key'
     mode: '0600'
 
-- name: Add SSH key to agent
-  ansible.builtin.shell: |
-    eval $(ssh-agent -s)
-    ssh-add /root/.ssh/ibp_key
-  environment:
-    SSH_AUTH_SOCK: /tmp/ssh-agent.sock
+- name: Ensure /opt/github exists
+  ansible.builtin.file:
+    path: /opt/github
+    state: directory
+    mode: '0755'
 
 - name: Install/Update ibp.network SSL
-  become: True
+  become: true
   block:
     - name: Git update
       ansible.builtin.git:
-        repo: 'git@github.com:GATOTECH-LTD/ibp-ssl.git'
+        repo: '{{ default_ibp_repository }}'
         dest: '/opt/github/ibp-ssl'
         key_file: '/root/.ssh/ibp_key'
         update: yes
         force: yes
+      environment:
+        GIT_SSH_COMMAND: "ssh -i /root/.ssh/ibp_key -o IdentitiesOnly=yes"
       tags:
       - skip_ansible_lint
 
-    - name: "Check new expiration date"
+    - name: Check new expiration date
       ansible.builtin.shell: |
         set -o pipefail
-        openssl x509 -enddate -noout -in /opt/github/dotters-ssl/cert/cert.pem | cut -f2 -d'='
+        openssl x509 -enddate -noout -in /opt/github/ibp-ssl/cert/cert.pem | cut -f2 -d'='
       register: expiration_date_new_ibp
+      args:
+        executable: /bin/bash
 
 # Ensure destination directories exist
 - name: Ensure directories exist for archive and live certificates
@@ -48,6 +52,7 @@
     src: "/opt/github/ibp-ssl/cert/{{ item }}"
     dest: "/etc/letsencrypt/archive/ibp.network/{{ item }}"
     mode: '0644'
+    remote_src: yes
   loop:
     - cert.pem
     - chain.pem
