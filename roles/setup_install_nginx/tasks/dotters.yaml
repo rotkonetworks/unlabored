@@ -14,7 +14,7 @@
     mode: '0755'
 
 - name: Install/Update rpc.dotters.network SSL
-  become: true
+  become: True
   block:
     - name: Git update
       ansible.builtin.git:
@@ -26,7 +26,7 @@
       environment:
         GIT_SSH_COMMAND: "ssh -i /root/.ssh/dotters_key -o IdentitiesOnly=yes"
       tags:
-      - skip_ansible_lint
+        - skip_ansible_later
 
     - name: Check new expiration date
       ansible.builtin.shell: |
