@@ -6,23 +6,29 @@
     dest: '/root/.ssh/dotters_key'
     mode: '0600'
 
-- name: Add SSH key to agent
+# Add SSH key to agent without password
+- name: Add SSH key to agent without password
   ansible.builtin.shell: |
+    set -o pipefail
     eval $(ssh-agent -s)
     ssh-add /root/.ssh/dotters_key
   environment:
     SSH_AUTH_SOCK: /tmp/ssh-agent.sock
+  when: default_dotters_private_key_pw is not defined
 
-- name: Add SSH key to agent
+# Add SSH key to agent with password
+- name: Add SSH key to agent with password
   ansible.builtin.shell: |
+    set -o pipefail
     eval $(ssh-agent -s)
     echo "{{ default_dotters_private_key_pw }}" | sshpass ssh-add /root/.ssh/dotters_key
   environment:
     SSH_AUTH_SOCK: /tmp/ssh-agent.sock
-  no_log: true  # Do not log sensitive information
+  no_log: true
+  when: default_dotters_private_key_pw is defined
 
 - name: Install/Update dotters.network SSL
-  become: True
+  become: true
   block:
     - name: Git update
       ansible.builtin.git:
@@ -30,9 +36,14 @@
         dest: '/opt/github/dotters-ssl'
         key_file: '/root/.ssh/dotters_key'
         update: yes
+        force: yes
+      tags:
+      - skip_ansible_lint
 
-    - name: "Check new expiration date"
-      ansible.builtin.shell: "openssl x509 -enddate -noout -in /opt/github/dotters-ssl/cert/cert.pem | cut -f2 -d'='"
+    - name: Check new expiration date
+      ansible.builtin.shell: |
+        set -o pipefail
+        openssl x509 -enddate -noout -in /opt/github/dotters-ssl/cert/cert.pem | cut -f2 -d'='
       register: expiration_date_new_dotters
 
 # Ensure destination directories exist

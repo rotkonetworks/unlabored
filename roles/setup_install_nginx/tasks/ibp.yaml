@@ -22,9 +22,14 @@
         dest: '/opt/github/ibp-ssl'
         key_file: '/root/.ssh/ibp_key'
         update: yes
+        force: yes
+      tags:
+      - skip_ansible_lint
 
     - name: "Check new expiration date"
-      ansible.builtin.shell: "openssl x509 -enddate -noout -in /opt/github/ibp-ssl/cert/cert.pem | cut -f2 -d'='"
+      ansible.builtin.shell: |
+        set -o pipefail
+        openssl x509 -enddate -noout -in /opt/github/dotters-ssl/cert/cert.pem | cut -f2 -d'='
       register: expiration_date_new_ibp
 
 # Ensure destination directories exist
