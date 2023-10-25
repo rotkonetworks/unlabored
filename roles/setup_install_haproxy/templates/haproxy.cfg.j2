@@ -10,13 +10,14 @@ global
     nbthread 8
     server-state-base /opt/haproxy/state/
     tune.bufsize 131072
+    tune.ssl.default-dh-param 4096
     stats socket /var/run/haproxy.sock mode 600 level admin
     stats timeout 2m
+    maxcompcpuusage 50
 
 # Defaults
 defaults
     log global
-    mode tcp
     retries 3
     maxconn 250000
     timeout connect 5s
@@ -32,56 +33,108 @@ frontend stats
     stats uri /stats
     stats refresh 10s
 
+###
+# HTTP Frontend configuration
+###
+
+#frontend http-frontend
+#   bind *:80
+#   mode http
+#   timeout client 300s
+
+#   acl is_http ssl_fc
+#   acl letsencrypt-acl path_beg -i /.well-known/acme-challenge/
+#   http-request redirect scheme https if !is_http !letsencrypt-acl
+#   use_backend letsencrypt if letsencrypt-acl
+#   default_backend letsencrypt
+
 # SSL Frontend
 frontend ssl-frontend
-    bind *:443
-    mode tcp
-    timeout client 300s
+   bind *:443 ssl crt /etc/pki/certs # verify optional
+   mode http
+   timeout client 300s
 
-    tcp-request inspect-delay 5s
-    tcp-request content accept if { req_ssl_hello_type 1 }
+   # Detecting WebSocket Upgrade header
+   acl wss hdr(Upgrade) -i websocket
 
-    # IBP routing
-    acl is_rpc_dotters_network req_ssl_sni -i rpc.dotters.network
-    acl is_rpc_ibp_network req_ssl_sni -i rpc.ibp.network
+   # Relay chains
+   acl polkadot path_beg -i /polkadot
+   acl kusama path_beg -i /kusama
+   acl westend path_beg -i /westend
 
-    acl is_payload_polka payload(0,0) -m sub /polkadot
-    acl is_payload_kusama payload(0,0) -m sub /kusama
-    acl is_payload_westend payload(0,0) -m sub /westend
+   # Horizontal chains
+#   acl westmint path_beg -i /westmint
+#   acl statemine path_beg -i /statemine
+#   acl statemint path_beg -i /statemint
+#   acl encointerKusama path_beg -i /encointer-kusama
+#   acl bridgehubKusama path_beg -i /bridgehub-kusama
+#   acl bridgehubPolkadot path_beg -i /bridgehub-polkadot
+#   acl bridgehubWestend path_beg -i /bridgehub-westend
+#   acl collectivesWestend path_beg -i /collectives-westend
+#   acl collectivesPolkadot path_beg -i /collectives-polkadot
 
-    use_backend polkadot_backend if is_rpc_dotters_network is_payload_polka
-    use_backend polkadot_backend if is_rpc_ibp_network is_payload_polka
+   # Polkadot
+   use_backend polkadot-backend if polkadot
+#   use_backend statemint-backend if statemint
+#   use_backend collectivesPolkadot-backend if collectivesPolkadot
+#   use_backend bridgehubPolkadot-backend if bridgehubPolkadot
+   # Kusama
+   use_backend kusama-backend if kusama
+#   use_backend statemine-backend if statemine
+#   use_backend encointerKusama-wss-backend if encointerKusama wss
+#   use_backend encointerKusama-rpc-backend if encointerKusama !wss
+#   use_backend bridgehubKusama-backend if bridgehubKusama
+   # Westend
+   use_backend westend-backend if westend
+#   use_backend westmint-backend if westmint
+#   use_backend collectivesWestend-backend if collectivesWestend
+#   use_backend bridgehubWestend-backend if bridgehubWestend
 
-    use_backend kusama_backend if is_rpc_dotters_network is_payload_kusama
-    use_backend kusama_backend if is_rpc_ibp_network is_payload_kusama
-
-    use_backend westend_backend if is_rpc_dotters_network is_payload_westend
-    use_backend westend_backend if is_rpc_ibp_network is_payload_westend
-
-    # Rotko Networks routing
-    acl is_polkadot req_ssl_sni -i polkadot.rotko.net
-    acl is_kusama req_ssl_sni -i kusama.rotko.net
-    acl is_westend req_ssl_sni -i westend.rotko.net
-
-    use_backend polkadot_backend if is_polkadot
-    use_backend kusama_backend if is_kusama
-    use_backend westend_backend if is_westend
-
+###
 # Polkadot Backend Configurations
-backend polkadot_backend
-    mode tcp
-    balance leastconn
-    server polkadot1 192.168.69.13:42313 check
-    server polkadot2 192.168.69.14:42314 check
+###
 
-backend kusama_backend
-    mode tcp
+backend polkadot-backend
+    mode http
     balance leastconn
-    server kusama1 192.168.69.23:42323 check
-    server kusama2 192.168.69.24:42324 check
+    server polkadot1-rpc 192.168.69.13:9313 check inter 2s maxconn 200
+    server polkadot2-rpc 192.168.69.14:9314 check inter 2s maxconn 200
 
-backend westend_backend
-    mode tcp
+###
+# Kusama Backend Configurations
+###
+
+backend kusama-backend
+    mode http
     balance leastconn
-    server westend1 192.168.69.33:42333 check
-    server westend2 192.168.69.34:42334 check
+    server kusama1-rpc 192.168.69.23:9323 check inter 2s maxconn 200
+    server kusama2-rpc 192.168.69.24:9324 check inter 2s maxconn 200
+
+###
+# Westend Backend Configurations
+###
+
+backend westend-backend
+    mode http
+    balance leastconn
+    server westend1-rpc 192.168.69.33:9333 check inter 2s maxconn 200
+    server westend2-rpc 192.168.69.34:9334 check inter 2s maxconn 200
+
+###
+# MISC Backend Configurations
+###
+
+#backend letsencrypt
+#   mode http
+#   balance leastconn
+#   server letsencrypt 192.168.69.95:80 check inter 2s maxconn 200
+
+#backend monitor
+#   mode http
+#   balance leastconn
+#   server monitor 192.168.69.98:80 check inter 2s maxconn 200
+
+#backend ibp
+#   mode http
+#   balance leastconn
+#   server monitor 192.168.69.97:80 check inter 2s maxconn 200

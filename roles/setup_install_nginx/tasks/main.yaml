@@ -102,12 +102,4 @@
 - name: Include loadbalancer tasks for endpoints
   ansible.builtin.import_tasks: loadbalancer.yaml
   when: default_node_type == 'endpoint'
-
-- name: Include ibp tasks for endpoints
-  ansible.builtin.import_tasks: ibp.yaml
-  when: default_node_type == 'endpoint'
-
-- name: Include dotters tasks for endpoints
-  ansible.builtin.import_tasks: dotters.yaml
-  when: default_node_type == 'endpoint'
 ...
