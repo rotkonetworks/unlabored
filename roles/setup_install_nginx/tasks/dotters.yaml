@@ -13,7 +13,7 @@
     state: directory
     mode: '0755'
 
-- name: Install/Update dotters.network SSL
+- name: Install/Update rpc.dotters.network SSL
   become: true
   block:
     - name: Git update
@@ -43,14 +43,14 @@
     state: directory
     mode: '0755'
   loop:
-    - "/etc/letsencrypt/archive/dotters.network"
-    - "/etc/letsencrypt/live/dotters.network"
+    - "/etc/letsencrypt/archive/{{ default_public_dns_dotters }}"
+    - "/etc/letsencrypt/live/{{ default_public_dns_dotters }}"
 
 # Copy the certificates to the archive folder
 - name: Copy SSL certificates to archive directory
   ansible.builtin.copy:
     src: "/opt/github/dotters-ssl/cert/{{ item }}"
-    dest: "/etc/letsencrypt/archive/dotters.network/{{ item }}"
+    dest: "/etc/letsencrypt/archive/{{ default_public_dns_dotters }}/{{ item }}"
     mode: '0644'
     remote_src: yes
   loop:
@@ -62,8 +62,8 @@
 # Create symlinks in the live directory
 - name: Create symlinks in live directory
   ansible.builtin.file:
-    src: "/etc/letsencrypt/archive/dotters.network/{{ item }}"
-    dest: "/etc/letsencrypt/live/dotters.network/{{ item }}"
+    src: "/etc/letsencrypt/archive/{{ default_public_dns_dotters }}/{{ item }}"
+    dest: "/etc/letsencrypt/live/{{ default_public_dns_dotters }}/{{ item }}"
     state: link
   loop:
     - cert.pem

@@ -43,14 +43,14 @@
     state: directory
     mode: '0755'
   loop:
-    - "/etc/letsencrypt/archive/ibp.network"
-    - "/etc/letsencrypt/live/ibp.network"
+    - "/ets/letsencrypt/archive/{{ default_public_dns_ibp }}"
+    - "/etc/letsencrypt/live/{{ default_public_dns_ibp }}"
 
 # Copy the certificates to the archive folder
 - name: Copy SSL certificates to archive directory
   ansible.builtin.copy:
     src: "/opt/github/ibp-ssl/cert/{{ item }}"
-    dest: "/etc/letsencrypt/archive/ibp.network/{{ item }}"
+    dest: "/etc/letsencrypt/archive/{{ default_public_dns_ibs }}/{{ item }}"
     mode: '0644'
     remote_src: yes
   loop:
@@ -62,8 +62,8 @@
 # Create symlinks in the live directory
 - name: Create symlinks in live directory
   ansible.builtin.file:
-    src: "/etc/letsencrypt/archive/ibp.network/{{ item }}"
-    dest: "/etc/letsencrypt/live/ibp.network/{{ item }}"
+    src: "/etc/letsencrypt/archive/{{ default_public_dns_ibp }}/{{ item }}"
+    dest: "/etc/letsencrypt/live/{{ default_public_dns_ibp }}/{{ item }}"
     state: link
   loop:
     - cert.pem
