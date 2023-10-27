@@ -28,14 +28,14 @@ lxc_nodes:
   - host: "ibp"
     proxmox_config:
       vmid: "997"
-      hostname: "{{ hostvars['monitor']['host_name'] }}"
+      hostname: "{{ hostvars['ibp']['host_name'] }}"
       ostemplate: "local:vztmpl/{{ default_container_template }}"
-      netif: "{{ hostvars['monitor']['netif'] }}"
+      netif: "{{ hostvars['ibp']['netif'] }}"
       cores: 1
       memory: 256
       swap: 256
       password: "{{ default_password }}"
-      disk: "{{ default_storage }}:20"
+      disk: "{{ default_storage }}:50"
       onboot: True
       unprivileged: True
       validate_certs: False
@@ -44,11 +44,8 @@ lxc_nodes:
       features:
         - nesting=1
     port_forwards:
-      - from_port: "{{ hostvars['monitor']['ansible_port'] }}"
-        to_host: "{{ hostvars['monitor']['container_ip'] }}:22"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['monitor']['zabbix_port'] }}"
-        to_host: "{{ hostvars['monitor']['container_ip'] }}:10050"
+      - from_port: "{{ hostvars['ibp']['ansible_port'] }}"
+        to_host: "{{ hostvars['ibp']['container_ip'] }}:22"
         protocol: "tcp"
   - host: "dot23"
     proxmox_config:
