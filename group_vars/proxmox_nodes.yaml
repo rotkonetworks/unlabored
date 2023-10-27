@@ -31,4 +31,5 @@ default_packages:
   - fd-find
   - nginx
   - certbot
+  - chrony
 ...

@@ -40,4 +40,5 @@ default_packages:
   - ncdu
   - logrotate
   - zsh
+  - chrony
 ...
