@@ -5,6 +5,7 @@
   gather_facts: True
   roles:
     - setup_add_node_role
+    - setup_install_rust
     - setup_install_polkadot
     - setup_install_nginx
 ...

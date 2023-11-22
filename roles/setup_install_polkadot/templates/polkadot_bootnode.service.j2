@@ -26,6 +26,7 @@ ExecStart={{ default_base_path }}/polkadot \
   --execution native-else-wasm \
   --sync {{ default_syncmode | default('warp') }} \
   --no-hardware-benchmarks \
+  --no-beefy \
   --rpc-external \
   --rpc-methods safe \
   --prometheus-external \
