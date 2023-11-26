@@ -42,8 +42,8 @@ lxc_nodes:
       - from_port: "{{ hostvars['ansible']['ansible_port'] }}"
         to_host: "{{ hostvars['ansible']['container_ip'] }}:22"
         protocol: "tcp"
-      - from_port: "{{ hostvars['monitor']['zabbix_port'] }}"
-        to_host: "{{ hostvars['monitor']['container_ip'] }}:10050"
+      - from_port: "{{ hostvars['ansible']['zabbix_port'] }}"
+        to_host: "{{ hostvars['ansible']['container_ip'] }}:10050"
         protocol: "tcp"
   - host: "matrix"
     proxmox_config:
@@ -72,34 +72,6 @@ lxc_nodes:
         protocol: "tcp"
       - from_port: "{{ hostvars['monitor']['zabbix_port'] }}"
         to_host: "{{ hostvars['monitor']['container_ip'] }}:10050"
-        protocol: "tcp"
-  - host: "monitor"
-    proxmox_config:
-      vmid: "998"
-      hostname: "{{ hostvars['monitor']['host_name'] }}"
-      ostemplate: "local:vztmpl/{{ default_container_template }}"
-      netif: "{{ hostvars['monitor']['netif'] }}"
-      cores: 1
-      memory: 256
-      swap: 256
-      password: "{{ default_password }}"
-      disk: "{{ default_storage }}:20"
-      onboot: True
-      unprivileged: True
-      validate_certs: False
-      description: "monitoring"
-      state: present
-      features:
-        - nesting=1
-    port_forwards:
-      - from_port: "{{ hostvars['monitor']['ansible_port'] }}"
-        to_host: "{{ hostvars['monitor']['container_ip'] }}:22"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['monitor']['zabbix_port'] }}"
-        to_host: "{{ hostvars['monitor']['container_ip'] }}:10050"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['monitor']['zabbix_host_port'] }}"
-        to_host: "{{ hostvars['monitor']['container_ip'] }}:10051"
         protocol: "tcp"
   - host: "dot14"
     proxmox_config:
@@ -153,7 +125,7 @@ lxc_nodes:
       swap: 8192
       password: "{{ default_password }}"
       disk: "{{ default_storage }}:20"
-      mounts: '{"mp0":"{{ default_storage }}:1500,mp={{ hostvars["dot24"]["default_base_path"] }}"}'
+      mounts: '{"mp0":"{{ default_storage }}:2000,mp={{ hostvars["dot24"]["default_base_path"] }}"}'
       onboot: True
       unprivileged: True
       validate_certs: False
@@ -261,7 +233,7 @@ lxc_nodes:
       swap: 8192
       password: "{{ default_password }}"
       disk: "{{ default_storage }}:20"
-      mounts: '{"mp0":"{{ default_storage }}:2500,mp={{ hostvars["ksm24"]["default_base_path"] }}"}'
+      mounts: '{"mp0":"{{ default_storage }}:3000,mp={{ hostvars["ksm24"]["default_base_path"] }}"}'
       onboot: True
       unprivileged: True
       validate_certs: False
