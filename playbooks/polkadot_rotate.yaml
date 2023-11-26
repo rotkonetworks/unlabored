@@ -6,23 +6,25 @@
 
   tasks:
     - name: Check if Cargo is installed
-      command: cargo --version
+      ansible.builtin.command: cargo --version
       register: cargo_installed
       failed_when: cargo_installed.rc != 0 and ('cargo' not in cargo_installed.stderr)
-      changed_when: false
-      ignore_errors: true
+      changed_when: False
+      ignore_errors: True
 
     - name: Setup and install Rust
-      include_role:
+      ansible.builtin.include_role:
         name: setup_install_rust
       when: cargo_installed is failed
 
     - name: Install websocat with cargo
-      command: cargo install websocat
+      ansible.builtin.command: cargo install websocat
       when: default_node_type in ["validator"] and cargo_installed is succeeded
 
+    # add pipefail
     - name: Rotate keys calling
-      shell: |
+      ansible.builtin.shell: |
+        set -o pipefail
         echo '{"id":1,"jsonrpc":"2.0","method":"author_rotateKeys","params":[]}' | websocat -n1 -B 99999999 ws://127.0.0.1:{{ default_rpc_port }}
       when: default_node_type in ["validator"] and cargo_installed is succeeded
       args:

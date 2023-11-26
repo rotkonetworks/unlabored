@@ -1,0 +1,36 @@
+---
+prometheus_targets:
+  node:
+    # ##############################################################################
+    # # RPC
+    # ##############################################################################
+    - targets:
+      - 192.168.69.13:7313  # polkadot-bkk03
+      - 192.168.69.23:7323  # kusama-bkk03
+      - 192.168.69.33:7333  # westend-bkk03
+      - 192.168.69.14:7314  # polkadot-bkk04
+      - 192.168.69.24:7324  # kusama-bkk04
+      - 192.168.69.34:7334  # westend-bkk04
+      labels:
+        node_type: rpc
+
+    # ##############################################################################
+    # # Bootnodes
+    # ##############################################################################
+    - targets:
+      # Relay
+      - 192.168.69.214:7214  # polkadot - dot14.rotko.net
+      - 192.168.69.224:7224  # kusama   - ksm14.rotko.net
+      - 192.168.69.234:7234  # westend  - wnd14.rotko.net
+      # Cumulus
+      - 192.168.69.241:7514  # polkadot asset hub        - mint14.rotko.net
+      - 192.168.69.242:7524  # kusama asset hub          - mine14.rotko.net
+      - 192.168.69.243:7534  # westend asset hub         - wmint14.rotko.net
+      - 192.168.69.244:7543  # polkadot bridge hub       - pbr13.rotko.net
+      - 192.168.69.245:7553  # kusama bridge hub         - kbr13.rotko.net
+      - 192.168.69.246:7563  # westend bridge hub        - wbr13.rotko.net
+      - 192.168.69.247:7573  # polkadot collectives hub  - pch13.rotko.net
+      - 192.168.69.249:7593  # westend collectives hub   - wch13.rotko.net
+      - 192.168.69.240:7504  # encointer                 - enc14.rotko.net
+      labels:
+        node_type: boot
