@@ -35,6 +35,18 @@
   changed_when: "'Congratulations' in certbot_result.stdout"
   no_log: True
 
+- name: Reload nginx service
+  ansible.builtin.service:
+    name: nginx
+    state: reloaded
+
+- name: Set up Certbot DNS auto-renewal cron job
+  ansible.builtin.cron:
+    name: "Certbot DNS Renewal and Reload Nginx"
+    job: "certbot renew --quiet && systemctl reload nginx"
+    special_time: daily
+    user: root
+
 - name: Ensure NGINX configuration directories exist
   ansible.builtin.file:
     path: "/etc/nginx/{{ item }}"
@@ -99,7 +111,7 @@
     state: link
   notify: Reload nginx
 
-- name: Include loadbalancer tasks for endpoints
-  ansible.builtin.import_tasks: loadbalancer.yaml
-  when: default_node_type == 'endpoint'
+# - name: Include loadbalancer tasks for endpoints
+#   ansible.builtin.import_tasks: loadbalancer.yaml
+#   when: default_node_type == 'endpoint'
 ...
