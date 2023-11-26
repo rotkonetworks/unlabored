@@ -6,7 +6,7 @@ proxmox_hosts
 proxmox_nodes
 routers
 
-[proxmox_nodes]
+[proxmox_nodes:children]
 polkadot
 
 [routers]

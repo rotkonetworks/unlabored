@@ -1,0 +1,19 @@
+---
+ansible_host: "65.21.107.112"
+ansible_port: "20780"
+host_name: "monitor.rotko.net"
+host_timezone: "Europe/Helsinki"
+
+  # port reminder
+  #     description: "monitoring"
+  #   port_forwards:
+  #     - from_port: "{{ hostvars['monitor']['ansible_port'] }}"
+  #       to_host: "{{ hostvars['monitor']['container_ip'] }}:22"
+  #       protocol: "tcp"
+  #     - from_port: "{{ hostvars['monitor']['zabbix_port'] }}"
+  #       to_host: "{{ hostvars['monitor']['container_ip'] }}:10050"
+  #       protocol: "tcp"
+  #     - from_port: "{{ hostvars['monitor']['zabbix_host_port'] }}"
+  #       to_host: "{{ hostvars['monitor']['container_ip'] }}:10051"
+  #       protocol: "tcp"
+...
