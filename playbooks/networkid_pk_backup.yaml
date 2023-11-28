@@ -42,6 +42,6 @@
         src: "{{ network_dir.files[0].path }}/network/secret_ed25519"
         dest: "/opt/backup/{{ subdomain }}_{{ networkid.stdout | trim }}_secret_ed25519"
         flat: yes
-      when: network_dir.matched > 0 and networkid.stdout != ""
+      when: network_dir.matched > 0 and networkid.stdout
       tags: backup
 ...
