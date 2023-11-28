@@ -16,13 +16,28 @@
       ansible.builtin.set_fact:
         subdomain: "{{ inventory_hostname.split('.')[0] }}"
 
+    - name: Get networkid from logs
+      become: True
+      become_user: root
+      ansible.builtin.shell: |
+        /bin/bash -c "set -o pipefail; journalctl -u {{ default_service }} -n 100000 | grep 'Local node identity is:' | tail -1 | awk '{print \$NF}'"
+      register: networkid
+      ignore_errors: true
+      when: network_dir.matched > 0
+
+    # print 
+    - name: Print networkid
+      ansible.builtin.debug:
+        msg: "Network ID: {{ networkid.stdout | trim }}"
+      when: network_dir.matched > 0 and networkid.stdout != ""
+
     - name: Backup secrets from servers to local storage
       become: True
       become_user: root
       ansible.builtin.fetch:
         src: "{{ network_dir.files[0].path }}/network/secret_ed25519"
-        dest: "/opt/backup/{{ subdomain }}secret_ed25519"
+        dest: "/opt/backup/{{ subdomain }}_{{ networkid.stdout | trim }}_secret_ed25519"
         flat: yes
-      when: network_dir.matched > 0
+      when: network_dir.matched > 0 and networkid.stdout != ""
       tags: backup
 ...
