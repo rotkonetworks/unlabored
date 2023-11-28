@@ -1,8 +1,8 @@
 def group_by_domain(hostvars):
     domain_groups = {}
 
-    for host, vars in hostvars.items():
-        domain = vars.get("default_public_dns_lb")
+    for host, host_vars in hostvars.items():
+        domain = host_vars.get("default_public_dns_lb")
         if domain:
             domain_groups.setdefault(domain, []).append(host)
 
