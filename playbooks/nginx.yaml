@@ -1,0 +1,8 @@
+# Standards: 0.2
+---
+- name: Default tools and configurations
+  hosts: polkadot,cumulus,encointer
+  gather_facts: True
+  roles:
+    - setup_install_nginx
+...

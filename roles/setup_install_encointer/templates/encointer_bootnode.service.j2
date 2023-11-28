@@ -17,6 +17,8 @@ ExecStart={{ default_base_path }}/encointer \
   --telemetry-url 'wss://telemetry.polkadot.io/submit/ 1' \
   --listen-addr /ip4/0.0.0.0/tcp/{{ default_p2p_port }} \
   --listen-addr /ip4/0.0.0.0/tcp/{{ default_p2p_port_ws }}/ws \
+  --public-addr /ip4/{{ ansible_host }}/tcp/{{ default_p2p_port }} \
+  --public-addr /ip4/{{ ansible_host }}/tcp/{{ default_p2p_port_ws }}/ws \
   --public-addr /dns/{{ default_public_dns }}/tcp/{{ default_p2p_port }} \
   --public-addr /dns/{{ default_public_dns }}/tcp/{{ default_p2p_port_ws }}/ws \
   --public-addr /dns/{{ default_public_dns }}/tcp/{{ default_p2p_port_wss }}/wss \
