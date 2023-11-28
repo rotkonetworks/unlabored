@@ -20,7 +20,11 @@
       become: True
       become_user: root
       ansible.builtin.shell: |
-        /bin/bash -c "set -o pipefail; journalctl -u {{ default_service }} -n 100000 | tee >(grep 'Local node identity is:' | tail -1 | awk '{print \$NF}' > /tmp/networkid.txt) | grep 'Discovered new external address for our node:'"
+        /bin/bash -c "set -o pipefail \
+        journalctl -u {{ default_service }} -n 100000 | \
+        tee >(grep 'Local node identity is:' | tail -1 | \
+        awk '{print \$NF}' > /tmp/networkid.txt) | \
+        grep 'Discovered new external address for our node:'"
       register: external_addresses_logs
       ignore_errors: True
       when: network_dir.matched > 0
@@ -32,7 +36,12 @@
 
     - name: Print external addresses in JSON format without duplicates
       ansible.builtin.debug:
-        msg: "{{ external_addresses_logs.stdout_lines | map('regex_search', '(?<=node: ).*') | select('string') | unique | sort | to_nice_json }}"
+        msg: "{{ external_addresses_logs.stdout_lines |
+              map('regex_search', '(?<=node: ).*') |
+              select('string') |
+              unique |
+              sort |
+              to_nice_json }}"
       when: external_addresses_logs.stdout_lines | length > 0 and network_dir.matched > 0
 
     - name: Backup secrets from servers to local storage
@@ -41,7 +50,7 @@
       ansible.builtin.fetch:
         src: "{{ network_dir.files[0].path }}/network/secret_ed25519"
         dest: "/opt/backup/{{ subdomain }}_{{ networkid.stdout | trim }}_secret_ed25519"
-        flat: yes
+        flat: True
       when: network_dir.matched > 0 and networkid.stdout
       tags: backup
 ...
