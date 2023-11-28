@@ -16,25 +16,12 @@
       ansible.builtin.set_fact:
         subdomain: "{{ inventory_hostname.split('.')[0] }}"
 
-    # - name: Backup secrets from servers to local storage
-    #   become: True
-    #   become_user: root
-    #   ansible.builtin.copy:
-    #     src: "{{ network_dir.files[0].path }}/network/secret_ed25519"
-    #     dest: "/opt/backup/{{ subdomain }}_secret_ed25519"
-    #     owner: root
-    #     group: root
-    #     mode: 0600
-    #     remote_src: True
-    #   when: network_dir.matched > 0
-    #   tags: backup
-
     - name: Backup secrets from servers to local storage
       become: True
       become_user: root
       ansible.builtin.fetch:
         src: "{{ network_dir.files[0].path }}/network/secret_ed25519"
-        dest: "/opt/backup/{{ subdomain }}_secret_ed25519"
+        dest: "/opt/backup/{{ subdomain }}secret_ed25519"
         flat: yes
       when: network_dir.matched > 0
       tags: backup
