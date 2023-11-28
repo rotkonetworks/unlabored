@@ -1,6 +1,6 @@
 ---
-default_client_version: 1.0.0
-default_download_url: "https://github.com/paritytech/cumulus/releases/download/v{{ default_client_version }}/polkadot-parachain"
+default_client_version: 1.4.0
+default_download_url: "https://github.com/paritytech/polkadot-sdk/releases/download/v{{ default_client_version }}/polkadot-parachain"
 
 default_service: cumulus
 default_user: "{{ service_users['cumulus'] }}"
