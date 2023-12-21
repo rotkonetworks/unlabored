@@ -23,7 +23,6 @@ ExecStart={{ default_base_path }}/cumulus \
   --prometheus-port {{ default_prom_port }} \
   --relay-chain-rpc-urls {{ default_relay_rpc }} {{ default_relay_rpc_fallback }} \
   --wasm-execution Compiled \
-  --execution native-else-wasm \
   --no-hardware-benchmarks \
   --rpc-external \
   --rpc-methods safe \

@@ -24,8 +24,6 @@ ExecStart={{ default_base_path }}/polkadot \
   --public-addr /dns/{{ default_public_dns }}/tcp/{{ default_p2p_port_wss }}/wss \
   --rpc-port {{ default_rpc_port }} \
   --prometheus-port {{ default_prom_port }} \
-  --wasm-execution Compiled \
-  --execution native-else-wasm \
   --sync {{ default_syncmode | default('warp') }} \
   --no-hardware-benchmarks \
   --no-beefy \
