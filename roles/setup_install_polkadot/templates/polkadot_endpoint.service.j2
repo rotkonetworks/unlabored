@@ -29,6 +29,7 @@ ExecStart={{ default_base_path }}/polkadot \
   --rpc-external \
   --rpc-methods safe \
   --rpc-cors all \
+  --rpc-max-connections 1200 \
   --allow-private-ipv4
 
 Restart=always
