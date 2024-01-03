@@ -1,8 +1,10 @@
 # Filesystem
 
-I have gone through multiple filesystems in search for the most optimal
-for blockchain usecase. ext4 doesn't scale, mdraid and lvm doesn't flex,
-btrfs has poor UX and so so support on Proxmox yet. ZFS is incredible.
+ZFS is great filesystem for keeping storage but its terrible for running
+blockchains. Performance drop is over 50% in comparison to lvm-thin with ext4.
+For running validators its absolutely no go but for RPC nodes it might do the job.
+Anyhow in retrospective I would recommend to use lvm-thin with ext4 for
+even RPC nodes.
 
 ## Zpool
 
@@ -13,7 +15,7 @@ rate.
 
 ## Validator settings (ParityDB):
 ```bash
-zfs set recordsize=16K tank
+zfs set recordsize=4k tank
 zfs set redundant_metadata=most tank
 zfs set atime=off tank
 zfs set logbias=throughput tank
