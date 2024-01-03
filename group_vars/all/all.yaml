@@ -102,6 +102,7 @@ default_users:
   - winboxuser
   - key
   - tommi
+  - dan
 
 all_users:
   - name: key
@@ -111,6 +112,8 @@ all_users:
   - name: winboxuser
     comment: "winbox"
   - name: tommi
+    comment: "tommi"
+  - name: dan
     comment: "tommi"
 
 # Proxmox management
