@@ -114,7 +114,7 @@ all_users:
   - name: tommi
     comment: "tommi"
   - name: dan
-    comment: "tommi"
+    comment: "dan"
 
 # Proxmox management
 proxmox_default_admin_account: "ansible_admin@pve"

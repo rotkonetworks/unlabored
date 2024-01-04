@@ -70,7 +70,7 @@
   when:
     - item.name in ( users_with_access | default(default_users) )
     - item.name in ( pam_current_users | default([]) )
-    - item.name  not in service_users_lookup
+    - item.name not in service_users_lookup
 
 - name: Enable passwordless sudo access with sudoers.
   ansible.builtin.lineinfile:
