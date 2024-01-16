@@ -14,6 +14,7 @@ default_base_path: /opt/polkadot
 default_database_path: "/opt/polkadot/chains"
 default_log_level: info
 default_network: polkadot
+default_chain_spec: "{{ default_base_path }}/paseo.json"
 default_node_type: validator
 # pruning options: archive(rpc), archive-canonical(rpc/finalized) 256(default), 1000(validator)
 # default_pruning: 1000

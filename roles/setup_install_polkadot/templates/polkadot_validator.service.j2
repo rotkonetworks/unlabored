@@ -16,7 +16,11 @@ KillSignal=SIGHUP
 ExecStart={{ default_base_path }}/polkadot \
      --validator \
      --base-path {{ default_base_path }} \
+{% if default_network == 'paseo' %}
+     --chain-spec {{ default_chain_spec }} \
+{% else %}
      --chain {{ default_network }} \
+{% endif %}
      --database {{ default_database }} \
      --name "{{ hostvars[inventory_hostname]['default_telemetry_name'] | default(host_name) }}" \
      --telemetry-url 'wss://telemetry-backend.w3f.community/submit 1' \
