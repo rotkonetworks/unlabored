@@ -30,6 +30,7 @@ ExecStart={{ default_base_path }}/polkadot \
      --public-addr /ip4/{{ ansible_host }}/tcp/{{ default_p2p_port }} \
      --public-addr /ip4/{{ ansible_host }}/tcp/{{ default_p2p_port_ws }}/ws \
      --prometheus-port {{ default_prom_port }} \
+     --prometheus-external \
      --wasm-execution compiled \
      --pruning 1000 \
      --workers-path {{ default_auxiliary_binary_path }} \
