@@ -6,11 +6,11 @@
     state: present
   when: ansible_facts['distribution_release'] == "bullseye"
 
-- name: Install Proxmox Enterprise GPG Key (Bullseye)
-  ansible.builtin.apt_key:
-    url: https://enterprise.proxmox.com/debian/proxmox-release-bullseye.gpg
-    state: present
+- name: Verify Proxmox OSS GPG Key (Bullseye)
+  ansible.builtin.shell:
+    cmd: "set -o pipefail && sha512sum /etc/apt/trusted.gpg.d/proxmox-release-bullseye.gpg | grep '{{ bullseye_gpg_key_hash }}'"
   when: ansible_facts['distribution_release'] == "bullseye"
+  failed_when: result.rc != 0 and 'No such file or directory' not in result.stderr
 
 - name: Install Proxmox OSS GPG Key (Bookworm)
   ansible.builtin.apt_key:
@@ -18,9 +18,9 @@
     state: present
   when: ansible_facts['distribution_release'] == "bookworm"
 
-- name: Install Proxmox Enterprise GPG Key (Bookworm)
-  ansible.builtin.apt_key:
-    url: https://enterprise.proxmox.com/debian/proxmox-release-bookworm.gpg
-    state: present
+- name: Verify Proxmox OSS GPG Key (Bookworm)
+  ansible.builtin.shell:
+    cmd: "set -o pipefail && sha512sum /etc/apt/trusted.gpg.d/proxmox-release-bookworm.gpg | grep '{{ bookworm_gpg_key_hash }}'"
   when: ansible_facts['distribution_release'] == "bookworm"
+  failed_when: result.rc != 0 and 'No such file or directory' not in result.stderr
 ...

@@ -1,7 +1,7 @@
 # Standards: 0.2
 ---
 galaxy_info:
-  author: Jani Mikkonen <jani.mikkonen@northcode.fi>
+  author: Rotko Networks <hq@rotko.net>
   description: Install gpgkeys for proxmox debian repository
   min_ansible_version: 3.0
   platforms:
