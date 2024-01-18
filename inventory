@@ -31,6 +31,7 @@ wch13
 
 [encointer]
 enc14
+enc26
 
 [polkadot]
 ksm01
@@ -47,25 +48,35 @@ ksm14
 ksm24
 wnd14
 wnd24
+pso01
+pso02
+pso06
+pso16
+pso26
 
 [proxmox_hosts]
 bkk01
 bkk02
 bkk03
 bkk04
+bkk06
 
 [unmanaged]
 bkk05
 zabbix
-hel-zabbix
+gatus
 kvm01
 kvm02
+kvm03
+kvm04
+kvm06
 
 [hardware]
 bkk01
 bkk02
 bkk03
 bkk04
+bkk06
 
 [access_management:children]
 hardware
