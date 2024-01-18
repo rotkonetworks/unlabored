@@ -33,13 +33,14 @@
   ansible.builtin.setup:
 
 - name: Check if default network is Paseo
-  set_fact:
+  ansible.builtin.set_fact:
     is_paseo_network: "{{ default_network == 'paseo' }}"
 
 - name: Download Paseo chain spec
-  get_url:
+  ansible.builtin.get_url:
     url: "{{ default_chain_spec_dl_url }}"
     dest: "{{ default_chain_spec }}"
+    mode: '0644'
   when: is_paseo_network
 
 - name: Copy Polkadot systemd service for specific node type
