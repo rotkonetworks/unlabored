@@ -8,7 +8,7 @@ role: "kvm"
 pinned_service: False
 
 port_forwards:
-- from_port: "{{ ansible_port }}"
-  to_host: "{{ container_ip }}:22"
-  protocol: "tcp"
+  - from_port: "{{ ansible_port }}"
+    to_host: "{{ container_ip }}:22"
+    protocol: "tcp"
 ...
