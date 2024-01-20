@@ -4,7 +4,7 @@
   ansible.builtin.include_role:
     name: geerlingguy.postfix
   vars:
-    postfix_config_file: /etc/postfix/main.cf
+    postfix_config_file: /etc/postfix/master.cf
     postfix_service_state: started
     postfix_service_enabled: True
     postfix_inet_interfaces: "loopback-only"
