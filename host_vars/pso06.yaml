@@ -1,0 +1,28 @@
+---
+ansible_host: "27.131.160.106"
+container_ip: "192.168.76.146"
+ansible_port: "2146"
+host_name: "pso06.rotko.net"
+host_timezone: "Asia/Bangkok"
+netif: '{"net0":"name=eth0,gw={{ default_nat_network_forward_cidr.split("/")[0] }},ip={{ default_host_ip }}/24,bridge={{ default_nat_device }}"}'
+role: "polkadot"
+pinned_service: True
+
+# Variables
+
+default_telemetry_name: "Rotko Networks - {{ host_name.split('.')[0] }} {{ default_node_type | capitalize }}"
+default_network: "paseo"
+default_chain_spec: "{{ default_base_path }}/paseo.raw.json"
+default_chain_spec_dl_url: "https://raw.githubusercontent.com/paseo-network/runtimes/main/chain-specs/paseo.raw.json"
+default_node_type: "validator"
+default_pruning: 1000
+default_database: paritydb
+default_syncmode: warp
+default_p2p_port: 33146
+default_p2p_port_ws: 34146
+default_p2p_port_wss: 35146
+default_rpc_port: 9146
+default_secure_rpc_port: 42146
+default_prom_port: 7146
+zabbix_ext_port: 10146
+...
