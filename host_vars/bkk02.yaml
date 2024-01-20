@@ -25,7 +25,7 @@ lxc_nodes:
       hostname: "{{ hostvars['dot02']['host_name'] }}"
       ostemplate: 'local:vztmpl/{{ default_container_template }}'
       netif: "{{ hostvars['dot02']['netif'] }}"
-      cores: 4
+      cores: 2
       memory: 30720
       swap: 15360
       password: "{{ default_password }}"
@@ -42,16 +42,28 @@ lxc_nodes:
       - from_port: "{{ hostvars['dot02']['ansible_port'] }}"
         to_host: "{{ hostvars['dot02']['container_ip'] }}:22"
         protocol: "tcp"
+      - from_port: "{{ hostvars['monitor']['zabbix_port'] }}"
+        to_host: "{{ hostvars['monitor']['container_ip'] }}:10050"
+        protocol: "tcp"
       - from_port: "{{ hostvars['dot02']['default_p2p_port'] }}"
         to_host: "{{ hostvars['dot02']['container_ip'] }}:{{ hostvars['dot02']['default_p2p_port'] }}"
         protocol: "tcp"
+      - from_port: "{{ hostvars['dot02']['default_p2p_port'] }}"
+        to_host: "{{ hostvars['dot02']['container_ip'] }}:{{ hostvars['dot02']['default_p2p_port'] }}"
+        protocol: "udp"
+      - from_port: "{{ hostvars['dot02']['default_p2p_port_ws'] }}"
+        to_host: "{{ hostvars['dot02']['container_ip'] }}:{{ hostvars['dot02']['default_p2p_port_ws'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['dot02']['default_p2p_port_ws'] }}"
+        to_host: "{{ hostvars['dot02']['container_ip'] }}:{{ hostvars['dot02']['default_p2p_port_ws'] }}"
+        protocol: "udp"
   - host: "ksm02"
     proxmox_config:
       vmid: "122"
       hostname: "{{ hostvars['ksm02']['host_name'] }}"
       ostemplate: 'local:vztmpl/{{ default_container_template }}'
       netif: "{{ hostvars['ksm02']['netif'] }}"
-      cores: 4
+      cores: 2
       memory: 30720
       swap: 15360
       password: "{{ default_password }}"
@@ -68,33 +80,19 @@ lxc_nodes:
       - from_port: "{{ hostvars['ksm02']['ansible_port'] }}"
         to_host: "{{ hostvars['ksm02']['container_ip'] }}:22"
         protocol: "tcp"
+      - from_port: "{{ hostvars['monitor']['zabbix_port'] }}"
+        to_host: "{{ hostvars['monitor']['container_ip'] }}:10050"
+        protocol: "tcp"
       - from_port: "{{ hostvars['ksm02']['default_p2p_port'] }}"
         to_host: "{{ hostvars['ksm02']['container_ip'] }}:{{ hostvars['ksm02']['default_p2p_port'] }}"
         protocol: "tcp"
-  - host: "pso02"
-    proxmox_config:
-      vmid: "142"
-      hostname: "{{ hostvars['pso02']['host_name'] }}"
-      ostemplate: 'local:vztmpl/{{ default_container_template }}'
-      netif: "{{ hostvars['pso02']['netif'] }}"
-      cores: 2
-      memory: 16384
-      swap: 16384
-      password: "{{ default_password }}"
-      disk: "{{ default_storage }}:20"
-      mounts: '{"mp0":"{{ default_storage }}:80,mp={{ hostvars["pso02"]["default_base_path"] }}"}'
-      onboot: True
-      unprivileged: True
-      validate_certs: False
-      description: "kusama validator node: {{ hostvars['pso02']['host_name'] }}"
-      state: present
-      features:
-        - nesting=1
-    port_forwards:
-      - from_port: "{{ hostvars['pso02']['ansible_port'] }}"
-        to_host: "{{ hostvars['pso02']['container_ip'] }}:22"
+      - from_port: "{{ hostvars['ksm02']['default_p2p_port'] }}"
+        to_host: "{{ hostvars['ksm02']['container_ip'] }}:{{ hostvars['ksm02']['default_p2p_port'] }}"
+        protocol: "udp"
+      - from_port: "{{ hostvars['ksm02']['default_p2p_port_ws'] }}"
+        to_host: "{{ hostvars['ksm02']['container_ip'] }}:{{ hostvars['ksm02']['default_p2p_port_ws'] }}"
         protocol: "tcp"
-      - from_port: "{{ hostvars['pso02']['default_p2p_port'] }}"
-        to_host: "{{ hostvars['pso02']['container_ip'] }}:{{ hostvars['pso02']['default_p2p_port'] }}"
-        protocol: "tcp"
+      - from_port: "{{ hostvars['ksm02']['default_p2p_port_ws'] }}"
+        to_host: "{{ hostvars['ksm02']['container_ip'] }}:{{ hostvars['ksm02']['default_p2p_port_ws'] }}"
+        protocol: "udp"
 ...
