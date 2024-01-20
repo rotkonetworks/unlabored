@@ -1,5 +1,12 @@
 # Standards: 0.2
 ---
+- name: Check if Proxmox VE is installed
+  ansible.builtin.command:
+    cmd: dpkg -l | grep proxmox-ve
+  register: proxmox_check
+  changed_when: False
+  failed_when: False
+
 - name: Remove clashing Qemu packages
   ansible.builtin.apt:
     pkg:
@@ -18,7 +25,7 @@
   ansible.builtin.apt:
     name: firmware-ath9k-htc
     state: absent
-  when: firmware_check.stdout | length > 0
+  when: firmware_check.stdout | length > 0 and proxmox_check.stdout | length == 0
 
 - name: Fix broken dependencies
   ansible.builtin.command:
@@ -27,12 +34,31 @@
   become_user: root
   when: firmware_check.stdout | length > 0
 
-- name: Install Proxmox kernel
+- name: Check if any PVE kernel is installed
+  ansible.builtin.command:
+    cmd: dpkg -l | grep 'pve-kernel'
+  register: pve_kernel_check
+  changed_when: False
+  failed_when: False
+
+- name: Install Proxmox kernel 6.5
   ansible.builtin.apt:
     pkg:
-      - pve-kernel-6.2
+      - pve-kernel-6.5
     state: present
   notify: Reboot machine
+  when: ansible_facts['distribution_release'] == "bookworm" and pve_kernel_check.stdout | length == 0
+
+- name: Install Proxmox kernel 5.19
+  ansible.builtin.apt:
+    pkg:
+      - pve-kernel-5.19
+    state: present
+  notify: Reboot machine
+  when: ansible_facts['distribution_release'] == "bullseye" and pve_kernel_check.stdout | length == 0
+
+- name: Flush notify handlers
+  ansible.builtin.meta: flush_handlers
 
 - name: Install Proxmox Debian Packages
   ansible.builtin.apt:
