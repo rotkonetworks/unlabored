@@ -6,21 +6,29 @@
     state: present
   when: ansible_facts['distribution_release'] == "bullseye"
 
-- name: Verify Proxmox OSS GPG Key (Bullseye)
+- name: Get SHA512 of Proxmox OSS GPG Key (Bullseye)
   ansible.builtin.shell:
-    cmd: "set -o pipefail && sha512sum /etc/apt/trusted.gpg.d/proxmox-release-bullseye.gpg | grep '{{ bullseye_gpg_key_hash }}'"
+    cmd: sha512sum /etc/apt/trusted.gpg.d/proxmox-release-bullseye.gpg
+  register: sha512sum_result
   when: ansible_facts['distribution_release'] == "bullseye"
-  failed_when: result.rc != 0 and 'No such file or directory' not in result.stderr
 
-- name: Install Proxmox OSS GPG Key (Bookworm)
-  ansible.builtin.apt_key:
-    url: http://download.proxmox.com/debian/proxmox-release-bookworm.gpg
-    state: present
-  when: ansible_facts['distribution_release'] == "bookworm"
+- name: Verify SHA512 of Proxmox OSS GPG Key (Bullseye)
+  ansible.builtin.fail:
+    msg: "SHA512 checksum does not match for Bullseye GPG key."
+  when:
+    - ansible_facts['distribution_release'] == "bullseye"
+    - bullseye_gpg_key_hash not in sha512sum_result.stdout
 
-- name: Verify Proxmox OSS GPG Key (Bookworm)
+- name: Get SHA512 of Proxmox OSS GPG Key (Bookworm)
   ansible.builtin.shell:
-    cmd: "set -o pipefail && sha512sum /etc/apt/trusted.gpg.d/proxmox-release-bookworm.gpg | grep '{{ bookworm_gpg_key_hash }}'"
+    cmd: sha512sum /etc/apt/trusted.gpg.d/proxmox-release-bookworm.gpg
+  register: sha512sum_result
   when: ansible_facts['distribution_release'] == "bookworm"
-  failed_when: result.rc != 0 and 'No such file or directory' not in result.stderr
+
+- name: Verify SHA512 of Proxmox OSS GPG Key (Bookworm)
+  ansible.builtin.fail:
+    msg: "SHA512 checksum does not match for Bookworm GPG key."
+  when:
+    - ansible_facts['distribution_release'] == "bookworm"
+    - bookworm_gpg_key_hash not in sha512sum_result.stdout
 ...
