@@ -15,7 +15,7 @@ bkk00
 [polkadot]
 ksm01
 dot01
-pso01
+; pso01
 
 [proxmox_hosts]
 bkk01
