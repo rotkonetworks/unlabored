@@ -9,7 +9,7 @@ Group={{ default_group }}
 ExecStart={{ default_base_path }}/polkadot \
   --name "{{ default_telemetry_name }}" \
 {% if default_network == 'paseo' %}
-     --chain-spec {{ default_chain_spec }} \
+     --chain {{ default_chain_spec }} \
 {% else %}
      --chain {{ default_network }} \
 {% endif %}

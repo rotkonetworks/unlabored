@@ -17,7 +17,7 @@ ExecStart={{ default_base_path }}/polkadot \
      --validator \
      --base-path {{ default_base_path }} \
 {% if default_network == 'paseo' %}
-     --chain-spec {{ default_chain_spec }} \
+     --chain {{ default_chain_spec }} \
 {% else %}
      --chain {{ default_network }} \
 {% endif %}
