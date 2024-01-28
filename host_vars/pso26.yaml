@@ -4,7 +4,7 @@ container_ip: "192.168.76.46"
 ansible_port: "2346"
 host_name: "pso26.rotko.net"
 host_timezone: "Asia/Bangkok"
-netif: '{"net0":"name=eth0,gw={{ default_nat_network_forward_cidr.split("/")[0] }},ip={{ default_host_ip }}/24,bridge={{ default_nat_device }}"}'
+netif: '{"net0":"name=eth0,gw={{ default_nat_network_forward_cidr.split("/")[0] }},ip={{ default_host_ip }}/16,bridge={{ default_nat_device }}"}'
 role: "polkadot"
 pinned_service: True
 
@@ -13,7 +13,8 @@ pinned_service: True
 default_telemetry_name: "Rotko Networks - {{ host_name.split('.')[0] }} {{ default_node_type | capitalize }}"
 default_network: "paseo"
 default_chain_spec: "{{ default_base_path }}/paseo.raw.json"
-default_chain_spec_dl_url: "https://raw.githubusercontent.com/paseo-network/runtimes/main/chain-specs/paseo.raw.json"
+default_chain_spec_dl_url: "https://raw.githubusercontent.com/paseo-network/runtimes/8cb10b1404f3e1ec79aa72f88d182f6a3f38b3a3/chain-specs/paseo.raw.json"
+# default_chain_spec_dl_url: "https://raw.githubusercontent.com/paseo-network/runtimes/main/chain-specs/paseo.raw.json"
 default_public_dns: "{{ host_name }}"
 default_public_dns_lb: "paseo.rotko.net"
 default_public_dns_ibp: "rpc.ibp.network"

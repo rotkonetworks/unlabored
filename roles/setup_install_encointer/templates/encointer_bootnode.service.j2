@@ -10,7 +10,7 @@ ExecStart={{ default_base_path }}/encointer \
   --name "{{ default_telemetry_name }}" \
   --chain {{ default_network }} \
   --base-path {{ default_base_path }} \
-  --database paritydb \
+  --database {{ default_database }} \
   --state-pruning 256 \
   --log sync=warn,afg=warn,babe=warn \
   --telemetry-url 'wss://telemetry-backend.w3f.community/submit 1' \

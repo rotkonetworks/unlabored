@@ -18,6 +18,11 @@ default_gw_device: "enp4s0"
 default_storage: "tank02"
 default_resource_pool: "bkk02_resource_pool"
 
+port_forwards:
+  - from_port: "{{ ansible_port }}"
+    to_host: "{{ container_ip }}:22"
+    protocol: "tcp"
+
 lxc_nodes:
   - host: "dot02"
     proxmox_config:
