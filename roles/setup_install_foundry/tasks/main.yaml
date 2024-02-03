@@ -12,7 +12,7 @@
     mode: "u+rwx"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
-  when: foundryup.stat.exists == False
+  when: not foundryup.stat.exists
   notify:
     - Run foundry installer script
     - Execute Foundry Installer
@@ -20,13 +20,13 @@
 - name: Run foundry installer script
   ansible.builtin.shell:
     cmd: "/tmp/foundry_install"
-  when: foundryup.stat.exists == False
+  when: not foundryup.stat.exists
   environment:
     FOUNDRY_DIR: /usr/local
 
 - name: Execute Foundry Installer
   ansible.builtin.shell:
     cmd: /usr/local/bin/foundryup
-  when: foundryup.stat.exists == False
+  when: not foundryup.stat.exists
   environment:
     FOUNDRY_DIR: /usr/local

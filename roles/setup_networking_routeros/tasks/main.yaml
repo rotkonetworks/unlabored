@@ -43,12 +43,12 @@
   community.routeros.command:
     commands: "{{ item.port_forward | generate_rule('nat', ansible_host) }}"
   loop: "{{ port_forwards_exist_check.results }}"
-  when: item.ansible_facts.port_forward_exists == False
+  when: not item.ansible_facts.port_forward_exists
   delegate_to: "{{ routeros_delegate_host }}"
 
 - name: Configure firewall filter rules on RouterOS for each LXC node
   community.routeros.command:
     commands: "{{ item.port_forward | generate_rule('filter') }}"
   loop: "{{ filter_exist_check.results }}"
-  when: item.ansible_facts.filter_exists == False
+  when: not item.ansible_facts.filter_exists
   delegate_to: "{{ routeros_delegate_host }}"

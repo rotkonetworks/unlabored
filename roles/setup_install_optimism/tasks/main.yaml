@@ -91,8 +91,8 @@
     repo: "{{ item.url }}"
     version: "{{ item.version }}"
   when:
-    - optimismnode.stat.exists == False
-    - ansible_local['noderole']['node']['pinned'] != "True"
+    - not optimismnode.stat.exists
+    - not ansible_local['noderole']['node']['pinned']
     - ansible_local['noderole']['node']['version'] != optimism_version
   with_items:
     - { url: "{{ optimism_git_repo }}", version: "@eth-optimism/sdk@{{ optimism_version }}", dest: "optimism" }
@@ -105,8 +105,8 @@
       - yarn
     chdir: "{{ optimism_build_path }}/optimism"
   when:
-    - optimismnode.stat.exists == False
-    - ansible_local['noderole']['node']['pinned'] != "True"
+    - not optimismnode.stat.exists
+    - not ansible_local['noderole']['node']['pinned']
     - ansible_local['noderole']['node']['version'] != optimism_version
 
 - name: Run yarn build
@@ -118,8 +118,8 @@
       - build
     chdir: "{{ optimism_build_path }}/optimism"
   when:
-    - optimismnode.stat.exists == False
-    - ansible_local['noderole']['node']['pinned'] != "True"
+    - not optimismnode.stat.exists
+    - not ansible_local['noderole']['node']['pinned']
     - ansible_local['noderole']['node']['version'] != optimism_version
 
 - name: Run make geth
@@ -139,8 +139,8 @@
     # that does not source /etc/profile where go env settings are stored.
     # So setting all those here is fast
   when:
-    - optimismnode.stat.exists == False
-    - ansible_local['noderole']['node']['pinned'] != "True"
+    - not optimismnode.stat.exists
+    - not ansible_local['noderole']['node']['pinned']
     - ansible_local['noderole']['node']['version'] != optimism_version
 
 - name: Install optimism
@@ -150,8 +150,8 @@
       - "{{ optimism_build_path }}/optimism"
       - "{{ optimism_base }}/optimism-v{{ optimism_version }}"
   when:
-    - optimismnode.stat.exists == False
-    - ansible_local['noderole']['node']['pinned'] != "True"
+    - not optimismnode.stat.exists
+    - not ansible_local['noderole']['node']['pinned']
     - ansible_local['noderole']['node']['version'] != optimism_version
   notify:
     - Remove Optimism Build Directory
@@ -186,7 +186,7 @@
     mode: "u+rw"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
-  when: l2gethdata.stat.exists == False
+  when: not l2gethdata.stat.exists
 
 - name: Generate empty password file
   ansible.builtin.file:
@@ -216,7 +216,7 @@
       - "init"
       - "/tmp/genesis.json"
     chdir: "{{ optimism_base }}/optimism-v{{ optimism_version }}/l2geth/build/bin"
-  when: l2gethdata.stat.exists == False
+  when: not l2gethdata.stat.exists
 
 - name: Import Optimism geth account
   become: True

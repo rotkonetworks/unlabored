@@ -44,7 +44,7 @@
     creates: "{{ avalanche_base }}/avalanchego-v{{ avalanche_version }}"
   register: avalanche_install
   when:
-    - ansible_local['noderole']['node']['pinned'] != "True"
+    - not ansible_local['noderole']['node']['pinned']
     - ansible_local['noderole']['node']['version'] != avalanche_version
   notify:
     - Add Service Pinned Status
@@ -95,9 +95,9 @@
     group: "{{ avalanche_user }}"
     mode: '0755'
   when:
-    - ansible_local['noderole']['node']['pinned'] != "True"
+    - not ansible_local['noderole']['node']['pinned']
     - ansible_local['noderole']['node']['version'] != avalanche_version
-    - avalanche_enable_swimmer == True
+    - avalanche_enable_swimmer
 
 - name: Copy Swimmer extra configs if needed
   ansible.builtin.copy:
@@ -107,7 +107,7 @@
     group: "{{ avalanche_user }}"
     mode: u+rw,g-wx,o-wx
   when:
-    - avalanche_enable_swimmer == True
+    - avalanche_enable_swimmer
   with_items:
     - { source: "chain_1_config.json", destination: "{{ avalanche_chain_config_path }}/2Sk6j8TYVQc2oR1TtUz64EWHAYjDUoDQ4hpbu6FMN2JBKC77xa/config.json" }
     - { source: "chain_2_config.json", destination: "{{ avalanche_chain_config_path }}/2K33xS9AyP9oCDiHYKVrHe7F54h2La5D8erpTChaAhdzeSu2RX/config.json" }

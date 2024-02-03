@@ -59,8 +59,8 @@
     repo: "{{ item.url }}"
     version: "{{ item.version }}"
   when:
-    - arbnode.stat.exists == False
-    - ansible_local['noderole']['node']['pinned'] != "True"
+    - not arbnode.stat.exists
+    - not ansible_local['noderole']['node']['pinned']
     - ansible_local['noderole']['node']['version'] != arbitrum_version
   with_items:
     - { url: "{{ arbitrum_git_repo }}", version: "v{{ arbitrum_version }}", dest: "arbitrum" }
@@ -76,7 +76,7 @@
     creates: "/usr/local/lib/librocksdb.so.{{ arbitrum_rocksdb_version }}"
     chdir: "{{ arbitrum_build_path }}/rocksdb"
   when:
-    - rocksdb.stat.exists == False
+    - not rocksdb.stat.exists
 
 - name: Generate ldconfig file for rocksdb installation
   ansible.builtin.template:
@@ -117,8 +117,8 @@
     creates: "{{ arbitrum_build_path }}/arbitrum/packages/arb-avm-cpp/build/bin/avm_runner"
     chdir: "{{ arbitrum_build_path }}/arbitrum"
   when:
-    - arbnode.stat.exists == False
-    - ansible_local['noderole']['node']['pinned'] != "True"
+    - not arbnode.stat.exists
+    - not ansible_local['noderole']['node']['pinned']
     - ansible_local['noderole']['node']['version'] != arbitrum_version
   environment:
     GOROOT: "/usr/local/go"
@@ -140,8 +140,8 @@
     chdir: "{{ arbitrum_build_path }}/arbitrum/packages/arb-rpc-node"
     creates: "{{ arbitrum_base }}/go"
   when:
-    - arbnode.stat.exists == False
-    - ansible_local['noderole']['node']['pinned'] != "True"
+    - not arbnode.stat.exists
+    - not ansible_local['noderole']['node']['pinned']
     - ansible_local['noderole']['node']['version'] != arbitrum_version
   environment:
     GOROOT: "/usr/local/go"
@@ -163,8 +163,8 @@
     GOPATH: "{{ arbitrum_base }}/go"
     PATH: "$GOPATH/bin:$GOROOT/bin:/usr/local/go/bin:/usr/local/bin:/usr/bin:/bin"
   when:
-    - arbnode.stat.exists == False
-    - ansible_local['noderole']['node']['pinned'] != "True"
+    - not arbnode.stat.exists
+    - not ansible_local['noderole']['node']['pinned']
     - ansible_local['noderole']['node']['version'] != arbitrum_version
   with_items:
     - { path: "packages/arb-rpc-node/cmd", name: "arb-node" }

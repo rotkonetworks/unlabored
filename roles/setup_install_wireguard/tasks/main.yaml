@@ -1,6 +1,5 @@
 ---
 # tasks/main.yaml for WireGuard
-
 - name: Check if necessary files exist
   ansible.builtin.stat:
     path: "{{ item }}"
@@ -9,37 +8,31 @@
     - /etc/wireguard/private.key
   register: file_status
 
-- name: Set Umask for session
-  ansible.builtin.shell:
-    cmd: "umask 077"
-  changed_when: False
-
 - name: Generate the VPN private key (admin)
-  ansible.builtin.shell:
-    cmd: wg genkey
+  ansible.builtin.command:
+    cmd: wg genkey > /etc/wireguard/private.key
     creates: /etc/wireguard/private.key
-  register: WG_PRIVATE_KEY
-  when: file_status.results[0].stat.exists == False
+  args:
+    creates: /etc/wireguard/private.key
+  when: not file_status.results[0].stat.exists
 
-- name: Generate the VPN public keys (admin)
+- name: Generate the VPN public key (admin)
   ansible.builtin.shell:
-    cmd: wg pubkey
-    args:
-      stdin: "{{ WG_PRIVATE_KEY.stdout }}"
+    cmd: cat /etc/wireguard/private.key | wg pubkey > /etc/wireguard/public.key
     creates: /etc/wireguard/public.key
-  when: file_status.results[0].stat.exists == False
+  when: not file_status.results[1].stat.exists
 
-- name: Register the VPN public keys (admin)
+- name: Register the VPN public key (admin)
   ansible.builtin.set_fact:
     WG_PUB_KEY: "{{ lookup('file', '/etc/wireguard/public.key') }}"
-  when: file_status.results[0].stat.exists == False
+  when: not file_status.results[1].stat.exists
 
 - name: Configure wireguard files
   ansible.builtin.template:
     src: wg0.conf.j2
     dest: /etc/wireguard/wg0.conf
     mode: "0755"
-  when: file_status.results[0].stat.exists == False
+  when: not file_status.results[0].stat.exists
   notify:
     - Restart wireguard
 
@@ -62,6 +55,6 @@
     name: wg-quick@wg0
     enabled: True
     masked: False
-  when: file_status.results[0].stat.exists == False
+  when: not file_status.results[0].stat.exists
   notify:
     - Start wireguard
