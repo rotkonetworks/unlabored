@@ -22,6 +22,7 @@ ExecStart={{ default_base_path }}/cumulus \
   --public-addr /dns/{{ default_public_dns }}/tcp/{{ default_p2p_port_wss }}/wss \
   --rpc-port {{ default_rpc_port }} \
   --prometheus-port {{ default_prom_port }} \
+  --prometheus-external \
   --relay-chain-rpc-urls {{ default_relay_rpc }} {{ default_relay_rpc_fallback }} \
   --wasm-execution Compiled \
   --no-hardware-benchmarks \
