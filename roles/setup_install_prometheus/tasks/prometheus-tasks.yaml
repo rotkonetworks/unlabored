@@ -1,12 +1,13 @@
 ---
-# Reworked tasks for Prometheus setup
+- name: Set default Prometheus download URL as fallback
+  ansible.builtin.set_fact:
+    prometheus_download_url: "https://example.com/default_prometheus.tar.gz"  # Fallback URL
 
-- name: Fetch the latest version of Prometheus
+- name: Attempt to fetch the latest version of Prometheus
   ansible.builtin.get_url:
-    url: "{{ prometheus_download_url }}"
+    url: "{{ lookup('url', 'https://api.github.com/repos/prometheus/prometheus/releases/latest', wantlist=True) | default([]) | json_query('[0].assets[?content_type==`application/gzip`].browser_download_url') | first | default(prometheus_download_url) }}"
     dest: "/tmp/prometheus.tar.gz"
-  vars:
-    prometheus_download_url: "{{ lookup('url', 'https://api.github.com/repos/prometheus/prometheus/releases/latest', wantlist=True) | json_query('[0].assets[?content_type==`application/gzip`].browser_download_url') | first }}"
+    mode: '0755'
   register: download_result
   until: download_result is succeeded
   retries: 3
@@ -18,7 +19,7 @@
     dest: "/tmp"
     remote_src: yes
     creates: "/usr/local/bin/prometheus"
-  
+
 - name: Move Prometheus binaries to the desired location
   ansible.builtin.command:
     cmd: "mv /tmp/prometheus-{{ prometheus_version }}/prometheus* /usr/local/bin/"
@@ -32,7 +33,7 @@
     state: directory
     owner: prometheus
     group: prometheus
-    mode: "0755"
+    mode: '0755'
   loop:
     - /etc/prometheus/
     - /var/lib/prometheus/
@@ -49,7 +50,7 @@
     dest: /etc/prometheus/prometheus.yml
     owner: prometheus
     group: prometheus
-    mode: "0644"
+    mode: '0644'
 
 - name: Validate Prometheus configuration
   ansible.builtin.command:
@@ -67,7 +68,7 @@
       ansible.builtin.template:
         src: files/prometheus.service
         dest: /etc/systemd/system/prometheus.service
-        mode: "0644"
+        mode: '0644'
       when: not servicestatus.stat.exists
 
     - name: Handle Prometheus service state

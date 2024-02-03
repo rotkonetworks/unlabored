@@ -17,7 +17,7 @@
   when: not file_status.results[0].stat.exists
 
 - name: Generate the VPN public key (admin)
-  ansible.builtin.shell:
+  ansible.builtin.command:
     cmd: cat /etc/wireguard/private.key | wg pubkey > /etc/wireguard/public.key
     creates: /etc/wireguard/public.key
   when: not file_status.results[1].stat.exists
