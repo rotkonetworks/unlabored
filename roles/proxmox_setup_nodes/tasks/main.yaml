@@ -1,9 +1,5 @@
 # Standards: 0.2
 ---
-- name: Debug ansible_local
-  debug:
-    var: ansible_local
-
 - name: Create predefined containers
   community.general.proxmox: "{{ proxmox_defaults | combine(item.proxmox_config) }}"
   loop: "{{ lxc_nodes }}"
