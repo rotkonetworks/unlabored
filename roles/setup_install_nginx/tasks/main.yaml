@@ -11,9 +11,10 @@
   register: packages_installed
 
 - name: Check certbot plugins
-  ansible.builtin.shell:
+  ansible.builtin.command:
     cmd: certbot plugins || true
   register: certbot_plugins_output
+  changed_when: False
 
 - name: Install certbot_dns_porkbun plugin if absent
   ansible.builtin.pip:

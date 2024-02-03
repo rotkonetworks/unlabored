@@ -15,11 +15,10 @@
   when: hostvars['monitor']['prometheus_latest_mon'] is defined
 
 - name: Check installed version of Prometheus
-  ansible.builtin.shell:
-    cmd: |
-      set -o pipefail
-      prometheus --version | grep prometheus | awk '{print substr($3, 0, length($3))}'
+  ansible.builtin.command:
+    cmd: prometheus --version | grep prometheus | awk '{print substr($3, 0, length($3))}'
   register: prometheus_installed
+  changed_when: False
 
 - name: Import Prometheus tasks
   ansible.builtin.import_tasks: "prometheus-tasks.yaml"
@@ -34,10 +33,10 @@
     mode: "0755"
 
 - name: Check Prometheus configuration
-  ansible.builtin.shell:
-    cmd: |
-      set -o pipefail
-      promtool check config /etc/prometheus/prometheus.yaml
+  ansible.builtin.command:
+    cmd: promtool check config /etc/prometheus/prometheus.yaml
+  register: prometheus_config
+  when: prometheus_latest.stdout != prometheus_installed.stdout
 
 - name: Restart service
   ansible.builtin.systemd:

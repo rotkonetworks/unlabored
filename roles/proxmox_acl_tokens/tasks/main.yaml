@@ -18,6 +18,7 @@
       - "{{ item.name }}"
   with_items: "{{ proxmox_admin_accounts }}"
   register: user_token_list
+  changed_when: False
 
 - name: Store existing tokens
   ansible.builtin.set_fact:

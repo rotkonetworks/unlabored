@@ -1,10 +1,10 @@
 ---
 - name: Really Restart Avalanche
-  ansible.builtin.command:
-    argv:
-      - systemctl
-      - restart
-      - avalanchego
+  ansible.builtin.systemd:
+    name: avalanchego
+    daemon_reload: True
+    state: restarted
+    enabled: True
 
 - name: Restart Avalanche
   ansible.builtin.systemd:

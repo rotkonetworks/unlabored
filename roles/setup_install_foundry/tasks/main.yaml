@@ -18,14 +18,14 @@
     - Execute Foundry Installer
 
 - name: Run foundry installer script
-  ansible.builtin.shell:
+  ansible.builtin.command:
     cmd: "/tmp/foundry_install"
   when: not foundryup.stat.exists
   environment:
     FOUNDRY_DIR: /usr/local
 
 - name: Execute Foundry Installer
-  ansible.builtin.shell:
+  ansible.builtin.command:
     cmd: /usr/local/bin/foundryup
   when: not foundryup.stat.exists
   environment:

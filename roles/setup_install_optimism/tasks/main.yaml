@@ -232,7 +232,7 @@
       - "{{ optimism_base }}/password"
       - "{{ optimism_base }}/block-signer-key"
     chdir: "{{ optimism_base }}/optimism-v{{ optimism_version }}/l2geth/build/bin"
-  when: l2auth.stat.exists == False
+  when: not l2auth.stat.exists
   notify:
     - Restart Optimism-geth
     - Restart Optimism-dtl

@@ -16,6 +16,7 @@
       - acl
       - list
   register: pveum_acl_list
+  changed_when: False
 
 - name: Register group acl list
   ansible.builtin.set_fact:

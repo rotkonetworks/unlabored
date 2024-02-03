@@ -18,8 +18,8 @@
     force: False
 
 - name: Install Rust for the user if not present
-  ansible.builtin.shell:
-    cmd: sh /tmp/sh.rustup.rs -y
+  ansible.builtin.command:
+    cmd: "/tmp/sh.rustup.rs -y"
   when: not rust_installed.stat.exists
   notify:
     - Add Rust to PATH for bash

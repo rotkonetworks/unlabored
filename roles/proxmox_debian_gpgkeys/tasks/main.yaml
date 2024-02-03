@@ -7,7 +7,7 @@
   when: ansible_facts['distribution_release'] == "bullseye"
 
 - name: Get SHA512 of Proxmox OSS GPG Key (Bullseye)
-  ansible.builtin.shell:
+  ansible.builtin.command:
     cmd: sha512sum /etc/apt/trusted.gpg.d/proxmox-release-bullseye.gpg
   register: sha512sum_result
   when: ansible_facts['distribution_release'] == "bullseye"
@@ -20,7 +20,7 @@
     - bullseye_gpg_key_hash not in sha512sum_result.stdout
 
 - name: Get SHA512 of Proxmox OSS GPG Key (Bookworm)
-  ansible.builtin.shell:
+  ansible.builtin.command:
     cmd: sha512sum /etc/apt/trusted.gpg.d/proxmox-release-bookworm.gpg
   register: sha512sum_result
   when: ansible_facts['distribution_release'] == "bookworm"
