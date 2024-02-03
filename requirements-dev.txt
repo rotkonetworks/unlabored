@@ -9,4 +9,5 @@ python-language-server[all]
 black
 invoke
 wheel
+jmespath
 -r requirements.txt
