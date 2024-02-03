@@ -41,4 +41,5 @@ default_packages:
   - logrotate
   - zsh
   - chrony
+  - jq
 ...

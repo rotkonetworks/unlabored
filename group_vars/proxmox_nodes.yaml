@@ -12,6 +12,7 @@ default_packages:
   - bind9-dnsutils
   - net-tools
   - libuser
+  - pkg-config
   - libssl-dev
   - sudo
   - bind9-dnsutils
@@ -32,4 +33,5 @@ default_packages:
   - nginx
   - certbot
   - chrony
+  - jq
 ...
