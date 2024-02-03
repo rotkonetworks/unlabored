@@ -83,4 +83,3 @@
     mode: '0644'
     state: present
   loop: "{{ kernel_modules }}"
-...

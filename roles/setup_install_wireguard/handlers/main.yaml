@@ -11,4 +11,3 @@
     name: wg-quick@wg0
     state: started
     daemon_reload: yes
-...

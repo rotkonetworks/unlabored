@@ -5,4 +5,3 @@
     name: postfix
     state: restarted
     enabled: True
-...

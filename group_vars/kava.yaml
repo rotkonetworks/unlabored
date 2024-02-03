@@ -45,4 +45,3 @@ kava_timeout_broadcast_tx_commit: 60s
 kava_min_gas_prices: "10000"
 kava_mempool_size: 5000
 kava_api_namespaces: eth,net,web3,txpool
-...

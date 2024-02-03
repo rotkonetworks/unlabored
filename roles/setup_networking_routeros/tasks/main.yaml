@@ -52,4 +52,3 @@
   loop: "{{ filter_exist_check.results }}"
   when: item.ansible_facts.filter_exists == False
   delegate_to: "{{ routeros_delegate_host }}"
-...

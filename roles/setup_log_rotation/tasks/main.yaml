@@ -27,4 +27,3 @@
     - { src: "rsyslog.template", dst: "/etc/logrotate.d/rsyslog" }
   notify:
     - Systemd daemon-reload
-...

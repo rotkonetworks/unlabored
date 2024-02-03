@@ -65,4 +65,3 @@
   when: file_status.results[0].stat.exists == False
   notify:
     - Start wireguard
-...

@@ -42,4 +42,3 @@
   when: (item.name not in current_groups) and (inventory_hostname == primary_node)
   delegate_to: "{{ primary_node }}"
   with_items: "{{ proxmox_admin_groups }}"
-...

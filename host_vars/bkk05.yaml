@@ -6,4 +6,3 @@ host_name: "bkk05.rotko.net"
 host_timezone: "Asia/Bangkok"
 role: "webserver"
 pinned_service: False
-...

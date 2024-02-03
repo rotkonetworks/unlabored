@@ -29,4 +29,3 @@ default_packages:
   - logrotate
   - rsync
   - nvme-cli
-...

@@ -7,4 +7,3 @@
   roles:
     - proxmox_full_installation
     - setup_disable_services
-...

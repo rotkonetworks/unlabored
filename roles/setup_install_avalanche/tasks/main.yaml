@@ -111,4 +111,3 @@
   with_items:
     - { source: "chain_1_config.json", destination: "{{ avalanche_chain_config_path }}/2Sk6j8TYVQc2oR1TtUz64EWHAYjDUoDQ4hpbu6FMN2JBKC77xa/config.json" }
     - { source: "chain_2_config.json", destination: "{{ avalanche_chain_config_path }}/2K33xS9AyP9oCDiHYKVrHe7F54h2La5D8erpTChaAhdzeSu2RX/config.json" }
-...

@@ -34,4 +34,3 @@
     - ansible_distribution_release == 'bullseye'
   notify:
     - Update APT cache
-...

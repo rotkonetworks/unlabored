@@ -4,4 +4,3 @@
   community.general.timezone:
     name: "{{ host_timezone }}"
   notify: Rebuild Timezone Data
-...

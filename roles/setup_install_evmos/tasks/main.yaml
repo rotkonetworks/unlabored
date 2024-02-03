@@ -113,4 +113,3 @@
     - Systemd daemon-reload
     - Stop evmosd
     - Start evmosd
-...

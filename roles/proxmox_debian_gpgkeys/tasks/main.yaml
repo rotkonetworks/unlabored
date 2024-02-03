@@ -31,4 +31,3 @@
   when:
     - ansible_facts['distribution_release'] == "bookworm"
     - bookworm_gpg_key_hash not in sha512sum_result.stdout
-...

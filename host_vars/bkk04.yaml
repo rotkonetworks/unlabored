@@ -582,4 +582,3 @@ lxc_nodes:
       - from_port: "{{ hostvars['enc14']['default_p2p_port_wss'] }}"
         to_host: "{{ hostvars['enc14']['container_ip'] }}:{{ hostvars['enc14']['default_p2p_port_wss'] }}"
         protocol: "udp"
-...

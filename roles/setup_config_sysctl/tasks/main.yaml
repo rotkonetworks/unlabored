@@ -8,4 +8,3 @@
   loop: "{{ (kernel_params_default | map('combine', kernel_params) | list) }}"
   loop_control:
     label: "Setting {{ item.name }}"
-...

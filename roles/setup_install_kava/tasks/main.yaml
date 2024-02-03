@@ -112,4 +112,3 @@
     - Systemd daemon-reload
     - Stop kavad
     - Start kavad
-...

@@ -22,4 +22,3 @@
   ansible.builtin.apt:
     update_cache: True
     force_apt_get: True
-...

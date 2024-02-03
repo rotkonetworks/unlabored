@@ -14,4 +14,3 @@ dependencies:
   - role: setup_install_golang
   - role: setup_install_foundry
 
-...

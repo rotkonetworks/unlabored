@@ -16,4 +16,3 @@
     name: iptables
     state: restarted
     enabled: True
-...

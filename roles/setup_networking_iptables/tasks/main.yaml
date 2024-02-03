@@ -118,4 +118,3 @@
   notify:
     - Persist iptables
     - Restart iptables
-...

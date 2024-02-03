@@ -84,4 +84,3 @@
   ansible.builtin.systemd:
     name: cumulus
     state: started
-...

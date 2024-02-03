@@ -13,4 +13,3 @@
     - lxc_nodes is defined
     - item.proxmox_config['state']  == 'present'
   register: container_start_result
-...

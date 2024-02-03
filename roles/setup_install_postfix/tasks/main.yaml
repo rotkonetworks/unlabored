@@ -9,4 +9,3 @@
     postfix_service_enabled: True
     postfix_inet_interfaces: "loopback-only"
     postfix_inet_protocols: "ipv4"
-...

@@ -45,4 +45,3 @@ evmos_timeout_broadcast_tx_commit: 60s
 evmos_min_gas_prices: "10000"
 evmos_mempool_size: 5000
 evmos_api_namespaces: eth,net,web3,txpool
-...

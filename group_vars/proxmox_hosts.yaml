@@ -42,4 +42,3 @@ default_packages:
   - zsh
   - chrony
   - jq
-...

@@ -106,4 +106,3 @@
   roles:
     - setup_install_encointer
     - setup_install_nginx
-...

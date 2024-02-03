@@ -6,4 +6,3 @@
   roles:
     - role: setup_networking_routeros
       when: default_need_routeros_port_forwarding
-...

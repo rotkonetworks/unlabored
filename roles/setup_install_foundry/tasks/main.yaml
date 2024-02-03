@@ -30,4 +30,3 @@
   when: foundryup.stat.exists == False
   environment:
     FOUNDRY_DIR: /usr/local
-...

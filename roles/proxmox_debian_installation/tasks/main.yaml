@@ -81,4 +81,3 @@
   ansible.builtin.apt:
     pkg: os-prober
     state: absent
-...

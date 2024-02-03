@@ -17,4 +17,3 @@ binance_ipc_path: "{{ binance_base }}/geth.ipc"
 binance_user: "{{ service_users['binance'] }}"
 
 binance_archive_node: False
-...

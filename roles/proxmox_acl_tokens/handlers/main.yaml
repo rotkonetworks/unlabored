@@ -25,4 +25,3 @@
 - name: Refresh Facts
   ansible.builtin.setup:
   listen: Refresh Facts
-...

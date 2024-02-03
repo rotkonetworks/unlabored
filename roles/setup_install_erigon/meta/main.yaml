@@ -12,4 +12,3 @@ galaxy_info:
 dependencies:
   - role: setup_install_golang
   - role: setup_add_node_role
-...

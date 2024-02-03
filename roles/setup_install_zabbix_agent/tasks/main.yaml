@@ -61,4 +61,3 @@
   notify:
     - Systemd daemon-reload
     - Restart zabbix-agent
-...

@@ -34,4 +34,3 @@
       - "{{ item.roleid }}"
   with_items: "{{ proxmox_acl_list }}"
   when: (item.group ~ item.path ~ item.roleid) not in current_group_acl | map('join', '') | list
-...

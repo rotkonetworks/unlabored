@@ -14,4 +14,3 @@
 #     -content {{ default_storage_content }}
 #     -sparse {{ default_storage_sparse }}
 #   when: default_storage not in pvesm_output.stdout
-...

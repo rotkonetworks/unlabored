@@ -44,4 +44,3 @@ default_packages:
   - librocksdb-dev
   - libboost-all-dev
   - logrotate
-...

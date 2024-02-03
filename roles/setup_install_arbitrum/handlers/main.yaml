@@ -56,4 +56,3 @@
     - "{{ arbitrum_build_path }}/rocksdb"
     - "{{ arbitrum_base }}/go"
     - "{{ arbitrum_base }}/.hunter"
-...

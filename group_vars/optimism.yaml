@@ -45,4 +45,3 @@ default_packages:
   - pkg-config
   - curl
   - logrotate
-...

@@ -18,4 +18,3 @@ wg_server_ip: "{{ wg_address | ansible.utils.ipaddr('network') | ansible.utils.i
 wg_interface_addr: "{{ ansible_default_ipv4.address | default(ansible_all_ipv4_addresses[0]) }}/{{ ansible_default_ipv4.netmask }}"
 wg_peers_allowed_ips: '{{ ([(_wg_interface_addr | ansible.utils.ipaddr(''network/prefix''))] + (wireguard_additional_routes | default([]))) | join(", ") }}'
 wg_pskkey: romeblockchainlabs
-...

@@ -23,4 +23,3 @@ ethereum_http_port: 8545
 ethereum_ws_port: 8546
 ethereum_lighthouse_beacon_port: 9000
 ethereum_cache_size: 4096
-...

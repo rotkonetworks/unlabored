@@ -8,4 +8,3 @@
     - setup_install_rust
     - setup_install_cumulus
     - setup_install_nginx
-...

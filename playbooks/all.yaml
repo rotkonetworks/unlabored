@@ -10,4 +10,3 @@
   ansible.builtin.import_playbook: monitoring.yaml
 - name: User Management
   ansible.builtin.import_playbook: user_management.yaml
-...

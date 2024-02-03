@@ -44,4 +44,3 @@
     name: prometheus
     state: restarted
     daemon_reload: yes
-...

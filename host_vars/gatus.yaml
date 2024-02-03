@@ -4,4 +4,3 @@ ansible_port: "22"
 # ansible_port: "20780"
 host_name: "status.rotko.net"
 host_timezone: "Europe/Helsinki"
-...

@@ -67,4 +67,3 @@
     - Start Lighthouse
   when:
     - ethereum_syncmode != "light"
-...

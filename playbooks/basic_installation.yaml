@@ -15,4 +15,3 @@
     - setup_ansible_facts
     - setup_kernel_modules
     - setup_log_rotation
-...

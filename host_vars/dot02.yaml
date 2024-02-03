@@ -23,4 +23,3 @@ default_p2p_port_wss: 35112
 default_rpc_port: 9112
 default_secure_rpc_port: 42112
 default_prom_port: 7112
-...

@@ -34,4 +34,3 @@
   notify:
     - Rebuild Locales
     - Update Locale
-...

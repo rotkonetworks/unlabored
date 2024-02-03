@@ -16,4 +16,3 @@
   notify:
     - Restart pveproxy
     - Restart spiceproxy
-...

@@ -22,4 +22,3 @@ default_rpc_port: 9676
 default_secure_rpc_port: 42676
 default_prom_port: 7676
 zabbix_ext_port: 10676
-...

@@ -22,4 +22,3 @@
     create: yes
   when: "'/usr/bin/zsh' in ansible_user_shell"
   become: no
-...

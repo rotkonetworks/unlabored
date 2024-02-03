@@ -148,4 +148,3 @@
     - default_node_type == 'endpoint'
     - inventory_hostname != domain_groups[default_public_dns_lb][0]
   notify: Reload nginx
-...

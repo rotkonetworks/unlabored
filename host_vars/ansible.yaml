@@ -9,4 +9,3 @@ role: "ansible"
 pinned_service: False
 
 default_container_template: "debian-11-turnkey-ansible_17.1-1_amd64.tar.gz"
-...

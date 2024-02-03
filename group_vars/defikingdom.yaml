@@ -20,4 +20,3 @@ defikingdom_staking_port: "9651"
 defikingdom_enable_swimmer: False
 
 default_max_open_files_in_service: 32768
-...

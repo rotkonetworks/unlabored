@@ -11,4 +11,3 @@ port_forwards:
   - from_port: "{{ ansible_port }}"
     to_host: "{{ container_ip }}:22"
     protocol: "tcp"
-...

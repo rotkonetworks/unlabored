@@ -29,4 +29,3 @@
       when: default_node_type in ["validator"] and cargo_installed is succeeded
       args:
         executable: /bin/bash
-...

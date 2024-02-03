@@ -39,4 +39,3 @@
     state: link
     owner: "{{ avalanche_user }}"
     group: "{{ avalanche_user }}"
-...

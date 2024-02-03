@@ -7,4 +7,3 @@
   roles:
     - setup_add_node_role
     - setup_install_arbitrum
-...

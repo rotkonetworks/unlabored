@@ -14,4 +14,3 @@ klaytn_rpc_port: 8551
 klaytn_ws_port: 8552
 klaytn_bridge_port: 50505
 klaytn_ws_api: "klay,eth,net,web3,rpc,txpool"
-...

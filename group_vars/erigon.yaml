@@ -53,4 +53,3 @@ erigon_gno_bt_port: 42269
 erigon_gno_sentry_port: 4020
 erigon_gno_sentry2_port: 4021
 erigon_gno_http_api: "engine,eth,erigon,ots,web3,net,debug,trace,txpool,shh"
-...

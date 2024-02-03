@@ -11,4 +11,3 @@
   ansible.builtin.systemd:
     daemon_reload: True
   check_mode: False
-...

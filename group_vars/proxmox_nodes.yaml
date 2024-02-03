@@ -34,4 +34,3 @@ default_packages:
   - certbot
   - chrony
   - jq
-...

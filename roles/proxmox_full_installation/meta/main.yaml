@@ -24,4 +24,3 @@ dependencies:
 
 # Disabled for now
 #  - role: proxmox_secure_node
-...

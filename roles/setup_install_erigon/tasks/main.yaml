@@ -94,4 +94,3 @@
     - Symlink Erigon service
     - Systemd daemon-reload
     - Start Erigon
-...

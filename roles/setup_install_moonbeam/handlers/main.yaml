@@ -32,4 +32,3 @@
     state: link
     owner: "{{ moonbeam_user }}"
     group: "{{ moonbeam_user }}"
-...

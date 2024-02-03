@@ -74,4 +74,3 @@
         daemon_reload: yes
         enabled: yes
         state: "{{ 'started' if not servicestatus.stat.exists else 'restarted' }}"
-...

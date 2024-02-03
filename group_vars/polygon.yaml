@@ -4,4 +4,3 @@ polygon_base: "/opt/polygon"
 polygon_storage_path: "{{ polygon_base }}"
 polygon_log_level: "info"
 polygon_network: "mainnet-v1"
-...

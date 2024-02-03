@@ -7,4 +7,3 @@ zabbix_agent_script_path: "{{ zabbix_agent_base_path }}/scripts"
 zabbix_agent_confd_path: "{{ zabbix_agent_base_path }}/zabbix_agentd.conf.d"
 zabbix_ansible_base_path: "/etc/ansible"
 zabbix_ansible_factsd_path: "{{ zabbix_ansible_base_path }}/facts.d"
-...

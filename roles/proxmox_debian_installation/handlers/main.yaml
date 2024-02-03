@@ -17,4 +17,3 @@
     reboot_timeout: 300
     reboot_timeout_unit: seconds
     msg: "Reboot initiated by Ansible for {{ ansible_hostname }}"
-...

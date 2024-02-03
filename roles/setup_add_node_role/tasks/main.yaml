@@ -44,4 +44,3 @@
     - role  == "ethereum"
   with_items:
     - { section: "lighthouse", option: "version", value: "undefined" }
-...

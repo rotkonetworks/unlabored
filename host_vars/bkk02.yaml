@@ -100,4 +100,3 @@ lxc_nodes:
       - from_port: "{{ hostvars['ksm02']['default_p2p_port_ws'] }}"
         to_host: "{{ hostvars['ksm02']['container_ip'] }}:{{ hostvars['ksm02']['default_p2p_port_ws'] }}"
         protocol: "udp"
-...

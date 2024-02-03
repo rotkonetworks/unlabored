@@ -6,4 +6,3 @@
       - dpkg-reconfigure
       - --frontend=noninteractive
       - tzdata
-...

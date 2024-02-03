@@ -14,4 +14,3 @@ moonbeam_chain_port: 30334
 moonbeam_chain_rpc_port: 9934
 moonbeam_chain_ws_port: 9945
 moonbeam_pruning: archive
-...

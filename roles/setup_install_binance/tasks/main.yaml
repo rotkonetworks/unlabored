@@ -98,4 +98,3 @@
     - { section: "Node", option: "WSHost", value: '"0.0.0.0"', state: "present" }
   notify:
     - Restart Binance
-...

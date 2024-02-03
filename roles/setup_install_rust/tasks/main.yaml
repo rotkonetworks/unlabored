@@ -39,4 +39,3 @@
   ansible.builtin.command:
     cmd: "{{ ansible_env.HOME }}/.cargo/bin/rustup update nightly"
   when: rust_installed.stat.exists
-...
