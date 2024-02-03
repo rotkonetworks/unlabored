@@ -13,4 +13,3 @@ dependencies:
   - role: setup_install_nodejs
   - role: setup_install_golang
   - role: setup_install_foundry
-

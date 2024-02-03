@@ -12,4 +12,3 @@
     argv:
       - update-locale
       - LANG={{ default_locale }}
-
