@@ -15,17 +15,17 @@ polkadot
 [routers]
 bkk00
 
-[cumulus]
-pbr13
-kbr13
-wbr13
-pch13
-wch13
-
 [polkadot]
 dot23
-ksm23
 wnd23
+
+[cumulus]
+mint23
+wmint23
+pbr23
+wbr23
+pch23
+wch23
 
 [proxmox_hosts]
 bkk03
@@ -46,7 +46,5 @@ unmanaged
 [referrence_nodes]
 dot14
 dot24
-ksm14
-ksm24
 wnd14
 wnd24

@@ -17,11 +17,11 @@ default_node_type: "bootnode"
 default_pruning: "archive"
 default_database: paritydb
 default_syncmode: full
-default_p2p_port: 33506
-default_p2p_port_ws: 34506
-default_p2p_port_wss: 35506
-default_rpc_port: 9506
-default_secure_rpc_port: 42506
-default_prom_port: 7506
-zabbix_ext_port: 10506
+default_p2p_port: 33504
+default_p2p_port_ws: 34504
+default_p2p_port_wss: 35504
+default_rpc_port: 9504
+default_secure_rpc_port: 42504
+default_prom_port: 7504
+zabbix_ext_port: 10504
 ...

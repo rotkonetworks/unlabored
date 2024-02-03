@@ -14,29 +14,21 @@ polkadot
 [routers]
 bkk00
 
+[polkadot]
+ksm04
+ksm24
+; pso24
+
 [cumulus]
-mint14
-mine14
-wmint14
-; pbr24
-; pch24
+; mine24
 ; kbr24
 ; kch24
-; wbr24
-; wch24
+; pabr24
+; pach24
 
 [encointer]
 enc14
 ; enc24
-
-[polkadot]
-ksm04
-ksm14
-ksm24
-dot14
-dot24
-wnd14
-wnd24
 
 [services]
 ansible
@@ -55,3 +47,9 @@ bkk04
 hardware
 proxmox_nodes
 unmanaged
+
+[referrence_nodes]
+dot14
+dot24
+wnd14
+wnd24
