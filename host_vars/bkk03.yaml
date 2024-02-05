@@ -18,11 +18,8 @@ default_container_template: "debian-12-standard_12.0-1_amd64.tar.zst"
 default_gw_device: "enp9s0"
 default_resource_pool: "bkk03_resource_pool"
 # storage
-default_storage: "tank03"
+default_storage: "tank03lvm"
 default_storage_mountpoint: "/mnt/tank"
-default_storage_type: "zfspool"
-default_storage_content: "images,rootdir"
-default_storage_sparse: 1
 
 port_forwards:
   - from_port: "{{ ansible_port }}"
@@ -84,15 +81,9 @@ lxc_nodes:
       - from_port: "{{ hostvars['dot23']['default_p2p_port'] }}"
         to_host: "{{ hostvars['dot23']['container_ip'] }}:{{ hostvars['dot23']['default_p2p_port'] }}"
         protocol: "tcp"
-      - from_port: "{{ hostvars['dot23']['default_p2p_port'] }}"
-        to_host: "{{ hostvars['dot23']['container_ip'] }}:{{ hostvars['dot23']['default_p2p_port'] }}"
-        protocol: "udp"
       - from_port: "{{ hostvars['dot23']['default_p2p_port_ws'] }}"
         to_host: "{{ hostvars['dot23']['container_ip'] }}:{{ hostvars['dot23']['default_p2p_port_ws'] }}"
         protocol: "tcp"
-      - from_port: "{{ hostvars['dot23']['default_p2p_port_ws'] }}"
-        to_host: "{{ hostvars['dot23']['container_ip'] }}:{{ hostvars['dot23']['default_p2p_port_ws'] }}"
-        protocol: "udp"
   - host: "ksm23"
     proxmox_config:
       vmid: "323"
@@ -122,15 +113,9 @@ lxc_nodes:
       - from_port: "{{ hostvars['ksm23']['default_p2p_port'] }}"
         to_host: "{{ hostvars['ksm23']['container_ip'] }}:{{ hostvars['ksm23']['default_p2p_port'] }}"
         protocol: "tcp"
-      - from_port: "{{ hostvars['ksm23']['default_p2p_port'] }}"
-        to_host: "{{ hostvars['ksm23']['container_ip'] }}:{{ hostvars['ksm23']['default_p2p_port'] }}"
-        protocol: "udp"
       - from_port: "{{ hostvars['ksm23']['default_p2p_port_ws'] }}"
         to_host: "{{ hostvars['ksm23']['container_ip'] }}:{{ hostvars['ksm23']['default_p2p_port_ws'] }}"
         protocol: "tcp"
-      - from_port: "{{ hostvars['ksm23']['default_p2p_port_ws'] }}"
-        to_host: "{{ hostvars['ksm23']['container_ip'] }}:{{ hostvars['ksm23']['default_p2p_port_ws'] }}"
-        protocol: "udp"
   - host: "wnd23"
     proxmox_config:
       vmid: "333"
@@ -160,12 +145,198 @@ lxc_nodes:
       - from_port: "{{ hostvars['wnd23']['default_p2p_port'] }}"
         to_host: "{{ hostvars['wnd23']['container_ip'] }}:{{ hostvars['wnd23']['default_p2p_port'] }}"
         protocol: "tcp"
-      - from_port: "{{ hostvars['wnd23']['default_p2p_port'] }}"
-        to_host: "{{ hostvars['wnd23']['container_ip'] }}:{{ hostvars['wnd23']['default_p2p_port'] }}"
-        protocol: "udp"
       - from_port: "{{ hostvars['wnd23']['default_p2p_port_ws'] }}"
         to_host: "{{ hostvars['wnd23']['container_ip'] }}:{{ hostvars['wnd23']['default_p2p_port_ws'] }}"
         protocol: "tcp"
-      - from_port: "{{ hostvars['wnd23']['default_p2p_port_ws'] }}"
-        to_host: "{{ hostvars['wnd23']['container_ip'] }}:{{ hostvars['wnd23']['default_p2p_port_ws'] }}"
-        protocol: "udp"
+  - host: "mint23"
+    proxmox_config:
+      vmid: "613"
+      hostname: "{{ hostvars['mint23']['host_name'] }}"
+      ostemplate: "local:vztmpl/{{ default_container_template }}"
+      netif: "{{ hostvars['mint23']['netif'] }}"
+      cores: 4
+      memory: 16384
+      swap: 8192
+      password: "{{ default_password }}"
+      disk: "{{ default_storage }}:20"
+      mounts: '{"mp0":"{{ default_storage }}:200,mp={{ hostvars["mint23"]["default_base_path"] }}"}'
+      onboot: True
+      unprivileged: True
+      validate_certs: False
+      description: "{{ hostvars['mint23']['default_network'] }} {{ hostvars['mint23']['default_node_type'] }}: {{ hostvars['mint23']['host_name'] }}"
+      state: present
+      features:
+        - nesting=1
+    port_forwards:
+      - from_port: "{{ hostvars['mint23']['ansible_port'] }}"
+        to_host: "{{ hostvars['mint23']['container_ip'] }}:22"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['mint23']['zabbix_ext_port'] }}"
+        to_host: "{{ hostvars['monitor']['container_ip'] }}:10050"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['mint23']['default_p2p_port'] }}"
+        to_host: "{{ hostvars['mint23']['container_ip'] }}:{{ hostvars['mint23']['default_p2p_port'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['mint23']['default_p2p_port_ws'] }}"
+        to_host: "{{ hostvars['mint23']['container_ip'] }}:{{ hostvars['mint23']['default_p2p_port_ws'] }}"
+        protocol: "tcp"
+  - host: "wmint23"
+    proxmox_config:
+      vmid: "633"
+      hostname: "{{ hostvars['wmint23']['host_name'] }}"
+      ostemplate: "local:vztmpl/{{ default_container_template }}"
+      netif: "{{ hostvars['wmint23']['netif'] }}"
+      cores: 4
+      memory: 16384
+      swap: 8192
+      password: "{{ default_password }}"
+      disk: "{{ default_storage }}:20"
+      mounts: '{"mp0":"{{ default_storage }}:200,mp={{ hostvars["wmint23"]["default_base_path"] }}"}'
+      onboot: True
+      unprivileged: True
+      validate_certs: False
+      description: "{{ hostvars['wmint23']['default_network'] }} {{ hostvars['wmint23']['default_node_type'] }}: {{ hostvars['wmint23']['host_name'] }}"
+      state: present
+      features:
+        - nesting=1
+    port_forwards:
+      - from_port: "{{ hostvars['wmint23']['ansible_port'] }}"
+        to_host: "{{ hostvars['wmint23']['container_ip'] }}:22"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['wmint23']['zabbix_ext_port'] }}"
+        to_host: "{{ hostvars['monitor']['container_ip'] }}:10050"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['wmint23']['default_p2p_port'] }}"
+        to_host: "{{ hostvars['wmint23']['container_ip'] }}:{{ hostvars['wmint23']['default_p2p_port'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['wmint23']['default_p2p_port_ws'] }}"
+        to_host: "{{ hostvars['wmint23']['container_ip'] }}:{{ hostvars['wmint23']['default_p2p_port_ws'] }}"
+        protocol: "tcp"
+  - host: "pbr23"
+    proxmox_config:
+      vmid: "643"
+      hostname: "{{ hostvars['pbr23']['host_name'] }}"
+      ostemplate: "local:vztmpl/{{ default_container_template }}"
+      netif: "{{ hostvars['pbr23']['netif'] }}"
+      cores: 4
+      memory: 16384
+      swap: 8192
+      password: "{{ default_password }}"
+      disk: "{{ default_storage }}:20"
+      mounts: '{"mp0":"{{ default_storage }}:200,mp={{ hostvars["pbr23"]["default_base_path"] }}"}'
+      onboot: True
+      unprivileged: True
+      validate_certs: False
+      description: "{{ hostvars['pbr23']['default_network'] }} {{ hostvars['pbr23']['default_node_type'] }}: {{ hostvars['pbr23']['host_name'] }}"
+      state: present
+      features:
+        - nesting=1
+    port_forwards:
+      - from_port: "{{ hostvars['pbr23']['ansible_port'] }}"
+        to_host: "{{ hostvars['pbr23']['container_ip'] }}:22"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['pbr23']['zabbix_ext_port'] }}"
+        to_host: "{{ hostvars['monitor']['container_ip'] }}:10050"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['pbr23']['default_p2p_port'] }}"
+        to_host: "{{ hostvars['pbr23']['container_ip'] }}:{{ hostvars['pbr23']['default_p2p_port'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['pbr23']['default_p2p_port_ws'] }}"
+        to_host: "{{ hostvars['pbr23']['container_ip'] }}:{{ hostvars['pbr23']['default_p2p_port_ws'] }}"
+        protocol: "tcp"
+  - host: "wbr23"
+    proxmox_config:
+      vmid: "663"
+      hostname: "{{ hostvars['wbr23']['host_name'] }}"
+      ostemplate: "local:vztmpl/{{ default_container_template }}"
+      netif: "{{ hostvars['wbr23']['netif'] }}"
+      cores: 4
+      memory: 16384
+      swap: 8192
+      password: "{{ default_password }}"
+      disk: "{{ default_storage }}:20"
+      mounts: '{"mp0":"{{ default_storage }}:200,mp={{ hostvars["wbr23"]["default_base_path"] }}"}'
+      onboot: True
+      unprivileged: True
+      validate_certs: False
+      description: "{{ hostvars['wbr23']['default_network'] }} {{ hostvars['wbr23']['default_node_type'] }}: {{ hostvars['wbr23']['host_name'] }}"
+      state: present
+      features:
+        - nesting=1
+    port_forwards:
+      - from_port: "{{ hostvars['wbr23']['ansible_port'] }}"
+        to_host: "{{ hostvars['wbr23']['container_ip'] }}:22"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['wbr23']['zabbix_ext_port'] }}"
+        to_host: "{{ hostvars['monitor']['container_ip'] }}:10050"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['wbr23']['default_p2p_port'] }}"
+        to_host: "{{ hostvars['wbr23']['container_ip'] }}:{{ hostvars['wbr23']['default_p2p_port'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['wbr23']['default_p2p_port_ws'] }}"
+        to_host: "{{ hostvars['wbr23']['container_ip'] }}:{{ hostvars['wbr23']['default_p2p_port_ws'] }}"
+        protocol: "tcp"
+  - host: "pch23"
+    proxmox_config:
+      vmid: "673"
+      hostname: "{{ hostvars['pch23']['host_name'] }}"
+      ostemplate: "local:vztmpl/{{ default_container_template }}"
+      netif: "{{ hostvars['pch23']['netif'] }}"
+      cores: 4
+      memory: 16384
+      swap: 8192
+      password: "{{ default_password }}"
+      disk: "{{ default_storage }}:20"
+      mounts: '{"mp0":"{{ default_storage }}:200,mp={{ hostvars["pch23"]["default_base_path"] }}"}'
+      onboot: True
+      unprivileged: True
+      validate_certs: False
+      description: "{{ hostvars['pch23']['default_network'] }} {{ hostvars['pch23']['default_node_type'] }}: {{ hostvars['pch23']['host_name'] }}"
+      state: present
+      features:
+        - nesting=1
+    port_forwards:
+      - from_port: "{{ hostvars['pch23']['ansible_port'] }}"
+        to_host: "{{ hostvars['pch23']['container_ip'] }}:22"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['pch23']['zabbix_ext_port'] }}"
+        to_host: "{{ hostvars['monitor']['container_ip'] }}:10050"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['pch23']['default_p2p_port'] }}"
+        to_host: "{{ hostvars['pch23']['container_ip'] }}:{{ hostvars['pch23']['default_p2p_port'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['pch23']['default_p2p_port_ws'] }}"
+        to_host: "{{ hostvars['pch23']['container_ip'] }}:{{ hostvars['pch23']['default_p2p_port_ws'] }}"
+        protocol: "tcp"
+  - host: "wch23"
+    proxmox_config:
+      vmid: "693"
+      hostname: "{{ hostvars['wch23']['host_name'] }}"
+      ostemplate: "local:vztmpl/{{ default_container_template }}"
+      netif: "{{ hostvars['wch23']['netif'] }}"
+      cores: 4
+      memory: 16384
+      swap: 8192
+      password: "{{ default_password }}"
+      disk: "{{ default_storage }}:20"
+      mounts: '{"mp0":"{{ default_storage }}:200,mp={{ hostvars["wch23"]["default_base_path"] }}"}'
+      onboot: True
+      unprivileged: True
+      validate_certs: False
+      description: "{{ hostvars['wch23']['default_network'] }} {{ hostvars['wch23']['default_node_type'] }}: {{ hostvars['wch23']['host_name'] }}"
+      state: present
+      features:
+        - nesting=1
+    port_forwards:
+      - from_port: "{{ hostvars['wch23']['ansible_port'] }}"
+        to_host: "{{ hostvars['wch23']['container_ip'] }}:22"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['wch23']['zabbix_ext_port'] }}"
+        to_host: "{{ hostvars['monitor']['container_ip'] }}:10050"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['wch23']['default_p2p_port'] }}"
+        to_host: "{{ hostvars['wch23']['container_ip'] }}:{{ hostvars['wch23']['default_p2p_port'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['wch23']['default_p2p_port_ws'] }}"
+        to_host: "{{ hostvars['wch23']['container_ip'] }}:{{ hostvars['wch23']['default_p2p_port_ws'] }}"
+        protocol: "tcp"
