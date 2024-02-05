@@ -6,7 +6,7 @@
 
 - name: Set primary node and is_cluster fact
   ansible.builtin.set_fact:
-    primary_node: "{{ cluster_config.stat.exists | ternary(groups['all'][0], inventory_hostname) }}"
+    primary_node: "{{ cluster_config.stat.exists | ternary(groups['proxmox_hosts'][0], inventory_hostname) }}"
     is_cluster: "{{ cluster_config.stat.exists }}"
 
 - name: Acquire current users on primary node
