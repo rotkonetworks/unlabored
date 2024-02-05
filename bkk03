@@ -17,6 +17,7 @@ bkk00
 
 [polkadot]
 dot23
+ksm23
 wnd23
 
 [cumulus]
@@ -27,13 +28,13 @@ wbr23
 pch23
 wch23
 
-[proxmox_hosts]
-bkk03
-
 [services]
 ibp
 
 [unmanaged]
+
+[proxmox_hosts]
+bkk03
 
 [hardware]
 bkk03
@@ -44,7 +45,6 @@ proxmox_nodes
 unmanaged
 
 [referrence_nodes]
-dot14
-dot24
-wnd14
-wnd24
+monitor
+dot26
+wnd26

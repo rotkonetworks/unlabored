@@ -19,6 +19,7 @@
     cmd: prometheus --version | grep prometheus | awk '{print substr($3, 0, length($3))}'
   register: prometheus_installed
   changed_when: False
+  failed_when: False
 
 - name: Import Prometheus tasks
   ansible.builtin.import_tasks: "prometheus-tasks.yaml"

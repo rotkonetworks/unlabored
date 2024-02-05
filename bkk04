@@ -17,22 +17,16 @@ bkk00
 [polkadot]
 ksm04
 ksm24
-; pso24
+pso24
 
 [cumulus]
-; mine24
-; kbr24
-; kch24
-; pabr24
-; pach24
+mine24
+kbr24
 
 [encointer]
-enc14
-; enc24
+enc24
 
 [services]
-ansible
-matrix
 monitor
 
 [proxmox_hosts]
@@ -49,7 +43,7 @@ proxmox_nodes
 unmanaged
 
 [referrence_nodes]
-dot14
-dot24
-wnd14
-wnd24
+ksm14
+ksm24
+ksm26
+pso26

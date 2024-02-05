@@ -1,59 +1,54 @@
-# Standards: 0.2
+  # Standards: 0.2
 ---
 - name: Create predefined containers
   community.general.proxmox:
+    api_user: "{{ api_user }}"
+    api_password: "{{ api_password }}"
     api_host: "{{ proxmox_defaults.api_host }}"
-    api_user: "{{ proxmox_defaults.api_user }}"
-    api_password: "{{ proxmox_defaults.api_password | default(omit) }}"
-    api_token_id: "{{ proxmox_defaults.api_token_id | default(omit) }}"
-    api_token_secret: "{{ proxmox_defaults.api_token_secret | default(omit) }}"
-    node: "{{ item.proxmox_config.node }}"
-    password: "{{ item.proxmox_config.password }}"
-    hostname: "{{ item.proxmox_config.hostname }}"
-    ostemplate: "{{ item.proxmox_config.ostemplate }}"
-    disk: "{{ item.proxmox_config.disk | default(omit) }}"
-    cores: "{{ item.proxmox_config.cores | default(omit) }}"
-    memory: "{{ item.proxmox_config.memory | default(omit) }}"
-    swap: "{{ item.proxmox_config.swap | default(omit) }}"
-    netif: "{{ item.proxmox_config.netif | default(omit) }}"
-    features: "{{ item.proxmox_config.features | to_json | default(omit) }}"
-    onboot: "{{ item.proxmox_config.onboot | default(omit) }}"
-    unprivileged: "{{ item.proxmox_config.unprivileged | default(omit) }}"
     vmid: "{{ item.proxmox_config.vmid }}"
-    state: "{{ item.proxmox_config.state | default('present') }}"
+    hostname: "{{ item.proxmox_config.hostname }}"
+    template: "{{ item.proxmox_config.ostemplate }}"
+    netif: "{{ item.proxmox_config.netif }}"
+    cores: "{{ item.proxmox_config.cores }}"
+    memory: "{{ item.proxmox_config.memory }}"
+    swap: "{{ item.proxmox_config.swap }}"
+    password: "{{ item.proxmox_config.password }}"
+    disk: "{{ item.proxmox_config.disk }}"
+    mounts: "{{ item.proxmox_config.mounts }}"
+    onboot: "{{ item.proxmox_config.onboot }}"
+    unprivileged: "{{ item.proxmox_config.unprivileged }}"
+    validate_certs: "{{ item.proxmox_config.validate_certs }}"
+    description: "{{ item.proxmox_config.description }}"
+    state: "{{ item.proxmox_config.state }}"
+    features: "{{ item.proxmox_config.features }}"
   loop: "{{ lxc_nodes }}"
   when: lxc_nodes is defined
   register: container_creation_result
-  no_log: True # Adjust based on your security policies
 
-- name: Start predefined nodes if not already started
+- name: Start predefined nodes
   community.general.proxmox:
+    api_user: "{{ api_user }}"
+    api_password: "{{ api_password }}"
     api_host: "{{ proxmox_defaults.api_host }}"
-    api_user: "{{ proxmox_defaults.api_user }}"
-    api_password: "{{ proxmox_defaults.api_password | default(omit) }}"
-    api_token_id: "{{ proxmox_defaults.api_token_id | default(omit) }}"
-    api_token_secret: "{{ proxmox_defaults.api_token_secret | default(omit) }}"
-    node: "{{ item.proxmox_config.node }}"
     vmid: "{{ item.proxmox_config.vmid }}"
     state: 'started'
   loop: "{{ lxc_nodes }}"
   when:
     - lxc_nodes is defined
-    - item.proxmox_config.state == 'present'
+    - "'state' in item.proxmox_config"
+    - "item.proxmox_config['state'] == 'present'"
   register: container_start_result
-  no_log: True # Adjust based on your security policies
 
-  # - name: Create predefined containers
-  #   community.general.proxmox: "{{ proxmox_defaults | combine(item.proxmox_config) }}"
-  #   loop: "{{ lxc_nodes }}"
-  #   when: lxc_nodes is defined
-  #   register: container_creation_result
-  #
-  # - name: Start predefined nodes
-  #   community.general.proxmox: "{{ proxmox_defaults | combine({'vmid': item.proxmox_config['vmid'], 'state': 'started'}) }}"
-  #   loop: "{{ lxc_nodes }}"
-  #   when:
-  #     - lxc_nodes is defined
-  #     - item.proxmox_config['state'] == 'present'
-  #   register: container_start_result
-
+# - name: Create predefined containers
+#   community.general.proxmox: "{{ proxmox_defaults | combine(item.proxmox_config) }}"
+#   loop: "{{ lxc_nodes }}"
+#   when: lxc_nodes is defined
+#   register: container_creation_result
+#
+# - name: Start predefined nodes
+#   community.general.proxmox: "{{ proxmox_defaults | combine({'vmid': item.proxmox_config['vmid'], 'state': 'started'}) }}"
+#   loop: "{{ lxc_nodes }}"
+#   when:
+#     - lxc_nodes is defined
+#     - item.proxmox_config['state'] == 'present'
+#   register: container_start_result

@@ -12,8 +12,9 @@
 
 - name: Check certbot plugins
   ansible.builtin.command:
-    cmd: certbot plugins || true
+    cmd: certbot plugins
   register: certbot_plugins_output
+  failed_when: False
   changed_when: False
 
 - name: Install certbot_dns_porkbun plugin if absent
@@ -34,7 +35,7 @@
       -d "{{ default_public_dns }}"
   register: certbot_result
   changed_when: "'Congratulations' in certbot_result.stdout"
-  no_log: True
+  no_log: False
 
 - name: Reload nginx service
   ansible.builtin.service:
@@ -111,7 +112,3 @@
     dest: "/etc/nginx/sites-enabled/{{ default_public_dns }}"
     state: link
   notify: Reload nginx
-
-# - name: Include loadbalancer tasks for endpoints
-#   ansible.builtin.import_tasks: loadbalancer.yaml
-#   when: default_node_type == 'endpoint'
