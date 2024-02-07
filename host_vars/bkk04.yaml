@@ -122,12 +122,12 @@ lxc_nodes:
       hostname: "{{ hostvars['pso24']['host_name'] }}"
       ostemplate: "local:vztmpl/{{ default_container_template }}"
       netif: "{{ hostvars['pso24']['netif'] }}"
-      cores: 8
+      cores: 4
       memory: 16384
       swap: 8192
       password: "{{ default_password }}"
       disk: "{{ default_storage }}:20"
-      mounts: '{"mp0":"{{ default_storage }}:3000,mp={{ hostvars["pso24"]["default_base_path"] }}"}'
+      mounts: '{"mp0":"{{ default_storage }}:300,mp={{ hostvars["pso24"]["default_base_path"] }}"}'
       onboot: True
       unprivileged: True
       validate_certs: False
