@@ -80,6 +80,7 @@ rules:
     - "ANSIBLE0026"
     - "LINT0007"
     - "LINT0008"
+    - YML108
 
   # All dotfiles (including hidden folders) are excluded by default.
   # You can disable this setting and handle dotfiles by yourself with `exclude_files`.

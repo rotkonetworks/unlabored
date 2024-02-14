@@ -1,6 +1,6 @@
 ---
 default_client_name: polkadot-v
-default_client_version: 1.6.0
+default_client_version: 1.7.0
 default_download_base_url: "https://github.com/paritytech/polkadot-sdk/releases/download/"
 default_download_url: "{{ default_download_base_url }}{{ default_client_name }}{{ default_client_version }}/polkadot"
 default_download_url_prepare: "{{ default_download_base_url }}{{ default_client_name }}{{ default_client_version }}/polkadot-prepare-worker"
