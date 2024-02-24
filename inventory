@@ -47,6 +47,7 @@ wch26
 
 [encointer]
 enc14
+enc24
 enc26
 
 [polkadot]
@@ -67,6 +68,7 @@ ksm24
 ksm26
 wnd23
 wnd26
+pso24
 pso26
 
 [proxmox_hosts]
