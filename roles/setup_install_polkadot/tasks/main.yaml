@@ -58,9 +58,6 @@
     - Start Polkadot
     - Add type of service fact
 
-- name: Flush handlers after Polkadot service copy
-  ansible.builtin.meta: flush_handlers
-
 - name: Install worker binaries v{{ default_client_version }}
   when:
     - ansible_local['noderole']['node']['pinned'] != "True"
@@ -108,6 +105,7 @@
 
 - name: Flush handlers after Polkadot install
   ansible.builtin.meta: flush_handlers
+  when: download_result.changed
 
 - name: Verify Polkadot version
   ansible.builtin.command: "{{ default_base_path }}/polkadot --version"
