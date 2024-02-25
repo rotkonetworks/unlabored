@@ -1,0 +1,39 @@
+---
+default_block_output_to_private_ip: True
+
+# Ligthhouse
+ethereum_lighthouse_version: "4.6.0"
+ethereum_lighthouse_download_url: "https://github.com/sigp/lighthouse/releases/download/v{{ ethereum_lighthouse_version }}/lighthouse-v{{ ethereum_lighthouse_version }}-x86_64-unknown-linux-gnu-portable.tar.gz"
+ethereum_lighthouse_nodetype: "beacon_node"
+ethereum_lighthouse_host: "0.0.0.0"
+ethereum_lighthouse_port: 8551
+ethereum_lighthouse_beacon_port: 9000
+ethereum_lighthouse_checkpoint_url: "https://beaconstate.info"
+
+reth_version: "0.1.0-alpha.19"
+reth_download_url: "https://github.com/paradigmxyz/reth/releases/download/v{{ reth_version }}/reth-v{{ reth_version }}-x86_64-unknown-linux-gnu.tar.gz"
+reth_github_url: "https://github.com/paragidmxyz/reth/"
+reth_service: "reth"
+ethereum_user: "{{ service_users['reth'] }}"
+ethereum_base: "/opt/reth"
+reth_build_path: "{{ ethereum_base }}/reth-{{ reth_version }}"
+reth_bin_path: "{{ reth_build_path }}/build/bin"
+ethereum_storage_path: "{{ ethereum_base }}/storage"
+ethereum_jwtsecret_file: "{{ ethereum_storage_path }}/jwt.hex"
+reth_config_path: "{{ ethereum_base }}/config"
+reth_private_api_addr: "localhost:9090"
+reth_addr: "0.0.0.0"
+reth_corsdomain: "*"
+reth_pruned_flags: "--prune hrtc"
+ethereum_syncmode: "archive"
+
+reth_eth: False
+reth_eth_p2p_port: 30303
+reth_eth_p2p2_port: 30304
+reth_eth_http_port: 8545
+reth_eth_ws_port: 8546
+reth_eth_bt_port: 42069
+reth_eth_sentry_port: 4000
+reth_eth_sentry2_port: 4001
+reth_eth_http_api: "engine,eth,reth,ots,web3,net,debug,trace,txpool,shh"
+...

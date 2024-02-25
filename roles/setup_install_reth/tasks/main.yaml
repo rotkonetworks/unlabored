@@ -1,0 +1,114 @@
+# Standards: 0.2
+---
+- name: Ensure group {{ ethereum_user }} exists
+  ansible.builtin.group:
+    name: "{{ ethereum_user }}"
+    state: present
+    system: True
+
+- name: Ensure user {{ ethereum_user }} exists
+  ansible.builtin.user:
+    append: True
+    comment: Reth service user
+    create_home: True
+    group: "{{ ethereum_user }}"
+    groups: sudo
+    home: "{{ ethereum_base }}"
+    name: "{{ ethereum_user }}"
+    shell: "{{ default_shell }}"
+    state: present
+    system: True
+
+- name: Update .profile
+  ansible.builtin.blockinfile:
+    path: "{{ ethereum_base }}/.profile"
+    owner: "{{ ethereum_user }}"
+    group: "{{ ethereum_user }}"
+    create: True
+    mode: "644"
+    block: |
+      CARGO_HOME="$HOME/.cargo"
+      RUSTUP_HOME="$HOME/.rustup"
+      PATH="$CARGO_HOME/bin:$PATH"
+
+- name: Ensure required directories exists
+  ansible.builtin.file:
+    path: "{{ item }}"
+    owner: "{{ ethereum_user }}"
+    group: "{{ ethereum_user }}"
+    mode: "0775"
+    state: directory
+  with_items:
+    - "{{ ethereum_base }}"
+    - "{{ ethereum_storage_path }}"
+    - "{{ ethereum_base }}/{{ reth_version }}"
+
+- name: Create jwtsecret file
+  become: True
+  become_user: "{{ ethereum_user }}"
+  ansible.builtin.shell:
+    cmd: |
+      set -o pipefail
+      echo 0x$(openssl rand -hex 32 | tr -d "\n") > {{ ethereum_jwtsecret_file }}
+    creates: "{{ ethereum_jwtsecret_file }}"
+    executable: /bin/bash
+  when: ansible_local['noderole']['node']['pinned'] != "True"
+
+- name: Download and extract reth binary
+  ansible.builtin.unarchive:
+    src: "{{ reth_download_url }}"
+    dest: "{{ ethereum_base }}/{{ reth_version }}"
+    remote_src: True
+    mode: '0755'
+    owner: "{{ ethereum_user }}"
+    group: "{{ ethereum_user }}"
+  when:
+    - ansible_local['noderole']['node']['pinned'] != "True"
+    - ansible_local['noderole']['node']['version'] != reth_version
+  notify:
+    - Symlink Reth client
+    - Add Service Pinned Status
+    - Stop Reth
+    - Systemd daemon-reload
+    - Start Reth
+    - Add Reth service version
+
+# - name: Make client reth v{{ reth_version }}
+#   ansible.builtin.shell: "source {{ ethereum_base }}/.profile && make reth"
+#   args:
+#     executable: /bin/bash
+#     chdir: "{{ reth_build_path }}"
+#   become: True
+#   become_user: "{{ ethereum_user }}"
+#   register: reth_install
+#   when:
+#     - ansible_local['noderole']['node']['pinned'] != "True"
+#     - ansible_local['noderole']['node']['version'] != reth_version
+#   notify:
+#     - Symlink Reth client
+#     - Add Service Pinned Status
+#     - Stop Reth
+#     - Systemd daemon-reload
+#     - Start Reth
+#     - Add Reth service version
+#
+
+- name: Copy reth systemd service to a host
+  ansible.builtin.template:
+    src: reth.service.j2
+    dest: "{{ ethereum_base }}/reth.service"
+    owner: "{{ ethereum_user }}"
+    group: "{{ ethereum_user }}"
+    mode: "0644"
+  register: reth_service
+  notify:
+    - Stop Reth
+    - Symlink Reth service
+    - Systemd daemon-reload
+    - Start Reth
+
+- name: Install lighthouse of node configs require it.
+  ansible.builtin.include_role:
+    name: setup_install_lighthouse
+  when: ethereum_syncmode != "light"
+...

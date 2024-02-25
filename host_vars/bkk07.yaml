@@ -1,0 +1,68 @@
+---
+host_name: "bkk06.rotko.net"
+host_timezone: "Asia/Bangkok"
+ansible_host: "27.131.160.106"
+ansible_port: "20787"
+role: "proxmox"
+
+kernel_modules:
+  - k10temp
+
+default_kvm_host: "192.168.77.10"
+default_kvm_port: "20797"
+default_need_routeros_port_forwarding: True
+routeros_delegate_host: "bkk00"
+default_need_iptables_port_forwarding: False
+default_container_template: "debian-12-standard_12.2-1_amd64.tar.zst"
+default_gw_device: "eno1"
+default_storage: "tank07lvm"
+default_resource_pool: "bkk07_resource_pool"
+default_max_cores: 192
+
+port_forwards:
+  - from_port: "{{ ansible_port }}"
+    to_host: "{{ container_ip }}:22"
+    protocol: "tcp"
+
+lxc_nodes:
+  - host: "eth01"
+    proxmox_config:
+      vmid: "101"
+      hostname: "{{ hostvars['eth01']['host_name'] }}"
+      ostemplate: 'local:vztmpl/{{ default_container_template }}'
+      netif: "{{ hostvars['eth01']['netif'] }}"
+      cores: 16
+      memory: 32678
+      swap: 32678
+      password: s4l4k4l4!
+      disk: "{{ default_storage }}:20"
+      mounts: '{"mp0":"{{ default_storage }}:4000,mp={{ hostvars["eth01"]["ethereum_storage_path"] }}"}'
+      onboot: True
+      unprivileged: True
+      validate_certs: False
+      description: "Rust Ethereum archive node: {{ hostvars['eth01']['host_name'] }}"
+      state: present
+      features:
+        - nesting=1
+    port_forwards:
+      - from_port: "50002"
+        to_host: "{{ hostvars['eth01']['container_ip'] }}:10050"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['eth01']['ansible_port'] }}"
+        to_host: "{{ hostvars['eth01']['container_ip'] }}:22"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['eth01']['reth_eth_ws_port'] }}"
+        to_host: "{{ hostvars['eth01']['container_ip'] }}:{{ hostvars['eth01']['reth_eth_http_port'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['eth01']['reth_eth_http_port'] }}"
+        to_host: "{{ hostvars['eth01']['container_ip'] }}:{{ hostvars['eth01']['reth_eth_ws_port'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['eth01']['reth_eth_p2p_port'] }}"
+        to_host: "{{ hostvars['eth01']['container_ip'] }}:{{ hostvars['eth01']['reth_eth_p2p_port'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['eth01']['reth_eth_p2p_port'] }}"
+        to_host: "{{ hostvars['eth01']['container_ip'] }}:{{ hostvars['eth01']['reth_eth_p2p_port'] }}"
+        protocol: "udp"
+      - from_port: "{{ hostvars['eth01']['reth_eth_p2p_port'] }}"
+        to_host: "{{ hostvars['eth01']['container_ip'] }}:{{ hostvars['eth01']['reth_eth_bt_port'] }}"
+        protocol: "tcp"

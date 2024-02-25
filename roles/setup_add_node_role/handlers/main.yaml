@@ -126,6 +126,20 @@
     mode: '0644'
   when: role == "erigon"
 
+- name: Add Reth service version
+  community.general.ini_file:
+    create: True
+    no_extra_spaces: True
+    option: "version"
+    section: "node"
+    state: present
+    value: "{{ reth_version }}"
+    path: "{{ noderole_file }}"
+    owner: root
+    group: root
+    mode: '0644'
+  when: role == "reth"
+
 - name: Add Evmos service version
   community.general.ini_file:
     create: True

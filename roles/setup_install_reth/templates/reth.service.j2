@@ -1,0 +1,37 @@
+[Unit]
+Description=Rust Ethereum client
+Wants=network-online.target
+After=network.target network-online.target
+
+[Service]
+User={{ ethereum_user }}
+Group={{ ethereum_user }}
+LimitNOFILE={{ default_max_open_files_in_service }}
+Environment=HOME={{ ethereum_base }}
+Type=simple
+ExecStart={{ ethereum_base }}/reth node \
+  --chain mainnet \
+  --datadir {{ ethereum_storage_path }} \
+  --discovery.port {{ reth_eth_p2p_port }} \
+  --port {{ reth_eth_p2p_port }} \
+  --http \
+  --http.addr 0.0.0.0 \
+  --http.port {{ reth_eth_http_port }} \
+  --http.corsdomain * \
+  --ws \
+  --ws.addr 0.0.0.0 \
+  --ws.port {{ reth_eth_ws_port }} \
+  --ws.origins * \
+  --ws.api "eth,net,trace,txpool,web3,rpc,reth,ots,eth-call-bundle" \
+  --authrpc.jwtsecret {{ ethereum_jwtsecret_file }} \
+  --authrpc.addr {{ ethereum_lighthouse_host }} \
+  --authrpc.port {{ ethereum_lighthouse_port }}
+
+KillMode=process
+KillSignal=SIGTERM
+TimeoutStopSec=90
+Restart=on-failure
+RestartSec=10s
+
+[Install]
+WantedBy=multi-user.target

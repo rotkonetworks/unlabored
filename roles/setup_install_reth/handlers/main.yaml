@@ -1,0 +1,49 @@
+# Standards: 0.2
+---
+- name: Symlink Reth client
+  ansible.builtin.file:
+    src: "{{ ethereum_base }}/{{ reth_version }}/reth"
+    dest: "{{ ethereum_base }}/reth"
+    force: True
+    state: link
+    owner: "{{ ethereum_user }}"
+    group: "{{ ethereum_user }}"
+
+- name: Symlink Reth service
+  ansible.builtin.file:
+    src: "{{ ethereum_base }}/reth.service"
+    dest: "/etc/systemd/system/reth.service"
+    force: True
+    state: link
+    owner: root
+    group: root
+
+- name: Enable Reth
+  ansible.builtin.service:
+    name: reth
+    enabled: True
+
+- name: Restart Reth
+  ansible.builtin.service:
+    name: reth
+    state: restarted
+    enabled: True
+
+- name: Systemd daemon-reload
+  ansible.builtin.systemd:
+    daemon_reload: True
+
+- name: Stop Reth
+  ansible.builtin.systemd:
+    name: reth
+    daemon_reload: True
+    state: stopped
+    enabled: True
+
+- name: Start Reth
+  ansible.builtin.systemd:
+    name: reth
+    daemon_reload: True
+    state: started
+    enabled: True
+...
