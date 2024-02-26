@@ -1,6 +1,9 @@
 ---
 name: Python application
 
+# self-hosted runner
+runs-on: self-hosted
+
 on:
   push:
     branches: [ master ]
