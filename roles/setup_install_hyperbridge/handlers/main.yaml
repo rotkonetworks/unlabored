@@ -1,0 +1,44 @@
+---
+- name: Symlink Cumulus release
+  ansible.builtin.file:
+    src: "{{ default_base_path }}/cumulus-v{{ default_client_version }}"
+    dest: "{{ default_base_path }}/cumulus"
+    force: True
+    state: link
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+
+- name: Symlink binary executable
+  ansible.builtin.file:
+    src: "{{ default_base_path }}/cumulus-v{{ default_client_version }}"
+    dest: "/usr/local/bin/cumulus"
+    force: True
+    state: link
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+
+- name: Symlink Cumulus service to systemd
+  ansible.builtin.file:
+    src: "{{ default_base_path }}/cumulus.service"
+    dest: "/etc/systemd/system/cumulus.service"
+    state: link
+    force: True
+    owner: "root"
+    group: "root"
+    mode: '0644'
+
+- name: Stop Cumulus
+  ansible.builtin.systemd:
+    name: cumulus
+    state: stopped
+    enabled: True
+
+- name: Systemd daemon-reload
+  ansible.builtin.systemd:
+    daemon_reload: True
+
+- name: Start Cumulus
+  ansible.builtin.systemd:
+    name: cumulus
+    state: started
+    enabled: True

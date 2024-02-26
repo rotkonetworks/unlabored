@@ -1,0 +1,38 @@
+[Unit]
+Description="{{ host_name.split('.')[0] }} endpoint - Cumulus service"
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User={{ default_user }}
+Group={{ default_group }}
+ExecStart={{ default_base_path }}/cumulus \
+  --name "{{ default_telemetry_name }}" \
+  --chain {{ default_network }} \
+  --base-path {{ default_base_path }} \
+  --state-pruning archive \
+  --database {{ default_database }} \
+  --sync full \
+  --listen-addr /ip4/0.0.0.0/tcp/{{ default_p2p_port }} \
+  --listen-addr /ip4/0.0.0.0/tcp/{{ default_p2p_port_ws }}/ws \
+  --public-addr /ip4/{{ ansible_host }}/tcp/{{ default_p2p_port }} \
+  --public-addr /ip4/{{ ansible_host }}/tcp/{{ default_p2p_port_ws }}/ws \
+  --public-addr /dns/{{ default_public_dns }}/tcp/{{ default_p2p_port }} \
+  --public-addr /dns/{{ default_public_dns }}/tcp/{{ default_p2p_port_ws }}/ws \
+  --public-addr /dns/{{ default_public_dns }}/tcp/{{ default_p2p_port_wss }}/wss \
+  --rpc-port {{ default_rpc_port }} \
+  --prometheus-port {{ default_prom_port }} \
+  --prometheus-external \
+  --relay-chain-rpc-urls {{ default_relay_rpc }} {{ default_relay_rpc_fallback }} \
+  --wasm-execution Compiled \
+  --no-hardware-benchmarks \
+  --rpc-external \
+  --rpc-methods safe \
+  --rpc-cors all \
+  --allow-private-ipv4
+
+Restart=always
+RestartSec=120
+
+[Install]
+WantedBy=multi-user.target

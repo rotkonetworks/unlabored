@@ -11,4 +11,3 @@ role: "reth"
 erigon_eth: True
 pruned: False
 pinned_service: True
-...

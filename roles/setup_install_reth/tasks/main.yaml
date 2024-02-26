@@ -111,4 +111,3 @@
   ansible.builtin.include_role:
     name: setup_install_lighthouse
   when: ethereum_syncmode != "light"
-...

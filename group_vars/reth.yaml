@@ -36,4 +36,3 @@ reth_eth_bt_port: 42069
 reth_eth_sentry_port: 4000
 reth_eth_sentry2_port: 4001
 reth_eth_http_api: "engine,eth,reth,ots,web3,net,debug,trace,txpool,shh"
-...
