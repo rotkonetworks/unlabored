@@ -1,9 +1,9 @@
 ---
 name: Check Polkadot and Cumulus Update
 
-# on:
-#   schedule:
-#     - cron: '0 0 * * *'  # Runs at midnight UTC every day
+on:
+  schedule:
+    - cron: '0 0 * * *'  # Runs at midnight UTC every day
 
 jobs:
   update-version:
