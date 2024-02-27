@@ -105,7 +105,9 @@
 
 - name: Flush handlers after Polkadot install
   ansible.builtin.meta: flush_handlers
-  when: download_result.changed
+  when:
+    - ansible_local['noderole']['node']['pinned'] != "True"
+    - ansible_local['noderole']['node']['version'] != default_client_version
 
 - name: Verify Polkadot version
   ansible.builtin.command: "{{ default_base_path }}/polkadot --version"
