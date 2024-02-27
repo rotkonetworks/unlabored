@@ -1,30 +1,28 @@
----
-default_client_name: polkadot-v
-default_client_version: 1.7.1
-default_download_base_url: "https://github.com/paritytech/polkadot-sdk/releases/download/"
-default_download_url: "{{ default_download_base_url }}{{ default_client_name }}{{ default_client_version }}/polkadot"
-default_download_url_prepare: "{{ default_download_base_url }}{{ default_client_name }}{{ default_client_version }}/polkadot-prepare-worker"
-default_download_url_execute: "{{ default_download_base_url }}{{ default_client_name }}{{ default_client_version }}/polkadot-execute-worker"
 default_auxiliary_binary_path: /usr/libexec
-
-default_service: polkadot
-default_user: "{{ service_users['polkadot'] }}"
-default_group: "{{ service_users['polkadot'] }}"
 default_base_path: /opt/polkadot
-default_database_path: "/opt/polkadot/chains"
+default_chain_spec: '{{ default_base_path }}/paseo.json'
+default_client_name: polkadot-v
+default_client_version: polkadot-v1.7.2
+default_database: paritydb
+default_database_path: /opt/polkadot/chains
+default_download_base_url: https://github.com/paritytech/polkadot-sdk/releases/download/
+default_download_url: '{{ default_download_base_url }}{{ default_client_name }}{{
+  default_client_version }}/polkadot'
+default_download_url_execute: '{{ default_download_base_url }}{{ default_client_name
+  }}{{ default_client_version }}/polkadot-execute-worker'
+default_download_url_prepare: '{{ default_download_base_url }}{{ default_client_name
+  }}{{ default_client_version }}/polkadot-prepare-worker'
+default_group: '{{ service_users[''polkadot''] }}'
 default_log_level: info
 default_network: polkadot
-default_chain_spec: "{{ default_base_path }}/paseo.json"
 default_node_type: validator
-# pruning options: archive(rpc), archive-canonical(rpc/finalized) 256(default), 1000(validator)
-# default_pruning: 1000
-# default_syncmode: warp
-default_database: paritydb
-default_telemetry_url: "wss://telemetry-backend.w3f.community/submit/ 1"
 default_p2p_port: 33100
 default_p2p_port_ws: 34100
 default_p2p_port_wss: 35100
+default_prom_port: 7100
 default_rpc_port: 9100
 default_secure_rpc_port: 42100
-default_prom_port: 7100
+default_service: polkadot
+default_telemetry_url: wss://telemetry-backend.w3f.community/submit/ 1
+default_user: '{{ service_users[''polkadot''] }}'
 zabbix_ext_port: 10100
