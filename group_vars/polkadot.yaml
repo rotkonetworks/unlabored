@@ -2,7 +2,7 @@ default_auxiliary_binary_path: /usr/libexec
 default_base_path: /opt/polkadot
 default_chain_spec: '{{ default_base_path }}/paseo.json'
 default_client_name: polkadot-v
-default_client_version: polkadot-v1.7.2
+default_client_version: polkadot-v1.8.0
 default_database: paritydb
 default_database_path: /opt/polkadot/chains
 default_download_base_url: https://github.com/paritytech/polkadot-sdk/releases/download/
