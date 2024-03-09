@@ -7,51 +7,13 @@ proxmox_nodes
 routers
 
 [proxmox_nodes:children]
-cumulus
-encointer
 hydradx
-polkadot
 
 [routers]
 bkk00
 
 [hydradx]
-hdx26
-
-[polkadot]
-pso06
-dot14
-ksm14
-wnd14
-pso16
-ksm26
-dot26
-wnd26
-pso26
-
-[cumulus]
-; boot
-mint14
-mine14
-wmint14
-pbr13
-kbr13
-wbr13
-pch13
-wch13
-; rpc
-mint26
-pbr26
-pch26
-mine26
-kbr26
-wmint26
-wbr26
-wch26
-
-[encointer]
-enc14
-enc26
+hdx27
 
 [services]
 monitor
@@ -59,10 +21,10 @@ monitor
 [unmanaged]
 
 [proxmox_hosts]
-bkk06
+bkk07
 
 [hardware]
-bkk06
+bkk07
 
 [referrence_nodes]
 dot14

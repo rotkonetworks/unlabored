@@ -1,0 +1,44 @@
+---
+- name: Symlink HydraDX release
+  ansible.builtin.file:
+    src: "{{ default_base_path }}/hydradx-v{{ default_client_version }}"
+    dest: "{{ default_base_path }}/hydradx"
+    force: True
+    state: link
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+
+- name: Symlink binary executable
+  ansible.builtin.file:
+    src: "{{ default_base_path }}/hydradx-v{{ default_client_version }}"
+    dest: "/usr/local/bin/hydradx"
+    force: True
+    state: link
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+
+- name: Symlink HydraDX service to systemd
+  ansible.builtin.file:
+    src: "{{ default_base_path }}/hydradx.service"
+    dest: "/etc/systemd/system/hydradx.service"
+    state: link
+    force: True
+    owner: "root"
+    group: "root"
+    mode: '0644'
+
+- name: Stop HydraDX
+  ansible.builtin.systemd:
+    name: hydradx
+    state: stopped
+    enabled: True
+
+- name: Systemd daemon-reload
+  ansible.builtin.systemd:
+    daemon_reload: True
+
+- name: Start HydraDX
+  ansible.builtin.systemd:
+    name: hydradx
+    state: started
+    enabled: True

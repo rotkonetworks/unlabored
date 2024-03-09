@@ -1,5 +1,5 @@
 ---
-host_name: "bkk06.rotko.net"
+host_name: "bkk07.rotko.net"
 host_timezone: "Asia/Bangkok"
 ansible_host: "27.131.160.106"
 ansible_port: "20787"
@@ -25,44 +25,88 @@ port_forwards:
     protocol: "tcp"
 
 lxc_nodes:
-  - host: "eth01"
+  - host: "hdx26"
     proxmox_config:
-      vmid: "101"
-      hostname: "{{ hostvars['eth01']['host_name'] }}"
-      ostemplate: 'local:vztmpl/{{ default_container_template }}'
-      netif: "{{ hostvars['eth01']['netif'] }}"
-      cores: 16
-      memory: 32678
-      swap: 32678
-      password: s4l4k4l4!
+      vmid: "836"
+      hostname: "{{ hostvars['hdx26']['host_name'] }}"
+      ostemplate: "local:vztmpl/{{ default_container_template }}"
+      netif: "{{ hostvars['hdx26']['netif'] }}"
+      cores: 4
+      memory: 16384
+      swap: 8192
+      password: "{{ default_password }}"
       disk: "{{ default_storage }}:20"
-      mounts: '{"mp0":"{{ default_storage }}:4000,mp={{ hostvars["eth01"]["ethereum_storage_path"] }}"}'
+      mounts: '{"mp0":"{{ default_storage }}:150,mp={{ hostvars["hdx26"]["default_database_path"] }}"}'
       onboot: True
       unprivileged: True
       validate_certs: False
-      description: "Rust Ethereum archive node: {{ hostvars['eth01']['host_name'] }}"
+      description: "{{ hostvars['hdx26']['default_network'] }} {{ hostvars['hdx26']['default_node_type'] }}: {{ hostvars['hdx26']['host_name'] }}"
       state: present
       features:
         - nesting=1
     port_forwards:
-      - from_port: "50002"
-        to_host: "{{ hostvars['eth01']['container_ip'] }}:10050"
+      - from_port: "{{ hostvars['hdx26']['ansible_port'] }}"
+        to_host: "{{ hostvars['hdx26']['container_ip'] }}:22"
         protocol: "tcp"
-      - from_port: "{{ hostvars['eth01']['ansible_port'] }}"
-        to_host: "{{ hostvars['eth01']['container_ip'] }}:22"
+      - from_port: "{{ hostvars['hdx26']['zabbix_ext_port'] }}"
+        to_host: "{{ hostvars['monitor']['container_ip'] }}:10050"
         protocol: "tcp"
-      - from_port: "{{ hostvars['eth01']['reth_eth_ws_port'] }}"
-        to_host: "{{ hostvars['eth01']['container_ip'] }}:{{ hostvars['eth01']['reth_eth_http_port'] }}"
+      - from_port: "{{ hostvars['hdx26']['default_p2p_port'] }}"
+        to_host: "{{ hostvars['hdx26']['container_ip'] }}:{{ hostvars['hdx26']['default_p2p_port'] }}"
         protocol: "tcp"
-      - from_port: "{{ hostvars['eth01']['reth_eth_http_port'] }}"
-        to_host: "{{ hostvars['eth01']['container_ip'] }}:{{ hostvars['eth01']['reth_eth_ws_port'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['eth01']['reth_eth_p2p_port'] }}"
-        to_host: "{{ hostvars['eth01']['container_ip'] }}:{{ hostvars['eth01']['reth_eth_p2p_port'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['eth01']['reth_eth_p2p_port'] }}"
-        to_host: "{{ hostvars['eth01']['container_ip'] }}:{{ hostvars['eth01']['reth_eth_p2p_port'] }}"
+      - from_port: "{{ hostvars['hdx26']['default_p2p_port'] }}"
+        to_host: "{{ hostvars['hdx26']['container_ip'] }}:{{ hostvars['hdx26']['default_p2p_port'] }}"
         protocol: "udp"
-      - from_port: "{{ hostvars['eth01']['reth_eth_p2p_port'] }}"
-        to_host: "{{ hostvars['eth01']['container_ip'] }}:{{ hostvars['eth01']['reth_eth_bt_port'] }}"
+      - from_port: "{{ hostvars['hdx26']['default_p2p_port_ws'] }}"
+        to_host: "{{ hostvars['hdx26']['container_ip'] }}:{{ hostvars['hdx26']['default_p2p_port_ws'] }}"
         protocol: "tcp"
+      - from_port: "{{ hostvars['hdx26']['default_p2p_port_ws'] }}"
+        to_host: "{{ hostvars['hdx26']['container_ip'] }}:{{ hostvars['hdx26']['default_p2p_port_ws'] }}"
+        protocol: "udp"
+      - from_port: "{{ hostvars['hdx26']['default_p2p_port_wss'] }}"
+        to_host: "{{ hostvars['hdx26']['container_ip'] }}:{{ hostvars['hdx26']['default_p2p_port_wss'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['hdx26']['default_p2p_port_wss'] }}"
+        to_host: "{{ hostvars['hdx26']['container_ip'] }}:{{ hostvars['hdx26']['default_p2p_port_wss'] }}"
+        protocol: "udp"
+  # - host: "eth01"
+  #   proxmox_config:
+  #     vmid: "101"
+  #     hostname: "{{ hostvars['eth01']['host_name'] }}"
+  #     ostemplate: 'local:vztmpl/{{ default_container_template }}'
+  #     netif: "{{ hostvars['eth01']['netif'] }}"
+  #     cores: 16
+  #     memory: 32678
+  #     swap: 32678
+  #     password: s4l4k4l4!
+  #     disk: "{{ default_storage }}:20"
+  #     mounts: '{"mp0":"{{ default_storage }}:4000,mp={{ hostvars["eth01"]["ethereum_storage_path"] }}"}'
+  #     onboot: True
+  #     unprivileged: True
+  #     validate_certs: False
+  #     description: "Rust Ethereum archive node: {{ hostvars['eth01']['host_name'] }}"
+  #     state: present
+  #     features:
+  #       - nesting=1
+  #   port_forwards:
+  #     - from_port: "50002"
+  #       to_host: "{{ hostvars['eth01']['container_ip'] }}:10050"
+  #       protocol: "tcp"
+  #     - from_port: "{{ hostvars['eth01']['ansible_port'] }}"
+  #       to_host: "{{ hostvars['eth01']['container_ip'] }}:22"
+  #       protocol: "tcp"
+  #     - from_port: "{{ hostvars['eth01']['reth_eth_ws_port'] }}"
+  #       to_host: "{{ hostvars['eth01']['container_ip'] }}:{{ hostvars['eth01']['reth_eth_http_port'] }}"
+  #       protocol: "tcp"
+  #     - from_port: "{{ hostvars['eth01']['reth_eth_http_port'] }}"
+  #       to_host: "{{ hostvars['eth01']['container_ip'] }}:{{ hostvars['eth01']['reth_eth_ws_port'] }}"
+  #       protocol: "tcp"
+  #     - from_port: "{{ hostvars['eth01']['reth_eth_p2p_port'] }}"
+  #       to_host: "{{ hostvars['eth01']['container_ip'] }}:{{ hostvars['eth01']['reth_eth_p2p_port'] }}"
+  #       protocol: "tcp"
+  #     - from_port: "{{ hostvars['eth01']['reth_eth_p2p_port'] }}"
+  #       to_host: "{{ hostvars['eth01']['container_ip'] }}:{{ hostvars['eth01']['reth_eth_p2p_port'] }}"
+  #       protocol: "udp"
+  #     - from_port: "{{ hostvars['eth01']['reth_eth_p2p_port'] }}"
+  #       to_host: "{{ hostvars['eth01']['container_ip'] }}:{{ hostvars['eth01']['reth_eth_bt_port'] }}"
+  #       protocol: "tcp"

@@ -9,6 +9,7 @@ routers
 [proxmox_nodes:children]
 cumulus
 encointer
+hydradx
 polkadot
 
 [proxmox_nodes]
@@ -50,6 +51,10 @@ enc14
 enc24
 enc26
 
+[hydradx]
+hdx26
+hdx27
+
 [polkadot]
 dot01
 dot02
@@ -77,6 +82,7 @@ bkk02
 bkk03
 bkk04
 bkk06
+bkk07
 
 [unmanaged]
 bkk05
@@ -87,6 +93,7 @@ kvm02
 kvm03
 kvm04
 kvm06
+kvm07
 
 [hardware]
 bkk01
@@ -94,6 +101,7 @@ bkk02
 bkk03
 bkk04
 bkk06
+bkk07
 
 [access_management:children]
 hardware

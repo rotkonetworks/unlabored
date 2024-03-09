@@ -46,7 +46,7 @@ default_container_template: "debian-12-standard_12.0-1_amd64.tar.zst"
 
 # Golang
 default_golang_dl_base_url: "https://dl.google.com/go/go"
-default_golang_version: "1.20.5"
+default_golang_version: "1.22.1"
 default_golang_os: "linux"
 default_golang_arch: "amd64"
 default_golang_base_path: "/usr/local"
@@ -161,6 +161,7 @@ service_users:
   ethereum: "ethereum"
   encointer: "encointer"
   evmos: "evmos"
+  hydradx: "hydradx"
   kava: "kava"
   moonbeam: "moonbeam"
   polygon: "polygon"
