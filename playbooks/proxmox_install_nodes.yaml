@@ -106,3 +106,10 @@
   roles:
     - setup_install_encointer
     - setup_install_nginx
+
+- name: Install HydraDX services
+  hosts: hydradx
+  gather_facts: True
+  roles:
+    - setup_install_hydradx
+    - setup_install_nginx

@@ -76,6 +76,9 @@ wnd26
 pso24
 pso26
 
+[services]
+monitor
+
 [proxmox_hosts]
 bkk01
 bkk02

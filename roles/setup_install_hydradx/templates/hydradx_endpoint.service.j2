@@ -17,7 +17,7 @@ ExecStart={{ default_base_path }}/hydradx \
   --name "{{ default_telemetry_name }}" \
   --chain {{ default_network }} \
   --base-path {{ default_base_path }} \
-  --blocks-pruning=archive \
+  --blocks-pruning archive \
   --state-pruning archive \
   --database {{ default_database }} \
   --sync full \
@@ -38,12 +38,6 @@ ExecStart={{ default_base_path }}/hydradx \
   --rpc-methods safe \
   --rpc-cors all \
   --allow-private-ipv4
-
-[Install]
-WantedBy=multi-user.target
-
-Restart=always
-RestartSec=120
 
 [Install]
 WantedBy=multi-user.target

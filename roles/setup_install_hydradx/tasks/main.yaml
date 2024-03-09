@@ -50,10 +50,10 @@
 - name: Flush handlers after HydraDX service copy
   ansible.builtin.meta: flush_handlers
 
-- name: Install HydraDX v{{ default_client_version }}
+- name: Install HydraDX {{ default_client_version }}
   ansible.builtin.get_url:
     url: "{{ default_download_url }}"
-    dest: "{{ default_base_path }}/hydradx-v{{ default_client_version }}"
+    dest: "{{ default_base_path }}/hydradx-{{ default_client_version }}"
     mode: "u+r+x"
     owner: "{{ default_user }}"
     group: "{{ default_user }}"
