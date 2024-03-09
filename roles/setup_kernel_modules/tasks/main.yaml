@@ -5,81 +5,47 @@
   register: zfs_module_check
   ignore_errors: True
   changed_when: False
-  when: "'zfs' in kernel_modules"
 
 - name: Ensure /etc/apt/sources.list.d directory exists
   ansible.builtin.file:
     path: /etc/apt/sources.list.d
     state: directory
     mode: '0755'
-  become: True
-  become_user: root
-  when: zfs_module_check.rc != 0 and zfs_module_check is defined
+  when: zfs_module_check.rc != 0
 
-- name: Ensure bookworm-backports.list file exists
-  ansible.builtin.file:
-    path: "/etc/apt/sources.list.d/bookworm-backports.list"
-    state: touch
-    owner: root
-    group: root
-    mode: '0644'
-  when: zfs_module_check.rc != 0 and zfs_module_check is defined
-
-- name: Add bookworm-backports repo for ZFS
+- name: Add stable-backports repo for ZFS
   ansible.builtin.lineinfile:
-    path: "/etc/apt/sources.list.d/bookworm-backports.list"
-    line: "{{ item }}"
-    state: present
+    path: "/etc/apt/sources.list.d/stable-backports.list"
+    line: "deb http://deb.debian.org/debian {{ ansible_distribution_release }}-backports main contrib"
+    create: yes
     owner: root
     group: root
     mode: '0644'
-  loop:
-    - "deb http://deb.debian.org/debian bookworm-backports main contrib"
-    - "deb-src http://deb.debian.org/debian bookworm-backports main contrib"
-  when: zfs_module_check.rc != 0 and zfs_module_check is defined
-
-- name: Setup apt preferences for ZFS
-  ansible.builtin.copy:
-    dest: "/etc/apt/preferences.d/90_zfs"
-    content: |
-      Package: src:zfs-linux
-      Pin: release n=bookworm-backports
-      Pin-Priority: 990
-    owner: root
-    group: root
-    mode: '0644'
-  when: zfs_module_check.rc != 0 and zfs_module_check is defined
+  when: zfs_module_check.rc != 0
 
 - name: Update apt cache
   ansible.builtin.apt:
     update_cache: yes
-  when: zfs_module_check.rc != 0 and zfs_module_check is defined
+  when: zfs_module_check.rc != 0
 
-- name: Install required packages for ZFS
+- name: Install ZFS utilities from stable-backports
   ansible.builtin.apt:
-    name:
-      - dpkg-dev
-      - "linux-headers-{{ ansible_kernel }}"
-      - "linux-image-{{ ansible_kernel }}"
-      - zfs-dkms
-      - zfsutils-linux
+    name: zfsutils-linux
     state: present
-  environment:
-    DEBIAN_FRONTEND: noninteractive
-  when: zfs_module_check.rc != 0 and zfs_module_check is defined
+    default_release: "{{ ansible_distribution_release }}-backports"
+  when: zfs_module_check.rc != 0
 
 - name: Load required kernel modules
-  community.general.modprobe:
-    name: "{{ item }}"
-    state: present
-  loop: "{{ kernel_modules }}"
+  ansible.builtin.command: modprobe zfs
+  when: zfs_module_check.rc != 0
 
-- name: Store required kernel modules to /etc/modules file
+- name: Ensure zfs is added to /etc/modules
   ansible.builtin.lineinfile:
     path: "/etc/modules"
-    line: "{{ item }}"
+    line: "zfs"
+    create: yes
     owner: root
     group: root
     mode: '0644'
     state: present
-  loop: "{{ kernel_modules }}"
+  when: zfs_module_check.rc != 0
