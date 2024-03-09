@@ -33,6 +33,7 @@
   become: True
   become_user: root
   when: firmware_check.stdout | length > 0
+  ignore_errors: yes
 
 - name: Check if any PVE kernel is installed
   ansible.builtin.command:
@@ -69,6 +70,7 @@
     autoclean: True
     autoremove: False
     state: present
+  ignore_errors: yes
 
 - name: Remove Debian default kernel
   ansible.builtin.apt:
@@ -76,6 +78,8 @@
       - linux-image-amd64
       - "linux-image-6.1*"
     state: absent
+  register: apt_result
+  ignore_errors: yes
 
 - name: Remove os-prober
   ansible.builtin.apt:

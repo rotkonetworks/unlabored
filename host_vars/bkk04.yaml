@@ -15,7 +15,6 @@ default_proxmox_port: "20814"
 default_need_routeros_port_forwarding: True
 routeros_delegate_host: "bkk00"
 default_need_iptables_port_forwarding: False
-default_container_template: "debian-12-standard_12.0-1_amd64.tar.zst"
 default_gw_device: "enp10s0"
 default_storage: "tank04lvm"
 default_resource_pool: "bkk04_resource_pool"
