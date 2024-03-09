@@ -3,6 +3,8 @@ warn_list:
   - no-tabs
   - var-spacing
   - no-handler
+  - ignore-errors
+  - yaml[comments-indentation]
 skip_list:
   - '503'
   - args[module]

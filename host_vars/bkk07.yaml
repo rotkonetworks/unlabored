@@ -23,7 +23,7 @@ port_forwards:
   - from_port: "{{ ansible_port }}"
     to_host: "{{ container_ip }}:22"
     protocol: "tcp"
-  - from_port: "20817" # Proxmox UI
+  - from_port: "20817"  #  Proxmox UI
     to_host: "{{ container_ip }}:8006"
     protocol: "tcp"
 
@@ -63,6 +63,7 @@ lxc_nodes:
       - from_port: "{{ hostvars['hdx27']['default_p2p_port_wss'] }}"
         to_host: "{{ hostvars['hdx27']['container_ip'] }}:{{ hostvars['hdx27']['default_p2p_port_wss'] }}"
         protocol: "tcp"
+
   # - host: "eth01"
   #   proxmox_config:
   #     vmid: "101"
