@@ -42,3 +42,6 @@
     name: polkadot
     state: started
     enabled: True
+
+- name: Flush Handlers after Polkadot Install
+  ansible.builtin.meta: flush_handlers
