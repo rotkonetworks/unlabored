@@ -2,12 +2,12 @@
 ---
 # - name: Create predefined containers
 #   community.general.proxmox:
-#     api_user: "{{ api_user }}"
-#     api_password: "{{ api_password }}"
+#     api_user: "{{ proxmox_defaults.api_user }}"
+#     api_password: "{{ proxmox_defaults.api_password }}"
 #     api_host: "{{ proxmox_defaults.api_host }}"
 #     vmid: "{{ item.proxmox_config.vmid }}"
 #     hostname: "{{ item.proxmox_config.hostname }}"
-#     template: "{{ item.proxmox_config.ostemplate }}"
+#     template: "{{ item.proxmox_config.template }}"
 #     netif: "{{ item.proxmox_config.netif }}"
 #     cores: "{{ item.proxmox_config.cores }}"
 #     memory: "{{ item.proxmox_config.memory }}"
@@ -27,16 +27,15 @@
 #
 # - name: Start predefined nodes
 #   community.general.proxmox:
-#     api_user: "{{ api_user }}"
-#     api_password: "{{ api_password }}"
+#     api_user: "{{ proxmox_defaults.api_user }}"
+#     api_password: "{{ proxmox_defaults.api_password }}"
 #     api_host: "{{ proxmox_defaults.api_host }}"
 #     vmid: "{{ item.proxmox_config.vmid }}"
-#     state: 'started'
+#     state: "started"
 #   loop: "{{ lxc_nodes }}"
 #   when:
 #     - lxc_nodes is defined
-#     - "'state' in item.proxmox_config"
-#     - "item.proxmox_config['state'] == 'present'"
+#     - "item.proxmox_config.state == 'present'"
 #   register: container_start_result
 
 - name: Create predefined containers

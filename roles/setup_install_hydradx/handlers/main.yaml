@@ -1,8 +1,8 @@
 ---
-- name: Symlink Polkadot release
+- name: Symlink HydraDX release
   ansible.builtin.file:
-    src: "{{ default_base_path }}/polkadot-v{{ default_client_version }}"
-    dest: "{{ default_base_path }}/polkadot"
+    src: "{{ default_base_path }}/hydradx-{{ default_client_version }}"
+    dest: "{{ default_base_path }}/hydradx"
     force: True
     state: link
     owner: "{{ default_user }}"
@@ -10,26 +10,26 @@
 
 - name: Symlink binary executable
   ansible.builtin.file:
-    src: "{{ default_base_path }}/polkadot-v{{ default_client_version }}"
-    dest: "/usr/local/bin/polkadot"
+    src: "{{ default_base_path }}/hydradx-{{ default_client_version }}"
+    dest: "/usr/local/bin/hydradx"
     force: True
     state: link
     owner: "{{ default_user }}"
     group: "{{ default_user }}"
 
-- name: Symlink Polkadot service to systemd
+- name: Symlink HydraDX service to systemd
   ansible.builtin.file:
-    src: "{{ default_base_path }}/polkadot.service"
-    dest: "/etc/systemd/system/polkadot.service"
+    src: "{{ default_base_path }}/hydradx.service"
+    dest: "/etc/systemd/system/hydradx.service"
     state: link
     force: True
     owner: "root"
     group: "root"
     mode: '0644'
 
-- name: Stop Polkadot
+- name: Stop HydraDX
   ansible.builtin.systemd:
-    name: polkadot
+    name: hydradx
     state: stopped
     enabled: True
 
@@ -37,11 +37,8 @@
   ansible.builtin.systemd:
     daemon_reload: True
 
-- name: Start Polkadot
+- name: Start HydraDX
   ansible.builtin.systemd:
-    name: polkadot
+    name: hydradx
     state: started
     enabled: True
-
-- name: Flush Handlers
-  ansible.builtin.meta: flush_handlers

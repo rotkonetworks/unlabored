@@ -42,11 +42,11 @@ default_admin_group_name: "bofh"
 default_admin_group_id: "500"
 default_shell: "/bin/bash"
 default_max_open_files_in_service: 16368
-default_container_template: "debian-12-standard_12.0-1_amd64.tar.zst"
+default_container_template: "debian-12-standard_12.2-1_amd64.tar.zst"
 
 # Golang
 default_golang_dl_base_url: "https://dl.google.com/go/go"
-default_golang_version: "1.20.5"
+default_golang_version: "1.22.1"
 default_golang_os: "linux"
 default_golang_arch: "amd64"
 default_golang_base_path: "/usr/local"
@@ -103,6 +103,7 @@ default_users:
   - key
   - tommi
   - dan
+  - runner
 
 all_users:
   - name: key
@@ -115,6 +116,8 @@ all_users:
     comment: "tommi"
   - name: dan
     comment: "dan"
+  - name: runner
+    comment: "github runner"
 
 # Proxmox management
 proxmox_default_admin_account: "ansible_admin@pve"
@@ -161,6 +164,7 @@ service_users:
   ethereum: "ethereum"
   encointer: "encointer"
   evmos: "evmos"
+  hydradx: "hydradx"
   kava: "kava"
   moonbeam: "moonbeam"
   polygon: "polygon"
