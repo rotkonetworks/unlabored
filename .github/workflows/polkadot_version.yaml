@@ -4,6 +4,8 @@ name: Check Polkadot and Cumulus Update
 on:
   schedule:
     - cron: '0 0 * * *'  # Runs at midnight UTC every day
+  workflow_dispatch: # Manually run the workflow
+
 
 jobs:
   update-version:
