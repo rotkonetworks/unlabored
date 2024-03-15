@@ -63,6 +63,38 @@ lxc_nodes:
       - from_port: "{{ hostvars['hdx27']['default_p2p_port_wss'] }}"
         to_host: "{{ hostvars['hdx27']['container_ip'] }}:{{ hostvars['hdx27']['default_p2p_port_wss'] }}"
         protocol: "tcp"
+  - host: "pso07"
+    proxmox_config:
+      vmid: "1007"
+      hostname: "{{ hostvars['pso07']['host_name'] }}"
+      ostemplate: "local:vztmpl/{{ default_container_template }}"
+      netif: "{{ hostvars['pso07']['netif'] }}"
+      cores: 4
+      memory: 16384
+      swap: 8192
+      password: "{{ default_password }}"
+      disk: "{{ default_storage }}:20"
+      mounts: '{"mp0":"{{ default_storage }}:200,mp={{ hostvars["pso07"]["default_base_path"] }}"}'
+      onboot: True
+      unprivileged: True
+      validate_certs: False
+      description: "{{ hostvars['pso07']['default_network'] }} {{ hostvars['pso07']['default_node_type'] }}: {{ hostvars['pso07']['host_name'] }}"
+      state: present
+      features:
+        - nesting=1
+    port_forwards:
+      - from_port: "{{ hostvars['pso07']['ansible_port'] }}"
+        to_host: "{{ hostvars['pso07']['container_ip'] }}:22"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['pso07']['zabbix_ext_port'] }}"
+        to_host: "{{ hostvars['monitor']['container_ip'] }}:10050"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['pso07']['default_p2p_port'] }}"
+        to_host: "{{ hostvars['pso07']['container_ip'] }}:{{ hostvars['pso07']['default_p2p_port'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['pso07']['default_p2p_port_ws'] }}"
+        to_host: "{{ hostvars['pso07']['container_ip'] }}:{{ hostvars['pso07']['default_p2p_port_ws'] }}"
+        protocol: "tcp"
 
   # - host: "eth01"
   #   proxmox_config:
