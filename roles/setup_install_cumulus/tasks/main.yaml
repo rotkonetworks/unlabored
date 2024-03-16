@@ -47,9 +47,6 @@
     - Start Cumulus
     - Add type of service fact
 
-- name: Flush handlers after Cumulus service copy
-  ansible.builtin.meta: flush_handlers
-
 - name: Install Cumulus v{{ default_client_version }}
   ansible.builtin.get_url:
     url: "{{ default_download_url }}"

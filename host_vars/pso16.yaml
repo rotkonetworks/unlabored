@@ -12,8 +12,7 @@ default_telemetry_name: "Rotko Networks - {{ host_name.split('.')[0] }} {{ defau
 default_public_dns: "{{ host_name }}"
 default_network: "paseo"
 default_chain_spec: "{{ default_base_path }}/paseo.raw.json"
-# default_chain_spec_dl_url: "https://raw.githubusercontent.com/paseo-network/runtimes/main/chain-specs/paseo.raw.json"
-default_chain_spec_dl_url: "https://raw.githubusercontent.com/paseo-network/runtimes/fixed-chain-spec/chain-specs/paseo.raw.json"
+default_chain_spec_dl_url: "https://raw.githubusercontent.com/paseo-network/runtimes/main/chain-specs/paseo.raw.json"
 default_database: paritydb
 default_node_type: "bootnode"
 default_pruning: 256

@@ -2,8 +2,9 @@
 name: Check Polkadot and Cumulus Update
 
 on:
+  push:
   schedule:
-    - cron: '0 0 * * *'  # Runs at midnight UTC every day
+    - cron: '0 0 * * *'   # Runs at midnight UTC every day
 
 jobs:
   update-version:
@@ -24,39 +25,36 @@ jobs:
 
       - name: Check for updates in Polkadot and replace version if needed
         id: check-update-polkadot
-        run: >
-          python scripts/extract_version.py
-          group_vars/polkadot.yaml
-          default_client_version
-          paritytech polkadot-sdk true
+        run: |
+          python scripts/extract_version.py group_vars/polkadot.yaml default_client_version paritytech polkadot-sdk true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Check for updates in Cumulus and replace version if needed
         id: check-update-cumulus
-        run: >
-          python scripts/extract_version.py
-          group_vars/cumulus.yaml
-          default_client_version
-          paritytech polkadot-sdk true
+        run: |
+          python scripts/extract_version.py group_vars/cumulus.yaml default_client_version paritytech polkadot-sdk true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Git config
-        if: steps.check-update-polkadot.outputs.current_version != steps.check-update-polkadot.outputs.latest_release || steps.check-update-cumulus.outputs.current_version != steps.check-update-cumulus.outputs.latest_release
+        if: steps.check-update-polkadot.outputs.current_version != steps.check-update-polkadot.outputs.latest_release
+          || steps.check-update-cumulus.outputs.current_version != steps.check-update-cumulus.outputs.latest_release
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
 
       - name: Commit updated YAML files
-        if: steps.check-update-polkadot.outputs.current_version != steps.check-update-polkadot.outputs.latest_release || steps.check-update-cumulus.outputs.current_version != steps.check-update-cumulus.outputs.latest_release
+        if: steps.check-update-polkadot.outputs.current_version != steps.check-update-polkadot.outputs.latest_release
+          || steps.check-update-cumulus.outputs.current_version != steps.check-update-cumulus.outputs.latest_release
         run: |
           git add group_vars/polkadot.yaml group_vars/cumulus.yaml
           git commit -m "Update Polkadot and Cumulus versions"
           git push
 
       - name: Create Pull Request for Polkadot and Cumulus Update
-        if: steps.check-update-polkadot.outputs.current_version != steps.check-update-polkadot.outputs.latest_release || steps.check-update-cumulus.outputs.current_version != steps.check-update-cumulus.outputs.latest_release
+        if: steps.check-update-polkadot.outputs.current_version != steps.check-update-polkadot.outputs.latest_release
+          || steps.check-update-cumulus.outputs.current_version != steps.check-update-cumulus.outputs.latest_release
         uses: repo-sync/pull-request@v2
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
