@@ -62,6 +62,7 @@ ksm01
 ksm02
 ksm04
 pso06
+pso07
 dot14
 ksm14
 wnd14
@@ -75,7 +76,6 @@ wnd23
 wnd26
 pso24
 pso26
-pso27
 
 [services]
 monitor

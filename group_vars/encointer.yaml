@@ -1,5 +1,5 @@
 ---
-default_client_version: 1.7.0
+default_client_version: 1.7.3
 default_download_url: https://github.com/encointer/encointer-parachain/releases/download/{{ default_client_version }}/encointer-collator
 
 default_service: encointer

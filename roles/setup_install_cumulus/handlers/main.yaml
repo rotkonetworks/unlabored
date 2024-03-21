@@ -42,3 +42,6 @@
     name: cumulus
     state: started
     enabled: True
+
+- name: Flush Handlers
+  ansible.builtin.meta: flush_handlers

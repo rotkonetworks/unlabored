@@ -1,0 +1,5 @@
+---
+default_certificate_email: hq@rotko.net
+default_public_dns: "{{ host_name }}"
+porkbun_api_key: "pk1_xxx"
+porkbun_secret_key: "sk1_xxx"

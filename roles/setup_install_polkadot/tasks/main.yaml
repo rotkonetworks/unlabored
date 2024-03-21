@@ -91,7 +91,6 @@
     group: "{{ default_user }}"
   register: download_result
   notify:
-    - Flush Handlers
     - Add Service Pinned Status
     - Add Polkadot service version
     - Symlink Polkadot service to systemd
@@ -103,6 +102,9 @@
   when:
     - ansible_local['noderole']['node']['pinned'] != "True"
     - ansible_local['noderole']['node']['version'] != default_client_version
+
+- name: Flush handlers
+  ansible.builtin.meta: flush_handlers
 
 - name: Verify Polkadot version
   ansible.builtin.command: "{{ default_base_path }}/polkadot --version"

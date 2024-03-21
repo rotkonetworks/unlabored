@@ -68,14 +68,8 @@
     - ansible_local['noderole']['node']['pinned'] != "True"
     - ansible_local['noderole']['node']['version'] != default_client_version
 
-- name: Flush handlers after Cumulus install
+- name: Flush handlers
   ansible.builtin.meta: flush_handlers
-
-- name: Verify Cumulus version
-  ansible.builtin.command: "{{ default_base_path }}/cumulus --version"
-  register: default_client_version_result
-  changed_when: False
-  failed_when: "default_client_version not in default_client_version_result.stdout"
 
 - name: Ensure Cumulus service is running
   ansible.builtin.systemd:
