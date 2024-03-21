@@ -1,4 +1,3 @@
----
 default_auxiliary_binary_path: /usr/libexec
 default_base_path: /opt/polkadot
 default_chain_spec: '{{ default_base_path }}/paseo.json'
@@ -6,12 +5,12 @@ default_client_version: 1.9.0
 default_database: paritydb
 default_database_path: /opt/polkadot/chains
 default_download_base_url: https://github.com/paritytech/polkadot-sdk/releases/download/
-default_download_url: '{{ default_download_base_url }}polkadot-v{{ 
-  default_client_version }}/polkadot'
-default_download_url_execute: '{{ default_download_base_url }}polkadot-v{{ 
-  default_client_version }}/polkadot-execute-worker'
-default_download_url_prepare: '{{ default_download_base_url }}polkadot-v{{ 
-  default_client_version }}/polkadot-prepare-worker'
+default_download_url: '{{ default_download_base_url }}polkadot-v{{ default_client_version
+  }}/polkadot'
+default_download_url_execute: '{{ default_download_base_url }}polkadot-v{{ default_client_version
+  }}/polkadot-execute-worker'
+default_download_url_prepare: '{{ default_download_base_url }}polkadot-v{{ default_client_version
+  }}/polkadot-prepare-worker'
 default_group: '{{ service_users[''polkadot''] }}'
 default_log_level: info
 default_network: polkadot
