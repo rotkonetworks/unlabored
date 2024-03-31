@@ -1,0 +1,26 @@
+---
+ansible_host: "27.131.160.106"
+container_ip: "192.168.76.236" # 36 westend people
+ansible_port: "2766"
+host_name: "wppl16.rotko.net"
+host_timezone: "Asia/Bangkok"
+netif: '{"net0":"name=eth0,gw={{ default_nat_network_forward_cidr.split("/")[0] }},ip={{ default_host_ip }}/16,bridge={{ default_nat_device }}"}'
+role: "cumulus"
+pinned_service: True
+
+default_telemetry_name: "Rotko Networks - {{ host_name.split('.')[0] }} {{ default_node_type | capitalize }}"
+default_public_dns: "{{ host_name }}"
+default_network: "people-westend"
+default_relay_rpc: "ws://{{ hostvars['wnd26']['container_ip'] }}:{{ hostvars['wnd26']['default_rpc_port'] }}"
+default_relay_rpc_fallback: "ws://{{ hostvars['wnd23']['container_ip'] }}:{{ hostvars['wnd23']['default_rpc_port'] }}"
+default_database: "paritydb"
+default_node_type: "bootnode"
+default_syncmode: "warp"
+default_pruning: 256
+default_p2p_port: 33766
+default_p2p_port_ws: 34766
+default_p2p_port_wss: 35766
+default_rpc_port: 9766
+default_secure_rpc_port: 42766
+default_prom_port: 7766
+zabbix_ext_port: 10766

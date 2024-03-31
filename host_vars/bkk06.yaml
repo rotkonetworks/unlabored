@@ -1094,3 +1094,143 @@ lxc_nodes:
       - from_port: "{{ hostvars['wcore26']['default_p2p_port_wss'] }}"
         to_host: "{{ hostvars['wcore26']['container_ip'] }}:{{ hostvars['wcore26']['default_p2p_port_wss'] }}"
         protocol: "tcp"
+  - host: "wppl16"
+    proxmox_config:
+      vmid: "766"
+      hostname: "{{ hostvars['wppl16']['host_name'] }}"
+      ostemplate: "local:vztmpl/{{ default_container_template }}"
+      netif: "{{ hostvars['wppl16']['netif'] }}"
+      cores: 2
+      memory: 16384
+      swap: 8192
+      password: "{{ default_password }}"
+      disk: "{{ default_storage }}:20"
+      mounts: '{"mp0":"{{ default_storage }}:100,mp={{ hostvars["wppl16"]["default_database_path"] }}"}'
+      onboot: True
+      unprivileged: True
+      validate_certs: False
+      description: "{{ hostvars['wppl16']['default_network'] }} {{ hostvars['wppl16']['default_node_type'] }}: {{ hostvars['wppl16']['host_name'] }}"
+      state: present
+      features:
+        - nesting=1
+    port_forwards:
+      - from_port: "{{ hostvars['wppl16']['ansible_port'] }}"
+        to_host: "{{ hostvars['wppl16']['container_ip'] }}:22"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['wppl16']['zabbix_ext_port'] }}"
+        to_host: "{{ hostvars['monitor']['container_ip'] }}:10050"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['wppl16']['default_p2p_port'] }}"
+        to_host: "{{ hostvars['wppl16']['container_ip'] }}:{{ hostvars['wppl16']['default_p2p_port'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['wppl16']['default_p2p_port_ws'] }}"
+        to_host: "{{ hostvars['wppl16']['container_ip'] }}:{{ hostvars['wppl16']['default_p2p_port_ws'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['wppl16']['default_p2p_port_wss'] }}"
+        to_host: "{{ hostvars['wppl16']['container_ip'] }}:{{ hostvars['wppl16']['default_p2p_port_wss'] }}"
+        protocol: "tcp"
+  - host: "wppl26"
+    proxmox_config:
+      vmid: "866"
+      hostname: "{{ hostvars['wppl26']['host_name'] }}"
+      ostemplate: "local:vztmpl/{{ default_container_template }}"
+      netif: "{{ hostvars['wppl26']['netif'] }}"
+      cores: 4
+      memory: 16384
+      swap: 8192
+      password: "{{ default_password }}"
+      disk: "{{ default_storage }}:20"
+      mounts: '{"mp0":"{{ default_storage }}:100,mp={{ hostvars["wppl26"]["default_database_path"] }}"}'
+      onboot: True
+      unprivileged: True
+      validate_certs: False
+      description: "{{ hostvars['wppl26']['default_network'] }} {{ hostvars['wppl26']['default_node_type'] }}: {{ hostvars['wppl26']['host_name'] }}"
+      state: present
+      features:
+        - nesting=1
+    port_forwards:
+      - from_port: "{{ hostvars['wppl26']['ansible_port'] }}"
+        to_host: "{{ hostvars['wppl26']['container_ip'] }}:22"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['wppl26']['zabbix_ext_port'] }}"
+        to_host: "{{ hostvars['monitor']['container_ip'] }}:10050"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['wppl26']['default_p2p_port'] }}"
+        to_host: "{{ hostvars['wppl26']['container_ip'] }}:{{ hostvars['wppl26']['default_p2p_port'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['wppl26']['default_p2p_port_ws'] }}"
+        to_host: "{{ hostvars['wppl26']['container_ip'] }}:{{ hostvars['wppl26']['default_p2p_port_ws'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['wppl26']['default_p2p_port_wss'] }}"
+        to_host: "{{ hostvars['wppl26']['container_ip'] }}:{{ hostvars['wppl26']['default_p2p_port_wss'] }}"
+        protocol: "tcp"
+  - host: "wglu16"
+    proxmox_config:
+      vmid: "796"
+      hostname: "{{ hostvars['wglu16']['host_name'] }}"
+      ostemplate: "local:vztmpl/{{ default_container_template }}"
+      netif: "{{ hostvars['wglu16']['netif'] }}"
+      cores: 2
+      memory: 16384
+      swap: 8192
+      password: "{{ default_password }}"
+      disk: "{{ default_storage }}:20"
+      mounts: '{"mp0":"{{ default_storage }}:100,mp={{ hostvars["wglu16"]["default_database_path"] }}"}'
+      onboot: True
+      unprivileged: True
+      validate_certs: False
+      description: "{{ hostvars['wglu16']['default_network'] }} {{ hostvars['wglu16']['default_node_type'] }}: {{ hostvars['wglu16']['host_name'] }}"
+      state: present
+      features:
+        - nesting=1
+    port_forwards:
+      - from_port: "{{ hostvars['wglu16']['ansible_port'] }}"
+        to_host: "{{ hostvars['wglu16']['container_ip'] }}:22"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['wglu16']['zabbix_ext_port'] }}"
+        to_host: "{{ hostvars['monitor']['container_ip'] }}:10050"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['wglu16']['default_p2p_port'] }}"
+        to_host: "{{ hostvars['wglu16']['container_ip'] }}:{{ hostvars['wglu16']['default_p2p_port'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['wglu16']['default_p2p_port_ws'] }}"
+        to_host: "{{ hostvars['wglu16']['container_ip'] }}:{{ hostvars['wglu16']['default_p2p_port_ws'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['wglu16']['default_p2p_port_wss'] }}"
+        to_host: "{{ hostvars['wglu16']['container_ip'] }}:{{ hostvars['wglu16']['default_p2p_port_wss'] }}"
+        protocol: "tcp"
+  - host: "wglu26"
+    proxmox_config:
+      vmid: "896"
+      hostname: "{{ hostvars['wglu26']['host_name'] }}"
+      ostemplate: "local:vztmpl/{{ default_container_template }}"
+      netif: "{{ hostvars['wglu26']['netif'] }}"
+      cores: 4
+      memory: 16384
+      swap: 8192
+      password: "{{ default_password }}"
+      disk: "{{ default_storage }}:20"
+      mounts: '{"mp0":"{{ default_storage }}:100,mp={{ hostvars["wglu26"]["default_database_path"] }}"}'
+      onboot: True
+      unprivileged: True
+      validate_certs: False
+      description: "{{ hostvars['wglu26']['default_network'] }} {{ hostvars['wcore26']['default_node_type'] }}: {{ hostvars['wcore26']['host_name'] }}"
+      state: present
+      features:
+        - nesting=1
+    port_forwards:
+      - from_port: "{{ hostvars['wglu26']['ansible_port'] }}"
+        to_host: "{{ hostvars['wglu26']['container_ip'] }}:22"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['wglu26']['zabbix_ext_port'] }}"
+        to_host: "{{ hostvars['monitor']['container_ip'] }}:10050"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['wglu26']['default_p2p_port'] }}"
+        to_host: "{{ hostvars['wglu26']['container_ip'] }}:{{ hostvars['wcore26']['default_p2p_port'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['wglu26']['default_p2p_port_ws'] }}"
+        to_host: "{{ hostvars['wglu26']['container_ip'] }}:{{ hostvars['wcore26']['default_p2p_port_ws'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['wglu26']['default_p2p_port_wss'] }}"
+        to_host: "{{ hostvars['wglu26']['container_ip'] }}:{{ hostvars['wcore26']['default_p2p_port_wss'] }}"
+        protocol: "tcp"
