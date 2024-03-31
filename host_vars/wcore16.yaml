@@ -1,0 +1,27 @@
+---
+ansible_host: "27.131.160.106"
+container_ip: "192.168.76.237" # 37 for coretime-westend
+ansible_port: "2736"
+host_name: "wcore16.rotko.net"
+host_timezone: "Asia/Bangkok"
+netif: '{"net0":"name=eth0,gw={{ default_nat_network_forward_cidr.split("/")[0] }},ip={{ default_host_ip }}/16,bridge={{ default_nat_device }}"}'
+role: "cumulus"
+pinned_service: False
+
+default_telemetry_name: "Rotko Networks - {{ host_name.split('.')[0] }} {{ default_node_type | capitalize }}"
+default_public_dns: "{{ host_name }}"
+default_network: "coretime-westend"
+default_relay_rpc: "ws://{{ hostvars['wnd26']['container_ip'] }}:{{ hostvars['wnd26']['default_rpc_port'] }}"
+default_relay_rpc_fallback: "ws://{{ hostvars['wnd23']['container_ip'] }}:{{ hostvars['wnd23']['default_rpc_port'] }}"
+default_database: paritydb
+default_node_type: "bootnode"
+default_pruning: 256
+default_syncmode: fast
+# default_syncmode: warp
+default_p2p_port: 33736
+default_p2p_port_ws: 34736
+default_p2p_port_wss: 35736
+default_rpc_port: 9736
+default_secure_rpc_port: 42736
+default_prom_port: 7736
+zabbix_ext_port: 10736
