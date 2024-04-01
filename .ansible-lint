@@ -18,6 +18,7 @@ skip_list:
   - yaml[truthy]
   - yaml[line-length]
   - schema[meta]
+  - yaml[comments]
 exclude_paths:
   - .later.yaml
   - ./ext_roles/
