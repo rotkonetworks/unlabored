@@ -32,6 +32,17 @@
 - name: Gather facts
   ansible.builtin.setup:
 
+- name: Check if needs custom chain spec
+  ansible.builtin.set_fact:
+    needs_custom_chain_spec: "{{ default_network in ['asset-hub-paseo', 'people-westend', 'glutton-westend'] }}"
+
+- name: Download chain spec
+  ansible.builtin.get_url:
+    url: "{{ default_chain_spec_dl_url }}"
+    dest: "{{ default_chain_spec }}"
+    mode: '0644'
+  when: needs_custom_chain_spec
+
 - name: Copy Cumulus systemd service for specific node type
   ansible.builtin.template:
     src: "{{ 'cumulus_' + default_node_type + '.service.j2' }}"

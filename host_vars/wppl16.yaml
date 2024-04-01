@@ -1,6 +1,6 @@
 ---
 ansible_host: "27.131.160.106"
-container_ip: "192.168.76.236" # 36 westend people
+container_ip: "192.168.76.238" # people westend 38
 ansible_port: "2766"
 host_name: "wppl16.rotko.net"
 host_timezone: "Asia/Bangkok"
@@ -11,6 +11,9 @@ pinned_service: True
 default_telemetry_name: "Rotko Networks - {{ host_name.split('.')[0] }} {{ default_node_type | capitalize }}"
 default_public_dns: "{{ host_name }}"
 default_network: "people-westend"
+default_chain_spec: "{{ default_base_path }}/people-westend.json"
+# default_chain_spec_dl_url: "https://raw.githubusercontent.com/paritytech/polkadot-sdk/master/cumulus/parachains/chain-specs/people-westend.json"
+default_chain_spec_dl_url: "https://raw.githubusercontent.com/paritytech/polkadot-sdk/fca5044c06c6ce9a0dbdacc54b0f4ad0ce422ddd/cumulus/parachains/chain-specs/people-westend.json"
 default_relay_rpc: "ws://{{ hostvars['wnd26']['container_ip'] }}:{{ hostvars['wnd26']['default_rpc_port'] }}"
 default_relay_rpc_fallback: "ws://{{ hostvars['wnd23']['container_ip'] }}:{{ hostvars['wnd23']['default_rpc_port'] }}"
 default_database: "paritydb"

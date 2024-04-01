@@ -15,7 +15,7 @@ SyslogFacility=local7
 KillSignal=SIGHUP
 ExecStart={{ default_base_path }}/cumulus \
      --base-path {{ default_base_path }} \
-     --chain {{ default_network }} \
+     --chain {% if needs_custom_chain_spec %}{{ default_chain_spec }}{% else %}{{ default_network }}{% endif %} \
      --database {{ default_database }} \
      --sync {{ default_syncmode }} \
      --name "{{ hostvars[inventory_hostname]['default_telemetry_name'] | default(host_name) }}" \

@@ -1,0 +1,28 @@
+---
+ansible_host: "27.131.160.106"
+container_ip: "192.168.76.250"
+ansible_port: "2946"
+host_name: "pmint16.rotko.net"
+host_timezone: "Asia/Bangkok"
+netif: '{"net0":"name=eth0,gw={{ default_nat_network_forward_cidr.split("/")[0] }},ip={{ default_host_ip }}/16,bridge={{ default_nat_device }}"}'
+role: "cumulus"
+pinned_service: True
+
+default_telemetry_name: "Rotko Networks - {{ host_name.split('.')[0] }} {{ default_node_type | capitalize }}"
+default_public_dns: "{{ host_name }}"
+default_network: "asset-hub-paseo"
+default_chain_spec: "{{ default_base_path }}/asset-hub-paseo.raw.json"
+default_chain_spec_dl_url: "https://raw.githubusercontent.com/paseo-network/runtimes/main/chain-specs/asset-hub-paseo.raw.json"
+default_relay_rpc: "ws://{{ hostvars['pso26']['container_ip'] }}:{{ hostvars['pso26']['default_rpc_port'] }}"
+default_relay_rpc_fallback: "ws://{{ hostvars['pso24']['container_ip'] }}:{{ hostvars['pso24']['default_rpc_port'] }}"
+default_database: "paritydb"
+default_node_type: "bootnode"
+default_pruning: 256
+default_syncmode: warp
+default_p2p_port: 33946
+default_p2p_port_ws: 34946
+default_p2p_port_wss: 35946
+default_rpc_port: 9946
+default_secure_rpc_port: 42946
+default_prom_port: 7946
+zabbix_ext_port: 10946
