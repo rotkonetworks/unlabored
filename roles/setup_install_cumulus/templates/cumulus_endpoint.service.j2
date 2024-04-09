@@ -26,6 +26,11 @@ ExecStart={{ default_base_path }}/cumulus \
   --relay-chain-rpc-urls {{ default_relay_rpc }} {{ default_relay_rpc_fallback }} \
   --wasm-execution Compiled \
   --no-hardware-benchmarks \
+  --max-runtime-instances 32 \
+  --rpc-max-request-size 16 \
+  --rpc-max-response-size 16 \
+  --rpc-max-subscriptions-per-connection 512 \
+  --rpc-max-connections 10000 \
   --rpc-external \
   --rpc-methods safe \
   --rpc-cors all \
