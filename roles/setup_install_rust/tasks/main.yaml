@@ -1,5 +1,10 @@
 # Standards: 0.2
 ---
+- name: Update apt cache
+  ansible.builtin.apt:
+    update_cache: True
+  become: True
+
 - name: Install required dependencies
   ansible.builtin.package:
     name: libssl-dev
