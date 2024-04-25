@@ -1,5 +1,13 @@
 # Standards: 0.2
 ---
+- name: Update apt cache
+  ansible.builtin.apt:
+    update_cache: yes
+
+- name: Upgrade all packages
+  ansible.builtin.apt:
+    upgrade: dist
+
 - name: Install Basic tools for debugging / monitoring / installation
   ansible.builtin.apt:
     pkg: "{{ item }}"

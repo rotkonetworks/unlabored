@@ -4,6 +4,7 @@
   ansible.builtin.apt:
     update_cache: True
   become: True
+  become_user: root
 
 - name: Install required dependencies
   ansible.builtin.package:

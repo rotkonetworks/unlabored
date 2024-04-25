@@ -105,6 +105,7 @@
 
 - name: Flush handlers
   ansible.builtin.meta: flush_handlers
+  when: download_result.changed
 
 - name: Verify Polkadot version
   ansible.builtin.command: "{{ default_base_path }}/polkadot --version"
