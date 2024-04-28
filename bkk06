@@ -42,6 +42,7 @@ pch13
 wch13
 wcore16
 kcore16
+kppl16
 wppl16
 wglu16
 ; rpc
@@ -55,6 +56,7 @@ wbr26
 wch26
 wcore26
 kcore26
+kppl26
 wppl26
 wglu26
 pmint26
