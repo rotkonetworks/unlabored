@@ -1,0 +1,54 @@
+---
+- name: Ensure group {{ default_user }} exists
+  ansible.builtin.group:
+    name: "{{ default_user }}"
+    state: present
+    system: True
+
+- name: Ensure user {{ default_user }} exists without unnecessary privileges
+  ansible.builtin.user:
+    append: True
+    comment: penumbra service user
+    create_home: False
+    group: "{{ default_user }}"
+    groups: []
+    home: "{{ default_base_path }}"
+    name: "{{ default_user }}"
+    shell: "/sbin/nologin"
+    state: present
+    system: True
+
+- name: Ensure user {{ default_user }} owns directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+    mode: '0750'
+    state: directory
+  loop:
+    - "{{ default_base_path }}"
+    - "{{ default_database_path }}"
+
+- name: Gather facts
+  ansible.builtin.setup:
+
+- name: Download and install pcli
+  ansible.builtin.shell:
+    cmd: "curl --proto '=https' --tlsv1.2 -LsSf https://github.com/penumbra-zone/penumbra/releases/download/v{{ default_client_version }}/pcli-installer.sh | sh"
+  become: True
+  become_user: "{{ default_user }}"
+  when: ansible_local['noderole']['node']['version'] != default_client_version
+
+- name: Download and install pd
+  ansible.builtin.shell:
+    cmd: "curl --proto '=https' --tlsv1.2 -LsSf https://github.com/penumbra-zone/penumbra/releases/download/v{{ default_client_version }}/pd-installer.sh | sh"
+  become: True
+  become_user: "{{ default_user }}"
+  when: ansible_local['noderole']['node']['version'] != default_client_version
+
+- name: Download and install pclientd
+  ansible.builtin.shell:
+    cmd: "curl --proto '=https' --tlsv1.2 -LsSf https://github.com/penumbra-zone/penumbra/releases/download/v{{ default_client_version }}/pclientd-installer.sh | sh"
+  become: True
+  become_user: "{{ default_user }}"
+  when: ansible_local['noderole']['node']['version'] != default_client_version
