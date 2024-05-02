@@ -34,7 +34,7 @@
 
 - name: Check if needs custom chain spec
   ansible.builtin.set_fact:
-    needs_custom_chain_spec: "{{ default_network in ['asset-hub-paseo', 'people-westend', 'glutton-westend'] }}"
+    needs_custom_chain_spec: "{{ default_network in ['asset-hub-paseo', 'people-kusama', 'people-westend', 'glutton-westend'] }}"
 
 - name: Download chain spec
   ansible.builtin.get_url:

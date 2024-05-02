@@ -5,7 +5,7 @@ default_client_version: 1.11.0
 default_database: paritydb
 default_database_path: '{{ default_base_path }}/chains'
 default_download_base_url: https://github.com/paritytech/polkadot-sdk/releases/download/
-default_download_url: '{{ default_download_base_url }}polkadot-parachain-v{{ default_client_version
+default_download_url: '{{ default_download_base_url }}polkadot-v{{ default_client_version
   }}/polkadot-parachain'
 default_group: '{{ service_users[''cumulus''] }}'
 default_log_level: info

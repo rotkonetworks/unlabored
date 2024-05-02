@@ -376,40 +376,40 @@ lxc_nodes:
       - from_port: "{{ hostvars['wbr13']['default_p2p_port_wss'] }}"
         to_host: "{{ hostvars['wbr13']['container_ip'] }}:{{ hostvars['wbr13']['default_p2p_port_wss'] }}"
         protocol: "tcp"
-  - host: "pch13"
+  - host: "pch16"
     proxmox_config:
       vmid: "576"
-      hostname: "{{ hostvars['pch13']['host_name'] }}"
+      hostname: "{{ hostvars['pch16']['host_name'] }}"
       ostemplate: "local:vztmpl/{{ default_container_template }}"
-      netif: "{{ hostvars['pch13']['netif'] }}"
+      netif: "{{ hostvars['pch16']['netif'] }}"
       cores: 4
       memory: 8192
       swap: 8192
       password: "{{ default_password }}"
       disk: "{{ default_storage }}:20"
-      mounts: '{"mp0":"{{ default_storage }}:100,mp={{ hostvars["pch13"]["default_database_path"] }}"}'
+      mounts: '{"mp0":"{{ default_storage }}:100,mp={{ hostvars["pch16"]["default_database_path"] }}"}'
       onboot: True
       unprivileged: True
       validate_certs: False
-      description: "{{ hostvars['pch13']['default_network'] }} {{ hostvars['pch13']['default_node_type'] }}: {{ hostvars['pch13']['host_name'] }}"
+      description: "{{ hostvars['pch16']['default_network'] }} {{ hostvars['pch16']['default_node_type'] }}: {{ hostvars['pch16']['host_name'] }}"
       state: present
       features:
         - nesting=1
     port_forwards:
-      - from_port: "{{ hostvars['pch13']['ansible_port'] }}"
-        to_host: "{{ hostvars['pch13']['container_ip'] }}:22"
+      - from_port: "{{ hostvars['pch16']['ansible_port'] }}"
+        to_host: "{{ hostvars['pch16']['container_ip'] }}:22"
         protocol: "tcp"
-      - from_port: "{{ hostvars['pch13']['zabbix_ext_port'] }}"
+      - from_port: "{{ hostvars['pch16']['zabbix_ext_port'] }}"
         to_host: "{{ hostvars['monitor']['container_ip'] }}:10050"
         protocol: "tcp"
-      - from_port: "{{ hostvars['pch13']['default_p2p_port'] }}"
-        to_host: "{{ hostvars['pch13']['container_ip'] }}:{{ hostvars['pch13']['default_p2p_port'] }}"
+      - from_port: "{{ hostvars['pch16']['default_p2p_port'] }}"
+        to_host: "{{ hostvars['pch16']['container_ip'] }}:{{ hostvars['pch16']['default_p2p_port'] }}"
         protocol: "tcp"
-      - from_port: "{{ hostvars['pch13']['default_p2p_port_ws'] }}"
-        to_host: "{{ hostvars['pch13']['container_ip'] }}:{{ hostvars['pch13']['default_p2p_port_ws'] }}"
+      - from_port: "{{ hostvars['pch16']['default_p2p_port_ws'] }}"
+        to_host: "{{ hostvars['pch16']['container_ip'] }}:{{ hostvars['pch16']['default_p2p_port_ws'] }}"
         protocol: "tcp"
-      - from_port: "{{ hostvars['pch13']['default_p2p_port_wss'] }}"
-        to_host: "{{ hostvars['pch13']['container_ip'] }}:{{ hostvars['pch13']['default_p2p_port_wss'] }}"
+      - from_port: "{{ hostvars['pch16']['default_p2p_port_wss'] }}"
+        to_host: "{{ hostvars['pch16']['container_ip'] }}:{{ hostvars['pch16']['default_p2p_port_wss'] }}"
         protocol: "tcp"
   - host: "wch13"
     proxmox_config:
