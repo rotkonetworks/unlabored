@@ -24,3 +24,10 @@ default_rpc_port: 9573
 default_secure_rpc_port: 42573
 default_prom_port: 7573
 zabbix_ext_port: 10573
+
+
+# in bootnode wiki
+# default_p2p_port: 33373
+# default_p2p_port_ws: 33473
+# default_p2p_port_wss: 33473
+

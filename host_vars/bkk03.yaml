@@ -307,3 +307,35 @@ lxc_nodes:
       - from_port: "{{ hostvars['wch23']['default_p2p_port_ws'] }}"
         to_host: "{{ hostvars['wch23']['container_ip'] }}:{{ hostvars['wch23']['default_p2p_port_ws'] }}"
         protocol: "tcp"
+  - host: "pso03"
+    proxmox_config:
+      vmid: "1003"
+      hostname: "{{ hostvars['pso03']['host_name'] }}"
+      ostemplate: "local:vztmpl/{{ default_container_template }}"
+      netif: "{{ hostvars['pso03']['netif'] }}"
+      cores: 2
+      memory: 16384
+      swap: 8192
+      password: "{{ default_password }}"
+      disk: "{{ default_storage }}:20"
+      mounts: '{"mp0":"{{ default_storage }}:200,mp={{ hostvars["pso03"]["default_base_path"] }}"}'
+      onboot: True
+      unprivileged: True
+      validate_certs: False
+      description: "{{ hostvars['pso03']['default_network'] }} {{ hostvars['pso03']['default_node_type'] }}: {{ hostvars['pso03']['host_name'] }}"
+      state: present
+      features:
+        - nesting=1
+    port_forwards:
+      - from_port: "{{ hostvars['pso03']['ansible_port'] }}"
+        to_host: "{{ hostvars['pso03']['container_ip'] }}:22"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['pso03']['zabbix_ext_port'] }}"
+        to_host: "{{ hostvars['monitor']['container_ip'] }}:10050"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['pso03']['default_p2p_port'] }}"
+        to_host: "{{ hostvars['pso03']['container_ip'] }}:{{ hostvars['pso03']['default_p2p_port'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['pso03']['default_p2p_port_ws'] }}"
+        to_host: "{{ hostvars['pso03']['container_ip'] }}:{{ hostvars['pso03']['default_p2p_port_ws'] }}"
+        protocol: "tcp"
