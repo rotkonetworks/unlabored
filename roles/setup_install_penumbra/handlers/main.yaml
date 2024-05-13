@@ -1,0 +1,19 @@
+---
+- name: Stop Penumbra
+  ansible.builtin.systemd:
+    name: pclientd
+    state: stopped
+    enabled: True
+
+- name: Systemd daemon-reload
+  ansible.builtin.systemd:
+    daemon_reload: True
+
+- name: Start Penumbra
+  ansible.builtin.systemd:
+    name: pclientd
+    state: started
+    enabled: True
+
+- name: Flush Handlers
+  ansible.builtin.meta: flush_handlers

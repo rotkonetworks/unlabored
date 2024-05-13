@@ -16,7 +16,7 @@ default_chain_spec_dl_url: "https://raw.githubusercontent.com/paseo-network/runt
 default_database: paritydb
 default_node_type: "bootnode"
 default_pruning: 256
-default_syncmode: fast
+default_syncmode: warp
 # default_syncmode: warp
 default_p2p_port: 33246
 default_p2p_port_ws: 34246

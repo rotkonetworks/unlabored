@@ -1,0 +1,27 @@
+---
+ansible_host: "27.131.160.106"
+container_ip: "192.168.76.227" # 27 for coretime-kusama
+ansible_port: "2726"
+host_name: "kcore16.rotko.net"
+host_timezone: "Asia/Bangkok"
+netif: '{"net0":"name=eth0,gw={{ default_nat_network_forward_cidr.split("/")[0] }},ip={{ default_host_ip }}/16,bridge={{ default_nat_device }}"}'
+role: "cumulus"
+pinned_service: False
+
+default_telemetry_name: "Rotko Networks - {{ host_name.split('.')[0] }} {{ default_node_type | capitalize }}"
+default_public_dns: "{{ host_name }}"
+default_network: "coretime-kusama"
+default_relay_rpc: "ws://{{ hostvars['ksm26']['container_ip'] }}:{{ hostvars['ksm26']['default_rpc_port'] }}"
+default_relay_rpc_fallback: "ws://{{ hostvars['ksm24']['container_ip'] }}:{{ hostvars['ksm24']['default_rpc_port'] }}"
+default_database: paritydb
+default_node_type: "bootnode"
+default_pruning: 256
+default_syncmode: warp
+# default_syncmode: warp
+default_p2p_port: 33726
+default_p2p_port_ws: 34726
+default_p2p_port_wss: 35726
+default_rpc_port: 9726
+default_secure_rpc_port: 42726
+default_prom_port: 7726
+zabbix_ext_port: 10726

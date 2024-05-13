@@ -8,7 +8,7 @@ User={{ default_user }}
 Group={{ default_group }}
 ExecStart={{ default_base_path }}/cumulus \
   --name "{{ default_telemetry_name }}" \
-  --chain {{ default_network }} \
+  --chain {% if needs_custom_chain_spec %}{{ default_chain_spec }}{% else %}{{ default_network }}{% endif %} \
   --base-path {{ default_base_path }} \
   --state-pruning archive \
   --database {{ default_database }} \
@@ -26,6 +26,11 @@ ExecStart={{ default_base_path }}/cumulus \
   --relay-chain-rpc-urls {{ default_relay_rpc }} {{ default_relay_rpc_fallback }} \
   --wasm-execution Compiled \
   --no-hardware-benchmarks \
+  --max-runtime-instances 32 \
+  --rpc-max-request-size 16 \
+  --rpc-max-response-size 16 \
+  --rpc-max-subscriptions-per-connection 512 \
+  --rpc-max-connections 10000 \
   --rpc-external \
   --rpc-methods safe \
   --rpc-cors all \

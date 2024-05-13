@@ -16,7 +16,7 @@ default_relay_rpc_fallback: "ws://{{ hostvars['wnd23']['container_ip'] }}:{{ hos
 default_database: paritydb
 default_node_type: "bootnode"
 default_pruning: 256
-default_syncmode: fast
+default_syncmode: warp
 # default_syncmode: warp
 default_p2p_port: 33534
 default_p2p_port_ws: 34534

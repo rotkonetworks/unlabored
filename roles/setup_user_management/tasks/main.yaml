@@ -33,6 +33,18 @@
     - default_admin_group_name in ( ansible_facts.getent_group | default([]) )
   ignore_errors: yes
 
+- name: Ensure .ssh directory exists
+  ansible.builtin.file:
+    path: "{{ item.home | default('/home/' + item.name) }}/.ssh"
+    state: directory
+    owner: "{{ item.name }}"
+    group: "{{ item.name }}"
+    mode: '0700'
+  with_items: "{{ all_users }}"
+  when:
+    - item.name in ( users_with_access | default(default_users) )
+    - default_admin_group_name in ( ansible_facts.getent_group | default([]) )
+
 - name: Refresh facts
   ansible.builtin.setup:
 

@@ -2,7 +2,7 @@
 ansible_host: "27.131.160.106"
 container_ip: "192.168.76.247"
 ansible_port: "2576"
-host_name: "pch13.rotko.net"
+host_name: "pch16.rotko.net"
 host_timezone: "Asia/Bangkok"
 netif: '{"net0":"name=eth0,gw={{ default_nat_network_forward_cidr.split("/")[0] }},ip={{ default_host_ip }}/16,bridge={{ default_nat_device }}"}'
 role: "cumulus"
@@ -15,12 +15,10 @@ default_relay_rpc: "ws://{{ hostvars['dot26']['container_ip'] }}:{{ hostvars['do
 default_relay_rpc_fallback: "ws://{{ hostvars['dot23']['container_ip'] }}:{{ hostvars['dot23']['default_rpc_port'] }}"
 default_database: paritydb
 default_node_type: "bootnode"
-# default_pruning: 256
-# default_syncmode: warp
-default_p2p_port: 33573
-default_p2p_port_ws: 34573
-default_p2p_port_wss: 35573
-default_rpc_port: 9573
-default_secure_rpc_port: 42573
-default_prom_port: 7573
-zabbix_ext_port: 10573
+default_p2p_port: 33576
+default_p2p_port_ws: 34576
+default_p2p_port_wss: 35576
+default_rpc_port: 9576
+default_secure_rpc_port: 42576
+default_prom_port: 7576
+zabbix_ext_port: 10576

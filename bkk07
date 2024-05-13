@@ -18,6 +18,15 @@ hdx27
 [polkadot]
 pso07
 
+[cumulus]
+mint27
+wcore27
+kcore27
+kppl27
+wppl27
+wglu27
+pmint27
+
 [services]
 monitor
 

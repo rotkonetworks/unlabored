@@ -34,11 +34,17 @@ pso26
 mint14
 mine14
 wmint14
+pmint16
 pbr13
 kbr13
 wbr13
-pch13
+pch16
 wch13
+wcore16
+kcore16
+kppl16
+wppl16
+wglu16
 ; rpc
 mint26
 pbr26
@@ -48,6 +54,12 @@ kbr26
 wmint26
 wbr26
 wch26
+wcore26
+kcore26
+kppl26
+wppl26
+wglu26
+pmint26
 
 [encointer]
 enc14

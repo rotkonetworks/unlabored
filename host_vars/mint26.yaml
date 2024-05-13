@@ -18,7 +18,8 @@ default_node_type: "endpoint"
 default_p2p_port: 33616
 default_p2p_port_ws: 34616
 default_p2p_port_wss: 35616
-default_rpc_port: 9616
+# echo '{"id":1, "jsonrpc":"2.0", "method":"chain_getBlock"}' | websocat ws://0.0.0.0:9716
+default_rpc_port: 9716  #  9616 wont work but bugs out
 default_secure_rpc_port: 42616
 default_prom_port: 7616
 zabbix_ext_port: 10616

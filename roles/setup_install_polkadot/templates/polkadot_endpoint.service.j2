@@ -8,12 +8,9 @@ User={{ default_user }}
 Group={{ default_group }}
 ExecStart={{ default_base_path }}/polkadot \
   --name "{{ default_telemetry_name }}" \
-{% if default_network == 'paseo' %}
-     --chain {{ default_chain_spec }} \
-{% else %}
-     --chain {{ default_network }} \
-{% endif %}
-  --base-path {{ default_base_path }} \
+{% if default_network == 'paseo' %}--chain {{ default_chain_spec }} \
+{% else %}--chain {{ default_network }} \
+{% endif %}--base-path {{ default_base_path }} \
   --database {{ default_database }} \
   --state-pruning archive \
   --sync full \
@@ -27,6 +24,7 @@ ExecStart={{ default_base_path }}/polkadot \
   --rpc-port {{ default_rpc_port }} \
   --prometheus-port {{ default_prom_port }} \
   --prometheus-external \
+  --enable-offchain-indexing true \
   --wasm-execution Compiled \
   --no-hardware-benchmarks \
   --rpc-external \

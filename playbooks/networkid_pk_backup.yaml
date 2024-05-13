@@ -1,55 +1,88 @@
-# Standards: 0.2
 ---
-- name: Backup networkid secret key
-  hosts: polkadot,cumulus,encointer
-  gather_facts: True
+- name: Manage and Backup Network ID Secret Key with genpeerid
+  hosts: polkadot, cumulus, encointer, hydradx
+  gather_facts: true
+  become: true
+  vars:
+    install_dir: "/usr/local/bin"
+    local_backup_dir: "/opt/backup"
+    client_folder: "/opt" # ~/.local/share default for polkadot-sdk
+    binary_name: "genpeerid"
+    script_url: "https://raw.githubusercontent.com/rotkonetworks/genpeerid/master/scripts/install.sh"
+
   tasks:
-    - name: Find network ID directory
-      become: True
-      become_user: root
+    - name: Check if genpeerid is already installed
+      ansible.builtin.stat:
+        path: "{{ install_dir }}/{{ binary_name }}"
+      register: binary_stat
+
+    - name: Ensure genpeerid is installed
+      block:
+        - name: Create temporary directory for installation script
+          ansible.builtin.tempfile:
+            state: directory
+            prefix: "install_"
+          register: temp_dir
+
+        - name: Download genpeerid installation script
+          ansible.builtin.get_url:
+            url: "{{ script_url }}"
+            dest: "{{ temp_dir.path }}/{{ binary_name }}.sh"
+            mode: '0755'
+
+        - name: Execute the installation script
+          ansible.builtin.command:
+            cmd: "{{ temp_dir.path }}/{{ binary_name }}.sh"
+            chdir: "{{ temp_dir.path }}"
+          #  ignore_errors: true
+          register: script_output
+
+        - name: Check installation success
+          ansible.builtin.stat:
+            path: "{{ install_dir }}/{{ binary_name }}"
+          register: post_install_check
+          failed_when: not post_install_check.stat.exists
+
+        - name: Clean up installation files
+          ansible.builtin.file:
+            path: "{{ temp_dir.path }}"
+            state: absent
+      when: not binary_stat.stat.exists
+
+    - name: Ensure backup directory exists locally
+      ansible.builtin.file:
+        path: "{{ local_backup_dir }}"
+        state: directory
+        mode: '0755'
+      delegate_to: localhost
+
+    - name: Locate secret_ed25519 files
       ansible.builtin.find:
-        paths: "{{ default_database_path }}"
-        file_type: directory
-      register: network_dir
+        paths: "{{ client_folder }}"
+        patterns: "secret_ed25519"
+        recurse: true
+        excludes: "lost+found/*"
+      register: secret_files
 
-    - name: Extract subdomain from hostname
-      ansible.builtin.set_fact:
-        subdomain: "{{ inventory_hostname.split('.')[0] }}"
+    - name: Process and backup each secret file
+      block:
+        - name: Generate peer ID for the secret key
+          ansible.builtin.command:
+            cmd: "{{ install_dir }}/{{ binary_name }} {{ item.path }}"
+          register: peerid
+          loop: "{{ secret_files.files }}"
+          when: secret_files.matched > 0
+          loop_control:
+            label: "{{ item.path }}"
+            pause: false
 
-    - name: Collect networkid and external addresses from logs
-      become: True
-      become_user: root
-      ansible.builtin.shell: |
-        /bin/bash -c "set -o pipefail \
-        journalctl -u {{ default_service }} -n 100000 | \
-        tee >(grep 'Local node identity is:' | tail -1 | \
-        awk '{print \$NF}' > /tmp/networkid.txt) | \
-        grep 'Discovered new external address for our node:'"
-      register: external_addresses_logs
-      ignore_errors: True
-      when: network_dir.matched > 0
-
-    - name: Read networkid from temporary file
-      ansible.builtin.command: cat /tmp/networkid.txt
-      register: networkid
-      when: network_dir.matched > 0
-
-    - name: Print external addresses in JSON format without duplicates
-      ansible.builtin.debug:
-        msg: "{{ external_addresses_logs.stdout_lines |
-              map('regex_search', '(?<=node: ).*') |
-              select('string') |
-              unique |
-              sort |
-              to_nice_json }}"
-      when: external_addresses_logs.stdout_lines | length > 0 and network_dir.matched > 0
-
-    - name: Backup secrets from servers to local storage
-      become: True
-      become_user: root
-      ansible.builtin.fetch:
-        src: "{{ network_dir.files[0].path }}/network/secret_ed25519"
-        dest: "/opt/backup/{{ subdomain }}_{{ networkid.stdout | trim }}_secret_ed25519"
-        flat: True
-      when: network_dir.matched > 0 and networkid.stdout
-      tags: backup
+        - name: Fetch secret file to local machine
+          ansible.builtin.fetch:
+            src: "{{ item.item.path }}"
+            dest: "{{ local_backup_dir }}/{{ ansible_hostname }}_{{ lookup('pipe', 'date +%Y%m%d%H%M%S') }}_{{ peerid.results | map(attribute='stdout') | join('_') }}.secret_ed25519"
+            flat: yes
+          loop: "{{ peerid.results }}"
+          when: peerid.results | map(attribute='stdout') | list | length > 0
+          loop_control:
+            label: "{{ item.item.path }}"
+            pause: false
