@@ -51,10 +51,19 @@
     group: "{{ default_user }}"
     mode: '0640'
   when: default_node_type in ["collator", "bootnode", "endpoint"]
+
+- name: Symlink Cumulus service to systemd
+  ansible.builtin.file:
+    src: "{{ default_base_path }}/cumulus.service"
+    dest: "/etc/systemd/system/cumulus.service"
+    state: link
+    force: True
+    owner: "root"
+    group: "root"
+    mode: '0644'
   notify:
-    - Symlink Cumulus service to systemd
-    - Stop Cumulus
     - Systemd daemon-reload
+    - Stop Cumulus
     - Start Cumulus
     - Add type of service fact
 

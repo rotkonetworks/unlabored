@@ -1,4 +1,15 @@
+# handlers/main.yaml
 ---
+- name: Symlink Cumulus service to systemd
+  ansible.builtin.file:
+    src: "{{ default_base_path }}/cumulus.service"
+    dest: "/etc/systemd/system/cumulus.service"
+    state: link
+    force: True
+    owner: "root"
+    group: "root"
+    mode: '0644'
+
 - name: Symlink Cumulus release
   ansible.builtin.file:
     src: "{{ default_base_path }}/cumulus-v{{ default_client_version }}"
@@ -17,15 +28,9 @@
     owner: "{{ default_user }}"
     group: "{{ default_user }}"
 
-- name: Symlink Cumulus service to systemd
-  ansible.builtin.file:
-    src: "{{ default_base_path }}/cumulus.service"
-    dest: "/etc/systemd/system/cumulus.service"
-    state: link
-    force: True
-    owner: "root"
-    group: "root"
-    mode: '0644'
+- name: Systemd daemon-reload
+  ansible.builtin.systemd:
+    daemon_reload: True
 
 - name: Stop Cumulus
   ansible.builtin.systemd:
@@ -33,15 +38,8 @@
     state: stopped
     enabled: True
 
-- name: Systemd daemon-reload
-  ansible.builtin.systemd:
-    daemon_reload: True
-
 - name: Start Cumulus
   ansible.builtin.systemd:
     name: cumulus
     state: started
     enabled: True
-
-- name: Flush Handlers
-  ansible.builtin.meta: flush_handlers
