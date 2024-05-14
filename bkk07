@@ -7,7 +7,10 @@ proxmox_nodes
 routers
 
 [proxmox_nodes:children]
+polkadot
 hydradx
+cumulus
+encointer
 
 [routers]
 bkk00
