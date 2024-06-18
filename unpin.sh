@@ -2,7 +2,7 @@
 
 # Define the lists of hosts with updated entries
 polkadot_primary_hosts=(
-    "pso06" "pso07" "dot14" "pso16" "pso24" "pso26" "wnd14" "wnd23" 
+    "pso06" "pso07" "pso03" "pso04" "dot14" "pso16" "pso24" "pso26" "wnd14" "wnd23" 
     "ksm04" "ksm14" "dot23" "ksm24"
 )
 cumulus_primary_hosts=(
