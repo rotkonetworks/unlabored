@@ -8,7 +8,8 @@ netif: '{"net0":"name=eth0,gw={{ default_nat_network_forward_cidr.split("/")[0] 
 role: "polkadot"
 pinned_service: False
 
-default_telemetry_name: "Rotko Networks - {{ host_name.split('.')[0] }} {{ default_node_type | capitalize }}"
+# default_telemetry_name: "Rotko Networks - {{ host_name.split('.')[0] }} {{ default_node_type | capitalize }}"
+default_telemetry_name: "Rotko Networks - dot01 Validator"
 default_network: "polkadot"
 default_node_type: "validator"
 default_pruning: 1000

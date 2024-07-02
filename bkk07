@@ -4,12 +4,24 @@ rotko
 [rotko:children]
 proxmox_hosts
 proxmox_nodes
+proxmox_vms
 routers
 
 [proxmox_nodes:children]
 polkadot
 hydradx
 cumulus
+
+[proxmox_vms:children]
+taloswrkr
+talosctl
+
+[taloswrkr]
+taloswrkr0701
+taloswrkr0702
+
+[talosctl]
+talosctl0701
 
 [routers]
 bkk00
