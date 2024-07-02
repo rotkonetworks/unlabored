@@ -1,0 +1,21 @@
+# handlers/main.yaml
+---
+- name: Stop VM
+  community.general.proxmox_kvm:
+    api_user: "{{ proxmox_defaults.api_user }}"
+    api_token_id: "{{ proxmox_defaults.api_token_id }}"
+    api_token_secret: "{{ proxmox_defaults.api_token_secret }}"
+    api_host: "{{ proxmox_defaults.api_host }}"
+    vmid: "{{ item.proxmox_config.vmid }}"
+    state: stopped
+  listen: Stop VM
+
+- name: Start VM
+  community.general.proxmox_kvm:
+    api_user: "{{ proxmox_defaults.api_user }}"
+    api_token_id: "{{ proxmox_defaults.api_token_id }}"
+    api_token_secret: "{{ proxmox_defaults.api_token_secret }}"
+    api_host: "{{ proxmox_defaults.api_host }}"
+    vmid: "{{ item.proxmox_config.vmid }}"
+    state: started
+  listen: Start VM

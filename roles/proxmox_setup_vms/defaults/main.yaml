@@ -1,0 +1,8 @@
+# defaults/main.yml
+---
+proxmox_defaults:
+  api_user: "root@pam"
+  api_token_id: "your_proxmox_token_id"
+  api_token_secret: "your_proxmox_token_secret"
+  api_host: "your.proxmox.host"
+  validate_certs: false
