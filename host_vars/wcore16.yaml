@@ -1,5 +1,5 @@
 ---
-ansible_host: "27.131.160.106"
+ansible_host: "160.22.181.181"
 container_ip: "192.168.76.237" # 37 for coretime-westend
 ansible_port: "2736"
 host_name: "wcore16.rotko.net"

@@ -1,5 +1,5 @@
 ---
-ansible_host: "27.131.160.106"
+ansible_host: "160.22.181.181"
 container_ip: "192.168.76.26"
 ansible_port: "2326"
 host_name: "ksm26.rotko.net"
