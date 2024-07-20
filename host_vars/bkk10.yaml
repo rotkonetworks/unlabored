@@ -1,8 +1,7 @@
 ---
-ansible_host: "160.22.181.181"
-ansible_port: 20780
-host_name: "bkk00.rotko.net"
-# host_name: "gw.rotko.net"
+ansible_host: "160.22.181.10"
+ansible_port: 22
+host_name: "bkk10.rotko.net"
 host_timezone: "Asia/Bangkok"
 ansible_connection: ansible.netcommon.network_cli
 ansible_network_os: community.network.routeros
@@ -10,4 +9,4 @@ ansible_user: ansible
 ansible_private_key_file: ~/.ssh/unlabored/ansible_mikrotik
 # ansible_ssh_common_args: '-o ProxyCommand="ssh -W %h:%p -q bkk01"'
 
-default_gw_device: "sfp-sfpplus2"  # ether1, sfp-sfpplus1, sfp-sfpplus2
+default_gw_device: "bridge_local"
