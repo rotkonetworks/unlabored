@@ -4,6 +4,7 @@ rotko
 [rotko:children]
 proxmox_hosts
 proxmox_nodes
+proxmox_vms
 routers
 
 [proxmox_nodes:children]
@@ -12,10 +13,21 @@ encointer
 hydradx
 polkadot
 
+[proxmox_vms:children]
+taloswrkr
+talosctl
+
 [proxmox_nodes]
 ansible
 matrix
 ibp
+
+[taloswrkr]
+taloswrkr0701
+taloswrkr0702
+
+[talosctl]
+talosctl0701
 
 [routers]
 bkk00
@@ -77,10 +89,14 @@ hdx27
 [polkadot]
 dot01
 dot02
+dot03
+dot04
 ksm01
 ksm02
+ksm03
 ksm04
 pso03
+pso04
 pso06
 pso07
 dot14
@@ -129,4 +145,5 @@ bkk07
 [access_management:children]
 hardware
 proxmox_nodes
+proxmox_vms
 unmanaged

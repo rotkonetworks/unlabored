@@ -1,0 +1,14 @@
+---
+- name: Update sshd to latest version
+  hosts: proxmox_nodes, proxmox_hosts
+  gather_facts: False
+  become: true
+  tasks:
+    - name: Ensure package lists are up to date
+      ansible.builtin.apt:
+        update_cache: yes
+
+    - name: Upgrade openssh-server to latest version
+      ansible.builtin.apt:
+        name: openssh-server
+        state: latest

@@ -10,4 +10,5 @@ black
 invoke
 wheel
 jmespath
+setuptools
 -r requirements.txt
