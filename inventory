@@ -19,6 +19,8 @@ ibp
 
 [routers]
 bkk00
+bkk10
+bkk20
 
 [cumulus]
 mint14
