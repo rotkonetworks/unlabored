@@ -1,5 +1,5 @@
 ---
-ansible_host: "160.22.181.20"
+ansible_host: "160.22.181.178"
 ansible_port: 22
 host_name: "bkk20.rotko.net"
 host_timezone: "Asia/Bangkok"
@@ -9,4 +9,4 @@ ansible_user: ansible
 ansible_private_key_file: ~/.ssh/unlabored/ansible_mikrotik
 # ansible_ssh_common_args: '-o ProxyCommand="ssh -W %h:%p -q bkk01"'
 
-default_gw_device: "bridge_local"
+default_gw_device: "sfp-sfpplus2"  # sfp-sfpplus2, sfp-sfpplus4 #ECMP BKNIX/AMSIX

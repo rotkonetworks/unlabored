@@ -1,0 +1,33 @@
+---
+# penumbra version
+penumbra_version: "0.73.1"
+penumbra_chain_id: ""
+
+# dl locations
+penumbra_download_pcli_url: "https://github.com/penumbra-zone/penumbra/releases/download/v{{ penumbra_version }}/pcli-installer.sh"
+penumbra_download_pd_url: "https://github.com/penumbra-zone/penumbra/releases/download/v{{ penumbra_version }}/pd-installer.sh"
+penumbra_download_pclientd_url: "https://github.com/penumbra-zone/penumbra/releases/download/v{{ penumbra_version }}/pclientd-installer.sh"
+
+default_git_repo: "https://github.com/penumbra-zone/penumbra"
+
+# service/user
+penumbra_service: "penumbra"
+penumbra_user: "{{ service_users['penumbra'] }}"
+
+# paths
+default_home_path: "/opt/penumbra"
+default_src_path: "{{ default_home_path }}/src"
+default_storage_path: "{{ default_home_path }}/data"
+default_config_path: "{{ default_home_path }}/config"
+default_log_path: "{{ default_home_path }}/logs"
+default_script_path: "{{ default_home_path }}/scripts"
+
+default_network: "penumbra"
+default_node_type: "validator"
+default_p2p_port: 33691
+default_p2p_port_ws: 34691
+default_p2p_port_wss: 35691
+default_rpc_port: 9691
+default_secure_rpc_port: 42691
+default_prom_port: 7691
+zabbix_ext_port: 10691

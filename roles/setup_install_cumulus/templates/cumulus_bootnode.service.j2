@@ -27,7 +27,7 @@ ExecStart={{ default_base_path }}/cumulus \
   --prometheus-external \
   --relay-chain-rpc-urls {{ default_relay_rpc }} {{ default_relay_rpc_fallback }} \
   --wasm-execution Compiled \
-  --sync {{ default_syncmode | default('warp') }} \
+  --sync {{ default_syncmode | default('fast-unsafe') }} \
   --no-hardware-benchmarks \
   --rpc-external \
   --rpc-methods safe \

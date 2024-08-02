@@ -77,12 +77,12 @@
             pause: false
 
         - name: Fetch secret file to local machine
+          when: peerid.results | map(attribute='stdout') | list | length > 0
           ansible.builtin.fetch:
             src: "{{ item.item.path }}"
             dest: "{{ local_backup_dir }}/{{ ansible_hostname }}_{{ lookup('pipe', 'date +%Y%m%d%H%M%S') }}_{{ peerid.results | map(attribute='stdout') | join('_') }}.secret_ed25519"
             flat: yes
           loop: "{{ peerid.results }}"
-          when: peerid.results | map(attribute='stdout') | list | length > 0
           loop_control:
             label: "{{ item.item.path }}"
             pause: false

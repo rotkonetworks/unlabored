@@ -1,6 +1,6 @@
 ---
 default_base_path: /opt/hydradx
-default_client_version: v24.0.1
+default_client_version: v28.0.0
 default_database: paritydb
 default_database_path: '{{ default_base_path }}/chains'
 default_download_base_url: https://github.com/galacticcouncil/HydraDX-node/releases/download/

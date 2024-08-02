@@ -1,0 +1,19 @@
+---
+ansible_host: "27.131.160.106"
+container_ip: "10.76.69.1"
+ansible_port: "2691"
+host_name: "penumbra01.rotko.net"
+host_timezone: "Asia/Bangkok"
+netif: '{"net0":"name=eth0,gw={{ default_nat_network_forward_cidr.split("/")[0] }},ip={{ default_host_ip }}/8,bridge={{ default_nat_device }}"}'
+role: "penumbra"
+pinned_service: True
+
+default_network: "penumbra"
+default_node_type: "validator"
+default_p2p_port: 33691
+default_p2p_port_ws: 34691
+default_p2p_port_wss: 35691
+default_rpc_port: 9691
+default_secure_rpc_port: 42691
+default_prom_port: 7691
+zabbix_ext_port: 10691

@@ -1,0 +1,38 @@
+# tasks/main.yaml
+---
+- name: Create predefined VMs
+  community.general.proxmox_kvm:
+    api_user: "{{ proxmox_defaults.api_user }}"
+    api_token_id: "{{ proxmox_defaults.api_token_id }}"
+    api_token_secret: "{{ proxmox_defaults.api_token_secret }}"
+    api_host: "{{ proxmox_defaults.api_host }}"
+    vmid: "{{ item.proxmox_config.vmid }}"
+    name: "{{ item.proxmox_config.name }}"
+    cores: "{{ item.proxmox_config.cores }}"
+    memory: "{{ item.proxmox_config.memory }}"
+    disks:
+      - size: "{{ item.proxmox_config.disk_size }}"
+        storage: "{{ item.proxmox_config.storage }}"
+    net:
+      - bridge: "{{ item.proxmox_config.net_bridge }}"
+        model: virtio
+    onboot: "{{ item.proxmox_config.onboot }}"
+    validate_certs: "{{ proxmox_defaults.validate_certs }}"
+    state: "{{ item.proxmox_config.state }}"
+  loop: "{{ proxmox_vms }}"
+  when: proxmox_vms is defined
+  register: vm_creation_result
+
+- name: Start predefined VMs
+  community.general.proxmox_kvm:
+    api_user: "{{ proxmox_defaults.api_user }}"
+    api_token_id: "{{ proxmox_defaults.api_token_id }}"
+    api_token_secret: "{{ proxmox_defaults.api_token_secret }}"
+    api_host: "{{ proxmox_defaults.api_host }}"
+    vmid: "{{ item.proxmox_config.vmid }}"
+    state: started
+  loop: "{{ proxmox_vms }}"
+  when:
+    - proxmox_vms is defined
+    - item.proxmox_config.state == 'present'
+  register: vm_start_result

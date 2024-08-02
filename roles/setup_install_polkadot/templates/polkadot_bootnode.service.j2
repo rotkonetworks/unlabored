@@ -8,14 +8,11 @@ User={{ default_user }}
 Group={{ default_group }}
 ExecStart={{ default_base_path }}/polkadot \
   --name "{{ default_telemetry_name }}" \
-{% if default_network == 'paseo' %}
-     --chain {{ default_chain_spec }} \
-{% else %}
-     --chain {{ default_network }} \
-{% endif %}
+  --chain {{ default_network }} \
   --base-path {{ default_base_path }} \
   --database paritydb \
   --state-pruning 256 \
+  --blocks-pruning 1000 \
   --log sync=warn,afg=warn,babe=warn \
   --telemetry-url 'wss://telemetry-backend.w3f.community/submit 1' \
   --telemetry-url 'wss://telemetry.polkadot.io/submit/ 1' \
@@ -28,7 +25,7 @@ ExecStart={{ default_base_path }}/polkadot \
   --public-addr /dns/{{ default_public_dns }}/tcp/{{ default_p2p_port_wss }}/wss \
   --rpc-port {{ default_rpc_port }} \
   --prometheus-port {{ default_prom_port }} \
-  --sync {{ default_syncmode | default('warp') }} \
+  --sync {{ default_syncmode | default('fast-unsafe') }} \
   --no-hardware-benchmarks \
   --no-beefy \
   --rpc-external \

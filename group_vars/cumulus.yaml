@@ -1,11 +1,11 @@
 default_base_path: /opt/cumulus
 default_chain_spec_dl_url: https://raw.githubusercontent.com/paritytech/polkadot-sdk/master/cumulus/parachains/chain-specs/{{
   default_network }}.json
-default_client_version: 1.14.0
+default_client_version: polkadot-stable2407
 default_database: paritydb
 default_database_path: '{{ default_base_path }}/chains'
 default_download_base_url: https://github.com/paritytech/polkadot-sdk/releases/download/
-default_download_url: '{{ default_download_base_url }}polkadot-v{{ default_client_version
+default_download_url: '{{ default_download_base_url }}{{ default_client_version
   }}/polkadot-parachain'
 default_group: '{{ service_users[''cumulus''] }}'
 default_log_level: info
