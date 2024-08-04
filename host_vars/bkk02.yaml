@@ -2,7 +2,7 @@
 host_name: "bkk02.rotko.net"
 host_timezone: "Asia/Bangkok"
 ansible_host: "160.22.181.181"
-ansible_port: "20782"
+ansible_port: "22782"
 role: "proxmox"
 
 kernel_modules:
@@ -10,7 +10,7 @@ kernel_modules:
   - zfs
 
 default_kvm_host: "192.168.69.202"
-default_kvm_port: "20792"
+default_kvm_port: "22792"
 default_need_routeros_port_forwarding: True
 routeros_delegate_host: "bkk00"
 default_need_iptables_port_forwarding: False
