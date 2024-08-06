@@ -340,3 +340,73 @@ lxc_nodes:
       - from_port: "{{ hostvars['mint27']['default_p2p_port_wss'] }}"
         to_host: "{{ hostvars['mint27']['container_ip'] }}:{{ hostvars['mint27']['default_p2p_port_wss'] }}"
         protocol: "tcp"
+  - host: "pppl27"
+    proxmox_config:
+      vmid: "847"
+      hostname: "{{ hostvars['pppl27']['host_name'] }}"
+      ostemplate: "local:vztmpl/{{ default_container_template }}"
+      netif: "{{ hostvars['pppl27']['netif'] }}"
+      cores: 4
+      memory: 16384
+      swap: 8192
+      password: "{{ default_password }}"
+      disk: "{{ default_storage }}:20"
+      mounts: '{"mp0":"{{ default_storage }}:100,mp={{ hostvars["pppl27"]["default_database_path"] }}"}'
+      onboot: True
+      unprivileged: True
+      validate_certs: False
+      description: "{{ hostvars['pppl27']['default_network'] }} {{ hostvars['pppl27']['default_node_type'] }}: {{ hostvars['pppl27']['host_name'] }}"
+      state: present
+      features:
+        - nesting=1
+    port_forwards:
+      - from_port: "{{ hostvars['pppl27']['ansible_port'] }}"
+        to_host: "{{ hostvars['pppl27']['container_ip'] }}:22"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['pppl27']['zabbix_ext_port'] }}"
+        to_host: "{{ hostvars['monitor']['container_ip'] }}:10050"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['pppl27']['default_p2p_port'] }}"
+        to_host: "{{ hostvars['pppl27']['container_ip'] }}:{{ hostvars['pppl27']['default_p2p_port'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['pppl27']['default_p2p_port_ws'] }}"
+        to_host: "{{ hostvars['pppl27']['container_ip'] }}:{{ hostvars['pppl27']['default_p2p_port_ws'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['pppl27']['default_p2p_port_wss'] }}"
+        to_host: "{{ hostvars['pppl27']['container_ip'] }}:{{ hostvars['pppl27']['default_p2p_port_wss'] }}"
+        protocol: "tcp"
+  - host: "psobh27"
+    proxmox_config:
+      vmid: "847"
+      hostname: "{{ hostvars['psobh27']['host_name'] }}"
+      ostemplate: "local:vztmpl/{{ default_container_template }}"
+      netif: "{{ hostvars['psobh27']['netif'] }}"
+      cores: 4
+      memory: 16384
+      swap: 8192
+      password: "{{ default_password }}"
+      disk: "{{ default_storage }}:20"
+      mounts: '{"mp0":"{{ default_storage }}:100,mp={{ hostvars["psobh27"]["default_database_path"] }}"}'
+      onboot: True
+      unprivileged: True
+      validate_certs: False
+      description: "{{ hostvars['psobh27']['default_network'] }} {{ hostvars['psobh27']['default_node_type'] }}: {{ hostvars['psobh27']['host_name'] }}"
+      state: present
+      features:
+        - nesting=1
+    port_forwards:
+      - from_port: "{{ hostvars['psobh27']['ansible_port'] }}"
+        to_host: "{{ hostvars['psobh27']['container_ip'] }}:22"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['psobh27']['zabbix_ext_port'] }}"
+        to_host: "{{ hostvars['monitor']['container_ip'] }}:10050"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['psobh27']['default_p2p_port'] }}"
+        to_host: "{{ hostvars['psobh27']['container_ip'] }}:{{ hostvars['psobh27']['default_p2p_port'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['psobh27']['default_p2p_port_ws'] }}"
+        to_host: "{{ hostvars['psobh27']['container_ip'] }}:{{ hostvars['psobh27']['default_p2p_port_ws'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['psobh27']['default_p2p_port_wss'] }}"
+        to_host: "{{ hostvars['psobh27']['container_ip'] }}:{{ hostvars['psobh27']['default_p2p_port_wss'] }}"
+        protocol: "tcp"

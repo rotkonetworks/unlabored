@@ -61,10 +61,10 @@
 - name: Flush handlers after service copy
   ansible.builtin.meta: flush_handlers
 
-- name: Install Cumulus v{{ default_client_version }}
+- name: Install Cumulus - {{ default_client_version }}
   ansible.builtin.get_url:
     url: "{{ default_download_url }}"
-    dest: "{{ default_base_path }}/cumulus-v{{ default_client_version }}"
+    dest: "{{ default_base_path }}/{{ default_client_version }}"
     mode: "u+r+x"
     owner: "{{ default_user }}"
     group: "{{ default_user }}"

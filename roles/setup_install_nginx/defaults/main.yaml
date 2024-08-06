@@ -3,3 +3,18 @@ default_certificate_email: hq@rotko.net
 default_public_dns: "{{ host_name }}"
 porkbun_api_key: "pk1_xxx"
 porkbun_secret_key: "sk1_xxx"
+
+# Additional default variables
+certbot_porkbun_plugin: certbot_dns_porkbun
+nginx_config_dirs:
+  - sites-available
+  - sites-enabled
+psk_file_path: /etc/nginx/psk.txt
+nginx_site_config: "/etc/nginx/sites-available/{{ default_public_dns }}"
+
+# Package list
+packages:
+  - nginx
+  - python3-certbot-nginx
+  - certbot
+  - python3-pip

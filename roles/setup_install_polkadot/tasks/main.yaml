@@ -85,7 +85,7 @@
 - name: Install Polkadot v{{ default_client_version }}
   ansible.builtin.get_url:
     url: "{{ default_download_url }}"
-    dest: "{{ default_base_path }}/polkadot-v{{ default_client_version }}"
+    dest: "{{ default_base_path }}/{{ default_client_version }}"
     mode: "u+r+x"
     owner: "{{ default_user }}"
     group: "{{ default_user }}"
@@ -106,12 +106,6 @@
 - name: Flush handlers
   ansible.builtin.meta: flush_handlers
   when: download_result.changed
-
-- name: Verify Polkadot version
-  ansible.builtin.command: "{{ default_base_path }}/polkadot --version"
-  register: default_client_version_result
-  changed_when: False
-  failed_when: "default_client_version not in default_client_version_result.stdout"
 
 - name: Ensure Polkadot service is running
   ansible.builtin.systemd:

@@ -13,11 +13,10 @@ default_public_dns: "{{ host_name }}"
 default_network: "bridge-hub-westend"
 default_relay_rpc: "ws://{{ hostvars['wnd26']['container_ip'] }}:{{ hostvars['wnd26']['default_rpc_port'] }}"
 default_relay_rpc_fallback: "ws://{{ hostvars['wnd23']['container_ip'] }}:{{ hostvars['wnd23']['default_rpc_port'] }}"
-default_database: paritydb
+default_database: rocksdb
+default_syncmode: fast-unsafe
 default_node_type: "bootnode"
 default_pruning: 256
-default_syncmode: warp
-# default_syncmode: warp
 default_p2p_port: 33563
 default_p2p_port_ws: 34563
 default_p2p_port_wss: 35563
