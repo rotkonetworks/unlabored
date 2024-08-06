@@ -19,7 +19,7 @@ def generate_nat_rule(item, public_ip):
 
 def generate_filter_rule(item):
     """Generate a filter rule string for RouterOS."""
-    return f"/ip firewall filter add chain=forward protocol={item['protocol']} " f"dst-port={item['from_port']} action=accept place-before=0"
+    return f"/ip firewall filter add chain=forward protocol={item['protocol']} " f"dst-port={item['from_port']} action=accept place-before=5"
 
 
 class FilterModule(object):
