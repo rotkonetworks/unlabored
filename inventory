@@ -30,9 +30,9 @@ taloswrkr0702
 talosctl0701
 
 [routers]
-bkk00
 bkk10
 bkk20
+bkk50
 
 [cumulus]
 mint14
