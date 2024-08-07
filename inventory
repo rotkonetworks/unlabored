@@ -67,20 +67,20 @@ wglu16
 boot-asset-hub-paseo
 wcore26
 kcore26
-rpc-people-polkadot-01
 kppl26
 wppl26
 wglu26
-rpc-asset-hub-paseo-01
 wcore27
 kcore27
-rpc-people-polkadot-02
 kppl27
 wppl27
 wglu27
-rpc-asset-hub-paseo-02
 mint27
+rpc-people-polkadot-01
+rpc-asset-hub-paseo-01
 rpc-bridgehub-paseo-01
+rpc-people-polkadot-02
+rpc-asset-hub-paseo-02
 rpc-bridgehub-paseo-02
 
 [encointer]
@@ -93,6 +93,10 @@ hdx26
 hdx27
 
 [polkadot]
+rpc-polkadot-02
+rpc-kusama-02
+rpc-westend-02
+rpc-paseo-02
 dot01
 dot02
 dot03
