@@ -1,8 +1,8 @@
 ---
 ansible_host: "160.22.181.181"
-container_ip: "192.168.76.50"
-ansible_port: "2956"
-host_name: "pmint26.rotko.net"
+container_ip: "192.168.77.50"
+ansible_port: "2957"
+host_name: "rpc-asset-hub-paseo-02.rotko.net"
 host_timezone: "Asia/Bangkok"
 netif: '{"net0":"name=eth0,gw={{ default_nat_network_forward_cidr.split("/")[0] }},ip={{ default_host_ip }}/16,bridge={{ default_nat_device }}"}'
 role: "cumulus"
@@ -12,15 +12,15 @@ default_telemetry_name: "Rotko Networks - {{ host_name.split('.')[0] }} {{ defau
 default_public_dns: "{{ host_name }}"
 default_network: "asset-hub-paseo"
 default_chain_spec: "{{ default_base_path }}/asset-hub-paseo.raw.json"
-default_chain_spec_dl_url: "https://raw.githubusercontent.com/paseo-network/runtimes/main/chain-specs/asset-hub-paseo.raw.json"
+default_chain_spec_dl_url: "https://media.githubusercontent.com/media/paseo-network/paseo-chain-specs/main/ah-paseo-spec.json"
 default_relay_rpc: "ws://{{ hostvars['pso26']['container_ip'] }}:{{ hostvars['pso26']['default_rpc_port'] }}"
 default_relay_rpc_fallback: "ws://{{ hostvars['pso24']['container_ip'] }}:{{ hostvars['pso24']['default_rpc_port'] }}"
-default_database: "paritydb"
+default_database: "rocksdb"
 default_node_type: "endpoint"
-default_p2p_port: 33956
-default_p2p_port_ws: 34956
-default_p2p_port_wss: 35956
-default_rpc_port: 9956
-default_secure_rpc_port: 42956
-default_prom_port: 7956
-zabbix_ext_port: 10956
+default_p2p_port: 33957
+default_p2p_port_ws: 34957
+default_p2p_port_wss: 35957
+default_rpc_port: 9957
+default_secure_rpc_port: 42957
+default_prom_port: 7957
+zabbix_ext_port: 10957

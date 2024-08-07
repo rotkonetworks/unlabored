@@ -7,7 +7,7 @@ polkadot_primary_hosts=(
 )
 cumulus_primary_hosts=(
     "kbr13" "kbr24" "mine24" "mine26" "mint14" "mint23" "pbr13"
-    "pbr23" "pbr26" "pch13" "pch23" "pmint27" "wbr13" "wbr23"
+    "pbr23" "pbr26" "pch13" "pch23" "rpc-asset-hub-paseo-02" "wbr13" "wbr23"
     "wch13" "wch23" "wmint14" "wmint23" "wmint26" "wbr13" "wbr23"
     "wch13" "wch23" "wmint23" "kppl16" "kppl26"
 )
@@ -18,7 +18,7 @@ polkadot_secondary_hosts=(
 
 cumulus_secondary_hosts=(
     "kbr26" "mine14" "mint26" "mint27" "pch26"
-    "pmint16" "pmint26" "wcore16" "wcore26" "wcore27"
+    "boot-asset-hub-paseo" "rpc-asset-hub-paseo-01" "wcore16" "wcore26" "wcore27"
     "wglu16" "wglu26" "wglu27" "wmint26" "wppl16"
     "wppl26" "wppl27" "wbr26" "wch26" "wcore16" "wcore26" "wcore27"
     "wglu16" "wglu26" "wglu27" "wmint26" "wppl16"

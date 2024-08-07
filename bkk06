@@ -34,7 +34,7 @@ pso26
 mint14
 mine14
 wmint14
-pmint16
+boot-asset-hub-paseo
 pbr13
 kbr13
 wbr13
@@ -59,9 +59,9 @@ kcore26
 kppl26
 wppl26
 wglu26
-pmint26
-pppl26
-psobh26
+rpc-asset-hub-paseo-01
+rpc-people-polkadot-01
+rpc-bridgehub-paseo-01
 
 [encointer]
 enc14
