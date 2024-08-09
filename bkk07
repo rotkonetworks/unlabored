@@ -24,7 +24,7 @@ taloswrkr0702
 talosctl0701
 
 [routers]
-bkk00
+bkk50
 
 [hydradx]
 hdx27
@@ -42,7 +42,6 @@ wcore27
 kcore27
 kppl27
 wppl27
-wglu27
 rpc-asset-hub-paseo-02
 rpc-people-polkadot-02
 rpc-bridgehub-paseo-02

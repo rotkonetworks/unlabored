@@ -11,12 +11,12 @@ kernel_modules:
 default_kvm_host: "192.168.77.10"
 default_kvm_port: "22797"
 default_need_routeros_port_forwarding: True
-routeros_delegate_host: "bkk00"
+routeros_delegate_host: "bkk50"
 default_need_iptables_port_forwarding: False
-default_container_template: "debian-12-standard_12.2-1_amd64.tar.zst"
 default_gw_device: "eno1"
 default_storage: "bkk07pool"
-#default_storage: "tank07lvm" # old
+zfs_storage: "bkk07pool"
+lvm_storage: "tank07lvm" # old
 default_resource_pool: "bkk07_resource_pool"
 default_max_cores: 192
 
@@ -29,6 +29,41 @@ port_forwards:
     protocol: "tcp"
 
 lxc_nodes:
+  - host: "rpc-polkadot-02"
+    proxmox_config:
+      vmid: "340202"
+      hostname: "{{ hostvars['rpc-polkadot-02']['host_name'] }}"
+      ostemplate: "local:vztmpl/{{ default_container_template }}"
+      netif: "{{ hostvars['rpc-polkadot-02']['netif'] }}"
+      cores: 4
+      memory: 16384
+      swap: 8192
+      password: "{{ default_password }}"
+      disk: "{{ zfs_storage }}:20"
+      mounts: '{"mp0":"{{ zfs_storage }}:2000,mp={{ hostvars["rpc-polkadot-02"]["default_database_path"] }}"}'
+      onboot: True
+      unprivileged: True
+      validate_certs: False
+      description: "{{ hostvars['rpc-polkadot-02']['default_network'] }} {{ hostvars['rpc-polkadot-02']['default_node_type'] }}: {{ hostvars['rpc-polkadot-02']['host_name'] }}"
+      state: present
+      features:
+        - nesting=1
+    port_forwards:
+      - from_port: "{{ hostvars['rpc-polkadot-02']['ansible_port'] }}"
+        to_host: "{{ hostvars['rpc-polkadot-02']['container_ip'] }}:22"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['rpc-polkadot-02']['zabbix_ext_port'] }}"
+        to_host: "{{ hostvars['monitor']['container_ip'] }}:10050"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['rpc-polkadot-02']['default_p2p_port'] }}"
+        to_host: "{{ hostvars['rpc-polkadot-02']['container_ip'] }}:{{ hostvars['rpc-polkadot-02']['default_p2p_port'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['rpc-polkadot-02']['default_p2p_port_ws'] }}"
+        to_host: "{{ hostvars['rpc-polkadot-02']['container_ip'] }}:{{ hostvars['rpc-polkadot-02']['default_p2p_port_ws'] }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['rpc-polkadot-02']['default_p2p_port_wss'] }}"
+        to_host: "{{ hostvars['rpc-polkadot-02']['container_ip'] }}:{{ hostvars['rpc-polkadot-02']['default_p2p_port_wss'] }}"
+        protocol: "tcp"
   - host: "hdx27"
     proxmox_config:
       vmid: "837"
@@ -246,8 +281,8 @@ lxc_nodes:
       memory: 16384
       swap: 8192
       password: "{{ default_password }}"
-      disk: "{{ default_storage }}:20"
-      mounts: '{"mp0":"{{ default_storage }}:100,mp={{ hostvars["rpc-asset-hub-paseo-02"]["default_database_path"] }}"}'
+      disk: "{{ zfs_storage }}:20"
+      mounts: '{"mp0":"{{ zfs_storage }}:100,mp={{ hostvars["rpc-asset-hub-paseo-02"]["default_database_path"] }}"}'
       onboot: True
       unprivileged: True
       validate_certs: False
@@ -281,8 +316,8 @@ lxc_nodes:
       memory: 16384
       swap: 8192
       password: "{{ default_password }}"
-      disk: "{{ default_storage }}:20"
-      mounts: '{"mp0":"{{ default_storage }}:100,mp={{ hostvars["mint27"]["default_database_path"] }}"}'
+      disk: "{{ lvm_storage }}:20"
+      mounts: '{"mp0":"{{ lvm_storage }}:100,mp={{ hostvars["mint27"]["default_database_path"] }}"}'
       onboot: True
       unprivileged: True
       validate_certs: False
@@ -316,8 +351,8 @@ lxc_nodes:
       memory: 16384
       swap: 8192
       password: "{{ default_password }}"
-      disk: "{{ default_storage }}:20"
-      mounts: '{"mp0":"{{ default_storage }}:100,mp={{ hostvars["rpc-people-polkadot-02"]["default_database_path"] }}"}'
+      disk: "{{ zfs_storage }}:20"
+      mounts: '{"mp0":"{{ zfs_storage }}:100,mp={{ hostvars["rpc-people-polkadot-02"]["default_database_path"] }}"}'
       onboot: True
       unprivileged: True
       validate_certs: False
@@ -351,8 +386,8 @@ lxc_nodes:
       memory: 16384
       swap: 8192
       password: "{{ default_password }}"
-      disk: "{{ default_storage }}:20"
-      mounts: '{"mp0":"{{ default_storage }}:100,mp={{ hostvars["rpc-bridgehub-paseo-02"]["default_database_path"] }}"}'
+      disk: "{{ zfs_storage }}:20"
+      mounts: '{"mp0":"{{ zfs_storage }}:100,mp={{ hostvars["rpc-bridgehub-paseo-02"]["default_database_path"] }}"}'
       onboot: True
       unprivileged: True
       validate_certs: False

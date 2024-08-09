@@ -41,7 +41,9 @@
     url: "{{ default_chain_spec_dl_url }}"
     dest: "{{ default_chain_spec }}"
     mode: '0644'
+    timeout: 60
   when: needs_custom_chain_spec
+  delegate_to: "{{ inventory_hostname }}"
 
 - name: Copy Cumulus systemd service for specific node type
   ansible.builtin.template:

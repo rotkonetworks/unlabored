@@ -12,7 +12,7 @@ kernel_modules:
 default_kvm_host: "192.168.69.203"
 default_kvm_port: "22793"
 default_need_routeros_port_forwarding: True
-routeros_delegate_host: "bkk00"
+routeros_delegate_host: "bkk50"
 default_need_iptables_port_forwarding: False
 default_gw_device: "enp9s0"
 default_resource_pool: "bkk03_resource_pool"

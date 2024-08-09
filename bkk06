@@ -13,7 +13,7 @@ hydradx
 polkadot
 
 [routers]
-bkk00
+bkk50
 
 [hydradx]
 hdx26
@@ -44,7 +44,6 @@ wcore16
 kcore16
 kppl16
 wppl16
-wglu16
 ; rpc
 mint26
 pbr26
@@ -58,7 +57,6 @@ wcore26
 kcore26
 kppl26
 wppl26
-wglu26
 rpc-asset-hub-paseo-01
 rpc-people-polkadot-01
 rpc-bridgehub-paseo-01
@@ -92,6 +90,14 @@ wnd24
 wnd26
 pso24
 pso26
+rpc-polkadot-01
+rpc-kusama-01
+rpc-westend-01
+rpc-paseo-01
+rpc-polkadot-02
+rpc-kusama-02
+rpc-westend-02
+rpc-paseo-02
 
 [access_management:children]
 hardware

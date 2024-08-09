@@ -1,16 +1,18 @@
 ---
+# Certbot configuration
 default_certificate_email: hq@rotko.net
 default_public_dns: "{{ host_name }}"
-porkbun_api_key: "pk1_xxx"
-porkbun_secret_key: "sk1_xxx"
+# Cloudflare configuration
+# Note: Sensitive data like API tokens and Zone IDs should be in vault
+# cloudflare_zone_id: "{{ vault_cloudflare_zone_id }}"
+# cloudflare_api_token: "{{ vault_cloudflare_api_token }}"
 
-# Additional default variables
-certbot_porkbun_plugin: certbot_dns_porkbun
-nginx_config_dirs:
-  - sites-available
-  - sites-enabled
-psk_file_path: /etc/nginx/psk.txt
-nginx_site_config: "/etc/nginx/sites-available/{{ default_public_dns }}"
+# NGINX configuration variables
+default_p2p_port_wss: 443
+default_p2p_port_ws: 8080
+default_secure_rpc_port: 8443
+default_rpc_port: 8545
+default_node_type: endpoint
 
 # Package list
 packages:
@@ -18,3 +20,11 @@ packages:
   - python3-certbot-nginx
   - certbot
   - python3-pip
+
+# NGINX configuration paths
+nginx_config_dirs:
+  - sites-available
+  - enabled
+
+nginx_site_config: "/etc/nginx/sites-available/{{ default_public_dns }}"
+psk_file_path: /etc/nginx/psk.txt

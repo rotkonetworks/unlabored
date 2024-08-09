@@ -12,7 +12,7 @@ kernel_modules:
 default_kvm_host: "192.168.69.202"
 default_kvm_port: "22792"
 default_need_routeros_port_forwarding: True
-routeros_delegate_host: "bkk00"
+routeros_delegate_host: "bkk50"
 default_need_iptables_port_forwarding: False
 default_gw_device: "enp4s0"
 default_storage: "tank02"

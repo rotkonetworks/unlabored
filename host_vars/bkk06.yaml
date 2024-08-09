@@ -12,11 +12,12 @@ kernel_modules:
 default_kvm_host: "192.168.69.206"
 default_kvm_port: "22796"
 default_need_routeros_port_forwarding: True
-routeros_delegate_host: "bkk00"
+routeros_delegate_host: "bkk50"
 default_need_iptables_port_forwarding: False
-default_container_template: "debian-12-standard_12.2-1_amd64.tar.zst"
 default_gw_device: "eno1"
-default_storage: "tank06lvm"
+default_storage: "bkk06pool" # zfspool
+zfs_storage: "bkk06pool" # new
+lvm_storage: "tank06lvm" # old
 default_resource_pool: "bkk06_resource_pool"
 default_max_cores: 128
 

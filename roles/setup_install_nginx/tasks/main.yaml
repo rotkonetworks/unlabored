@@ -1,41 +1,60 @@
 ---
-- name: Install necessary packages
-  ansible.builtin.package:
-    name: "{{ packages }}"
+- name: Ensure required packages are installed
+  ansible.builtin.apt:
+    name:
+      - nginx
+      - certbot
+      - python3-certbot-nginx
     state: present
-  register: packages_installed
+    update_cache: yes
+  become: true
 
-- name: Check certbot plugins
-  ansible.builtin.command:
-    cmd: certbot plugins
-  register: certbot_plugins_output
+- name: Check if python3-certbot-dns-cloudflare is available
+  ansible.builtin.command: apt-cache show python3-certbot-dns-cloudflare
+  register: cloudflare_plugin_available
   changed_when: false
-  check_mode: false
+  failed_when: false
+  become: true
 
-- name: Install Cloudflare DNS plugin for Certbot
-  ansible.builtin.pip:
-    name: "{{ certbot_cloudflare_plugin }}"
+- name: Install Cloudflare DNS plugin for Certbot using apt
+  ansible.builtin.apt:
+    name: python3-certbot-dns-cloudflare
     state: present
-  when: "'dns-cloudflare' not in certbot_plugins_output.stdout"
+  when: cloudflare_plugin_available.rc == 0
+  become: true
+
+- name: Install Cloudflare DNS plugin for Certbot using pip (fallback)
+  ansible.builtin.pip:
+    name: certbot-dns-cloudflare
+    extra_args: --break-system-packages
+  when: cloudflare_plugin_available.rc != 0
+  become: true
 
 - name: Ensure Cloudflare credentials directory exists
   ansible.builtin.file:
-    path: "{{ cloudflare_creds_path | dirname }}"
+    path: /root/.secrets
     state: directory
     mode: '0700'
     owner: root
     group: root
+  become: true
 
 - name: Create Cloudflare credentials file
   ansible.builtin.copy:
     content: |
-      dns_cloudflare_email = {{ cloudflare_email }}
-      dns_cloudflare_api_key = {{ cloudflare_api_key }}
-    dest: "{{ cloudflare_creds_path }}"
+      dns_cloudflare_api_token = {{ cloudflare_api_token }}
+      dns_cloudflare_zone_id = {{ cloudflare_zone_id }}
+    dest: /root/.secrets/cloudflare.ini
     mode: '0600'
     owner: root
     group: root
-  no_log: true
+  become: true
+  #  no_log: true
+
+- name: Check if certificate already exists
+  ansible.builtin.stat:
+    path: "/etc/letsencrypt/live/{{ default_public_dns }}/fullchain.pem"
+  register: cert_file
 
 - name: Obtain certificate using DNS-01 challenge
   ansible.builtin.command:
@@ -46,54 +65,42 @@
       --email "{{ default_certificate_email }}"
       --preferred-challenges dns
       --authenticator dns-cloudflare
-      --dns-cloudflare-credentials {{ cloudflare_creds_path }}
+      --dns-cloudflare-credentials /root/.secrets/cloudflare.ini
       --dns-cloudflare-propagation-seconds 60
       -d "{{ default_public_dns }}"
+  when: not cert_file.stat.exists
   register: certbot_result
   changed_when: "'Congratulations' in certbot_result.stdout"
-  no_log: true
+  become: true
+  #  no_log: true
 
-- name: Set up Certbot DNS auto-renewal cron job
+- name: Set up Certbot auto-renewal cron job
   ansible.builtin.cron:
-    name: "Certbot DNS Renewal and Reload Nginx"
-    job: "certbot renew --quiet && systemctl reload nginx"
+    name: "Certbot Renewal"
+    job: "certbot renew --quiet --post-hook 'systemctl reload nginx'"
     special_time: daily
     user: root
-
-- name: Ensure NGINX configuration directories exist
-  ansible.builtin.file:
-    path: "/etc/nginx/{{ item }}"
-    state: directory
-    mode: '0755'
-  loop: "{{ nginx_config_dirs }}"
-
-- name: Generate Pre-Shared Key (PSK) if not existing
-  ansible.builtin.shell:
-    cmd: |
-      if [ ! -f {{ psk_file_path }} ]; then
-        openssl rand -base64 32 > {{ psk_file_path }}
-        chmod 600 {{ psk_file_path }}
-      fi
-      cat {{ psk_file_path }}
-  register: psk_output
-  changed_when: false
-  no_log: true
-
-- name: Store PSK in a fact
-  ansible.builtin.set_fact:
-    default_nginx_psk: "{{ psk_output.stdout }}"
-  no_log: true
+  become: true
 
 - name: Apply HTTPS configuration to NGINX
   ansible.builtin.template:
-    src: "https-{{ default_node_type }}.j2"
-    dest: "{{ nginx_site_config }}"
+    src: "https-{{ default_node_type }}.conf.j2"
+    dest: "/etc/nginx/sites-available/{{ default_public_dns }}"
     mode: '0644'
   notify: Reload nginx
+  become: true
 
-- name: Enable HTTPS configuration for NGINX
+- name: Enable NGINX configuration
   ansible.builtin.file:
-    src: "{{ nginx_site_config }}"
+    src: "/etc/nginx/sites-available/{{ default_public_dns }}"
     dest: "/etc/nginx/sites-enabled/{{ default_public_dns }}"
     state: link
   notify: Reload nginx
+  become: true
+
+- name: Ensure NGINX is started and enabled
+  ansible.builtin.service:
+    name: nginx
+    state: started
+    enabled: yes
+  become: true
