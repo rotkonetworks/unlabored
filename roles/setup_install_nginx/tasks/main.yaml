@@ -1,92 +1,61 @@
 ---
+- name: Register domain if missing
+  uri:
+    url: "https://api.cloudflare.com/client/v4/zones/{{ cloudflare_zone_id }}/dns_records"
+    method: POST
+    headers:
+      Authorization: "Bearer {{ cloudflare_api_token }}"
+      Content-Type: "application/json"
+    body_format: json
+    body:
+      type: "A"
+      name: "{{ item }}"
+      content: "{{ ansible_host }}"
+      ttl: 1
+      proxied: false
+  loop:
+    - "{{ default_domain }}"
+    - "{{ default_bootnode_domain | default(omit) }}"
+  when: item is defined
+  register: domain_registration
+  changed_when: domain_registration.status == 200
+  failed_when:
+    - domain_registration.status != 200
+    - "'already exists' not in domain_registration.json.errors[0].message"
+
 - name: Ensure required packages are installed
   ansible.builtin.apt:
     name:
       - nginx
-      - certbot
-      - python3-certbot-nginx
     state: present
     update_cache: yes
   become: true
 
-- name: Check if python3-certbot-dns-cloudflare is available
-  ansible.builtin.command: apt-cache show python3-certbot-dns-cloudflare
-  register: cloudflare_plugin_available
-  changed_when: false
-  failed_when: false
-  become: true
-
-- name: Install Cloudflare DNS plugin for Certbot using apt
-  ansible.builtin.apt:
-    name: python3-certbot-dns-cloudflare
-    state: present
-  when: cloudflare_plugin_available.rc == 0
-  become: true
-
-- name: Install Cloudflare DNS plugin for Certbot using pip (fallback)
-  ansible.builtin.pip:
-    name: certbot-dns-cloudflare
-    extra_args: --break-system-packages
-  when: cloudflare_plugin_available.rc != 0
-  become: true
-
-- name: Ensure Cloudflare credentials directory exists
+- name: Ensure SSL directory exists
   ansible.builtin.file:
-    path: /root/.secrets
+    path: /etc/nginx/ssl
     state: directory
     mode: '0700'
     owner: root
     group: root
   become: true
 
-- name: Create Cloudflare credentials file
+- name: Copy Cloudflare Origin Certificate
   ansible.builtin.copy:
-    content: |
-      dns_cloudflare_api_token = {{ cloudflare_api_token }}
-      dns_cloudflare_zone_id = {{ cloudflare_zone_id }}
-    dest: /root/.secrets/cloudflare.ini
+    content: "{{ cloudflare_origin_certificate }}"
+    dest: "{{ cloudflare_origin_pem_path }}"
     mode: '0600'
     owner: root
     group: root
   become: true
-  #  no_log: true
 
-- name: Check if certificates already exist
-  ansible.builtin.stat:
-    path: "/etc/letsencrypt/live/{{ item }}/fullchain.pem"
-  register: cert_files
-  loop:
-    - "{{ default_domain }}"
-    - "{{ default_bootnode_domain | default(omit) }}"
-  when: default_bootnode_domain is defined
-
-- name: Obtain certificates using DNS-01 challenge
-  ansible.builtin.command:
-    cmd: >
-      certbot certonly
-      --non-interactive
-      --agree-tos
-      --email "{{ default_certificate_email }}"
-      --preferred-challenges dns
-      --authenticator dns-cloudflare
-      --dns-cloudflare-credentials /root/.secrets/cloudflare.ini
-      --dns-cloudflare-propagation-seconds 60
-      -d "{{ item.item }}"
-  when: 
-    - not item.stat.exists
-    - item.item is defined
-  loop: "{{ cert_files.results }}"
-  register: certbot_results
-  changed_when: "'Congratulations' in item.stdout"
-  become: true
-  #  no_log: true
-
-- name: Set up Certbot auto-renewal cron job
-  ansible.builtin.cron:
-    name: "Certbot Renewal"
-    job: "certbot renew --quiet --post-hook 'systemctl reload nginx'"
-    special_time: daily
-    user: root
+- name: Copy Cloudflare private key
+  ansible.builtin.copy:
+    content: "{{ cloudflare_origin_key }}"
+    dest: "{{ cloudflare_origin_key_path }}"
+    mode: '0600'
+    owner: root
+    group: root
   become: true
 
 - name: Apply HTTPS configuration to NGINX for endpoint
@@ -117,7 +86,7 @@
 - name: Enable NGINX configuration for bootnode
   ansible.builtin.file:
     src: "/etc/nginx/sites-available/{{ default_bootnode_domain }}"
-    dest: "/etc/nginx/sites-enabled/{{ default_bootnode_domain }}"
+    dest: "/etc/nginx/sites-enabled/{{ default_domain }}"
     state: link
   notify: Reload nginx
   become: true
@@ -128,4 +97,11 @@
     name: nginx
     state: started
     enabled: yes
+  become: true
+
+- name: Check NGINX configuration
+  ansible.builtin.command: nginx -t
+  register: nginx_config_check
+  changed_when: false
+  failed_when: nginx_config_check.rc != 0
   become: true

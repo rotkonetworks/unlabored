@@ -3,18 +3,19 @@ server {
     listen {{ default_p2p_port_wss }} ssl http2;
     listen [::]:{{ default_p2p_port_wss }} ssl http2;
     server_name {{ default_domain }};
-
+    
     # SSL/TLS settings
-    ssl_certificate /etc/letsencrypt/live/{{ default_domain }}/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/{{ default_domain }}/privkey.pem;
-
-    # Strong SSL settings (removed duplicates)
+    ssl_certificate {{ cloudflare_origin_pem_path }};
+    ssl_certificate_key {{ cloudflare_origin_key_path }};
+    
+    # Strong SSL settings
     ssl_protocols TLSv1.3;
     ssl_ciphers 'TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384';
+    ssl_prefer_server_ciphers on;
     ssl_session_cache shared:SSL:10m;
     ssl_session_timeout 10m;
     ssl_session_tickets off;
-
+    
     # OCSP Stapling
     ssl_stapling on;
     ssl_stapling_verify on;
@@ -39,11 +40,11 @@ server {
     listen {{ default_secure_rpc_port }} ssl http2;
     listen [::]:{{ default_secure_rpc_port }} ssl http2;
     server_name {{ default_domain }};
-
+    
     # SSL/TLS settings
-    ssl_certificate /etc/letsencrypt/live/{{ default_domain }}/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/{{ default_domain }}/privkey.pem;
-
+    ssl_certificate {{ cloudflare_origin_pem_path }};
+    ssl_certificate_key {{ cloudflare_origin_key_path }};
+    
     # SSL settings are inherited from the previous server block
 
     location / {
@@ -65,13 +66,12 @@ server {
     listen {{ default_bootnode_p2p_port_wss }} ssl http2;
     listen [::]:{{ default_bootnode_p2p_port_wss }} ssl http2;
     server_name {{ default_bootnode_domain }};
-
+    
     # SSL/TLS settings
-    ssl_certificate /etc/letsencrypt/live/{{ default_bootnode_domain }}/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/{{ default_bootnode_domain }}/privkey.pem;
-
+    ssl_certificate {{ cloudflare_origin_pem_path }};
+    ssl_certificate_key {{ cloudflare_origin_key_path }};
+    
     # SSL settings are inherited from the first server block
-
     location / {
         proxy_buffers 16 4k;
         proxy_buffer_size 2k;

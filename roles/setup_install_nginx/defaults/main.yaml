@@ -1,11 +1,15 @@
 ---
 # Certbot configuration
-default_certificate_email: hq@rotko.net
+default_certificate_email: example@rotko.net
 default_domain: "{{ host_name }}"
 # Cloudflare configuration
 # Note: Sensitive data like API tokens and Zone IDs should be in vault
 # cloudflare_zone_id: "{{ vault_cloudflare_zone_id }}"
 # cloudflare_api_token: "{{ vault_cloudflare_api_token }}"
+# cloudflare_certificate: "-----BEGIN CERTIFICATE----- -----END CERTIFICATE-----" 
+# cloudflare_certificate_pk: "-----BEGIN PRIVATE KEY----- -----END PRIVATE KEY-----"
+cloudflare_origin_key_path: "/etc/nginx/ssl/cloudflare_origin.key"
+cloudflare_origin_pem_path: "/etc/nginx/ssl/cloudflare_origin.pem"
 
 # NGINX configuration variables
 default_p2p_port_wss: 443
@@ -17,9 +21,6 @@ default_node_type: endpoint
 # Package list
 packages:
   - nginx
-  - python3-certbot-nginx
-  - certbot
-  - python3-pip
 
 # NGINX configuration paths
 nginx_config_dirs:

@@ -34,15 +34,24 @@
 
 - name: Check if needs custom chain spec
   ansible.builtin.set_fact:
-    needs_custom_chain_spec: "{{ default_network in ['asset-hub-paseo', 'people-kusama', 'people-westend', 'glutton-westend'] }}"
+    needs_custom_chain_spec: "{{ default_network in ['asset-hub-paseo', 'bridgehub-paseo'] }}"
 
-- name: Download chain spec
+- name: Check if the local chain spec file exists
+  stat:
+    path: "{{ default_chain_spec }}"
+  register: local_chain_spec
+  when: needs_custom_chain_spec
+  delegate_to: "{{ inventory_hostname }}"
+
+- name: Download chain spec if not present
   ansible.builtin.get_url:
     url: "{{ default_chain_spec_dl_url }}"
     dest: "{{ default_chain_spec }}"
     mode: '0644'
     timeout: 60
-  when: needs_custom_chain_spec
+  when:
+    - needs_custom_chain_spec
+    - not local_chain_spec.stat.exists
   delegate_to: "{{ inventory_hostname }}"
 
 - name: Copy Cumulus systemd service for specific node type

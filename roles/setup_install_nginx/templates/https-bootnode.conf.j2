@@ -4,8 +4,8 @@ server {
     server_name {{ default_domain }};
 
     # SSL/TLS settings
-    ssl_certificate /etc/letsencrypt/live/{{ default_domain }}/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/{{ default_domain }}/privkey.pem;
+    ssl_certificate {{ cloudflare_origin_pem_path }};
+    ssl_certificate_key {{ cloudflare_origin_key_path }};
 
     # SSL protocols and ciphers
     ssl_protocols TLSv1.3;
@@ -41,8 +41,8 @@ server {
     server_name {{ default_domain }};
 
     # SSL/TLS settings
-    ssl_certificate /etc/letsencrypt/live/{{ default_domain }}/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/{{ default_domain }}/privkey.pem;
+    ssl_certificate {{ cloudflare_origin_pem_path }};
+    ssl_certificate_key {{ cloudflare_origin_key_path }};
 
     # SSL protocols and ciphers
     ssl_protocols TLSv1.3;
