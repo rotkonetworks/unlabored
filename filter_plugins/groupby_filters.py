@@ -2,7 +2,7 @@ def group_by_domain(hostvars):
     domain_groups = {}
 
     for host, host_vars in hostvars.items():
-        domain = host_vars.get("default_public_dns_lb")
+        domain = host_vars.get("default_domain_lb")
         if domain:
             domain_groups.setdefault(domain, []).append(host)
 

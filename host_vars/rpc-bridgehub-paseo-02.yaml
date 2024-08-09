@@ -9,7 +9,7 @@ role: "cumulus"
 pinned_service: True
 
 default_telemetry_name: "Rotko Networks - {{ host_name.split('.')[0] }} {{ default_node_type | capitalize }}"
-default_public_dns: "{{ host_name }}"
+default_domain: "{{ host_name }}"
 default_network: "bridgehub-paseo"
 default_chain_spec: "{{ default_base_path }}/bridgehub-paseo.raw.json"
 default_chain_spec_dl_url: "https://raw.githubusercontent.com/paseo-network/runtimes/main/chain-specs/bridge-hub-paseo.raw.json"
@@ -25,7 +25,7 @@ default_secure_rpc_port: 42967
 default_prom_port: 7967
 zabbix_ext_port: 10967
 
-default_bootnode_dns: "boot-{{ default_network }}.rotko.net"
+default_bootnode_domain: "boot-{{ default_network }}.rotko.net"
 default_bootnode_p2p_port: "{{ default_p2p_port + 500 }}"
 default_bootnode_p2p_port_ws: "{{ default_p2p_port_ws + 500 }}"
 default_bootnode_p2p_port_wss: "{{ default_p2p_port_wss + 500 }}"

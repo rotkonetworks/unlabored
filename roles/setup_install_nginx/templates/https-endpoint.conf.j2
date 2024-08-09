@@ -1,55 +1,36 @@
-# Common SSL/TLS settings
-ssl_protocols TLSv1.3;
-ssl_ciphers 'TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384';
-ssl_prefer_server_ciphers off;
-ssl_session_cache shared:SSL:10m;
-ssl_session_timeout 10m;
-ssl_session_tickets off;
-ssl_stapling on;
-ssl_stapling_verify on;
-
-# Resolver settings
-resolver 1.1.1.1 1.0.0.1 valid=300s;
-resolver_timeout 5s;
-
-# Security headers
-add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
-add_header X-Frame-Options DENY;
-add_header X-Content-Type-Options nosniff;
-add_header X-XSS-Protection "1; mode=block";
-
-# Disable server tokens
-server_tokens off;
-
-# Logging
-access_log /var/log/nginx/access.log;
-error_log /var/log/nginx/error.log;
-
-# Rate limiting
-limit_req_zone $binary_remote_addr zone=mylimit:10m rate=10r/s;
-
-# Reusable proxy configuration
-proxy_set_header Upgrade $http_upgrade;
-proxy_set_header Connection "upgrade";
-proxy_set_header Host $host;
-proxy_set_header X-Real-IP $remote_addr;
-proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-proxy_buffers 16 4k;
-proxy_buffer_size 2k;
-
 # Server 1: Regular Endpoint Server
 server {
     listen {{ default_p2p_port_wss }} ssl http2;
     listen [::]:{{ default_p2p_port_wss }} ssl http2;
-    server_name {{ default_public_dns }};
+    server_name {{ default_domain }};
 
-    ssl_certificate /etc/letsencrypt/live/{{ default_public_dns }}/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/{{ default_public_dns }}/privkey.pem;
+    # SSL/TLS settings
+    ssl_certificate /etc/letsencrypt/live/{{ default_domain }}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/{{ default_domain }}/privkey.pem;
+
+    # Strong SSL settings (removed duplicates)
+    ssl_protocols TLSv1.3;
+    ssl_ciphers 'TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384';
+    ssl_session_cache shared:SSL:10m;
+    ssl_session_timeout 10m;
+    ssl_session_tickets off;
+
+    # OCSP Stapling
+    ssl_stapling on;
+    ssl_stapling_verify on;
+    resolver 1.1.1.1 1.0.0.1 valid=300s;
+    resolver_timeout 5s;
 
     location / {
+        proxy_buffers 16 4k;
+        proxy_buffer_size 2k;
         proxy_pass http://127.0.0.1:{{ default_p2p_port_ws }};
         proxy_http_version 1.1;
-        limit_req zone=mylimit burst=20 nodelay;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     }
 }
 
@@ -57,30 +38,50 @@ server {
 server {
     listen {{ default_secure_rpc_port }} ssl http2;
     listen [::]:{{ default_secure_rpc_port }} ssl http2;
-    server_name {{ default_public_dns }};
+    server_name {{ default_domain }};
 
-    ssl_certificate /etc/letsencrypt/live/{{ default_public_dns }}/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/{{ default_public_dns }}/privkey.pem;
+    # SSL/TLS settings
+    ssl_certificate /etc/letsencrypt/live/{{ default_domain }}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/{{ default_domain }}/privkey.pem;
+
+    # SSL settings are inherited from the previous server block
 
     location / {
+        proxy_buffers 16 4k;
+        proxy_buffer_size 2k;
         proxy_pass http://127.0.0.1:{{ default_rpc_port }};
         proxy_http_version 1.1;
-        limit_req zone=mylimit burst=20 nodelay;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     }
 }
 
+{% if default_bootnode_domain is defined %}
 # Server 3: Bootnode Server
 server {
     listen {{ default_bootnode_p2p_port_wss }} ssl http2;
     listen [::]:{{ default_bootnode_p2p_port_wss }} ssl http2;
-    server_name {{ default_bootnode_dns }};
+    server_name {{ default_bootnode_domain }};
 
-    ssl_certificate /etc/letsencrypt/live/{{ default_bootnode_dns }}/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/{{ default_bootnode_dns }}/privkey.pem;
+    # SSL/TLS settings
+    ssl_certificate /etc/letsencrypt/live/{{ default_bootnode_domain }}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/{{ default_bootnode_domain }}/privkey.pem;
+
+    # SSL settings are inherited from the first server block
 
     location / {
+        proxy_buffers 16 4k;
+        proxy_buffer_size 2k;
         proxy_pass http://127.0.0.1:{{ default_bootnode_p2p_port_ws }};
         proxy_http_version 1.1;
-        limit_req zone=mylimit burst=20 nodelay;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     }
 }
+{% endif %}

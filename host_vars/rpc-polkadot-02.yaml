@@ -9,10 +9,10 @@ role: "polkadot"
 pinned_service: True
 
 default_telemetry_name: "Rotko Networks - {{ host_name.split('.')[0] }} {{ default_node_type | capitalize }}"
-default_public_dns: "{{ host_name }}"
-default_public_dns_lb: "polkadot.rotko.net"
-default_public_dns_ibp: "rpc.ibp.network"
-default_public_dns_dotters: "rpc.dotters.network"
+default_domain: "{{ host_name }}"
+default_domain_lb: "polkadot.rotko.net"
+default_domain_ibp: "rpc.ibp.network"
+default_domain_dotters: "rpc.dotters.network"
 default_ibp_repository: "git@github.com:GATOTECH-LTD/ibp-ssl"
 default_dotters_repository: "git@github.com:senseless/dotters-ssl"
 default_network: "polkadot"
@@ -28,8 +28,8 @@ default_secure_rpc_port: 42312
 default_prom_port: 7312
 zabbix_ext_port: 10312
 
-# default_bootnode_dns: "boot-{{ default_network }}.rotko.net"
-default_bootnode_dns: "dot14.rotko.net"
+# default_bootnode_domain: "boot-{{ default_network }}.rotko.net"
+default_bootnode_domain: "dot14.rotko.net"
 
 default_bootnode_p2p_port: "{{ default_p2p_port + 500 }}"
 default_bootnode_p2p_port_ws: "{{ default_p2p_port_ws + 500 }}"

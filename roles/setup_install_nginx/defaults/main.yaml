@@ -1,7 +1,7 @@
 ---
 # Certbot configuration
 default_certificate_email: hq@rotko.net
-default_public_dns: "{{ host_name }}"
+default_domain: "{{ host_name }}"
 # Cloudflare configuration
 # Note: Sensitive data like API tokens and Zone IDs should be in vault
 # cloudflare_zone_id: "{{ vault_cloudflare_zone_id }}"
@@ -26,5 +26,5 @@ nginx_config_dirs:
   - sites-available
   - enabled
 
-nginx_site_config: "/etc/nginx/sites-available/{{ default_public_dns }}"
+nginx_site_config: "/etc/nginx/sites-available/{{ default_domain }}"
 psk_file_path: /etc/nginx/psk.txt

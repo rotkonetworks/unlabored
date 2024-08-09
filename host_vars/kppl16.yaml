@@ -9,7 +9,7 @@ role: "cumulus"
 pinned_service: True
 
 default_telemetry_name: "Rotko Networks - {{ host_name.split('.')[0] }} {{ default_node_type | capitalize }}"
-default_public_dns: "{{ host_name }}"
+default_domain: "{{ host_name }}"
 default_network: "people-kusama"
 default_chain_spec: "{{ default_base_path }}/people-kusama.json"
 default_chain_spec_dl_url: "https://raw.githubusercontent.com/paritytech/polkadot-sdk/master/cumulus/parachains/chain-specs/people-kusama.json"

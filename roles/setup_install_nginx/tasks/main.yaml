@@ -51,12 +51,16 @@
   become: true
   #  no_log: true
 
-- name: Check if certificate already exists
+- name: Check if certificates already exist
   ansible.builtin.stat:
-    path: "/etc/letsencrypt/live/{{ default_public_dns }}/fullchain.pem"
-  register: cert_file
+    path: "/etc/letsencrypt/live/{{ item }}/fullchain.pem"
+  register: cert_files
+  loop:
+    - "{{ default_domain }}"
+    - "{{ default_bootnode_domain | default(omit) }}"
+  when: default_bootnode_domain is defined
 
-- name: Obtain certificate using DNS-01 challenge
+- name: Obtain certificates using DNS-01 challenge
   ansible.builtin.command:
     cmd: >
       certbot certonly
@@ -67,10 +71,13 @@
       --authenticator dns-cloudflare
       --dns-cloudflare-credentials /root/.secrets/cloudflare.ini
       --dns-cloudflare-propagation-seconds 60
-      -d "{{ default_public_dns }}"
-  when: not cert_file.stat.exists
-  register: certbot_result
-  changed_when: "'Congratulations' in certbot_result.stdout"
+      -d "{{ item.item }}"
+  when: 
+    - not item.stat.exists
+    - item.item is defined
+  loop: "{{ cert_files.results }}"
+  register: certbot_results
+  changed_when: "'Congratulations' in item.stdout"
   become: true
   #  no_log: true
 
@@ -82,21 +89,39 @@
     user: root
   become: true
 
-- name: Apply HTTPS configuration to NGINX
+- name: Apply HTTPS configuration to NGINX for endpoint
   ansible.builtin.template:
     src: "https-{{ default_node_type }}.conf.j2"
-    dest: "/etc/nginx/sites-available/{{ default_public_dns }}"
+    dest: "/etc/nginx/sites-available/{{ default_domain }}"
     mode: '0644'
   notify: Reload nginx
   become: true
 
-- name: Enable NGINX configuration
+- name: Apply HTTPS configuration to NGINX for bootnode
+  ansible.builtin.template:
+    src: "https-bootnode.conf.j2"
+    dest: "/etc/nginx/sites-available/{{ default_bootnode_domain }}"
+    mode: '0644'
+  notify: Reload nginx
+  become: true
+  when: default_bootnode_domain is defined
+
+- name: Enable NGINX configuration for endpoint
   ansible.builtin.file:
-    src: "/etc/nginx/sites-available/{{ default_public_dns }}"
-    dest: "/etc/nginx/sites-enabled/{{ default_public_dns }}"
+    src: "/etc/nginx/sites-available/{{ default_domain }}"
+    dest: "/etc/nginx/sites-enabled/{{ default_domain }}"
     state: link
   notify: Reload nginx
   become: true
+
+- name: Enable NGINX configuration for bootnode
+  ansible.builtin.file:
+    src: "/etc/nginx/sites-available/{{ default_bootnode_domain }}"
+    dest: "/etc/nginx/sites-enabled/{{ default_bootnode_domain }}"
+    state: link
+  notify: Reload nginx
+  become: true
+  when: default_bootnode_domain is defined
 
 - name: Ensure NGINX is started and enabled
   ansible.builtin.service:

@@ -1,11 +1,11 @@
 server {
     listen {{ default_p2p_port_wss }} ssl http2;
     listen [::]:{{ default_p2p_port_wss }} ssl http2;
-    server_name {{ default_public_dns }};
+    server_name {{ default_domain }};
 
     # SSL/TLS settings
-    ssl_certificate /etc/letsencrypt/live/{{ default_public_dns }}/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/{{ default_public_dns }}/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/{{ default_domain }}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/{{ default_domain }}/privkey.pem;
 
     # SSL protocols and ciphers
     ssl_protocols TLSv1.3;
@@ -38,11 +38,11 @@ server {
 server {
     listen {{ default_secure_rpc_port }} ssl http2;
     listen [::]:{{ default_secure_rpc_port }} ssl http2;
-    server_name {{ default_public_dns }};
+    server_name {{ default_domain }};
 
     # SSL/TLS settings
-    ssl_certificate /etc/letsencrypt/live/{{ default_public_dns }}/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/{{ default_public_dns }}/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/{{ default_domain }}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/{{ default_domain }}/privkey.pem;
 
     # SSL protocols and ciphers
     ssl_protocols TLSv1.3;

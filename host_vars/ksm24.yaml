@@ -9,7 +9,7 @@ role: "polkadot"
 pinned_service: False
 
 default_telemetry_name: "Rotko Networks - {{ host_name.split('.')[0] }} {{ default_node_type | capitalize }}"
-default_public_dns: "{{ host_name }}"
+default_domain: "{{ host_name }}"
 default_ibp_repository: "git@github.com:GATOTECH-LTD/ibp-ssl"
 default_dotters_repository: "git@github.com:senseless/dotters-ssl"
 default_network: kusama
