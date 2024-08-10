@@ -22,3 +22,9 @@ default_rpc_port: 9673
 default_secure_rpc_port: 42673
 default_prom_port: 7673
 zabbix_ext_port: 10673
+
+# default_bootnode_domain: "boot-{{ default_network }}.rotko.net"
+default_bootnode_domain: "pch16.rotko.net"
+default_bootnode_p2p_port: "{{ default_p2p_port + 10500 }}"
+default_bootnode_p2p_port_ws: "{{ default_p2p_port_ws + 10500 }}"
+default_bootnode_p2p_port_wss: "{{ default_p2p_port_wss + 10500 }}"

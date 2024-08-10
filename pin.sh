@@ -1,69 +1,155 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# Define the lists of hosts with updated entries
-polkadot_primary_hosts=(
-	"pso06" "pso07" "dot14" "pso16" "pso24" "pso26" "wnd14" "wnd23"
-	"ksm04" "ksm14" "dot23" "ksm24"
-)
-cumulus_primary_hosts=(
-	"kbr13" "kbr24" "mine24" "mine26" "mint14" "mint23" "pbr13"
-	"pbr23" "pbr26" "pch13" "pch23" "wbr13" "wbr23"
-	"rpc-asset-hub-paseo-02" "rpc-bridgehub-paseo-02"
-	"wch13" "wch23" "wmint14" "wmint23" "wmint26" "wbr13" "wbr23"
-	"wch13" "wch23" "wmint14" "wmint23"
-)
+set -euo pipefail
+IFS=$'\n\t'
 
-polkadot_secondary_hosts=(
-	"dot01" "dot02" "dot26" "ksm01" "ksm02" "ksm26" "wnd26"
-)
+# Globals
+readonly SCRIPT_NAME="${0##*/}"
+readonly INVENTORY_FILE="inventory"
 
-cumulus_secondary_hosts=(
-	"kbr26" "mine14" "mint26" "mint27" "pch26"
-	"boot-asset-hub-paseo" "rpc-asset-hub-paseo-01"
-	"wcore16" "wcore26" "wcore27" "wmint26" "wppl16"
-	"wppl26" "wppl27" "wbr26" "wch26" "wcore16" "wcore26" "wcore27"
-	"wmint26" "wppl16" "wppl26" "wppl27"
-)
+# Error codes
+readonly E_ARGS=1
+readonly E_INVENTORY=2
+readonly E_EXTRACTION=3
+readonly E_CATEGORIZATION=4
+readonly E_PIN=5
 
-# Function to pin a single host
+# Log levels
+readonly LOG_ERROR="ERROR"
+readonly LOG_WARN="WARN"
+readonly LOG_INFO="INFO"
+readonly LOG_DEBUG="DEBUG"
+
+log() {
+	local level="$1"
+	shift
+	echo "[$(date +'%Y-%m-%d %H:%M:%S')] [${level}] $*" >&2
+}
+
+die() {
+	log "${LOG_ERROR}" "$@"
+	exit "${E_ARGS}"
+}
+
+safe_source() {
+	[[ -r "$1" ]] || die "Cannot read file: $1"
+	# shellcheck source=/dev/null
+	source "$1"
+}
+
+validate_inventory() {
+	[[ -r "${INVENTORY_FILE}" ]] || die "Cannot read inventory file: ${INVENTORY_FILE}"
+	grep -qE '^\[(polkadot|cumulus)\]$' "${INVENTORY_FILE}" || die "Invalid inventory file format"
+}
+
+extract_hosts() {
+	local group="$1"
+	local result
+	result=$(awk -v group="[$group]" '
+        $0 == group {f=1; next}
+        /^\[/ {f=0}
+        f && NF && !/^[[:space:]]*#/ {gsub(/[[:space:]]/, ""); print}
+    ' "${INVENTORY_FILE}")
+	[[ -n "${result}" ]] || die "No hosts found for group: ${group}"
+	echo "${result}"
+}
+
+categorize_hosts() {
+	local -n hosts=$1
+	local -n primary=$2
+	local -n secondary=$3
+
+	for host in "${hosts[@]}"; do
+		if [[ ! "${host}" =~ ^[a-zA-Z0-9_-]+$ ]]; then
+			log "${LOG_WARN}" "Invalid hostname: ${host}"
+			continue
+		fi
+		local last_digit
+		last_digit=$(echo "${host}" | grep -oE '[0-9]$' || echo "")
+		if [[ -n "${last_digit}" ]]; then
+			if ((last_digit % 2 == 1)); then
+				primary+=("${host}")
+			else
+				secondary+=("${host}")
+			fi
+		else
+			log "${LOG_WARN}" "No digit found in hostname: ${host}"
+			secondary+=("${host}")
+		fi
+	done
+}
+
 pin_host() {
 	local host="$1"
-	echo "pinning ${host}..."
-	inv pin "${host}"
+	log "${LOG_INFO}" "Pinning ${host}..."
+	if ! inv pin "${host}"; then
+		log "${LOG_ERROR}" "Failed to pin ${host}"
+		return 1
+	fi
 }
 
-# Function to concurrently pin hosts
 pin_hosts_concurrently() {
-	for host in "${@}"; do
+	local -n hosts=$1
+	local pids=()
+	for host in "${hosts[@]}"; do
 		pin_host "${host}" &
+		pids+=($!)
 	done
-	wait # Wait for all background jobs to finish
+	for pid in "${pids[@]}"; do
+		if ! wait "${pid}"; then
+			log "${LOG_ERROR}" "A host pin operation failed"
+			return 1
+		fi
+	done
 }
 
-# Check for input argument
-if [ "$#" -ne 1 ]; then
-	echo "Usage: $0 <list_number>"
-	echo "1: polkadot primary, 2: polkadot secondary, 3: cumulus primary, 4: cumulus secondary"
-	exit 1
-fi
+main() {
+	if [[ "$#" -ne 1 ]]; then
+		die "Usage: ${SCRIPT_NAME} <list_number>
+1: polkadot primary (odd last digit)
+2: polkadot secondary (even last digit)
+3: cumulus primary (odd last digit)
+4: cumulus secondary (even last digit)"
+	fi
 
-# Process the input argument
-case "$1" in
-1)
-	pin_hosts_concurrently "${polkadot_primary_hosts[@]}"
-	;;
-2)
-	pin_hosts_concurrently "${polkadot_secondary_hosts[@]}"
-	;;
-3)
-	pin_hosts_concurrently "${cumulus_primary_hosts[@]}"
-	;;
-4)
-	pin_hosts_concurrently "${cumulus_secondary_hosts[@]}"
-	;;
-*)
-	echo "Invalid list number: $1"
-	echo "1: Unfailed Hosts, 2: Failed Hosts"
-	exit 2
-	;;
-esac
+	local list_number="$1"
+	validate_inventory
+
+	local polkadot_hosts cumulus_hosts
+	readarray -t polkadot_hosts < <(extract_hosts "polkadot")
+	readarray -t cumulus_hosts < <(extract_hosts "cumulus")
+
+	local polkadot_primary=() polkadot_secondary=() cumulus_primary=() cumulus_secondary=()
+	categorize_hosts polkadot_hosts polkadot_primary polkadot_secondary
+	categorize_hosts cumulus_hosts cumulus_primary cumulus_secondary
+
+	case "${list_number}" in
+	1)
+		log "${LOG_INFO}" "Pinning Polkadot primary hosts (odd last digit):"
+		printf '%s\n' "${polkadot_primary[@]}"
+		pin_hosts_concurrently polkadot_primary || die "Failed to pin some Polkadot primary hosts"
+		;;
+	2)
+		log "${LOG_INFO}" "Pinning Polkadot secondary hosts (even last digit):"
+		printf '%s\n' "${polkadot_secondary[@]}"
+		pin_hosts_concurrently polkadot_secondary || die "Failed to pin some Polkadot secondary hosts"
+		;;
+	3)
+		log "${LOG_INFO}" "Pinning Cumulus primary hosts (odd last digit):"
+		printf '%s\n' "${cumulus_primary[@]}"
+		pin_hosts_concurrently cumulus_primary || die "Failed to pin some Cumulus primary hosts"
+		;;
+	4)
+		log "${LOG_INFO}" "Pinning Cumulus secondary hosts (even last digit):"
+		printf '%s\n' "${cumulus_secondary[@]}"
+		pin_hosts_concurrently cumulus_secondary || die "Failed to pin some Cumulus secondary hosts"
+		;;
+	*)
+		die "Invalid list number: ${list_number}"
+		;;
+	esac
+
+	log "${LOG_INFO}" "Pin operation completed successfully"
+}
+
+main "$@"

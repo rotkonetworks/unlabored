@@ -67,9 +67,9 @@ frontend ssl-frontend
 #   acl statemine path_beg -i /statemine
 #   acl statemint path_beg -i /statemint
 #   acl encointerKusama path_beg -i /encointer-kusama
-#   acl bridgehubKusama path_beg -i /bridgehub-kusama
-#   acl bridgehubPolkadot path_beg -i /bridgehub-polkadot
-#   acl bridgehubWestend path_beg -i /bridgehub-westend
+#   acl bridge-hubKusama path_beg -i /bridge-hub-kusama
+#   acl bridge-hubPolkadot path_beg -i /bridge-hub-polkadot
+#   acl bridge-hubWestend path_beg -i /bridge-hub-westend
 #   acl collectivesWestend path_beg -i /collectives-westend
 #   acl collectivesPolkadot path_beg -i /collectives-polkadot
 
@@ -77,18 +77,18 @@ frontend ssl-frontend
    use_backend polkadot-backend if polkadot
 #   use_backend statemint-backend if statemint
 #   use_backend collectivesPolkadot-backend if collectivesPolkadot
-#   use_backend bridgehubPolkadot-backend if bridgehubPolkadot
+#   use_backend bridge-hubPolkadot-backend if bridge-hubPolkadot
    # Kusama
    use_backend kusama-backend if kusama
 #   use_backend statemine-backend if statemine
 #   use_backend encointerKusama-wss-backend if encointerKusama wss
 #   use_backend encointerKusama-rpc-backend if encointerKusama !wss
-#   use_backend bridgehubKusama-backend if bridgehubKusama
+#   use_backend bridge-hubKusama-backend if bridge-hubKusama
    # Westend
    use_backend westend-backend if westend
 #   use_backend westmint-backend if westmint
 #   use_backend collectivesWestend-backend if collectivesWestend
-#   use_backend bridgehubWestend-backend if bridgehubWestend
+#   use_backend bridge-hubWestend-backend if bridge-hubWestend
 
 ###
 # Polkadot Backend Configurations

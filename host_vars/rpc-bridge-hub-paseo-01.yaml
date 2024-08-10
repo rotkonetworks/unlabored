@@ -2,7 +2,7 @@
 ansible_host: "160.22.181.181"
 container_ip: "192.168.76.60"
 ansible_port: "2966"
-host_name: "rpc-bridgehub-paseo-01.rotko.net"
+host_name: "rpc-bridge-hub-paseo-01.rotko.net"
 host_timezone: "Asia/Bangkok"
 netif: '{"net0":"name=eth0,gw={{ default_nat_network_forward_cidr.split("/")[0] }},ip={{ default_host_ip }}/16,bridge={{ default_nat_device }}"}'
 role: "cumulus"
@@ -10,8 +10,8 @@ pinned_service: True
 
 default_telemetry_name: "Rotko Networks - {{ host_name.split('.')[0] }} {{ default_node_type | capitalize }}"
 default_domain: "{{ host_name }}"
-default_network: "bridgehub-paseo"
-default_chain_spec: "{{ default_base_path }}/bridgehub-paseo.raw.json"
+default_network: "bridge-hub-paseo"
+default_chain_spec: "{{ default_base_path }}/bridge-hub-paseo.raw.json"
 default_chain_spec_dl_url: "https://raw.githubusercontent.com/paseo-network/runtimes/main/chain-specs/bridge-hub-paseo.raw.json"
 default_relay_rpc: "ws://{{ hostvars['pso26']['container_ip'] }}:{{ hostvars['pso26']['default_rpc_port'] }}"
 default_relay_rpc_fallback: "ws://{{ hostvars['pso24']['container_ip'] }}:{{ hostvars['pso24']['default_rpc_port'] }}"

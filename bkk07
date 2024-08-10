@@ -44,7 +44,7 @@ kppl27
 wppl27
 rpc-asset-hub-paseo-02
 rpc-people-polkadot-02
-rpc-bridgehub-paseo-02
+rpc-bridge-hub-paseo-02
 
 [services]
 monitor

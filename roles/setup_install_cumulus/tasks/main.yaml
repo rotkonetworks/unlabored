@@ -34,7 +34,7 @@
 
 - name: Check if needs custom chain spec
   ansible.builtin.set_fact:
-    needs_custom_chain_spec: "{{ default_network in ['asset-hub-paseo', 'bridgehub-paseo'] }}"
+    needs_custom_chain_spec: "{{ default_network in ['asset-hub-paseo', 'bridge-hub-paseo'] }}"
 
 - name: Check if the local chain spec file exists
   stat:

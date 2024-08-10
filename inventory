@@ -75,10 +75,10 @@ wppl27
 mint27
 rpc-people-polkadot-01
 rpc-asset-hub-paseo-01
-rpc-bridgehub-paseo-01
+rpc-bridge-hub-paseo-01
 rpc-people-polkadot-02
 rpc-asset-hub-paseo-02
-rpc-bridgehub-paseo-02
+rpc-bridge-hub-paseo-02
 
 [encointer]
 enc14
