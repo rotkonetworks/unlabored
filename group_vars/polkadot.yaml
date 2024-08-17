@@ -7,8 +7,7 @@ default_client_version: polkadot-stable2407-1
 default_database: paritydb
 default_database_path: /opt/polkadot/chains
 default_download_base_url: https://github.com/paritytech/polkadot-sdk/releases/download/
-default_download_url: '{{ default_download_base_url }}{{ default_client_version
-  }}/polkadot'
+default_download_url: '{{ default_download_base_url }}{{ default_client_version }}/polkadot'
 default_download_url_execute: '{{ default_download_base_url }}{{ default_client_version
   }}/polkadot-execute-worker'
 default_download_url_prepare: '{{ default_download_base_url }}{{ default_client_version

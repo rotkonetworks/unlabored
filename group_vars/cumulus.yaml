@@ -5,8 +5,7 @@ default_client_version: polkadot-stable2407-1
 default_database: paritydb
 default_database_path: '{{ default_base_path }}/chains'
 default_download_base_url: https://github.com/paritytech/polkadot-sdk/releases/download/
-default_download_url: '{{ default_download_base_url }}{{ default_client_version
-  }}/polkadot-parachain'
+default_download_url: '{{ default_download_base_url }}{{ default_client_version }}/polkadot-parachain'
 default_group: '{{ service_users[''cumulus''] }}'
 default_log_level: info
 default_network: asset-hub-polkadot
