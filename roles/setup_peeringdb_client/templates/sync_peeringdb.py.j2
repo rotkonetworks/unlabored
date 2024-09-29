@@ -1,0 +1,8 @@
+from peeringdb import PeeringDB
+import yaml
+
+with open('{{ peeringdb_install_dir }}/peeringdb_config.yaml', 'r') as f:
+    config = yaml.safe_load(f)
+
+pdb = PeeringDB(conf=config)
+pdb.update_all()

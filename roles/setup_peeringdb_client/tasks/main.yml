@@ -1,0 +1,101 @@
+- name: Update and upgrade apt packages
+  become: true
+  apt:
+    upgrade: yes
+    update_cache: yes
+
+- name: Install required system packages
+  become: true
+  apt:
+    pkg:
+      - python3
+      - python3-pip
+      - python3-venv
+      - postgresql
+      - postgresql-contrib
+      - libpq-dev
+      - python3-psycopg2
+    state: present
+
+- name: Ensure PostgreSQL is started and enabled
+  systemd:
+    name: postgresql
+    state: started
+    enabled: yes
+
+- name: Create PostgreSQL database
+  become: true
+  become_user: postgres
+  postgresql_db:
+    name: "{{ peeringdb_db_name }}"
+    encoding: UTF-8
+    lc_collate: en_US.UTF-8
+    lc_ctype: en_US.UTF-8
+    template: template0
+
+- name: Create PostgreSQL user
+  become: true
+  become_user: postgres
+  postgresql_user:
+    name: "{{ peeringdb_db_user }}"
+    password: "{{ peeringdb_db_password }}"
+    role_attr_flags: CREATEDB
+
+- name: Grant privileges to user
+  become: true
+  become_user: postgres
+  postgresql_privs:
+    type: database
+    database: "{{ peeringdb_db_name }}"
+    roles: "{{ peeringdb_db_user }}"
+    privs: ALL
+
+- name: Create directory for PeeringDB client
+  file:
+    path: "{{ peeringdb_install_dir }}"
+    state: directory
+    mode: '0755'
+
+- name: Set up Python virtual environment
+  pip:
+    virtualenv: "{{ peeringdb_install_dir }}/venv"
+    virtualenv_command: python3 -m venv
+    name: 
+      - peeringdb
+      - django-peeringdb
+      - psycopg2-binary
+
+- name: Create PeeringDB configuration file
+  template:
+    src: peeringdb_config.yaml.j2
+    dest: "{{ peeringdb_install_dir }}/peeringdb_config.yaml"
+
+- name: Set environment variables
+  lineinfile:
+    path: /etc/environment
+    line: "{{ item }}"
+  loop:
+    - "PDB_SYNC_URL={{ peeringdb_sync_url }}"
+    - "PDB_SYNC_CACHE_URL={{ peeringdb_sync_cache_url }}"
+    - "PDB_SYNC_CACHE_DIR={{ peeringdb_sync_cache_dir }}"
+    - "PDB_SYNC_API_KEY={{ peeringdb_sync_api_key }}"
+    - "PDB_SYNC_STRIP_TZ=1"
+    - "PDB_SYNC_TIMEOUT={{ peeringdb_sync_timeout }}"
+    - "PDB_ORM_BACKEND=django_peeringdb"
+    - "PDB_ORM_DB_ENGINE=postgresql"
+    - "PDB_ORM_DB_NAME={{ peeringdb_db_name }}"
+    - "PDB_ORM_DB_HOST={{ peeringdb_db_host }}"
+    - "PDB_ORM_DB_PORT={{ peeringdb_db_port }}"
+    - "PDB_ORM_DB_USER={{ peeringdb_db_user }}"
+    - "PDB_ORM_DB_PASSWORD={{ peeringdb_db_password }}"
+    - "LOG_LEVEL=INFO"
+
+- name: Create script to sync PeeringDB data
+  template:
+    src: sync_peeringdb.py.j2
+    dest: "{{ peeringdb_install_dir }}/sync_peeringdb.py"
+
+- name: Create example query script
+  template:
+    src: query_example.py.j2
+    dest: "{{ peeringdb_install_dir }}/query_example.py"

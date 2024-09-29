@@ -1,0 +1,15 @@
+from peeringdb import PeeringDB
+import yaml
+
+with open('{{ peeringdb_install_dir }}/peeringdb_config.yaml', 'r') as f:
+    config = yaml.safe_load(f)
+
+pdb = PeeringDB(conf=config)
+
+# Example: Get all Internet Exchanges
+ixs = pdb.all('ix')
+print(f"Total IXs: {len(ixs)}")
+
+# Example: Get a specific network
+net = pdb.get('net', 1)
+print(f"Network: {net['name']}")

@@ -1,0 +1,11 @@
+peeringdb_install_dir: /opt/peeringdb-client
+peeringdb_db_name: peeringdb
+peeringdb_db_user: peeringdb
+peeringdb_db_password: change_this_password
+peeringdb_db_host: localhost
+peeringdb_db_port: 5432
+peeringdb_sync_url: https://www.peeringdb.com/api
+peeringdb_sync_cache_url: https://public.peeringdb.com
+peeringdb_sync_cache_dir: ~/.cache/peeringdb
+peeringdb_sync_api_key: your_api_key_here
+peeringdb_sync_timeout: 0

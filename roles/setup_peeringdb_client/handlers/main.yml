@@ -1,0 +1,4 @@
+- name: Sync PeeringDB data
+  command: "{{ peeringdb_install_dir }}/venv/bin/python {{ peeringdb_install_dir }}/sync_peeringdb.py"
+  args:
+    chdir: "{{ peeringdb_install_dir }}"

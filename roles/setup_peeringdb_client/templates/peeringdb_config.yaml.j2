@@ -1,0 +1,17 @@
+sync:
+  url: {{ peeringdb_sync_url }}
+  cache_url: {{ peeringdb_sync_cache_url }}
+  cache_dir: {{ peeringdb_sync_cache_dir }}
+  api_key: {{ peeringdb_sync_api_key }}
+  strip_tz: true
+  timeout: {{ peeringdb_sync_timeout }}
+
+orm:
+  backend: django_peeringdb
+  database:
+    engine: postgresql
+    name: {{ peeringdb_db_name }}
+    host: {{ peeringdb_db_host }}
+    port: {{ peeringdb_db_port }}
+    user: {{ peeringdb_db_user }}
+    password: {{ peeringdb_db_password }}
