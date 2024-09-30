@@ -1,117 +1,101 @@
 ---
-- name: Prepare domain list
-  set_fact:
-    domains_to_register: >
-      {{
-        ([default_domain] if default_domain is defined and default_domain | length > 0 else []) +
-        ([default_bootnode_domain] if default_bootnode_domain is defined and default_bootnode_domain | length > 0 else [])
-      }}
-
-- name: Register domain if missing
-  uri:
-    url: "https://api.cloudflare.com/client/v4/zones/{{ cloudflare_zone_id }}/dns_records"
-    method: POST
-    headers:
-      Authorization: "Bearer {{ cloudflare_api_token }}"
-      Content-Type: "application/json"
-    body_format: json
-    body:
-      type: "A"
-      name: "{{ item }}"
-      content: "{{ ansible_host }}"
-      ttl: 1
-      proxied: false
-  loop: "{{ domains_to_register }}"
-  register: domain_registration
-  changed_when: domain_registration.status == 200
-  failed_when:
-    - domain_registration.status != 200
-    - "'already exists' not in (domain_registration.json.errors[0].message | default(''))"
-  when: domains_to_register | length > 0
-
-- name: Warning if no domains to register
-  debug:
-    msg: "No valid domains were provided for registration. Please check your default_domain and default_bootnode_domain variables."
-  when: domains_to_register | length == 0
-
 - name: Ensure required packages are installed
   ansible.builtin.apt:
     name:
-      - nginx
+      - certbot
+      - python3-certbot-dns-cloudflare
     state: present
     update_cache: yes
   become: true
 
-- name: Ensure SSL directory exists
+- name: Ensure Certbot secrets directory exists
   ansible.builtin.file:
-    path: /etc/nginx/ssl
+    path: /root/.secrets/certbot
     state: directory
     mode: '0700'
     owner: root
     group: root
   become: true
 
-- name: Copy Cloudflare Origin Certificate
+- name: Ensure Cloudflare credentials file exists
   ansible.builtin.copy:
-    content: "{{ cloudflare_origin_certificate }}"
-    dest: "{{ cloudflare_origin_pem_path }}"
+    content: |
+      dns_cloudflare_api_token = {{ cloudflare_api_token }}
+    dest: /root/.secrets/certbot/cloudflare.ini
     mode: '0600'
     owner: root
     group: root
   become: true
 
-- name: Copy Cloudflare private key
-  ansible.builtin.copy:
-    content: "{{ cloudflare_origin_key }}"
-    dest: "{{ cloudflare_origin_key_path }}"
-    mode: '0600'
+- name: Calculate days until expiration
+  set_fact:
+    days_until_expiration: >
+      {{ ((cert_info.not_after | default('1970-01-01T00:00:00Z') | to_datetime('%Y%m%d%H%M%SZ')) - (ansible_date_time.iso8601 | to_datetime('%Y-%m-%dT%H:%M:%SZ'))).days }}
+  when: cert_info is defined and cert_info.not_after is defined
+
+- name: Renew Let's Encrypt certificate using DNS challenge
+  command: >
+    certbot certonly --dns-cloudflare
+    --dns-cloudflare-credentials /root/.secrets/certbot/cloudflare.ini
+    -d {{ default_domain }}
+    {% if default_bootnode_domain is defined and default_bootnode_domain | length > 0 %}
+    -d {{ default_bootnode_domain }}
+    {% endif %}
+    --non-interactive
+    --agree-tos
+    --email {{ default_certificate_email }}
+    --deploy-hook "systemctl reload nginx"
+  become: true
+  when: days_until_expiration is not defined or days_until_expiration | int < 30
+
+- name: Ensure NGINX SSL directory exists
+  ansible.builtin.file:
+    path: /etc/nginx/ssl
+    state: directory
+    mode: '0755'
     owner: root
     group: root
   become: true
 
-- name: Apply HTTPS configuration to NGINX for endpoint
-  ansible.builtin.template:
+- name: Symlink Let's Encrypt certificates to NGINX SSL directory
+  ansible.builtin.file:
+    src: "/etc/letsencrypt/live/{{ default_domain }}/{{ item }}"
+    dest: "/etc/nginx/ssl/{{ item }}"
+    state: link
+    force: yes
+  loop:
+    - fullchain.pem
+    - privkey.pem
+  become: true
+  notify: Reload nginx
+
+- name: Configure NGINX for HTTPS
+  template:
     src: "https-{{ default_node_type }}.conf.j2"
     dest: "/etc/nginx/sites-available/{{ default_domain }}"
     mode: '0644'
   notify: Reload nginx
   become: true
 
-# - name: Apply HTTPS configuration to NGINX for bootnode
-#   ansible.builtin.template:
-#     src: "https-bootnode.conf.j2"
-#     dest: "/etc/nginx/sites-available/{{ default_bootnode_domain }}"
-#     mode: '0644'
-#   notify: Reload nginx
-#   become: true
-#   when: default_bootnode_domain is defined
-
-- name: Enable NGINX configuration for endpoint
-  ansible.builtin.file:
+- name: Enable NGINX configuration
+  file:
     src: "/etc/nginx/sites-available/{{ default_domain }}"
     dest: "/etc/nginx/sites-enabled/{{ default_domain }}"
     state: link
   notify: Reload nginx
   become: true
 
-# - name: Enable NGINX configuration for bootnode
-#   ansible.builtin.file:
-#     src: "/etc/nginx/sites-available/{{ default_bootnode_domain }}"
-#     dest: "/etc/nginx/sites-enabled/{{ default_domain }}"
-#     state: link
-#   notify: Reload nginx
-#   become: true
-#   when: default_bootnode_domain is defined
-
-- name: Ensure NGINX is started and enabled
-  ansible.builtin.service:
-    name: nginx
-    state: started
-    enabled: yes
+- name: Set up Certbot auto-renewal
+  cron:
+    name: "Certbot renewal"
+    job: "certbot renew --quiet --dns-cloudflare --dns-cloudflare-credentials /root/.secrets/certbot/cloudflare.ini --deploy-hook 'systemctl reload nginx'"
+    minute: "0"
+    hour: "3"
+    weekday: "1"
   become: true
 
 - name: Check NGINX configuration
-  ansible.builtin.command: nginx -t
+  command: nginx -t
   register: nginx_config_check
   changed_when: false
   failed_when: nginx_config_check.rc != 0
