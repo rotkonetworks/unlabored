@@ -1,0 +1,44 @@
+---
+- name: Symlink Bifrost release
+  ansible.builtin.file:
+    src: "{{ default_base_path }}/bifrost-{{ default_client_version }}"
+    dest: "{{ default_base_path }}/bifrost"
+    force: True
+    state: link
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+
+- name: Symlink binary executable
+  ansible.builtin.file:
+    src: "{{ default_base_path }}/bifrost-{{ default_client_version }}"
+    dest: "/usr/local/bin/bifrost"
+    force: True
+    state: link
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+
+- name: Symlink Bifrost service to systemd
+  ansible.builtin.file:
+    src: "{{ default_base_path }}/bifrost.service"
+    dest: "/etc/systemd/system/bifrost.service"
+    state: link
+    force: True
+    owner: "root"
+    group: "root"
+    mode: "0644"
+
+- name: Stop Bifrost
+  ansible.builtin.systemd:
+    name: bifrost
+    state: stopped
+    enabled: True
+
+- name: Systemd daemon-reload
+  ansible.builtin.systemd:
+    daemon_reload: True
+
+- name: Start Bifrost
+  ansible.builtin.systemd:
+    name: Bifrost
+    state: started
+    enabled: True

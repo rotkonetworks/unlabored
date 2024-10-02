@@ -34,47 +34,47 @@
 
 - name: Copy HydraDX systemd service for specific node type
   ansible.builtin.template:
-    src: "{{ 'unique_' + default_node_type + '.service.j2' }}"
-    dest: "{{ default_base_path }}/unique.service"
+    src: "{{ 'bifrost_' + default_node_type + '.service.j2' }}"
+    dest: "{{ default_base_path }}/bifrost.service"
     owner: "{{ default_user }}"
     group: "{{ default_user }}"
     mode: "0640"
   when: default_node_type in ["collator", "bootnode", "endpoint"]
   notify:
-    - Symlink Unique service to systemd
-    - Stop Unique
+    - Symlink Bifrost service to systemd
+    - Stop Bifrost
     - Systemd daemon-reload
-    - Start Unique
+    - Start Bifrost
     - Add type of service fact
 
-- name: Flush handlers after Unique service copy
+- name: Flush handlers after Bifrost service copy
   ansible.builtin.meta: flush_handlers
 
-- name: Install Unique {{ default_client_version }}
+- name: Install Bifrost {{ default_client_version }}
   ansible.builtin.get_url:
     url: "{{ default_download_url }}"
-    dest: "{{ default_base_path }}/unique-{{ default_client_version }}"
+    dest: "{{ default_base_path }}/bifrost-{{ default_client_version }}"
     mode: "u+r+x"
     owner: "{{ default_user }}"
     group: "{{ default_user }}"
   register: download_result
   notify:
     - Add Service Pinned Status
-    - Add Unique service version
-    - Symlink Unique service to systemd
-    - Symlink Unique release
+    - Add Bifrost service version
+    - Symlink Bifrost service to systemd
+    - Symlink Bifrost release
     - Symlink binary executable
-    - Stop Unique
+    - Stop Bifrost
     - Systemd daemon-reload
-    - Start Unique
+    - Start Bifrost
   when:
     - ansible_local['noderole']['node']['pinned'] != "True"
     - ansible_local['noderole']['node']['version'] != default_client_version
 
-- name: Flush handlers after Unique install
+- name: Flush handlers after Bifrost install
   ansible.builtin.meta: flush_handlers
 
-- name: Ensure Unique service is running
+- name: Ensure Bifrost service is running
   ansible.builtin.systemd:
-    name: unique
+    name: bifrost
     state: started

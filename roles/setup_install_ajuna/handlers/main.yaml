@@ -1,0 +1,44 @@
+---
+- name: Symlink Ajuna release
+  ansible.builtin.file:
+    src: "{{ default_base_path }}/ajuna-{{ default_client_version }}"
+    dest: "{{ default_base_path }}/ajuna"
+    force: True
+    state: link
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+
+- name: Symlink binary executable
+  ansible.builtin.file:
+    src: "{{ default_base_path }}/ajuna-{{ default_client_version }}"
+    dest: "/usr/local/bin/ajuna"
+    force: True
+    state: link
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+
+- name: Symlink Ajuna service to systemd
+  ansible.builtin.file:
+    src: "{{ default_base_path }}/ajuna.service"
+    dest: "/etc/systemd/system/ajuna.service"
+    state: link
+    force: True
+    owner: "root"
+    group: "root"
+    mode: '0644'
+
+- name: Stop Ajuna
+  ansible.builtin.systemd:
+    name: ajuna
+    state: stopped
+    enabled: True
+
+- name: Systemd daemon-reload
+  ansible.builtin.systemd:
+    daemon_reload: True
+
+- name: Start Ajuna
+  ansible.builtin.systemd:
+    name: ajuna
+    state: started
+    enabled: True
