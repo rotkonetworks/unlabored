@@ -1,0 +1,14 @@
+# Standards: 0.2
+---
+galaxy_info:
+  author: Rotko Networks <hq@rotko.net>
+  description: Install or upgrade KILT parachain node
+  min_ansible_version: 3.0
+  platforms:
+    - name: Debian
+      versions:
+        - bullseye
+        - bookworm
+dependencies:
+  - setup_add_node_role
+  - setup_install_rust

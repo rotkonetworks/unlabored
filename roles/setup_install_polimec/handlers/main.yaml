@@ -1,0 +1,44 @@
+---
+- name: Symlink Polimec release
+  ansible.builtin.file:
+    src: "{{ default_base_path }}/polimec-{{ default_client_version }}"
+    dest: "{{ default_base_path }}/polimec"
+    force: True
+    state: link
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+
+- name: Symlink binary executable
+  ansible.builtin.file:
+    src: "{{ default_base_path }}/polimec-{{ default_client_version }}"
+    dest: "/usr/local/bin/polimec"
+    force: True
+    state: link
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+
+- name: Symlink Polimec service to systemd
+  ansible.builtin.file:
+    src: "{{ default_base_path }}/polimec.service"
+    dest: "/etc/systemd/system/polimec.service"
+    state: link
+    force: True
+    owner: "root"
+    group: "root"
+    mode: '0644'
+
+- name: Stop Polimec
+  ansible.builtin.systemd:
+    name: polimec
+    state: stopped
+    enabled: True
+
+- name: Systemd daemon-reload
+  ansible.builtin.systemd:
+    daemon_reload: True
+
+- name: Start Polimec
+  ansible.builtin.systemd:
+    name: polimec
+    state: started
+    enabled: True

@@ -1,0 +1,80 @@
+---
+- name: Ensure group {{ default_user }} exists
+  ansible.builtin.group:
+    name: "{{ default_user }}"
+    state: present
+    system: True
+
+- name: Ensure user {{ default_user }} exists without unnecessary privileges
+  ansible.builtin.user:
+    append: True
+    comment: kilt service user
+    create_home: False
+    group: "{{ default_user }}"
+    groups: []
+    home: "{{ default_base_path }}"
+    name: "{{ default_user }}"
+    shell: "/sbin/nologin"
+    state: present
+    system: True
+
+- name: Ensure user {{ default_user }} owns directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+    mode: '0750'
+    state: directory
+  loop:
+    - "{{ default_base_path }}"
+    - "{{ default_database_path }}"
+
+- name: Gather facts
+  ansible.builtin.setup:
+
+- name: Copy KILT systemd service for specific node type
+  ansible.builtin.template:
+    src: "{{ 'kilt_' + default_node_type + '.service.j2' }}"
+    dest: "{{ default_base_path }}/kilt.service"
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+    mode: '0640'
+  when: default_node_type in ["collator", "bootnode", "endpoint"]
+  notify:
+    - Symlink KILT service to systemd
+    - Stop KILT
+    - Systemd daemon-reload
+    - Start KILT
+    - Add type of service fact
+
+- name: Flush handlers after KILT service copy
+  ansible.builtin.meta: flush_handlers
+
+- name: Install KILT {{ default_client_version }}
+  ansible.builtin.get_url:
+    url: "{{ default_download_url }}"
+    dest: "{{ default_base_path }}/kilt-{{ default_client_version }}"
+    mode: "u+r+x"
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+  register: download_result
+  notify:
+    - Add Service Pinned Status
+    - Add KILT service version
+    - Symlink KILT service to systemd
+    - Symlink KILT release
+    - Symlink binary executable
+    - Stop KILT
+    - Systemd daemon-reload
+    - Start KILT
+  when:
+    - ansible_local['noderole']['node']['pinned'] != "True"
+    - ansible_local['noderole']['node']['version'] != default_client_version
+
+- name: Flush handlers after KILT install
+  ansible.builtin.meta: flush_handlers
+
+- name: Ensure KILT service is running
+  ansible.builtin.systemd:
+    name: kilt
+    state: started

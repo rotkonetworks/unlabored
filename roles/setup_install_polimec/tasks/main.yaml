@@ -1,0 +1,80 @@
+---
+- name: Ensure group {{ default_user }} exists
+  ansible.builtin.group:
+    name: "{{ default_user }}"
+    state: present
+    system: True
+
+- name: Ensure user {{ default_user }} exists without unnecessary privileges
+  ansible.builtin.user:
+    append: True
+    comment: polimec service user
+    create_home: False
+    group: "{{ default_user }}"
+    groups: []
+    home: "{{ default_base_path }}"
+    name: "{{ default_user }}"
+    shell: "/sbin/nologin"
+    state: present
+    system: True
+
+- name: Ensure user {{ default_user }} owns directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+    mode: '0750'
+    state: directory
+  loop:
+    - "{{ default_base_path }}"
+    - "{{ default_database_path }}"
+
+- name: Gather facts
+  ansible.builtin.setup:
+
+- name: Copy Polimec systemd service for specific node type
+  ansible.builtin.template:
+    src: "{{ 'polimec_' + default_node_type + '.service.j2' }}"
+    dest: "{{ default_base_path }}/polimec.service"
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+    mode: '0640'
+  when: default_node_type in ["collator", "bootnode", "endpoint"]
+  notify:
+    - Symlink Polimec service to systemd
+    - Stop Polimec
+    - Systemd daemon-reload
+    - Start Polimec
+    - Add type of service fact
+
+- name: Flush handlers after Polimec service copy
+  ansible.builtin.meta: flush_handlers
+
+- name: Install Polimec {{ default_client_version }}
+  ansible.builtin.get_url:
+    url: "{{ default_download_url }}"
+    dest: "{{ default_base_path }}/polimec-{{ default_client_version }}"
+    mode: "u+r+x"
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+  register: download_result
+  notify:
+    - Add Service Pinned Status
+    - Add Polimec service version
+    - Symlink Polimec service to systemd
+    - Symlink Polimec release
+    - Symlink binary executable
+    - Stop Polimec
+    - Systemd daemon-reload
+    - Start Polimec
+  when:
+    - ansible_local['noderole']['node']['pinned'] != "True"
+    - ansible_local['noderole']['node']['version'] != default_client_version
+
+- name: Flush handlers after Polimec install
+  ansible.builtin.meta: flush_handlers
+
+- name: Ensure Polimec service is running
+  ansible.builtin.systemd:
+    name: polimec
+    state: started

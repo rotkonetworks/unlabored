@@ -1,0 +1,44 @@
+---
+- name: Symlink KILT release
+  ansible.builtin.file:
+    src: "{{ default_base_path }}/kilt-{{ default_client_version }}"
+    dest: "{{ default_base_path }}/kilt"
+    force: True
+    state: link
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+
+- name: Symlink binary executable
+  ansible.builtin.file:
+    src: "{{ default_base_path }}/kilt-{{ default_client_version }}"
+    dest: "/usr/local/bin/kilt"
+    force: True
+    state: link
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+
+- name: Symlink KILT service to systemd
+  ansible.builtin.file:
+    src: "{{ default_base_path }}/kilt.service"
+    dest: "/etc/systemd/system/kilt.service"
+    state: link
+    force: True
+    owner: "root"
+    group: "root"
+    mode: '0644'
+
+- name: Stop KILT
+  ansible.builtin.systemd:
+    name: kilt
+    state: stopped
+    enabled: True
+
+- name: Systemd daemon-reload
+  ansible.builtin.systemd:
+    daemon_reload: True
+
+- name: Start KILT
+  ansible.builtin.systemd:
+    name: kilt
+    state: started
+    enabled: True
