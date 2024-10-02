@@ -1,0 +1,44 @@
+---
+- name: Symlink Unique release
+  ansible.builtin.file:
+    src: "{{ default_base_path }}/unique-{{ default_client_version }}"
+    dest: "{{ default_base_path }}/unique"
+    force: True
+    state: link
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+
+- name: Symlink binary executable
+  ansible.builtin.file:
+    src: "{{ default_base_path }}/unique-{{ default_client_version }}"
+    dest: "/usr/local/bin/unique"
+    force: True
+    state: link
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+
+- name: Symlink Unique service to systemd
+  ansible.builtin.file:
+    src: "{{ default_base_path }}/unique.service"
+    dest: "/etc/systemd/system/unique.service"
+    state: link
+    force: True
+    owner: "root"
+    group: "root"
+    mode: "0644"
+
+- name: Stop Unique
+  ansible.builtin.systemd:
+    name: unique
+    state: stopped
+    enabled: True
+
+- name: Systemd daemon-reload
+  ansible.builtin.systemd:
+    daemon_reload: True
+
+- name: Start Unique
+  ansible.builtin.systemd:
+    name: Unique
+    state: started
+    enabled: True
