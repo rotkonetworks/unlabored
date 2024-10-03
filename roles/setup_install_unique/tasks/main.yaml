@@ -34,7 +34,7 @@
 
 - name: Copy Unique systemd service for specific node type
   ansible.builtin.template:
-    src: "{{ 'unique_' + default_node_type + '.service.j2' }}"
+    src: "{{ default_node_type + '.service.j2' }}"
     dest: "{{ default_base_path }}/unique.service"
     owner: "{{ default_user }}"
     group: "{{ default_user }}"

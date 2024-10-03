@@ -34,7 +34,7 @@
 
 - name: Copy Bifrost systemd service for specific node type
   ansible.builtin.template:
-    src: "{{ 'bifrost_' + default_node_type + '.service.j2' }}"
+    src: "{{ default_node_type + '.service.j2' }}"
     dest: "{{ default_base_path }}/bifrost.service"
     owner: "{{ default_user }}"
     group: "{{ default_user }}"

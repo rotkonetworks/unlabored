@@ -34,7 +34,7 @@
 
 - name: Copy KILT systemd service for specific node type
   ansible.builtin.template:
-    src: "{{ 'kilt_' + default_node_type + '.service.j2' }}"
+    src: "{{ default_node_type + '.service.j2' }}"
     dest: "{{ default_base_path }}/kilt.service"
     owner: "{{ default_user }}"
     group: "{{ default_user }}"
@@ -84,7 +84,7 @@
 
 - name: Install kilt {{ default_client_version }}
   ansible.builtin.copy:
-    src: "{{ default_base_path }}/kilt-node-{{ default_client_version }}//target/release/kilt-parachain"
+    src: "{{ default_base_path }}/kilt-node-{{ default_client_version }}/target/release/kilt-parachain"
     dest: "{{ default_base_path }}/kilt-{{ default_client_version }}"
     remote_src: True
     mode: "0744"

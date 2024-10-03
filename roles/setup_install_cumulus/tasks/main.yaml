@@ -23,7 +23,7 @@
     path: "{{ item }}"
     owner: "{{ default_user }}"
     group: "{{ default_user }}"
-    mode: '0750'
+    mode: "0750"
     state: directory
   loop:
     - "{{ default_base_path }}"
@@ -47,7 +47,7 @@
   ansible.builtin.get_url:
     url: "{{ default_chain_spec_dl_url }}"
     dest: "{{ default_chain_spec }}"
-    mode: '0644'
+    mode: "0644"
     timeout: 60
   when:
     - needs_custom_chain_spec
@@ -56,11 +56,11 @@
 
 - name: Copy Cumulus systemd service for specific node type
   ansible.builtin.template:
-    src: "{{ 'cumulus_' + default_node_type + '.service.j2' }}"
+    src: "{{ default_node_type + '.service.j2' }}"
     dest: "{{ default_base_path }}/cumulus.service"
     owner: "{{ default_user }}"
     group: "{{ default_user }}"
-    mode: '0640'
+    mode: "0640"
   when: default_node_type in ["collator", "bootnode", "endpoint"]
   notify:
     - Symlink Cumulus service to systemd
