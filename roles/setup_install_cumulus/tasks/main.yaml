@@ -37,7 +37,7 @@
     needs_custom_chain_spec: "{{ default_network in ['asset-hub-paseo', 'bridge-hub-paseo'] }}"
 
 - name: Check if the local chain spec file exists
-  stat:
+  ansible.builtin.stat:
     path: "{{ default_chain_spec }}"
   register: local_chain_spec
   when: needs_custom_chain_spec
