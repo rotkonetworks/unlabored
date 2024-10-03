@@ -1,10 +1,10 @@
 # Standards: 0.2
 ---
-- name: HydraDX installation
-  hosts: hydradx
+- name: Hydration installation
+  hosts: hydration
   gather_facts: True
   roles:
     - setup_add_node_role
     - setup_install_rust
-    - setup_install_hydradx
+    - setup_install_hydration
     - setup_install_nginx

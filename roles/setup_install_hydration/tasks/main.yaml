@@ -8,7 +8,7 @@
 - name: Ensure user {{ default_user }} exists without unnecessary privileges
   ansible.builtin.user:
     append: True
-    comment: hydradx service user
+    comment: hydration service user
     create_home: False
     group: "{{ default_user }}"
     groups: []
@@ -32,49 +32,49 @@
 - name: Gather facts
   ansible.builtin.setup:
 
-- name: Copy HydraDX systemd service for specific node type
+- name: Copy Hydration systemd service for specific node type
   ansible.builtin.template:
-    src: "{{ 'hydradx_' + default_node_type + '.service.j2' }}"
-    dest: "{{ default_base_path }}/hydradx.service"
+    src: "{{ 'hydration_' + default_node_type + '.service.j2' }}"
+    dest: "{{ default_base_path }}/hydration.service"
     owner: "{{ default_user }}"
     group: "{{ default_user }}"
     mode: '0640'
   when: default_node_type in ["collator", "bootnode", "endpoint"]
   notify:
-    - Symlink HydraDX service to systemd
-    - Stop HydraDX
+    - Symlink Hydration service to systemd
+    - Stop Hydration
     - Systemd daemon-reload
-    - Start HydraDX
+    - Start Hydration
     - Add type of service fact
 
-- name: Flush handlers after HydraDX service copy
+- name: Flush handlers after Hydration service copy
   ansible.builtin.meta: flush_handlers
 
-- name: Install HydraDX {{ default_client_version }}
+- name: Install Hydration {{ default_client_version }}
   ansible.builtin.get_url:
     url: "{{ default_download_url }}"
-    dest: "{{ default_base_path }}/hydradx-{{ default_client_version }}"
+    dest: "{{ default_base_path }}/hydration-{{ default_client_version }}"
     mode: "u+r+x"
     owner: "{{ default_user }}"
     group: "{{ default_user }}"
   register: download_result
   notify:
     - Add Service Pinned Status
-    - Add HydraDX service version
-    - Symlink HydraDX service to systemd
-    - Symlink HydraDX release
+    - Add Hydration service version
+    - Symlink Hydration service to systemd
+    - Symlink Hydration release
     - Symlink binary executable
-    - Stop HydraDX
+    - Stop Hydration
     - Systemd daemon-reload
-    - Start HydraDX
+    - Start Hydration
   when:
     - ansible_local['noderole']['node']['pinned'] != "True"
     - ansible_local['noderole']['node']['version'] != default_client_version
 
-- name: Flush handlers after HydraDX install
+- name: Flush handlers after Hydration install
   ansible.builtin.meta: flush_handlers
 
-- name: Ensure HydraDX service is running
+- name: Ensure Hydration service is running
   ansible.builtin.systemd:
-    name: hydradx
+    name: hydration
     state: started

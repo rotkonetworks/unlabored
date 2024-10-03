@@ -9,7 +9,7 @@ routers
 
 [proxmox_nodes:children]
 polkadot
-hydradx
+hydration
 cumulus
 
 [proxmox_vms:children]
@@ -26,7 +26,7 @@ talosctl0701
 [routers]
 bkk50
 
-[hydradx]
+[hydration]
 hdx27
 
 [polkadot]

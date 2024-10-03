@@ -126,7 +126,7 @@
     mode: '0644'
   when: role == "erigon"
 
-- name: Add HydraDX service version
+- name: Add Hydration service version
   community.general.ini_file:
     create: True
     no_extra_spaces: True
@@ -138,7 +138,7 @@
     owner: root
     group: root
     mode: '0644'
-  when: role == "hydradx"
+  when: role == "hydration"
 
 - name: Add Reth service version
   community.general.ini_file:

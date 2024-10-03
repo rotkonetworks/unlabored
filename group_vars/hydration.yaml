@@ -1,14 +1,14 @@
 ---
-default_base_path: /opt/hydradx
+default_base_path: /opt/hydration
 default_client_version: v28.0.0
 default_database: paritydb
 default_database_path: '{{ default_base_path }}/chains'
-default_download_base_url: https://github.com/galacticcouncil/HydraDX-node/releases/download/
+default_download_base_url: https://github.com/galacticcouncil/Hydration-node/releases/download/
 default_download_url: '{{ default_download_base_url }}{{
-  default_client_version }}/hydradx'
-default_group: '{{ service_users[''hydradx''] }}'
+  default_client_version }}/hydration'
+default_group: '{{ service_users[''hydration''] }}'
 default_log_level: info
-default_network: hydradx
+default_network: hydration
 default_node_type: endpoint
 default_p2p_port: 33800
 default_p2p_port_ws: 34800
@@ -16,8 +16,8 @@ default_p2p_port_wss: 35800
 default_prom_port: 7800
 default_rpc_port: 9800
 default_secure_rpc_port: 42800
-default_service: hydradx
+default_service: hydration
 default_storage: '{{ default_base_path }}/chains'
 default_telemetry_url: wss://telemetry-backend.w3f.community/submit/ 1
-default_user: '{{ service_users[''hydradx''] }}'
+default_user: '{{ service_users[''hydration''] }}'
 zabbix_ext_port: 10800

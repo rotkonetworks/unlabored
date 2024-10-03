@@ -1,6 +1,6 @@
 ---
 - name: Manage and Backup Network ID Secret Key with genpeerid
-  hosts: polkadot, cumulus, encointer, hydradx
+  hosts: polkadot, cumulus, encointer, hydration
   gather_facts: true
   become: true
   vars:

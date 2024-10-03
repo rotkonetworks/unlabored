@@ -164,7 +164,7 @@ service_users:
   ethereum: "ethereum"
   encointer: "encointer"
   evmos: "evmos"
-  hydradx: "hydradx"
+  hydration: "hydration"
   kava: "kava"
   moonbeam: "moonbeam"
   polygon: "polygon"

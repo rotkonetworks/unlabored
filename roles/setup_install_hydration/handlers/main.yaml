@@ -1,8 +1,8 @@
 ---
-- name: Symlink HydraDX release
+- name: Symlink Hydration release
   ansible.builtin.file:
-    src: "{{ default_base_path }}/hydradx-{{ default_client_version }}"
-    dest: "{{ default_base_path }}/hydradx"
+    src: "{{ default_base_path }}/hydration-{{ default_client_version }}"
+    dest: "{{ default_base_path }}/hydration"
     force: True
     state: link
     owner: "{{ default_user }}"
@@ -10,26 +10,26 @@
 
 - name: Symlink binary executable
   ansible.builtin.file:
-    src: "{{ default_base_path }}/hydradx-{{ default_client_version }}"
-    dest: "/usr/local/bin/hydradx"
+    src: "{{ default_base_path }}/hydration-{{ default_client_version }}"
+    dest: "/usr/local/bin/hydration"
     force: True
     state: link
     owner: "{{ default_user }}"
     group: "{{ default_user }}"
 
-- name: Symlink HydraDX service to systemd
+- name: Symlink Hydration service to systemd
   ansible.builtin.file:
-    src: "{{ default_base_path }}/hydradx.service"
-    dest: "/etc/systemd/system/hydradx.service"
+    src: "{{ default_base_path }}/hydration.service"
+    dest: "/etc/systemd/system/hydration.service"
     state: link
     force: True
     owner: "root"
     group: "root"
     mode: '0644'
 
-- name: Stop HydraDX
+- name: Stop Hydration
   ansible.builtin.systemd:
-    name: hydradx
+    name: hydration
     state: stopped
     enabled: True
 
@@ -37,8 +37,8 @@
   ansible.builtin.systemd:
     daemon_reload: True
 
-- name: Start HydraDX
+- name: Start Hydration
   ansible.builtin.systemd:
-    name: hydradx
+    name: hydration
     state: started
     enabled: True

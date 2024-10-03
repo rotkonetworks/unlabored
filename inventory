@@ -10,7 +10,7 @@ routers
 [proxmox_nodes:children]
 cumulus
 encointer
-hydradx
+hydration
 polkadot
 
 [proxmox_vms:children]
@@ -85,7 +85,7 @@ enc14
 enc24
 enc26
 
-[hydradx]
+[hydration]
 hdx26
 hdx27
 
