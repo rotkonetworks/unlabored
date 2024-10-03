@@ -28,13 +28,13 @@
   become: true
 
 - name: Calculate days until expiration
-  set_fact:
+  ansible.builtin.set_fact:
     days_until_expiration: >
       {{ ((cert_info.not_after | default('1970-01-01T00:00:00Z') | to_datetime('%Y%m%d%H%M%SZ')) - (ansible_date_time.iso8601 | to_datetime('%Y-%m-%dT%H:%M:%SZ'))).days }}
   when: cert_info is defined and cert_info.not_after is defined
 
 - name: Renew Let's Encrypt certificate using DNS challenge
-  command: >
+  ansible.builtin.command: >
     certbot certonly --dns-cloudflare
     --dns-cloudflare-credentials /root/.secrets/certbot/cloudflare.ini
     -d {{ default_domain }}
@@ -70,7 +70,7 @@
   notify: Reload nginx
 
 - name: Configure NGINX for HTTPS
-  template:
+  ansible.builtin.template:
     src: "https-{{ default_node_type }}.conf.j2"
     dest: "/etc/nginx/sites-available/{{ default_domain }}"
     mode: '0644'
@@ -78,7 +78,7 @@
   become: true
 
 - name: Enable NGINX configuration
-  file:
+  ansible.builtin.file:
     src: "/etc/nginx/sites-available/{{ default_domain }}"
     dest: "/etc/nginx/sites-enabled/{{ default_domain }}"
     state: link
@@ -86,7 +86,7 @@
   become: true
 
 - name: Set up Certbot auto-renewal
-  cron:
+  ansible.builtin.cron:
     name: "Certbot renewal"
     job: "certbot renew --quiet --dns-cloudflare --dns-cloudflare-credentials /root/.secrets/certbot/cloudflare.ini --deploy-hook 'systemctl reload nginx'"
     minute: "0"
@@ -95,7 +95,7 @@
   become: true
 
 - name: Check NGINX configuration
-  command: nginx -t
+  ansible.builtin.command: nginx -t
   register: nginx_config_check
   changed_when: false
   failed_when: nginx_config_check.rc != 0

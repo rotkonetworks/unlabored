@@ -8,7 +8,11 @@
       ansible.builtin.apt:
         update_cache: yes
 
-    - name: Upgrade openssh-server to latest version
+    - name: Perform dist-upgrade to ensure all packages, including OpenSSH, are up to date
+      ansible.builtin.apt:
+        upgrade: dist
+
+    - name: Ensure openssh-server is installed
       ansible.builtin.apt:
         name: openssh-server
-        state: latest
+        state: present

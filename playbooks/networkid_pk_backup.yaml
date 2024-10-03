@@ -17,6 +17,7 @@
       register: binary_stat
 
     - name: Ensure genpeerid is installed
+      when: not binary_stat.stat.exists
       block:
         - name: Create temporary directory for installation script
           ansible.builtin.tempfile:
@@ -47,7 +48,6 @@
           ansible.builtin.file:
             path: "{{ temp_dir.path }}"
             state: absent
-      when: not binary_stat.stat.exists
 
     - name: Ensure backup directory exists locally
       ansible.builtin.file:
