@@ -1,12 +1,14 @@
 ---
 - name: Update and upgrade apt packages
-  become: true
+  become: True
+  become_user: root
   ansible.builtin.apt:
     upgrade: dist
     update_cache: yes
 
 - name: Install required system packages
-  become: true
+  become: True
+  become_user: root
   ansible.builtin.apt:
     name:
       - python3
@@ -25,7 +27,7 @@
     enabled: yes
 
 - name: Create PostgreSQL database
-  become: true
+  become: True
   become_user: postgres
   community.postgresql.postgresql_db:
     name: "{{ peeringdb_db_name }}"
@@ -35,7 +37,7 @@
     template: template0
 
 - name: Create PostgreSQL user
-  become: true
+  become: True
   become_user: postgres
   community.postgresql.postgresql_user:
     name: "{{ peeringdb_db_user }}"
@@ -43,7 +45,7 @@
     role_attr_flags: CREATEDB
 
 - name: Grant privileges to user
-  become: true
+  become: True
   become_user: postgres
   community.postgresql.postgresql_privs:
     type: database

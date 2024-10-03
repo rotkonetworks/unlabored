@@ -2,7 +2,7 @@
 - name: Update sshd to latest version
   hosts: proxmox_nodes, proxmox_hosts
   gather_facts: False
-  become: true
+  become: True
   tasks:
     - name: Ensure package lists are up to date
       ansible.builtin.apt:

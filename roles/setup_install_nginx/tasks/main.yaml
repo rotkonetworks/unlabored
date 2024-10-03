@@ -6,7 +6,8 @@
       - python3-certbot-dns-cloudflare
     state: present
     update_cache: yes
-  become: true
+  become: True
+  become_user: root
 
 - name: Ensure Certbot secrets directory exists
   ansible.builtin.file:
@@ -15,7 +16,8 @@
     mode: '0700'
     owner: root
     group: root
-  become: true
+  become: True
+  become_user: root
 
 - name: Ensure Cloudflare credentials file exists
   ansible.builtin.copy:
@@ -25,7 +27,8 @@
     mode: '0600'
     owner: root
     group: root
-  become: true
+  become: True
+  become_user: root
 
 - name: Calculate days until expiration
   ansible.builtin.set_fact:
@@ -45,7 +48,8 @@
     --agree-tos
     --email {{ default_certificate_email }}
     --deploy-hook "systemctl reload nginx"
-  become: true
+  become: True
+  become_user: root
   when: days_until_expiration is not defined or days_until_expiration | int < 30
 
 - name: Ensure NGINX SSL directory exists
@@ -55,7 +59,8 @@
     mode: '0755'
     owner: root
     group: root
-  become: true
+  become: True
+  become_user: root
 
 - name: Symlink Let's Encrypt certificates to NGINX SSL directory
   ansible.builtin.file:
@@ -66,7 +71,8 @@
   loop:
     - fullchain.pem
     - privkey.pem
-  become: true
+  become: True
+  become_user: root
   notify: Reload nginx
 
 - name: Configure NGINX for HTTPS
@@ -75,7 +81,8 @@
     dest: "/etc/nginx/sites-available/{{ default_domain }}"
     mode: '0644'
   notify: Reload nginx
-  become: true
+  become: True
+  become_user: root
 
 - name: Enable NGINX configuration
   ansible.builtin.file:
@@ -83,7 +90,8 @@
     dest: "/etc/nginx/sites-enabled/{{ default_domain }}"
     state: link
   notify: Reload nginx
-  become: true
+  become: True
+  become_user: root
 
 - name: Set up Certbot auto-renewal
   ansible.builtin.cron:
@@ -92,11 +100,13 @@
     minute: "0"
     hour: "3"
     weekday: "1"
-  become: true
+  become: True
+  become_user: root
 
 - name: Check NGINX configuration
   ansible.builtin.command: nginx -t
   register: nginx_config_check
-  changed_when: false
+  changed_when: False
   failed_when: nginx_config_check.rc != 0
-  become: true
+  become: True
+  become_user: root
