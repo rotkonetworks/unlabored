@@ -32,7 +32,7 @@
 - name: Gather facts
   ansible.builtin.setup:
 
-- name: Copy Polimec systemd service for specific node type
+- name: Copy Bifrost systemd service for specific node type
   ansible.builtin.template:
     src: "{{ 'bifrost_' + default_node_type + '.service.j2' }}"
     dest: "{{ default_base_path }}/bifrost.service"

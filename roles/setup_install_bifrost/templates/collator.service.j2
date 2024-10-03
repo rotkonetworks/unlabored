@@ -1,5 +1,5 @@
 [Unit]
-Description="{{ host_name.split('.')[0] }} Collator - Polimec service"
+Description="{{ host_name.split('.')[0] }} Collator - Bifrost service"
 After=network.target
 StartLimitIntervalSec=0
 
@@ -13,7 +13,7 @@ SyslogIdentifier={{ default_service }}
 LimitNOFILE={{ default_max_open_files_in_service }}
 SyslogFacility=local7
 KillSignal=SIGHUP
-ExecStart={{ default_base_path }}/ajuna \
+ExecStart={{ default_base_path }}/bifrost \
      --base-path {{ default_base_path }} \
      --chain {{ default_network }} \
      --database {{ default_database }} \

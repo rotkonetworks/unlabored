@@ -8,7 +8,7 @@
 - name: Ensure user {{ default_user }} exists without unnecessary privileges
   ansible.builtin.user:
     append: True
-    comment: polimec service user
+    comment: unique service user
     create_home: False
     group: "{{ default_user }}"
     groups: []
@@ -32,7 +32,7 @@
 - name: Gather facts
   ansible.builtin.setup:
 
-- name: Copy Polimec systemd service for specific node type
+- name: Copy Unique systemd service for specific node type
   ansible.builtin.template:
     src: "{{ 'unique_' + default_node_type + '.service.j2' }}"
     dest: "{{ default_base_path }}/unique.service"
