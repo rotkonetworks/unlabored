@@ -1,8 +1,8 @@
 ---
 - name: Manage and Backup Network ID Secret Key with genpeerid
   hosts: polkadot, cumulus, encointer, hydration
-  gather_facts: true
-  become: true
+  gather_facts: True
+  become: True
   vars:
     install_dir: "/usr/local/bin"
     local_backup_dir: "/opt/backup"
@@ -28,7 +28,7 @@
           ansible.builtin.get_url:
             url: "{{ script_url }}"
             dest: "{{ temp_dir.path }}/{{ binary_name }}.sh"
-            mode: '0755'
+            mode: "0755"
 
         - name: Execute the installation script
           ansible.builtin.command:
@@ -53,7 +53,7 @@
       ansible.builtin.file:
         path: "{{ local_backup_dir }}"
         state: directory
-        mode: '0755'
+        mode: "0755"
       delegate_to: localhost
 
     - name: Locate secret_ed25519 files
