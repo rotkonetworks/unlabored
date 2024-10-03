@@ -12,16 +12,15 @@ default_download_url: "{{ default_download_base_url }}{{ default_client_version 
 default_group: "{{ service_users['kilt'] }}"
 default_log_level: info
 default_network: kilt
-#NOTE: i havent touch below this
 default_node_type: endpoint
-default_p2p_port: 33800
-default_p2p_port_ws: 34800
-default_p2p_port_wss: 35800
-default_prom_port: 7800
-default_rpc_port: 9800
-default_secure_rpc_port: 42800
 default_service: kilt
 default_storage: "{{ default_base_path }}/chains"
 default_telemetry_url: wss://telemetry-backend.w3f.community/submit/ 1
 default_user: "{{ service_users['kilt'] }}"
-zabbix_ext_port: 10800
+default_p2p_port: 33400
+default_p2p_port_ws: 34400
+default_p2p_port_wss: 35400
+default_prom_port: 7400
+default_rpc_port: 9400
+default_secure_rpc_port: 42400
+zabbix_ext_port: 10400
