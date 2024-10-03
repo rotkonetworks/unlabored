@@ -8,7 +8,7 @@
 - name: Ensure user {{ default_user }} exists without unnecessary privileges
   ansible.builtin.user:
     append: True
-    comment: hydradx service user
+    comment: bifrost service user
     create_home: False
     group: "{{ default_user }}"
     groups: []
@@ -32,7 +32,7 @@
 - name: Gather facts
   ansible.builtin.setup:
 
-- name: Copy HydraDX systemd service for specific node type
+- name: Copy Polimec systemd service for specific node type
   ansible.builtin.template:
     src: "{{ 'bifrost_' + default_node_type + '.service.j2' }}"
     dest: "{{ default_base_path }}/bifrost.service"

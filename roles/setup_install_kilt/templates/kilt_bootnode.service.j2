@@ -6,7 +6,7 @@ Wants=network-online.target
 [Service]
 User={{ default_user }}
 Group={{ default_group }}
-ExecStart={{ default_base_path }}/hydradx \
+ExecStart={{ default_base_path }}/kilt \
   --name "{{ default_telemetry_name }}" \
   --chain {{ default_network }} \
   --base-path {{ default_base_path }} \

@@ -1,5 +1,5 @@
 [Unit]
-Description="{{ host_name.split('.')[0] }} endpoint - HydraDX service"
+Description="{{ host_name.split('.')[0] }} endpoint - Polimec service"
 After=network-online.target
 Wants=network-online.target
 StartLimitIntervalSec=0
@@ -8,12 +8,12 @@ StartLimitIntervalSec=0
 Type=simple
 Restart=on-failure
 RestartSec=10
-SyslogIdentifier=hydradx-n1
+SyslogIdentifier=ajuna-n1
 SyslogFacility=local7
 KillSignal=SIGHUP
 User={{ default_user }}
 Group={{ default_group }}
-ExecStart={{ default_base_path }}/hydradx \
+ExecStart={{ default_base_path }}/ajuna \
   --name "{{ default_telemetry_name }}" \
   --chain {{ default_network }} \
   --base-path {{ default_base_path }} \
