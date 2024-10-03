@@ -32,9 +32,17 @@
 - name: Gather facts
   ansible.builtin.setup:
 
+- name: Ensure /etc/ansible/facts.d/ directory exists
+  ansible.builtin.file:
+    path: /etc/ansible/facts.d/
+    state: directory
+    mode: '0755'
+  become: True
+  become_user: root
+
 - name: Copy KILT systemd service for specific node type
   ansible.builtin.template:
-    src: "{{ default_node_type + '.service.j2' }}"
+    src: "{{ default_node_type }}.service.j2"
     dest: "{{ default_base_path }}/kilt.service"
     owner: "{{ default_user }}"
     group: "{{ default_user }}"
@@ -50,37 +58,51 @@
 - name: Flush handlers after KILT service copy
   ansible.builtin.meta: flush_handlers
 
-# WARN: please check this -al
+- name: Check if KILT binary exists
+  ansible.builtin.stat:
+    path: "{{ default_base_path }}/kilt-{{ default_client_version }}"
+  register: kilt_binary
+
 - name: Acquire kilt source
   ansible.builtin.get_url:
     url: "{{ default_download_url }}"
-    dest: "{{ default_src_path }}"
-    mode: "u+r+x"
+    dest: "{{ default_src_path }}/{{ default_client_version }}.tar.gz"
+    mode: "0644"
     owner: "{{ default_user }}"
     group: "{{ default_user }}"
-  register: download_result
   when:
     - ansible_local['noderole']['node']['pinned'] != "True"
     - ansible_local['noderole']['node']['version'] != default_client_version
+    - not kilt_binary.stat.exists
 
 - name: Extract source tarball
   ansible.builtin.unarchive:
     src: "{{ default_src_path }}/{{ default_client_version }}.tar.gz"
     dest: "{{ default_base_path }}"
-    remote_src: yes
+    remote_src: True
     owner: "{{ default_user }}"
     group: "{{ default_user }}"
+  when:
+    - ansible_local['noderole']['node']['pinned'] != "True"
+    - ansible_local['noderole']['node']['version'] != default_client_version
+    - not kilt_binary.stat.exists
 
-# NOTE: please look at this shell script
-- name: Build client from tar.gz
-  ansible.builtin.shell: |
-    source "{{ default_base_path }}/.profile"
-    cd "{{ default_base_path }}/kilt-node-{{ default_client_version }}"
-    cargo build --release
-  args:
-    executable: /bin/bash
-    become: True
-    become_user: "{{ default_user }}"
+- name: Build client from source
+  ansible.builtin.command:
+    cmd: cargo build --release
+    chdir: "{{ default_base_path }}/kilt-node-{{ default_client_version }}"
+  become: True
+  become_user: "{{ default_user }}"
+  environment:
+    PATH: "{{ ansible_env.PATH }}:/usr/local/cargo/bin"
+  when:
+    - ansible_local['noderole']['node']['pinned'] != "True"
+    - ansible_local['noderole']['node']['version'] != default_client_version
+    - not kilt_binary.stat.exists
+  register: build_result
+  changed_when: build_result.rc == 0
+  async: 3600
+  poll: 30
 
 - name: Install kilt {{ default_client_version }}
   ansible.builtin.copy:
@@ -90,41 +112,18 @@
     mode: "0744"
     group: "{{ default_user }}"
     owner: "{{ default_user }}"
-  become: True
-  become_user: "{{ default_user }}"
-  register: kilt_install
   when:
-    - ansible_local['noderole']['node']['pinned'] != "true"
-    - ansible_local['noderole']['node']['version'] != kava_version
-  #NOTE: yeah i dont know for the notify
+    - ansible_local['noderole']['node']['pinned'] != "True"
+    - ansible_local['noderole']['node']['version'] != default_client_version
+    - not kilt_binary.stat.exists
   notify:
     - Add KILT service version
     - Add Service Pinned Status
     - Symlink kilt release
+    - Symlink binary executable
     - Systemd daemon-reload
-    - Stop kilt
-    - Start kilt
-
-# - name: Install KILT {{ default_client_version }}
-#   ansible.builtin.get_url:
-#     url: "{{ default_download_url }}"
-#     dest: "{{ default_base_path }}/kilt-{{ default_client_version }}"
-#     mode: "u+r+x"
-#     owner: "{{ default_user }}"
-#     group: "{{ default_user }}"
-#   register: download_result
-#   notify:
-#     - Add Service Pinned Status
-#     - Add KILT service version
-#     - Symlink KILT service to systemd
-#     - Symlink KILT release
-#     - Symlink binary executable
-#     - Stop KILT
-#     - Systemd daemon-reload
-#     - Start KILT
-#   when:
-#     - ansible_local['noderole']['node']['pinned'] != "True"
-#     - ansible_local['noderole']['node']['version'] != default_client_version
+    - Stop KILT
+    - Start KILT
 
 - name: Flush handlers after KILT install
   ansible.builtin.meta: flush_handlers
@@ -133,3 +132,20 @@
   ansible.builtin.systemd:
     name: kilt
     state: started
+    enabled: True
+
+- name: Final service status check
+  ansible.builtin.systemd:
+    name: kilt
+  register: kilt_status
+
+- name: Report final service status
+  ansible.builtin.debug:
+    msg: "KILT service final status: {{ kilt_status.status.ActiveState }}"
+
+- name: Fail the play if service is not running
+  ansible.builtin.fail:
+    msg: "KILT service is not running after all attempts. Manual intervention may be required."
+  when:
+    - ansible_local['noderole']['node']['pinned'] != "True"
+    - kilt_status.status.ActiveState != 'active'

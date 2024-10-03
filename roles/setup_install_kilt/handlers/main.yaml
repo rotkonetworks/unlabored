@@ -1,5 +1,5 @@
 ---
-- name: Symlink KILT release
+- name: Symlink kilt release
   ansible.builtin.file:
     src: "{{ default_base_path }}/kilt-{{ default_client_version }}"
     dest: "{{ default_base_path }}/kilt"
@@ -42,3 +42,27 @@
     name: kilt
     state: started
     enabled: True
+
+- name: Add type of service fact
+  ansible.builtin.lineinfile:
+    path: /etc/ansible/facts.d/noderole.fact
+    regexp: '^type='
+    line: 'type={{ default_node_type }}'
+    create: True
+    mode: '0644'
+
+- name: Add KILT service version
+  ansible.builtin.lineinfile:
+    path: /etc/ansible/facts.d/noderole.fact
+    regexp: '^version='
+    line: 'version={{ default_client_version }}'
+    create: True
+    mode: '0644'
+
+- name: Add Service Pinned Status
+  ansible.builtin.lineinfile:
+    path: /etc/ansible/facts.d/noderole.fact
+    regexp: '^pinned='
+    line: 'pinned=False'
+    create: True
+    mode: '0644'
