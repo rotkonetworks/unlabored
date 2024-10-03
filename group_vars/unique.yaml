@@ -4,7 +4,7 @@ default_client_version: v10030070
 default_database: rocksdb
 default_database_path: "{{ default_base_path }}/chains"
 default_download_base_url: https://github.com/UniqueNetwork/unique-chain/releases/download/
-default_download_url: "{{ default_download_base_url }}{{default_client_version }}/unique-collator-{{ default_client_version }}"
+default_download_url: "{{ default_download_base_url }}{{ default_client_version }}/unique-collator-{{ default_client_version }}"
 default_group: "{{ service_users['unique'] }}"
 default_log_level: info
 default_network: unique
