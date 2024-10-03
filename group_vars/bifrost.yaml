@@ -1,7 +1,7 @@
 ---
 default_base_path: /opt/bifrost
 default_client_version: v1.3.0
-default_database: paritydb
+default_database: rocksdb
 default_database_path: "{{ default_base_path }}/chains"
 default_download_base_url: https://github.com/bifrost-platform/bifrost-node/releases/download/
 default_download_url: "{{ default_download_base_url }}{{ default_client_version }}/bifrost-node"

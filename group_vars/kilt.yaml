@@ -1,7 +1,7 @@
 ---
 default_base_path: /opt/kilt
 default_client_version: 1.14.3
-default_database: paritydb
+default_database: rocksdb
 default_database_path: "{{ default_base_path }}/chains"
 #TODO: we need to compile the provided wasm ourselves
 default_download_base_url: https://github.com/KILTprotocol/kilt-node/releases/download/
