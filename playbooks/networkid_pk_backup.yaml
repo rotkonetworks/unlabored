@@ -6,7 +6,7 @@
   vars:
     install_dir: "/usr/local/bin"
     local_backup_dir: "/opt/backup"
-    client_folder: "/opt" # ~/.local/share default for polkadot-sdk
+    client_folder: "/opt"  # ~/.local/share default for polkadot-sdk
     binary_name: "genpeerid"
     script_url: "https://raw.githubusercontent.com/rotkonetworks/genpeerid/master/scripts/install.sh"
 
@@ -81,7 +81,7 @@
           ansible.builtin.fetch:
             src: "{{ item.item.path }}"
             dest: "{{ local_backup_dir }}/{{ ansible_hostname }}_{{ lookup('pipe', 'date +%Y%m%d%H%M%S') }}_{{ peerid.results | map(attribute='stdout') | join('_') }}.secret_ed25519"
-            flat: yes
+            flat: True
           loop: "{{ peerid.results }}"
           loop_control:
             label: "{{ item.item.path }}"
