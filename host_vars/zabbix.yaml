@@ -1,5 +1,5 @@
 ---
 ansible_host: "65.21.107.112"
-ansible_port: "22780"
+ansible_port: 22780
 host_name: "monitor.rotko.net"
 host_timezone: "Europe/Helsinki"

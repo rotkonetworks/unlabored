@@ -3,7 +3,7 @@
 ansible_host: "95.216.235.72"
 container_ip: "192.168.72.101"
 default_nat_network_forward_cidr: 192.168.72.1/16
-ansible_port: "2101"
+ansible_port: 2101
 host_name: "ethereum01.ct.romenet.io"
 host_timezone: "Europe/Helsinki"
 netif: '{"net0":"name=eth0,gw={{ default_nat_network_forward_cidr.split("/")[0] }},ip={{ container_ip }}/16,bridge={{ default_nat_device }}"}'

@@ -1,6 +1,6 @@
 ---
 ansible_host: "172.104.169.64"
-ansible_port: "22"
-# ansible_port: "22780"
+ansible_port: 22
+# ansible_port: 22780
 host_name: "status.rotko.net"
 host_timezone: "Europe/Helsinki"

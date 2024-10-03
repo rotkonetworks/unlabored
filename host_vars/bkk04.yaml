@@ -2,7 +2,7 @@
 host_name: "bkk04.rotko.net"
 host_timezone: "Asia/Bangkok"
 ansible_host: "160.22.181.181"
-ansible_port: "22784"
+ansible_port: 22784
 role: "proxmox"
 
 kernel_modules:

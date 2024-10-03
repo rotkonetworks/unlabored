@@ -1,7 +1,7 @@
 ---
 ansible_host: "160.22.181.181"
 container_ip: "192.168.76.37" # 37 for coretime-westend
-ansible_port: "2936"
+ansible_port: 2936
 host_name: "wcore26.rotko.net"
 host_timezone: "Asia/Bangkok"
 netif: '{"net0":"name=eth0,gw={{ default_nat_network_forward_cidr.split("/")[0] }},ip={{ default_host_ip }}/16,bridge={{ default_nat_device }}"}'
