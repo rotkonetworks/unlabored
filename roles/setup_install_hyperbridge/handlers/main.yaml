@@ -1,8 +1,8 @@
 ---
-- name: Symlink Cumulus release
+- name: Symlink Hyperbridge release
   ansible.builtin.file:
-    src: "{{ default_base_path }}/cumulus-v{{ default_client_version }}"
-    dest: "{{ default_base_path }}/cumulus"
+    src: "{{ default_base_path }}/hyperbridge-v{{ default_client_version }}"
+    dest: "{{ default_base_path }}/hyperbridge"
     force: True
     state: link
     owner: "{{ default_user }}"
@@ -10,26 +10,26 @@
 
 - name: Symlink binary executable
   ansible.builtin.file:
-    src: "{{ default_base_path }}/cumulus-v{{ default_client_version }}"
-    dest: "/usr/local/bin/cumulus"
+    src: "{{ default_base_path }}/hyperbridge-v{{ default_client_version }}"
+    dest: "/usr/local/bin/hyperbridge"
     force: True
     state: link
     owner: "{{ default_user }}"
     group: "{{ default_user }}"
 
-- name: Symlink Cumulus service to systemd
+- name: Symlink Hyperbridge service to systemd
   ansible.builtin.file:
-    src: "{{ default_base_path }}/cumulus.service"
-    dest: "/etc/systemd/system/cumulus.service"
+    src: "{{ default_base_path }}/hyperbridge.service"
+    dest: "/etc/systemd/system/hyperbridge.service"
     state: link
     force: True
     owner: "root"
     group: "root"
     mode: '0644'
 
-- name: Stop Cumulus
+- name: Stop Hyperbridge
   ansible.builtin.systemd:
-    name: cumulus
+    name: hyperbridge
     state: stopped
     enabled: True
 
@@ -37,8 +37,8 @@
   ansible.builtin.systemd:
     daemon_reload: True
 
-- name: Start Cumulus
+- name: Start Hyperbridge
   ansible.builtin.systemd:
-    name: cumulus
+    name: hyperbridge
     state: started
     enabled: True
