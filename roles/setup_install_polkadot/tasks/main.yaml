@@ -103,10 +103,6 @@
     - ansible_local['noderole']['node']['pinned'] != "True"
     - ansible_local['noderole']['node']['version'] != default_client_version
 
-- name: Flush handlers
-  ansible.builtin.meta: flush_handlers
-  when: download_result.changed
-
 - name: Ensure Polkadot service is running
   ansible.builtin.systemd:
     name: polkadot

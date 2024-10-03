@@ -1,3 +1,4 @@
+---
 peeringdb_install_dir: /opt/peeringdb-client
 peeringdb_db_name: peeringdb
 peeringdb_db_user: peeringdb
