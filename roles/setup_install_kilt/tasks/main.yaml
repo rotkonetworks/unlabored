@@ -23,7 +23,7 @@
     path: "{{ item }}"
     owner: "{{ default_user }}"
     group: "{{ default_user }}"
-    mode: '0750'
+    mode: "0750"
     state: directory
   loop:
     - "{{ default_base_path }}"
@@ -38,7 +38,7 @@
     dest: "{{ default_base_path }}/kilt.service"
     owner: "{{ default_user }}"
     group: "{{ default_user }}"
-    mode: '0640'
+    mode: "0640"
   when: default_node_type in ["collator", "bootnode", "endpoint"]
   notify:
     - Symlink KILT service to systemd
@@ -50,26 +50,81 @@
 - name: Flush handlers after KILT service copy
   ansible.builtin.meta: flush_handlers
 
-- name: Install KILT {{ default_client_version }}
+# WARN: please check this -al
+- name: Acquire kilt source
   ansible.builtin.get_url:
     url: "{{ default_download_url }}"
-    dest: "{{ default_base_path }}/kilt-{{ default_client_version }}"
+    dest: "{{ default_src_path }}"
     mode: "u+r+x"
     owner: "{{ default_user }}"
     group: "{{ default_user }}"
   register: download_result
-  notify:
-    - Add Service Pinned Status
-    - Add KILT service version
-    - Symlink KILT service to systemd
-    - Symlink KILT release
-    - Symlink binary executable
-    - Stop KILT
-    - Systemd daemon-reload
-    - Start KILT
   when:
     - ansible_local['noderole']['node']['pinned'] != "True"
     - ansible_local['noderole']['node']['version'] != default_client_version
+
+- name: Extract source tarball
+  ansible.builtin.unarchive:
+    src: "{{ default_src_path }}/{{ default_client_version }}.tar.gz"
+    dest: "{{ default_base_path }}"
+    remote_src: yes
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+
+# NOTE: please look at this shell script
+- name: Build client from tar.gz
+  ansible.builtin.shell: |
+    source "{{ default_base_path }}/.profile"
+    cd "{{ default_base_path }}/kilt-node-{{ default_client_version }}"
+    cargo build --release
+  args:
+    executable: /bin/bash
+    become: True
+    become_user: "{{ default_user }}"
+
+- name: Install kilt {{ default_client_version }}
+  ansible.builtin.copy:
+    src: "{{ default_base_path }}/kilt-node-{{ default_client_version }}//target/release/kilt-parachain"
+    dest: "{{ default_base_path }}/kilt-{{ default_client_version }}"
+    remote_src: True
+    mode: "0744"
+    group: "{{ default_user }}"
+    owner: "{{ default_user }}"
+  become: True
+  become_user: "{{ default_user }}"
+  register: kilt_install
+  when:
+    - ansible_local['noderole']['node']['pinned'] != "true"
+    - ansible_local['noderole']['node']['version'] != kava_version
+  #NOTE: yeah i dont know for the notify
+  notify:
+    - Add KILT service version
+    - Add Service Pinned Status
+    - Symlink kilt release
+    - Systemd daemon-reload
+    - Stop kilt
+    - Start kilt
+
+# - name: Install KILT {{ default_client_version }}
+#   ansible.builtin.get_url:
+#     url: "{{ default_download_url }}"
+#     dest: "{{ default_base_path }}/kilt-{{ default_client_version }}"
+#     mode: "u+r+x"
+#     owner: "{{ default_user }}"
+#     group: "{{ default_user }}"
+#   register: download_result
+#   notify:
+#     - Add Service Pinned Status
+#     - Add KILT service version
+#     - Symlink KILT service to systemd
+#     - Symlink KILT release
+#     - Symlink binary executable
+#     - Stop KILT
+#     - Systemd daemon-reload
+#     - Start KILT
+#   when:
+#     - ansible_local['noderole']['node']['pinned'] != "True"
+#     - ansible_local['noderole']['node']['version'] != default_client_version
 
 - name: Flush handlers after KILT install
   ansible.builtin.meta: flush_handlers
