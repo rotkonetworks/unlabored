@@ -11,11 +11,10 @@ pinned_service: False
 default_telemetry_name: "Rotko Networks - {{ host_name.split('.')[0] }} {{ default_node_type | capitalize }}"
 default_domain: "{{ host_name }}"
 default_network: "westend"
-default_database: paritydb
+default_database: rocksdb
 default_node_type: "bootnode"
 default_pruning: 256
-default_syncmode: warp
-# default_syncmode: warp
+default_syncmode: fast-unsafe # warp broken on westend
 default_p2p_port: 33234
 default_p2p_port_ws: 34234
 default_p2p_port_wss: 35234
