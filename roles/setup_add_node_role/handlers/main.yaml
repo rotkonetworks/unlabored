@@ -293,19 +293,19 @@
     mode: '0644'
   when: role == "polkadot"
 
-- name: Add Polygon service version
+- name: Add KILT service version
   community.general.ini_file:
     create: True
     no_extra_spaces: True
     option: "version"
     section: "node"
     state: present
-    value: "{{ polygon_version }}"
+    value: "{{ kilt_version }}"
     path: "{{ noderole_file }}"
     owner: root
     group: root
     mode: '0644'
-  when: role == "polygon"
+  when: role == "kilt"
 
 - name: Add type of service fact
   community.general.ini_file:

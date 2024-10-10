@@ -28,6 +28,7 @@
   loop:
     - "{{ default_base_path }}"
     - "{{ default_database_path }}"
+    - "{{ default_src_path }}"
 
 - name: Gather facts
   ansible.builtin.setup:

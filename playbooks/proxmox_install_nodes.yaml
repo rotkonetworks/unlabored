@@ -113,3 +113,10 @@
   roles:
     - setup_install_hydration
     - setup_install_nginx
+
+- name: Install KILT services
+  hosts: kilt
+  gather_facts: True
+  roles:
+    - setup_install_kilt
+    - setup_install_nginx
