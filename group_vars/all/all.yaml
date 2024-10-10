@@ -100,25 +100,22 @@ kernel_params:
 # User management
 default_users:
   - user
-  - winboxuser
   - key
   - tommi
   - dan
-  - runner
+  - al
 
 all_users:
-  - name: key
-    comment: "key"
   - name: user
     comment: "user"
-  - name: winboxuser
-    comment: "winbox"
+  - name: key
+    comment: "key"
   - name: tommi
-    comment: "tommi"
+    comment: "tommi@rotko"
   - name: dan
-    comment: "dan"
-  - name: runner
-    comment: "github runner"
+    comment: "dan@rotko"
+  - name: al
+    comment: "al@rotko"
 
 # Proxmox management
 proxmox_default_admin_account: "ansible_admin@pve"
@@ -150,7 +147,8 @@ proxmox_defaults:
   api_user: "{{ proxmox_default_admin_account }}"
   api_token_id: "{{ proxmox_default_admin_token }}-{{ inventory_hostname }}"
   api_token_secret: "{{ ansible_local.proxmox.api.token | unvault(default_passphrase) }}"
-  pubkey: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAPBgdF5W2e5iMFt1iiLRuRdz7RxJzmj9v30nn9vZTYP user@pc02"
+  #pubkey: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAPBgdF5W2e5iMFt1iiLRuRdz7RxJzmj9v30nn9vZTYP user@pc02" # old
+  pubkey: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO4WcOCe2Xh3oDcR/yY+YUo68rPsEuYFHo5nKap1OkKI ansible@rotko"
   node: "{{ host_name.split('.')[0] }}"
   timeout: 1200
 
@@ -164,9 +162,15 @@ service_users:
   ethereum: "ethereum"
   encointer: "encointer"
   evmos: "evmos"
-  hydration: "hydration"
   kava: "kava"
-  moonbeam: "moonbeam"
   polygon: "polygon"
   polkadot: "polkadot"
   optimism: "optimism"
+  kilt: "kilt"
+  hydration: "hydration"
+  moonbeam: "moonbeam"
+  interlay: "interlay"
+  unique: "unique"
+  polimec: "polimec"
+  ajuna: "ajuna"
+
