@@ -15,8 +15,8 @@ default_proxmox_port: "20814"
 default_need_routeros_port_forwarding: True
 routeros_delegate_host: "bkk50"
 default_need_iptables_port_forwarding: False
-default_gw_device: "enp10s0"
-default_storage: "tank04lvm"
+default_gw_device: "enp8s0"
+default_storage: "disk-raid"
 default_resource_pool: "bkk04_resource_pool"
 
 port_forwards:
@@ -52,268 +52,36 @@ lxc_nodes:
         protocol: "tcp"
         # TODO: add zabbix / prometheus port forwards
   #
-  - host: "dot04"
+
+  - host: "val-polkadot-01"
     proxmox_config:
       vmid: "114"
-      hostname: "{{ hostvars['dot04']['host_name'] }}"
+      hostname: "{{ hostvars['val-polkadot-01']['host_name'] }}"
       ostemplate: "local:vztmpl/{{ default_container_template }}"
-      netif: "{{ hostvars['dot04']['netif'] }}"
+      netif: "{{ hostvars['val-polkadot-01']['netif'] }}"
       cores: 4
       memory: 16384
       swap: 8192
       password: "{{ default_password }}"
       disk: "{{ default_storage }}:20"
-      mounts: '{"mp0":"{{ default_storage }}:700,mp={{ hostvars["dot04"]["default_base_path"] }}"}'
+      mounts: '{"mp0":"{{ default_storage }}:700,mp={{ hostvars["val-polkadot-01"]["default_base_path"] }}"}'
       onboot: True
       unprivileged: True
       validate_certs: False
-      description: "{{ hostvars['dot04']['default_network'] }} {{ hostvars['dot04']['default_node_type'] }}: {{ hostvars['dot04']['host_name'] }}"
+      description: "{{ hostvars['val-polkadot-01']['default_network'] }} {{ hostvars['val-polkadot-01']['default_node_type'] }}: {{ hostvars['val-polkadot-01']['host_name'] }}"
       state: present
       features:
         - nesting=1
     port_forwards:
-      - from_port: "{{ hostvars['dot04']['ansible_port'] }}"
-        to_host: "{{ hostvars['dot04']['container_ip'] }}:22"
+      - from_port: "{{ hostvars['val-polkadot-01']['ansible_port'] }}"
+        to_host: "{{ hostvars['val-polkadot-01']['container_ip'] }}:22"
         protocol: "tcp"
-      - from_port: "{{ hostvars['dot04']['zabbix_ext_port'] }}"
+      - from_port: "{{ hostvars['val-polkadot-01']['zabbix_ext_port'] }}"
         to_host: "{{ hostvars['monitor']['container_ip'] }}:10050"
         protocol: "tcp"
-      - from_port: "{{ hostvars['dot04']['default_p2p_port'] }}"
-        to_host: "{{ hostvars['dot04']['container_ip'] }}:{{ hostvars['dot04']['default_p2p_port'] }}"
+      - from_port: "{{ hostvars['val-polkadot-01']['default_p2p_port'] }}"
+        to_host: "{{ hostvars['val-polkadot-01']['container_ip'] }}:{{ hostvars['val-polkadot-01']['default_p2p_port'] }}"
         protocol: "tcp"
-      - from_port: "{{ hostvars['dot04']['default_p2p_port_ws'] }}"
-        to_host: "{{ hostvars['dot04']['container_ip'] }}:{{ hostvars['dot04']['default_p2p_port_ws'] }}"
-        protocol: "tcp"
-  - host: "ksm04"
-    proxmox_config:
-      vmid: "124"
-      hostname: "{{ hostvars['ksm04']['host_name'] }}"
-      ostemplate: "local:vztmpl/{{ default_container_template }}"
-      netif: "{{ hostvars['ksm04']['netif'] }}"
-      cores: 4
-      memory: 16384
-      swap: 8192
-      password: "{{ default_password }}"
-      disk: "{{ default_storage }}:20"
-      mounts: '{"mp0":"{{ default_storage }}:1300,mp={{ hostvars["ksm04"]["default_base_path"] }}"}'
-      onboot: True
-      unprivileged: True
-      validate_certs: False
-      description: "{{ hostvars['ksm04']['default_network'] }} {{ hostvars['ksm04']['default_node_type'] }}: {{ hostvars['ksm04']['host_name'] }}"
-      state: present
-      features:
-        - nesting=1
-    port_forwards:
-      - from_port: "{{ hostvars['ksm04']['ansible_port'] }}"
-        to_host: "{{ hostvars['ksm04']['container_ip'] }}:22"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['ksm04']['zabbix_ext_port'] }}"
-        to_host: "{{ hostvars['monitor']['container_ip'] }}:10050"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['ksm04']['default_p2p_port'] }}"
-        to_host: "{{ hostvars['ksm04']['container_ip'] }}:{{ hostvars['ksm04']['default_p2p_port'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['ksm04']['default_p2p_port_ws'] }}"
-        to_host: "{{ hostvars['ksm04']['container_ip'] }}:{{ hostvars['ksm04']['default_p2p_port_ws'] }}"
-        protocol: "tcp"
-  - host: "ksm24"
-    proxmox_config:
-      vmid: "324"
-      hostname: "{{ hostvars['ksm24']['host_name'] }}"
-      ostemplate: "local:vztmpl/{{ default_container_template }}"
-      netif: "{{ hostvars['ksm24']['netif'] }}"
-      cores: 8
-      memory: 16384
-      swap: 8192
-      password: "{{ default_password }}"
-      disk: "{{ default_storage }}:20"
-      mounts: '{"mp0":"{{ default_storage }}:3000,mp={{ hostvars["ksm24"]["default_base_path"] }}"}'
-      onboot: True
-      unprivileged: True
-      validate_certs: False
-      description: "{{ hostvars['ksm24']['default_network'] }} {{ hostvars['ksm24']['default_node_type'] }}: {{ hostvars['ksm24']['host_name'] }}"
-      state: present
-      features:
-        - nesting=1
-    port_forwards:
-      - from_port: "{{ hostvars['ksm24']['ansible_port'] }}"
-        to_host: "{{ hostvars['ksm24']['container_ip'] }}:22"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['ksm24']['zabbix_ext_port'] }}"
-        to_host: "{{ hostvars['monitor']['container_ip'] }}:10050"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['ksm24']['default_p2p_port'] }}"
-        to_host: "{{ hostvars['ksm24']['container_ip'] }}:{{ hostvars['ksm24']['default_p2p_port'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['ksm24']['default_p2p_port_ws'] }}"
-        to_host: "{{ hostvars['ksm24']['container_ip'] }}:{{ hostvars['ksm24']['default_p2p_port_ws'] }}"
-        protocol: "tcp"
-  - host: "pso24"
-    proxmox_config:
-      vmid: "344"
-      hostname: "{{ hostvars['pso24']['host_name'] }}"
-      ostemplate: "local:vztmpl/{{ default_container_template }}"
-      netif: "{{ hostvars['pso24']['netif'] }}"
-      cores: 4
-      memory: 16384
-      swap: 8192
-      password: "{{ default_password }}"
-      disk: "{{ default_storage }}:20"
-      mounts: '{"mp0":"{{ default_storage }}:300,mp={{ hostvars["pso24"]["default_base_path"] }}"}'
-      onboot: True
-      unprivileged: True
-      validate_certs: False
-      description: "{{ hostvars['pso24']['default_network'] }} {{ hostvars['pso24']['default_node_type'] }}: {{ hostvars['pso24']['host_name'] }}"
-      state: present
-      features:
-        - nesting=1
-    port_forwards:
-      - from_port: "{{ hostvars['pso24']['ansible_port'] }}"
-        to_host: "{{ hostvars['pso24']['container_ip'] }}:22"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['pso24']['zabbix_ext_port'] }}"
-        to_host: "{{ hostvars['monitor']['container_ip'] }}:10050"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['pso24']['default_p2p_port'] }}"
-        to_host: "{{ hostvars['pso24']['container_ip'] }}:{{ hostvars['pso24']['default_p2p_port'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['pso24']['default_p2p_port_ws'] }}"
-        to_host: "{{ hostvars['pso24']['container_ip'] }}:{{ hostvars['pso24']['default_p2p_port_ws'] }}"
-        protocol: "tcp"
-  - host: "mine24"
-    proxmox_config:
-      vmid: "624"
-      hostname: "{{ hostvars['mine24']['host_name'] }}"
-      ostemplate: "local:vztmpl/{{ default_container_template }}"
-      netif: "{{ hostvars['mine24']['netif'] }}"
-      cores: 4
-      memory: 16384
-      swap: 8192
-      password: "{{ default_password }}"
-      disk: "{{ default_storage }}:20"
-      mounts: '{"mp0":"{{ default_storage }}:200,mp={{ hostvars["mine24"]["default_database_path"] }}"}'
-      onboot: True
-      unprivileged: True
-      validate_certs: False
-      description: "{{ hostvars['mine24']['default_network'] }} {{ hostvars['mine24']['default_node_type'] }}: {{ hostvars['mine24']['host_name'] }}"
-      state: present
-      features:
-        - nesting=1
-    port_forwards:
-      - from_port: "{{ hostvars['mine24']['ansible_port'] }}"
-        to_host: "{{ hostvars['mine24']['container_ip'] }}:22"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['mine24']['zabbix_ext_port'] }}"
-        to_host: "{{ hostvars['monitor']['container_ip'] }}:10050"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['mine24']['default_p2p_port'] }}"
-        to_host: "{{ hostvars['mine24']['container_ip'] }}:{{ hostvars['mine24']['default_p2p_port'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['mine24']['default_p2p_port_ws'] }}"
-        to_host: "{{ hostvars['mine24']['container_ip'] }}:{{ hostvars['mine24']['default_p2p_port_ws'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['mine24']['default_p2p_port_wss'] }}"
-        to_host: "{{ hostvars['mine24']['container_ip'] }}:{{ hostvars['mine24']['default_p2p_port_wss'] }}"
-        protocol: "tcp"
-  - host: "kbr24"
-    proxmox_config:
-      vmid: "654"
-      hostname: "{{ hostvars['kbr24']['host_name'] }}"
-      ostemplate: "local:vztmpl/{{ default_container_template }}"
-      netif: "{{ hostvars['kbr24']['netif'] }}"
-      cores: 4
-      memory: 16384
-      swap: 8192
-      password: "{{ default_password }}"
-      disk: "{{ default_storage }}:20"
-      mounts: '{"mp0":"{{ default_storage }}:200,mp={{ hostvars["kbr24"]["default_database_path"] }}"}'
-      onboot: True
-      unprivileged: True
-      validate_certs: False
-      description: "{{ hostvars['kbr24']['default_network'] }} {{ hostvars['kbr24']['default_node_type'] }}: {{ hostvars['kbr24']['host_name'] }}"
-      state: present
-      features:
-        - nesting=1
-    port_forwards:
-      - from_port: "{{ hostvars['kbr24']['ansible_port'] }}"
-        to_host: "{{ hostvars['kbr24']['container_ip'] }}:22"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['kbr24']['zabbix_ext_port'] }}"
-        to_host: "{{ hostvars['monitor']['container_ip'] }}:10050"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['kbr24']['default_p2p_port'] }}"
-        to_host: "{{ hostvars['kbr24']['container_ip'] }}:{{ hostvars['kbr24']['default_p2p_port'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['kbr24']['default_p2p_port_ws'] }}"
-        to_host: "{{ hostvars['kbr24']['container_ip'] }}:{{ hostvars['kbr24']['default_p2p_port_ws'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['kbr24']['default_p2p_port_wss'] }}"
-        to_host: "{{ hostvars['kbr24']['container_ip'] }}:{{ hostvars['kbr24']['default_p2p_port_wss'] }}"
-        protocol: "tcp"
-  - host: "enc24"
-    proxmox_config:
-      vmid: "604"
-      hostname: "{{ hostvars['enc24']['host_name'] }}"
-      ostemplate: "local:vztmpl/{{ default_container_template }}"
-      netif: "{{ hostvars['enc24']['netif'] }}"
-      cores: 4
-      memory: 16384
-      swap: 8192
-      password: "{{ default_password }}"
-      disk: "{{ default_storage }}:20"
-      mounts: '{"mp0":"{{ default_storage }}:100,mp={{ hostvars["enc24"]["default_database_path"] }}"}'
-      onboot: True
-      unprivileged: True
-      validate_certs: False
-      description: "{{ hostvars['enc24']['default_network'] }} {{ hostvars['enc24']['default_node_type'] }}: {{ hostvars['enc24']['host_name'] }}"
-      state: present
-      features:
-        - nesting=1
-    port_forwards:
-      - from_port: "{{ hostvars['enc24']['ansible_port'] }}"
-        to_host: "{{ hostvars['enc24']['container_ip'] }}:22"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['enc24']['zabbix_ext_port'] }}"
-        to_host: "{{ hostvars['monitor']['container_ip'] }}:10050"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['enc24']['default_p2p_port'] }}"
-        to_host: "{{ hostvars['enc24']['container_ip'] }}:{{ hostvars['enc24']['default_p2p_port'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['enc24']['default_p2p_port_ws'] }}"
-        to_host: "{{ hostvars['enc24']['container_ip'] }}:{{ hostvars['enc24']['default_p2p_port_ws'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['enc24']['default_p2p_port_wss'] }}"
-        to_host: "{{ hostvars['enc24']['container_ip'] }}:{{ hostvars['enc24']['default_p2p_port_wss'] }}"
-        protocol: "tcp"
-  - host: "pso04"
-    proxmox_config:
-      vmid: "1004"
-      hostname: "{{ hostvars['pso04']['host_name'] }}"
-      ostemplate: "local:vztmpl/{{ default_container_template }}"
-      netif: "{{ hostvars['pso04']['netif'] }}"
-      cores: 2
-      memory: 16384
-      swap: 8192
-      password: "{{ default_password }}"
-      disk: "{{ default_storage }}:20"
-      mounts: '{"mp0":"{{ default_storage }}:200,mp={{ hostvars["pso04"]["default_base_path"] }}"}'
-      onboot: True
-      unprivileged: True
-      validate_certs: False
-      description: "{{ hostvars['pso04']['default_network'] }} {{ hostvars['pso04']['default_node_type'] }}: {{ hostvars['pso04']['host_name'] }}"
-      state: present
-      features:
-        - nesting=1
-    port_forwards:
-      - from_port: "{{ hostvars['pso04']['ansible_port'] }}"
-        to_host: "{{ hostvars['pso04']['container_ip'] }}:22"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['pso04']['zabbix_ext_port'] }}"
-        to_host: "{{ hostvars['monitor']['container_ip'] }}:10050"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['pso04']['default_p2p_port'] }}"
-        to_host: "{{ hostvars['pso04']['container_ip'] }}:{{ hostvars['pso04']['default_p2p_port'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['pso04']['default_p2p_port_ws'] }}"
-        to_host: "{{ hostvars['pso04']['container_ip'] }}:{{ hostvars['pso04']['default_p2p_port_ws'] }}"
+      - from_port: "{{ hostvars['val-polkadot-01']['default_p2p_port_ws'] }}"
+        to_host: "{{ hostvars['val-polkadot-01']['container_ip'] }}:{{ hostvars['val-polkadot-01']['default_p2p_port_ws'] }}"
         protocol: "tcp"
