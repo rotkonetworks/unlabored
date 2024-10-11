@@ -37,7 +37,7 @@
   ansible.builtin.file:
     path: /etc/ansible/facts.d/
     state: directory
-    mode: '0755'
+    mode: "0755"
   become: True
   become_user: root
 
@@ -88,22 +88,41 @@
     - ansible_local['noderole']['node']['version'] != default_client_version
     - not kilt_binary.stat.exists
 
-- name: Build client from source
+- name: Build client from source as root
   ansible.builtin.command:
     cmd: cargo build --release
     chdir: "{{ default_base_path }}/kilt-node-{{ default_client_version }}"
-  become: True
-  become_user: "{{ default_user }}"
+  become: True # Build as root
   environment:
     PATH: "{{ ansible_env.PATH }}:/usr/local/cargo/bin"
+
+- name: Change ownership of built binary to {{ default_user }}
+  ansible.builtin.file:
+    path: "{{ default_base_path }}/kilt-node-{{ default_client_version }}/target/release/kilt-parachain"
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+    mode: "0755"
   when:
     - ansible_local['noderole']['node']['pinned'] != "True"
     - ansible_local['noderole']['node']['version'] != default_client_version
-    - not kilt_binary.stat.exists
-  register: build_result
-  changed_when: build_result.rc == 0
-  async: 3600
-  poll: 30
+    - kilt_binary.stat.exists
+
+# - name: Build client from source
+#   ansible.builtin.command:
+#     cmd: cargo build --release
+#     chdir: "{{ default_base_path }}/kilt-node-{{ default_client_version }}"
+#   become: True
+#   become_user: "{{ default_user }}"
+#   environment:
+#     PATH: "{{ ansible_env.PATH }}:/usr/local/cargo/bin"
+#   when:
+#     - ansible_local['noderole']['node']['pinned'] != "True"
+#     - ansible_local['noderole']['node']['version'] != default_client_version
+#     - not kilt_binary.stat.exists
+#   register: build_result
+#   changed_when: build_result.rc == 0
+#   async: 3600
+#   poll: 30
 
 - name: Install kilt {{ default_client_version }}
   ansible.builtin.copy:
