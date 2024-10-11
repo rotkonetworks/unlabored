@@ -88,6 +88,7 @@
     - ansible_local['noderole']['node']['version'] != default_client_version
     - not kilt_binary.stat.exists
 
+#NOTE: take look at it -al
 - name: Build client from source as root
   ansible.builtin.command:
     cmd: cargo build --release
@@ -106,6 +107,7 @@
     - ansible_local['noderole']['node']['pinned'] != "True"
     - ansible_local['noderole']['node']['version'] != default_client_version
     - kilt_binary.stat.exists
+#NOTE: until here
 
 # - name: Build client from source
 #   ansible.builtin.command:
