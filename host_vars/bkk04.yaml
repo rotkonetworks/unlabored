@@ -121,7 +121,7 @@ lxc_nodes:
 
   - host: "val-polkadot-03"
     proxmox_config:
-      vmid: "1142"
+      vmid: "1143"
       hostname: "{{ hostvars['val-polkadot-03']['host_name'] }}"
       ostemplate: "local:vztmpl/{{ default_container_template }}"
       netif: "{{ hostvars['val-polkadot-03']['netif'] }}"
@@ -154,7 +154,7 @@ lxc_nodes:
 
   - host: "val-kusama-01"
     proxmox_config:
-      vmid: "1142"
+      vmid: "1241"
       hostname: "{{ hostvars['val-kusama-01']['host_name'] }}"
       ostemplate: "local:vztmpl/{{ default_container_template }}"
       netif: "{{ hostvars['val-kusama-01']['netif'] }}"
@@ -187,7 +187,7 @@ lxc_nodes:
 
   - host: "val-kusama-02"
     proxmox_config:
-      vmid: "1142"
+      vmid: "1242"
       hostname: "{{ hostvars['val-kusama-02']['host_name'] }}"
       ostemplate: "local:vztmpl/{{ default_container_template }}"
       netif: "{{ hostvars['val-kusama-02']['netif'] }}"
