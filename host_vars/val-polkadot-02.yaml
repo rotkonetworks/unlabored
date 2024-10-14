@@ -1,0 +1,23 @@
+---
+ansible_host: "160.22.181.181"
+container_ip: "192.168.69.116"
+ansible_port: 2116
+host_name: "val-polkadot-02.rotko.net"
+host_timezone: "Asia/Bangkok"
+netif: '{"net0":"name=eth0,gw={{ default_nat_network_forward_cidr.split("/")[0] }},ip={{ default_host_ip }}/16,bridge={{ default_nat_device }}"}'
+role: "polkadot"
+pinned_service: True
+
+default_telemetry_name: "Rotko Networks - {{ host_name.split('.')[0] }} {{ default_node_type | capitalize }}"
+default_network: "polkadot"
+default_node_type: "validator"
+default_pruning: 1000
+default_database: paritydb
+default_syncmode: warp
+default_p2p_port: 33116
+default_p2p_port_ws: 34116
+default_p2p_port_wss: 35116
+default_rpc_port: 9116
+default_secure_rpc_port: 42116
+default_prom_port: 7116
+zabbix_ext_port: 10116
