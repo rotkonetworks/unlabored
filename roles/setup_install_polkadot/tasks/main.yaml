@@ -1,4 +1,7 @@
 ---
+- name: Gather facts
+  ansible.builtin.setup:
+
 - name: Ensure group {{ default_user }} exists
   ansible.builtin.group:
     name: "{{ default_user }}"
@@ -36,20 +39,6 @@
     state: directory
     mode: "0755"
 
-- name: Gather facts
-  ansible.builtin.setup:
-
-- name: Check if default network is Paseo
-  ansible.builtin.set_fact:
-    is_paseo_network: "{{ default_network == 'paseo' }}"
-
-- name: Download Paseo chain spec
-  ansible.builtin.get_url:
-    url: "{{ default_chain_spec_dl_url }}"
-    dest: "{{ default_chain_spec }}"
-    mode: "0644"
-  when: is_paseo_network
-
 - name: Copy Polkadot systemd service for specific node type
   ansible.builtin.template:
     src: "{{ default_node_type + '.service.j2' }}"
@@ -65,11 +54,19 @@
     - Start Polkadot
     - Add type of service fact
 
+- name: Check if Polkadot is already installed
+  ansible.builtin.stat:
+    path: "{{ default_base_path }}/polkadot"
+  register: polkadot_binary
+
+- name: Set force_update flag
+  ansible.builtin.set_fact:
+    force_update: "{{ force_update | default(false) }}"
+
 - name: Install worker binaries v{{ default_client_version }}
   when:
-    - ansible_local['noderole']['node']['pinned'] != "True"
-    - ansible_local['noderole']['node']['version'] != default_client_version
-    - ansible_local['noderole']['node']['type'] == "validator"
+    - default_node_type == "validator"
+    - not polkadot_binary.stat.exists or force_update or ansible_local['noderole']['node']['version'] is not defined or ansible_local['noderole']['node']['version'] != default_client_version
   block:
     - name: Install prepare worker binary v{{ default_client_version }}
       ansible.builtin.get_url:
@@ -94,7 +91,8 @@
         src: "{{ item.src }}"
         dest: "{{ item.dest }}"
         state: link
-        force: yes
+        owner: "{{ default_user }}"
+        group: "{{ default_user }}"
       loop:
         - src: "{{ default_base_path }}/bin/polkadot-prepare-worker-{{ default_client_version }}"
           dest: "/usr/libexec/polkadot-prepare-worker"
@@ -112,16 +110,16 @@
     owner: "{{ default_user }}"
     group: "{{ default_user }}"
   register: download_result
-  when:
-    - ansible_local['noderole']['node']['pinned'] != "True"
-    - ansible_local['noderole']['node']['version'] != default_client_version
+  when: not polkadot_binary.stat.exists or force_update or ansible_local['noderole']['node']['version'] is not defined or ansible_local['noderole']['node']['version'] != default_client_version
 
 - name: Create soft link for Polkadot binary
   ansible.builtin.file:
     src: "{{ default_base_path }}/bin/polkadot-{{ default_client_version }}"
     dest: "{{ default_base_path }}/polkadot"
     state: link
-    force: yes
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+  when: not polkadot_binary.stat.exists or force_update or ansible_local['noderole']['node']['version'] is not defined or ansible_local['noderole']['node']['version'] != default_client_version
   notify:
     - Add Service Pinned Status
     - Add Polkadot service version
@@ -129,9 +127,6 @@
     - Stop Polkadot
     - Systemd daemon-reload
     - Start Polkadot
-  when:
-    - ansible_local['noderole']['node']['pinned'] != "True"
-    - ansible_local['noderole']['node']['version'] != default_client_version
 
 - name: Flush handlers after service copy
   ansible.builtin.meta: flush_handlers
@@ -140,3 +135,23 @@
   ansible.builtin.systemd:
     name: polkadot
     state: started
+    enabled: True
+
+- name: Set Polkadot version fact
+  ansible.builtin.set_fact:
+    polkadot_installed_version: "{{ lookup('ini', 'version section=node file=' + noderole_file) }}"
+  ignore_errors: True
+
+- name: Log installation status
+  ansible.builtin.debug:
+    msg: >
+      Polkadot installation status: 
+      {% if download_result is changed %}
+      Updated to version {{ polkadot_installed_version }}
+      {% elif polkadot_binary.stat.exists and polkadot_installed_version %}
+      Already installed version {{ polkadot_installed_version }}, no update needed
+      {% elif polkadot_binary.stat.exists %}
+      Binary exists but version information is missing
+      {% else %}
+      Installation skipped or failed
+      {% endif %}
