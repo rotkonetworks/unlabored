@@ -40,13 +40,15 @@
 #   register: container_start_result
 
 - name: Create predefined containers
-  community.general.proxmox: "{{ proxmox_defaults | combine(item.proxmox_config) }}"
+  community.general.proxmox:
+    proxmox: "{{ proxmox_defaults | combine(item.proxmox_config) }}"
   loop: "{{ lxc_nodes }}"
   when: lxc_nodes is defined
   register: container_creation_result
 
 - name: Start predefined nodes
-  community.general.proxmox: "{{ proxmox_defaults | combine({'vmid': item.proxmox_config['vmid'], 'state': 'started'}) }}"
+  community.general.proxmox:
+    proxmox: "{{ proxmox_defaults | combine({'vmid': item.proxmox_config['vmid'], 'state': 'started'}) }}"
   loop: "{{ lxc_nodes }}"
   when:
     - lxc_nodes is defined

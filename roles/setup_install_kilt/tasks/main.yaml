@@ -94,8 +94,13 @@
     cmd: cargo build --release
     chdir: "{{ default_base_path }}/kilt-node-{{ default_client_version }}"
   become: True # Build as root
+  become_user: root
   environment:
     PATH: "{{ ansible_env.PATH }}:/usr/local/cargo/bin"
+  when:
+    - ansible_local['noderole']['node']['pinned'] != "True"
+    - ansible_local['noderole']['node']['version'] != default_client_version
+    - not kilt_binary.stat.exists
 
 - name: Change ownership of built binary to {{ default_user }}
   ansible.builtin.file:

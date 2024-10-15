@@ -11,7 +11,7 @@
     path: "{{ noderole_file }}"
     owner: root
     group: root
-    mode: '0644'
+    mode: "0644"
   when: role == "arbitrum"
 
 - name: Add Avalanche service version
@@ -25,7 +25,7 @@
     path: "{{ noderole_file }}"
     owner: root
     group: root
-    mode: '0644'
+    mode: "0644"
   when: role == "avalanche"
 
 - name: Add AvalancheDFK service version
@@ -39,7 +39,7 @@
     path: "{{ noderole_file }}"
     owner: root
     group: root
-    mode: '0644'
+    mode: "0644"
   when: role == "defikingdom"
 
 - name: Add Binance service version
@@ -53,7 +53,7 @@
     path: "{{ noderole_file }}"
     owner: root
     group: root
-    mode: '0644'
+    mode: "0644"
   when: role == "binance"
 
 - name: Add Cumulus service version
@@ -67,7 +67,7 @@
     path: "{{ noderole_file }}"
     owner: root
     group: root
-    mode: '0644'
+    mode: "0644"
   when: role == "cumulus"
 
 - name: Add Encointer service version
@@ -81,7 +81,7 @@
     path: "{{ noderole_file }}"
     owner: root
     group: root
-    mode: '0644'
+    mode: "0644"
   when: role == "encointer"
 
 - name: Add Golang version
@@ -95,7 +95,7 @@
     path: "{{ noderole_file }}"
     owner: root
     group: root
-    mode: '0644'
+    mode: "0644"
   when: role in ["arbitrum", "avalanche", "defikingdom", "ethereum", "erigon", "evmos", "kava", "klaytn", "optimism", "polygon"]
 
 - name: Add Ethereum service version
@@ -109,7 +109,7 @@
     path: "{{ noderole_file }}"
     owner: root
     group: root
-    mode: '0644'
+    mode: "0644"
   when: role == "ethereum"
 
 - name: Add Erigon service version
@@ -123,7 +123,7 @@
     path: "{{ noderole_file }}"
     owner: root
     group: root
-    mode: '0644'
+    mode: "0644"
   when: role == "erigon"
 
 - name: Add Hydration service version
@@ -137,8 +137,22 @@
     path: "{{ noderole_file }}"
     owner: root
     group: root
-    mode: '0644'
+    mode: "0644"
   when: role == "hydration"
+
+# - name: Add KILT service version
+#   community.general.ini_file:
+#     create: True
+#     no_extra_spaces: True
+#     option: "version"
+#     section: "node"
+#     state: present
+#     value: "{{ kilt_version }}"
+#     path: "{{ noderole_file }}"
+#     owner: root
+#     group: root
+#     mode: "0644"
+#   when: role == "kilt"
 
 - name: Add KILT service version
   community.general.ini_file:
@@ -151,7 +165,7 @@
     path: "{{ noderole_file }}"
     owner: root
     group: root
-    mode: '0644'
+    mode: "0644"
   when: role == "KILT"
 
 - name: Add Reth service version
@@ -165,7 +179,7 @@
     path: "{{ noderole_file }}"
     owner: root
     group: root
-    mode: '0644'
+    mode: "0644"
   when: role == "reth"
 
 - name: Add Evmos service version
@@ -179,7 +193,7 @@
     path: "{{ noderole_file }}"
     owner: root
     group: root
-    mode: '0644'
+    mode: "0644"
   when: role == "evmos"
 
 - name: Add Kava service version
@@ -193,7 +207,7 @@
     path: "{{ noderole_file }}"
     owner: root
     group: root
-    mode: '0644'
+    mode: "0644"
   when: role == "kava"
 
 - name: Add Klaytn service version
@@ -207,7 +221,7 @@
     path: "{{ noderole_file }}"
     owner: root
     group: root
-    mode: '0644'
+    mode: "0644"
   when: role == "klaytn"
 
 - name: Add Lighthouse service version
@@ -221,7 +235,7 @@
     path: "{{ noderole_file }}"
     owner: root
     group: root
-    mode: '0644'
+    mode: "0644"
   when: role == "ethereum"
 
 - name: Add Moonbeam service version
@@ -235,7 +249,7 @@
     path: "{{ noderole_file }}"
     owner: root
     group: root
-    mode: '0644'
+    mode: "0644"
   when: role == "moonbeam"
 
 - name: Add Service Pinned Status
@@ -249,7 +263,7 @@
     path: "{{ noderole_file }}"
     owner: root
     group: root
-    mode: '0644'
+    mode: "0644"
 
 - name: Add Optimism service version
   community.general.ini_file:
@@ -262,7 +276,7 @@
     path: "{{ noderole_file }}"
     owner: root
     group: root
-    mode: '0644'
+    mode: "0644"
   when: role == "optimism"
 
 - name: Add Penumbra service version
@@ -276,7 +290,7 @@
     path: "{{ noderole_file }}"
     owner: root
     group: root
-    mode: '0644'
+    mode: "0644"
   when: role == "penumbra"
 
 - name: Add Polkadot service version
@@ -290,22 +304,8 @@
     path: "{{ noderole_file }}"
     owner: root
     group: root
-    mode: '0644'
+    mode: "0644"
   when: role == "polkadot"
-
-- name: Add KILT service version
-  community.general.ini_file:
-    create: True
-    no_extra_spaces: True
-    option: "version"
-    section: "node"
-    state: present
-    value: "{{ kilt_version }}"
-    path: "{{ noderole_file }}"
-    owner: root
-    group: root
-    mode: '0644'
-  when: role == "kilt"
 
 - name: Add type of service fact
   community.general.ini_file:
@@ -318,4 +318,4 @@
     path: "{{ noderole_file }}"
     owner: root
     group: root
-    mode: '0644'
+    mode: "0644"
