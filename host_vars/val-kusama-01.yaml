@@ -19,5 +19,4 @@ default_p2p_port_ws: 34125
 default_p2p_port_wss: 35125
 default_rpc_port: 9125
 default_secure_rpc_port: 42125
-default_prom_port: 7125
 zabbix_ext_port: 10125

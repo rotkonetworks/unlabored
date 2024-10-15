@@ -74,10 +74,10 @@ lxc_nodes:
         - nesting=1
     port_forwards:
       - from_port: "{{ hostvars['val-polkadot-01']['ansible_port'] }}"
-        to_host: "{{ hostvars['val-polkadot-01']['container_ip'] }}:22"
+        to_host: "{{ hostvars['val-polkadot-01']['container_ip'] }}:{{ ssh_port }}"
         protocol: "tcp"
       - from_port: "{{ hostvars['val-polkadot-01']['zabbix_ext_port'] }}"
-        to_host: "{{ hostvars['monitor']['container_ip'] }}:10050"
+        to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
         protocol: "tcp"
       - from_port: "{{ hostvars['val-polkadot-01']['default_p2p_port'] }}"
         to_host: "{{ hostvars['val-polkadot-01']['container_ip'] }}:{{ hostvars['val-polkadot-01']['default_p2p_port'] }}"
@@ -107,10 +107,10 @@ lxc_nodes:
         - nesting=1
     port_forwards:
       - from_port: "{{ hostvars['val-kusama-01']['ansible_port'] }}"
-        to_host: "{{ hostvars['val-kusama-01']['container_ip'] }}:22"
+        to_host: "{{ hostvars['val-kusama-01']['container_ip'] }}:{{ ssh_port }}"
         protocol: "tcp"
       - from_port: "{{ hostvars['val-kusama-01']['zabbix_ext_port'] }}"
-        to_host: "{{ hostvars['monitor']['container_ip'] }}:10050"
+        to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
         protocol: "tcp"
       - from_port: "{{ hostvars['val-kusama-01']['default_p2p_port'] }}"
         to_host: "{{ hostvars['val-kusama-01']['container_ip'] }}:{{ hostvars['val-kusama-01']['default_p2p_port'] }}"
