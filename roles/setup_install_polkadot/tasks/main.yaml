@@ -28,6 +28,13 @@
   loop:
     - "{{ default_base_path }}"
     - "{{ default_database_path }}"
+    - "{{ default_base_path }}/bin"
+
+- name: Ensure /usr/libexec directory exists
+  ansible.builtin.file:
+    path: "/usr/libexec"
+    state: directory
+    mode: "0755"
 
 - name: Gather facts
   ansible.builtin.setup:
@@ -67,7 +74,7 @@
     - name: Install prepare worker binary v{{ default_client_version }}
       ansible.builtin.get_url:
         url: "{{ default_download_url_prepare }}"
-        dest: "{{ default_auxiliary_binary_path }}/polkadot-prepare-worker"
+        dest: "{{ default_base_path }}/bin/polkadot-prepare-worker-{{ default_client_version }}"
         mode: "u+r+x"
         owner: "{{ default_user }}"
         group: "{{ default_user }}"
@@ -76,26 +83,53 @@
     - name: Install execute worker binary v{{ default_client_version }}
       ansible.builtin.get_url:
         url: "{{ default_download_url_execute }}"
-        dest: "{{ default_auxiliary_binary_path }}/polkadot-execute-worker"
+        dest: "{{ default_base_path }}/bin/polkadot-execute-worker-{{ default_client_version }}"
         mode: "u+r+x"
         owner: "{{ default_user }}"
         group: "{{ default_user }}"
       register: download_result_execute_worker
 
+    - name: Create soft links for worker binaries
+      ansible.builtin.file:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        state: link
+        force: yes
+      loop:
+        - {
+            src: "{{ default_base_path }}/bin/polkadot-prepare-worker-{{ default_client_version }}",
+            dest: "/usr/libexec/polkadot-prepare-worker",
+          }
+        - {
+            src: "{{ default_base_path }}/bin/polkadot-execute-worker-{{ default_client_version }}",
+            dest: "/usr/libexec/polkadot-execute-worker",
+          }
+      notify:
+        - Stop Polkadot
+        - Start Polkadot
+
 - name: Install Polkadot v{{ default_client_version }}
   ansible.builtin.get_url:
     url: "{{ default_download_url }}"
-    dest: "{{ default_base_path }}/{{ default_client_version }}"
+    dest: "{{ default_base_path }}/bin/polkadot-{{ default_client_version }}"
     mode: "u+r+x"
     owner: "{{ default_user }}"
     group: "{{ default_user }}"
   register: download_result
+  when:
+    - ansible_local['noderole']['node']['pinned'] != "True"
+    - ansible_local['noderole']['node']['version'] != default_client_version
+
+- name: Create soft link for Polkadot binary
+  ansible.builtin.file:
+    src: "{{ default_base_path }}/bin/polkadot-{{ default_client_version }}"
+    dest: "{{ default_base_path }}/polkadot"
+    state: link
+    force: yes
   notify:
     - Add Service Pinned Status
     - Add Polkadot service version
     - Symlink Polkadot service to systemd
-    - Symlink Polkadot release
-    - Symlink binary executable
     - Stop Polkadot
     - Systemd daemon-reload
     - Start Polkadot
