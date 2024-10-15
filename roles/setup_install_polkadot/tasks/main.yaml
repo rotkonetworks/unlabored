@@ -96,14 +96,10 @@
         state: link
         force: yes
       loop:
-        - {
-            src: "{{ default_base_path }}/bin/polkadot-prepare-worker-{{ default_client_version }}",
-            dest: "/usr/libexec/polkadot-prepare-worker",
-          }
-        - {
-            src: "{{ default_base_path }}/bin/polkadot-execute-worker-{{ default_client_version }}",
-            dest: "/usr/libexec/polkadot-execute-worker",
-          }
+        - src: "{{ default_base_path }}/bin/polkadot-prepare-worker-{{ default_client_version }}"
+          dest: "/usr/libexec/polkadot-prepare-worker"
+        - src: "{{ default_base_path }}/bin/polkadot-execute-worker-{{ default_client_version }}"
+          dest: "/usr/libexec/polkadot-execute-worker"
       notify:
         - Stop Polkadot
         - Start Polkadot

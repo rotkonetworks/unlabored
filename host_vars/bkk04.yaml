@@ -59,8 +59,8 @@ lxc_nodes:
       hostname: "{{ hostvars['val-polkadot-01']['host_name'] }}"
       ostemplate: "local:vztmpl/{{ default_container_template }}"
       netif: "{{ hostvars['val-polkadot-01']['netif'] }}"
-      cores: 4
-      memory: 16384
+      cores: 8
+      memory: 32768
       swap: 8192
       password: "{{ default_password }}"
       disk: "{{ default_storage }}:20"
@@ -92,8 +92,8 @@ lxc_nodes:
       hostname: "{{ hostvars['val-kusama-01']['host_name'] }}"
       ostemplate: "local:vztmpl/{{ default_container_template }}"
       netif: "{{ hostvars['val-kusama-01']['netif'] }}"
-      cores: 4
-      memory: 16384
+      cores: 8
+      memory: 32768
       swap: 8192
       password: "{{ default_password }}"
       disk: "{{ default_storage }}:20"
