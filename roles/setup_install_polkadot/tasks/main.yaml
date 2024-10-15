@@ -145,7 +145,7 @@
 - name: Log installation status
   ansible.builtin.debug:
     msg: >
-      Polkadot installation status: 
+      Polkadot installation status:
       {% if download_result is changed %}
       Updated to version {{ polkadot_installed_version }}
       {% elif polkadot_binary.stat.exists and polkadot_installed_version %}
