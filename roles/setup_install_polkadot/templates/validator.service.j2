@@ -24,17 +24,18 @@ ExecStart={{ default_base_path }}/polkadot \
      --database {{ default_database }} \
      --name "{{ hostvars[inventory_hostname]['default_telemetry_name'] | default(host_name) }}" \
      --telemetry-url 'wss://telemetry-backend.w3f.community/submit 1' \
-     --rpc-port {{ default_rpc_port }} \
-     --listen-addr /ip4/0.0.0.0/tcp/{{ default_p2p_port }} \
-     --listen-addr /ip4/0.0.0.0/tcp/{{ default_p2p_port_ws }}/ws \
-     --public-addr /ip4/{{ ansible_host }}/tcp/{{ default_p2p_port }} \
-     --public-addr /ip4/{{ ansible_host }}/tcp/{{ default_p2p_port_ws }}/ws \
+     --rpc-port {{ inet_rpc_port }} \
+     --listen-addr /ip4/0.0.0.0/tcp/{{ inet_p2p_port }} \
+     --listen-addr /ip4/0.0.0.0/tcp/{{ inet_p2p_port_ws }}/ws \
+     --public-addr /ip4/{{ ansible_host }}/tcp/{{ pub_p2p_port }} \
+     --public-addr /ip4/{{ ansible_host }}/tcp/{{ pub_p2p_port_ws }}/ws \
      --prometheus-port {{ default_prom_port }} \
      --prometheus-external \
      --wasm-execution compiled \
      --pruning 1000 \
      --workers-path {{ default_auxiliary_binary_path }} \
      --db-cache {{ ansible_memtotal_mb // 2 }}
+     --sync {{ default_syncmode }}
 
 [Install]
 WantedBy=multi-user.target

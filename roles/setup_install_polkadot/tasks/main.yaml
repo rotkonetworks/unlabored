@@ -136,22 +136,3 @@
     name: polkadot
     state: started
     enabled: True
-
-- name: Set Polkadot version fact
-  ansible.builtin.set_fact:
-    polkadot_installed_version: "{{ lookup('ini', 'version section=node file=' + noderole_file) }}"
-  ignore_errors: True
-
-- name: Log installation status
-  ansible.builtin.debug:
-    msg: >
-      Polkadot installation status:
-      {% if download_result is changed %}
-      Updated to version {{ polkadot_installed_version }}
-      {% elif polkadot_binary.stat.exists and polkadot_installed_version %}
-      Already installed version {{ polkadot_installed_version }}, no update needed
-      {% elif polkadot_binary.stat.exists %}
-      Binary exists but version information is missing
-      {% else %}
-      Installation skipped or failed
-      {% endif %}

@@ -11,6 +11,10 @@ default_resource_pool: "{{ inventory_hostname }}_resource_pool"
 default_node_type: validator
 pinned_service: False
 
+# port for ssh and zabbix -al
+zabbix_port: 10050
+ssh_port: 22
+
 # Monitoring
 default_zabbix_port: 10050
 zabbix_master: "192.168.69.98"
