@@ -24,7 +24,7 @@ port_forwards:
   - from_port: "{{ ansible_port }}"
     to_host: "{{ container_ip }}:22"
     protocol: "tcp"
-  - from_port: "20817"  #  Proxmox UI
+  - from_port: "20817" #  Proxmox UI
     to_host: "{{ container_ip }}:8006"
     protocol: "tcp"
 
@@ -550,4 +550,56 @@ lxc_nodes:
         protocol: "tcp"
       - from_port: "{{ hostvars['rpc-paseo-02']['default_p2p_port_wss'] }}"
         to_host: "{{ hostvars['rpc-paseo-02']['container_ip'] }}:{{ hostvars['rpc-paseo-02']['default_p2p_port_wss'] }}"
+        protocol: "tcp"
+  - host: "rpc-coretime-paseo-02"
+    proxmox_config:
+      vmid: "340302"
+      hostname: "{{ hostvars['rpc-coretime-paseo-02']['host_name'] }}"
+      ostemplate: "local:vztmpl/{{ default_container_template }}"
+      netif: "{{ hostvars['rpc-coretime-paseo-02']['netif'] }}"
+      cores: 4
+      memory: 16384
+      swap: 8192
+      password: "{{ default_password }}"
+      disk: "{{ default_storage }}:20"
+      mounts: '{"mp0":"{{ default_storage }}:100,mp={{ hostvars["rpc-coretime-paseo-02"]["default_database_path"] }}"}'
+      onboot: True
+      unprivileged: True
+      validate_certs: False
+      description: "{{ hostvars['rpc-coretime-paseo-02']['default_network'] }} {{ hostvars['rpc-coretime-paseo-02']['default_node_type'] }}: {{ hostvars['rpc-coretime-paseo-02']['host_name'] }}"
+      state: present
+      features:
+        - nesting=1
+    port_forwards:
+      - from_port: "{{ hostvars['rpc-coretime-paseo-02']['ansible_port'] }}"
+        to_host: "{{ hostvars['rpc-coretime-paseo-02']['container_ip'] }}:22"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['rpc-coretime-paseo-02']['zabbix_ext_port'] }}"
+        to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
+        protocol: "tcp"
+  - host: "rpc-people-paseo-02"
+    proxmox_config:
+      vmid: "340402"
+      hostname: "{{ hostvars['rpc-people-paseo-02']['host_name'] }}"
+      ostemplate: "local:vztmpl/{{ default_container_template }}"
+      netif: "{{ hostvars['rpc-people-paseo-02']['netif'] }}"
+      cores: 4
+      memory: 16384
+      swap: 8192
+      password: "{{ default_password }}"
+      disk: "{{ default_storage }}:20"
+      mounts: '{"mp0":"{{ default_storage }}:100,mp={{ hostvars["rpc-people-paseo-02"]["default_database_path"] }}"}'
+      onboot: True
+      unprivileged: True
+      validate_certs: False
+      description: "{{ hostvars['rpc-people-paseo-02']['default_network'] }} {{ hostvars['rpc-people-paseo-02']['default_node_type'] }}: {{ hostvars['rpc-people-paseo-02']['host_name'] }}"
+      state: present
+      features:
+        - nesting=1
+    port_forwards:
+      - from_port: "{{ hostvars['rpc-people-paseo-02']['ansible_port'] }}"
+        to_host: "{{ hostvars['rpc-people-paseo-02']['container_ip'] }}:22"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['rpc-people-paseo-02']['zabbix_ext_port'] }}"
+        to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
         protocol: "tcp"

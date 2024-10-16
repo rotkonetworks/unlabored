@@ -13,7 +13,7 @@
   ansible.builtin.file:
     path: /root/.secrets/certbot
     state: directory
-    mode: '0700'
+    mode: "0700"
     owner: root
     group: root
   become: True
@@ -24,7 +24,7 @@
     content: |
       dns_cloudflare_api_token = {{ cloudflare_api_token }}
     dest: /root/.secrets/certbot/cloudflare.ini
-    mode: '0600'
+    mode: "0600"
     owner: root
     group: root
   become: True
@@ -35,6 +35,9 @@
     days_until_expiration: >
       {{ ((cert_info.not_after | default('1970-01-01T00:00:00Z') | to_datetime('%Y%m%d%H%M%SZ')) - (ansible_date_time.iso8601 | to_datetime('%Y-%m-%dT%H:%M:%SZ'))).days }}
   when: cert_info is defined and cert_info.not_after is defined
+
+# NOTE: it need to create cloudflare_origin.pem and cloudflare_origin.key from secret vault
+# because Renew Let's encrypt will not work if the cloudflare_origin.key/.pem not in /etc/nginx/ssl/
 
 - name: Renew Let's Encrypt certificate using DNS challenge
   ansible.builtin.command: >
@@ -56,7 +59,7 @@
   ansible.builtin.file:
     path: /etc/nginx/ssl
     state: directory
-    mode: '0755'
+    mode: "0755"
     owner: root
     group: root
   become: True
@@ -79,7 +82,7 @@
   ansible.builtin.template:
     src: "https-{{ default_node_type }}.conf.j2"
     dest: "/etc/nginx/sites-available/{{ default_domain }}"
-    mode: '0644'
+    mode: "0644"
   notify: Reload nginx
   become: True
   become_user: root
