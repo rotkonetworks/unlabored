@@ -15,6 +15,9 @@ pinned_service: False
 zabbix_port: 10050
 ssh_port: 22
 
+# Default Nginx PSK (validator need this) -al
+default_nginx_psk: "ainaZoozie8hai1FohphiShei8tei3eb"
+
 # Monitoring
 default_zabbix_port: 10050
 zabbix_master: "192.168.69.98"
