@@ -23,15 +23,3 @@ default_syncmode: "full"
 zabbix_ext_port: 10331
 
 default_bootnode_domain: "wnd14.rotko.net"
-
-default_p2p_port: 33331
-default_p2p_port_ws: 34331
-default_p2p_port_wss: 35331
-default_rpc_port: 9331
-default_secure_rpc_port: 42331
-default_prom_port: 7331
-
-# default_bootnode_domain: "boot-{{ default_network }}.rotko.net"
-default_bootnode_p2p_port: "{{ default_p2p_port + 10500 }}"
-default_bootnode_p2p_port_ws: "{{ default_p2p_port_ws + 10500 }}"
-default_bootnode_p2p_port_wss: "{{ default_p2p_port_wss + 10500 }}"
