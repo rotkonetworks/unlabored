@@ -18,3 +18,10 @@ default_node_type: "endpoint"
 zabbix_ext_port: 10612
 
 default_bootnode_domain: "mint14.rotko.net"
+
+default_p2p_port: 30333
+default_p2p_port_ws: 30334
+default_p2p_port_wss: 30335
+default_rpc_port: 9300
+default_secure_rpc_port: 42612
+default_prom_port: 7612
