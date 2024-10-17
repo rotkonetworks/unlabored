@@ -423,9 +423,9 @@ lxc_nodes:
       password: "{{ default_password }}"
       disk: "{{ zfs_storage }}:20"
       mounts: '{"mp0":"{{ zfs_storage }}:2000,mp={{ hostvars["rpc-polkadot-01"]["default_database_path"] }}"}'
-      onboot: true
-      unprivileged: true
-      validate_certs: false
+      onboot: True
+      unprivileged: True
+      validate_certs: False
       description: "{{ hostvars['rpc-polkadot-01']['default_network'] }} {{ hostvars['rpc-polkadot-01']['default_node_type'] }}: {{ hostvars['rpc-polkadot-01']['host_name'] }}"
       state: present
       features:
@@ -458,9 +458,9 @@ lxc_nodes:
       password: "{{ default_password }}"
       disk: "{{ zfs_storage }}:20"
       mounts: '{"mp0":"{{ zfs_storage }}:2000,mp={{ hostvars["rpc-polkadot-02"]["default_database_path"] }}"}'
-      onboot: true
-      unprivileged: true
-      validate_certs: false
+      onboot: True
+      unprivileged: True
+      validate_certs: False
       description: "{{ hostvars['rpc-polkadot-02']['default_network'] }} {{ hostvars['rpc-polkadot-02']['default_node_type'] }}: {{ hostvars['rpc-polkadot-02']['host_name'] }}"
       state: present
       features:
