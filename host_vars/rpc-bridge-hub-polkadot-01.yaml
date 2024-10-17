@@ -25,3 +25,5 @@ default_p2p_port_wss: 30335
 default_rpc_port: 9300
 default_secure_rpc_port: 42641
 default_prom_port: 7641
+default_bootnode_p2p_port_ws: 30434
+default_bootnode_p2p_port_wss: 30435

@@ -69,6 +69,7 @@
   become: True
   become_user: root
 
+  #NOTE: added --dns-cloudflare-propagation-seconds 60 -al
 - name: Renew Let's Encrypt certificate using DNS challenge
   ansible.builtin.command: >
     certbot certonly --dns-cloudflare
@@ -81,6 +82,7 @@
     --agree-tos
     --email {{ default_certificate_email }}
     --deploy-hook "systemctl reload nginx"
+    --dns-cloudflare-propagation-seconds 60
   become: True
   become_user: root
   when: days_until_expiration is not defined or days_until_expiration | int < 30
