@@ -30,8 +30,10 @@ bkk50
 hdx27
 
 [polkadot]
+rpc-polkadot-01
 rpc-polkadot-02
 rpc-kusama-02
+rpc-westend-01
 rpc-westend-02
 rpc-paseo-02
 pso07
@@ -47,6 +49,16 @@ rpc-people-polkadot-02
 rpc-bridge-hub-paseo-02
 rpc-coretime-paseo-02
 rpc-people-paseo-02
+rpc-asset-hub-polkadot-01
+rpc-asset-hub-polkadot-02
+rpc-bridge-hub-polkadot-01
+rpc-bridge-hub-polkadot-02
+rpc-bridge-hub-westend-01
+rpc-bridge-hub-westend-02
+rpc-collectives-polkadot-01
+rpc-collectives-polkadot-02
+rpc-collectives-westend-01
+rpc-collectives-westend-02
 
 [services]
 monitor
