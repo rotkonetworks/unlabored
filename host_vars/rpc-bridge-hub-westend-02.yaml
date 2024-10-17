@@ -16,10 +16,3 @@ default_relay_rpc_fallback: "ws://{{ hostvars['rpc-westend-02']['container_ip'] 
 default_database: rocksdb
 default_node_type: "endpoint"
 zabbix_ext_port: 10662
-
-default_p2p_port: 33662
-default_p2p_port_ws: 34662
-default_p2p_port_wss: 35662
-default_rpc_port: 9662
-default_secure_rpc_port: 42662
-default_prom_port: 7662

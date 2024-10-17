@@ -24,10 +24,3 @@ zabbix_ext_port: 10311
 
 # default_bootnode_domain: "boot-{{ default_network }}.rotko.net"
 default_bootnode_domain: "dot14.rotko.net"
-
-default_p2p_port: 33311
-default_p2p_port_ws: 34311
-default_p2p_port_wss: 35311
-default_rpc_port: 9311
-default_secure_rpc_port: 42311
-default_prom_port: 7311
