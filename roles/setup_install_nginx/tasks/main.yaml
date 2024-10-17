@@ -36,8 +36,38 @@
       {{ ((cert_info.not_after | default('1970-01-01T00:00:00Z') | to_datetime('%Y%m%d%H%M%SZ')) - (ansible_date_time.iso8601 | to_datetime('%Y-%m-%dT%H:%M:%SZ'))).days }}
   when: cert_info is defined and cert_info.not_after is defined
 
-# NOTE: it need to create cloudflare_origin.pem and cloudflare_origin.key from secret vault
-# because Renew Let's encrypt will not work if the cloudflare_origin.key/.pem not in /etc/nginx/ssl/
+  #NOTE: please take a look at it -al
+- name: Ensure NGINX SSL directory exists
+  ansible.builtin.file:
+    path: /etc/nginx/ssl
+    state: directory
+    mode: "0755"
+    owner: root
+    group: root
+  become: True
+  become_user: root
+
+# NOTE: Create cloudflare_origin.pem and cloudflare_origin.key from variables
+# These files are required for Let's Encrypt renewal to work properly
+- name: Create cloudflare_origin.pem
+  ansible.builtin.copy:
+    content: "{{ cloudflare_origin_certificate }}"
+    dest: /etc/nginx/ssl/cloudflare_origin.pem
+    mode: "0644"
+    owner: root
+    group: root
+  become: True
+  become_user: root
+
+- name: Create cloudflare_origin.key
+  ansible.builtin.copy:
+    content: "{{ cloudflare_origin_key }}"
+    dest: /etc/nginx/ssl/cloudflare_origin.key
+    mode: "0600"
+    owner: root
+    group: root
+  become: True
+  become_user: root
 
 - name: Renew Let's Encrypt certificate using DNS challenge
   ansible.builtin.command: >
@@ -54,16 +84,6 @@
   become: True
   become_user: root
   when: days_until_expiration is not defined or days_until_expiration | int < 30
-
-- name: Ensure NGINX SSL directory exists
-  ansible.builtin.file:
-    path: /etc/nginx/ssl
-    state: directory
-    mode: "0755"
-    owner: root
-    group: root
-  become: True
-  become_user: root
 
 - name: Symlink Let's Encrypt certificates to NGINX SSL directory
   ansible.builtin.file:
