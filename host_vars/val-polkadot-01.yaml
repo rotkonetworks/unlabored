@@ -10,12 +10,13 @@ pinned_service: True
 
 default_telemetry_name: "Rotko Networks - {{ host_name.split('.')[0] }} {{ default_node_type | capitalize }}"
 default_network: "polkadot"
+default_chains_name: "polkadot"
 default_node_type: "validator"
 default_pruning: 1000
 default_database: paritydb
 default_syncmode: warp
-pub_p2p_port: 33115
-pub_p2p_port_ws: 34115
+default_p2p_port: 33115
+default_p2p_port_ws: 34115
 default_p2p_port_wss: 35115
 default_rpc_port: 9115
 default_secure_rpc_port: 42115

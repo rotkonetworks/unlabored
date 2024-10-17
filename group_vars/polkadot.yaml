@@ -22,8 +22,8 @@ default_network: polkadot
 default_node_type: validator
 # default_p2p_port: 33100
 # default_p2p_port_ws: 34100
-inet_p2p_port: 30333
-inet_p2p_port_ws: 30334
+default_inet_p2p_port: 30333
+default_inet_p2p_port_ws: 30334
 default_p2p_port_wss: 30335
 default_p2p_para_port: 31333
 default_p2p_para_port_ws: 31334
