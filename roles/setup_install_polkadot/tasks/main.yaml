@@ -128,6 +128,37 @@
     - Systemd daemon-reload
     - Start Polkadot
 
+    #NOTE: please take a look at it -al
+- name: Create ParityDB folder if default_database is paritydb
+  ansible.builtin.file:
+    path: "{{ default_base_path }}/chains/{{ default_chains_name }}/paritydb/full"
+    state: directory
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+    mode: "0750"
+  when: default_database == "paritydb"
+
+- name: Ensure network directory exists
+  ansible.builtin.file:
+    path: "{{ default_base_path }}/chains/{{ default_chains_name }}/network"
+    state: directory
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+    mode: "0750"
+
+- name: Check if secret_ed25519 file exists
+  ansible.builtin.stat:
+    path: "{{ default_base_path }}/chains/{{ default_chains_name }}/network/secret_ed25519"
+  register: secret_ed25519_file
+
+- name: Generate node key
+  ansible.builtin.command:
+    cmd: "./polkadot key generate-node-key --file {{ default_base_path }}/chains/{{ default_chains_name }}/network/secret_ed25519"
+    chdir: "{{ default_base_path }}"
+  become: True
+  become_user: "{{ default_user }}"
+  when: not secret_ed25519_file.stat.exists
+
 - name: Flush handlers after service copy
   ansible.builtin.meta: flush_handlers
 
