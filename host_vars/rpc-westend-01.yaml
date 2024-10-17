@@ -1,0 +1,37 @@
+---
+ansible_host: "160.22.181.181"
+container_ip: "192.168.77.31"
+ansible_port: 2331
+host_name: "rpc-westend-01.rotko.net"
+host_timezone: "Asia/Bangkok"
+netif: '{"net0":"name=eth0,gw={{ default_nat_network_forward_cidr.split("/")[0] }},ip={{ default_host_ip }}/16,bridge={{ default_nat_device }}"}'
+role: "westend"
+pinned_service: True
+
+default_telemetry_name: "Rotko Networks - {{ host_name.split('.')[0] }} {{ default_node_type | capitalize }}"
+default_domain: "{{ host_name }}"
+default_domain_lb: "westend.rotko.net"
+default_domain_ibp: "rpc.ibp.network"
+default_domain_dotters: "rpc.dotters.network"
+default_ibp_repository: "git@github.com:GATOTECH-LTD/ibp-ssl"
+default_dotters_repository: "git@github.com:senseless/dotters-ssl"
+default_network: "westend"
+default_node_type: "endpoint"
+default_pruning: "archive"
+default_database: "rocksdb"
+default_syncmode: "full"
+zabbix_ext_port: 10331
+
+default_bootnode_domain: "wnd14.rotko.net"
+
+default_p2p_port: 33331
+default_p2p_port_ws: 34331
+default_p2p_port_wss: 35331
+default_rpc_port: 9331
+default_secure_rpc_port: 42331
+default_prom_port: 7331
+
+# default_bootnode_domain: "boot-{{ default_network }}.rotko.net"
+default_bootnode_p2p_port: "{{ default_p2p_port + 10500 }}"
+default_bootnode_p2p_port_ws: "{{ default_p2p_port_ws + 10500 }}"
+default_bootnode_p2p_port_wss: "{{ default_p2p_port_wss + 10500 }}"
