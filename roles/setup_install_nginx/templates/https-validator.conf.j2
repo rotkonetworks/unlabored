@@ -9,8 +9,8 @@ server {
     server_name {{ default_domain }};
     
     # SSL/TLS settings
-    ssl_certificate {{ cloudflare_origin_pem_path }};
-    ssl_certificate_key {{ cloudflare_origin_key_path }};
+    ssl_certificate {{ letsencrypt_key_path }};
+    ssl_certificate_key {{ letsencrypt_key_path }};
 
     # Strong SSL settings
     ssl_protocols TLSv1.3;
@@ -45,8 +45,8 @@ server {
     server_name {{ default_domain }};
 
     # SSL/TLS settings
-    ssl_certificate {{ cloudflare_origin_pem_path }};
-    ssl_certificate_key {{ cloudflare_origin_key_path }};
+    ssl_certificate {{ letsencrypt_key_path }};
+    ssl_certificate_key {{ letsencrypt_key_path }};
 
     # Strong SSL settings
     ssl_protocols TLSv1.3;

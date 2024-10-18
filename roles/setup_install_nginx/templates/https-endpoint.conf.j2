@@ -5,8 +5,8 @@ server {
     server_name {{ default_domain }};
     
     # SSL/TLS settings
-    ssl_certificate {{ cloudflare_origin_pem_path }};
-    ssl_certificate_key {{ cloudflare_origin_key_path }};
+    ssl_certificate {{ letsencrypt_key_path }};
+    ssl_certificate_key {{ letsencrypt_key_path }};
     
     # Strong SSL settings
     ssl_protocols TLSv1.3;
@@ -42,8 +42,8 @@ server {
     server_name {{ default_domain }};
     
     # SSL/TLS settings
-    ssl_certificate {{ cloudflare_origin_pem_path }};
-    ssl_certificate_key {{ cloudflare_origin_key_path }};
+    ssl_certificate {{ letsencrypt_key_path }};
+    ssl_certificate_key {{ letsencrypt_key_path }};
     
     # SSL settings are inherited from the previous server block
 
@@ -68,9 +68,9 @@ server {
     server_name {{ default_bootnode_domain }};
     
     # SSL/TLS settings
-    ssl_certificate {{ cloudflare_origin_pem_path }};
-    ssl_certificate_key {{ cloudflare_origin_key_path }};
-    
+    ssl_certificate {{ letsencrypt_key_path }};
+    ssl_certificate_key {{ letsencrypt_key_path }};
+
     # SSL settings are inherited from the first server block
     location / {
         proxy_buffers 16 4k;

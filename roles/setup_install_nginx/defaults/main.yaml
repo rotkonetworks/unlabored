@@ -10,6 +10,8 @@ default_domain: "{{ host_name }}"
 # cloudflare_certificate_pk: "-----BEGIN PRIVATE KEY----- -----END PRIVATE KEY-----"
 cloudflare_origin_key_path: "/etc/nginx/ssl/cloudflare_origin.key"
 cloudflare_origin_pem_path: "/etc/nginx/ssl/cloudflare_origin.pem"
+letsencrypt_cert_path: "/etc/letsencrypt/live/{{ default_domain }}/fullchain.pem"
+letsencrypt_key_path: "/etc/letsencrypt/live/{{ default_domain }}/privkey.pem"
 
 # NGINX configuration variables
 default_p2p_port_wss: 443
