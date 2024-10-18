@@ -4,7 +4,7 @@ server {
     server_name {{ default_domain }};
 
     # SSL/TLS settings
-    ssl_certificate {{ letsencrypt_key_path }};
+    ssl_certificate {{ letsencrypt_cert_path }};
     ssl_certificate_key {{ letsencrypt_key_path }};
 
     # SSL protocols and ciphers
@@ -41,8 +41,8 @@ server {
     server_name {{ default_domain }};
 
     # SSL/TLS settings
-    ssl_certificate {{ cloudflare_origin_pem_path }};
-    ssl_certificate_key {{ cloudflare_origin_key_path }};
+    ssl_certificate {{ letsencrypt_cert_path }};
+    ssl_certificate_key {{ letsencrypt_key_path }};
 
     # SSL protocols and ciphers
     ssl_protocols TLSv1.3;

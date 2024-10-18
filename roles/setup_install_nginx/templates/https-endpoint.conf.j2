@@ -5,7 +5,7 @@ server {
     server_name {{ default_domain }};
     
     # SSL/TLS settings
-    ssl_certificate {{ letsencrypt_key_path }};
+    ssl_certificate {{ letsencrypt_cert_path }};
     ssl_certificate_key {{ letsencrypt_key_path }};
     
     # Strong SSL settings
@@ -68,7 +68,7 @@ server {
     server_name {{ default_bootnode_domain }};
     
     # SSL/TLS settings
-    ssl_certificate {{ letsencrypt_key_path }};
+    ssl_certificate {{ letsencrypt_cert_path }};
     ssl_certificate_key {{ letsencrypt_key_path }};
 
     # SSL settings are inherited from the first server block
