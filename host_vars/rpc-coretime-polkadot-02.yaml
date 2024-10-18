@@ -17,7 +17,9 @@ default_relay_rpc: "ws://{{ hostvars['rpc-polkadot-01']['container_ip'] }}:{{ ho
 default_relay_rpc_fallback: "ws://{{ hostvars['rpc-polkadot-02']['container_ip'] }}:{{ hostvars['rpc-polkadot-02']['default_rpc_port'] }}"
 default_database: "paritydb"
 default_node_type: "endpoint"
-default_bootnode_domain: "boot-{{ default_network }}.rotko.net"
+zabbix_ext_port: 10845
+
+default_bootnode_domain: "{{ default_network }}.boot.rotko.net"
 
 default_p2p_port: 30333
 default_p2p_port_ws: 30334
@@ -28,4 +30,3 @@ default_bootnode_p2p_port_wss: 30435
 
 default_secure_rpc_port: 42845
 default_prom_port: 7845
-zabbix_ext_port: 10845

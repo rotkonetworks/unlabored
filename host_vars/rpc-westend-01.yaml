@@ -22,7 +22,7 @@ default_database: "rocksdb"
 default_syncmode: "full"
 zabbix_ext_port: 10331
 
-default_bootnode_domain: "wnd14.rotko.net"
+default_bootnode_domain: "{{ default_network }}.boot.rotko.net"
 
 default_p2p_port: 30333
 default_p2p_port_ws: 30334

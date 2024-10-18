@@ -17,7 +17,7 @@ default_database: paritydb
 default_node_type: "endpoint"
 zabbix_ext_port: 10612
 
-default_bootnode_domain: "mint14.rotko.net"
+default_bootnode_domain: "{{ default_network }}.boot.rotko.net"
 
 default_p2p_port: 30333
 default_p2p_port_ws: 30334

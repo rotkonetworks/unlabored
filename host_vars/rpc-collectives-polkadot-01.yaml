@@ -16,8 +16,8 @@ default_relay_rpc_fallback: "ws://{{ hostvars['rpc-polkadot-02']['container_ip']
 default_database: rocksdb
 default_node_type: "endpoint"
 zabbix_ext_port: 10671
-# default_bootnode_domain: "boot-{{ default_network }}.rotko.net"
-default_bootnode_domain: "pch16.rotko.net"
+
+default_bootnode_domain: "{{ default_network }}.boot.rotko.net"
 
 default_p2p_port: 30333
 default_p2p_port_ws: 30334
