@@ -1,5 +1,5 @@
 ---
-default_client_version: 1.11.1
+default_client_version: 1.14.0
 default_download_url: https://github.com/encointer/encointer-parachain/releases/download/{{ default_client_version }}/encointer-collator
 
 default_service: encointer
@@ -9,7 +9,7 @@ default_base_path: /opt/encointer
 default_database_path: "/opt/encointer/chains"
 default_log_level: info
 default_network: "encointer-kusama"
-default_node_type: bootnode  # collator, bootnode, endpoint
+default_node_type: bootnode # collator, bootnode, endpoint
 default_database: paritydb
 default_telemetry_url: "wss://telemetry-backend.w3f.community/submit/ 1"
 default_p2p_port: 33000
