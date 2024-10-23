@@ -25,8 +25,8 @@ ExecStart={{ default_base_path }}/polkadot \
      --name "{{ hostvars[inventory_hostname]['default_telemetry_name'] | default(host_name) }}" \
      --telemetry-url 'wss://telemetry-backend.w3f.community/submit 1' \
      --rpc-port {{ inet_rpc_port }} \
-     --listen-addr /ip4/0.0.0.0/tcp/{{ inet_p2p_port }} \
-     --listen-addr /ip4/0.0.0.0/tcp/{{ inet_p2p_port_ws }}/ws \
+     --listen-addr /ip4/0.0.0.0/tcp/{{ pub_p2p_port }} \
+     --listen-addr /ip4/0.0.0.0/tcp/{{ pub_p2p_port }}/ws \
      --public-addr /ip4/{{ ansible_host }}/tcp/{{ pub_p2p_port }} \
      --public-addr /ip4/{{ ansible_host }}/tcp/{{ pub_p2p_port_ws }}/ws \
      --prometheus-port {{ default_prom_port }} \
