@@ -6,13 +6,12 @@ This document outlines the port rules for various network connections in our sys
 
 | Protocol | Port  | Description                         |
 | -------- | ----- | ----------------------------------- |
-| P2P      | 30333 | Peer-to-peer network communications |
-| WS       | 30334 | WebSocket connections               |
-| WSS      | 30335 | Alternative WebSocket port          |
-| P2P      | 30433 | Bootnode p2p network communications |
-| WS       | 30434 | Bootnode WebSocket connections      |
-| WSS      | 30435 | Bootnode secure WebSocket port      |
-| WSS      | 443   | if possible for wss                 |
+| P2Prelay      | DIRECT | controlled in fw direct to ports 33000-33999 |
+| WSrelay       | 30334 | Relay WebSocket connections               |
+| WSSrelay      | 30335 | Relay Alternative WebSocket port          |
+| P2Ppara      | DIRECT | controlled in fw direct to ports 34000-34999|
+| WSpara       | 30434 | Parachain WebSocket connections      |
+| WSSpara      | 30435 | Parachain secure WebSocket port      |
 
 ## Relaychain and Parachain RPC Ports
 
