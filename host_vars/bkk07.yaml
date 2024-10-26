@@ -1655,7 +1655,7 @@ lxc_nodes:
   #       protocol: "tcp"
   - host: "val-polkadot-01"
     proxmox_config:
-      vmid: "114"
+      vmid: "31021"
       hostname: "{{ hostvars['val-polkadot-01']['host_name'] }}"
       ostemplate: "local:vztmpl/{{ default_container_template }}"
       netif: "{{ hostvars['val-polkadot-01']['netif'] }}"
@@ -1664,7 +1664,7 @@ lxc_nodes:
       swap: 8192
       password: "{{ default_password }}"
       disk: "{{ zfs_storage }}:20"
-      mounts: '{"mp0":"{{ zfs_storage }}:100,mp={{ hostvars["val-polkadot-01"]["default_database_path"] }}"}'
+      mounts: '{"mp0":"{{ zfs_storage }}:700,mp={{ hostvars["val-polkadot-01"]["default_database_path"] }}"}'
       onboot: True
       unprivileged: True
       validate_certs: False
@@ -1690,7 +1690,7 @@ lxc_nodes:
         protocol: "tcp"
   - host: "val-kusama-01"
     proxmox_config:
-      vmid: "124"
+      vmid: "32021"
       hostname: "{{ hostvars['val-kusama-01']['host_name'] }}"
       ostemplate: "local:vztmpl/{{ default_container_template }}"
       netif: "{{ hostvars['val-kusama-01']['netif'] }}"
@@ -1699,7 +1699,7 @@ lxc_nodes:
       swap: 8192
       password: "{{ default_password }}"
       disk: "{{ zfs_storage }}:20"
-      mounts: '{"mp0":"{{ zfs_storage }}:100,mp={{ hostvars["val-kusama-01"]["default_database_path"] }}"}'
+      mounts: '{"mp0":"{{ zfs_storage }}:700,mp={{ hostvars["val-kusama-01"]["default_database_path"] }}"}'
       onboot: True
       unprivileged: True
       validate_certs: False
