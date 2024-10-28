@@ -37,8 +37,8 @@ rpc-westend-01
 rpc-westend-02
 rpc-paseo-02
 pso07
-val-polkadot-01
-val-kusama-01
+val-polkadot-02
+val-kusama-02
 
 [cumulus]
 mint27

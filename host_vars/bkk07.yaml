@@ -1653,73 +1653,73 @@ lxc_nodes:
   #     - from_port: "{{ hostvars['rpc-encointer-kusama-02']['default_p2p_port_wss'] }}"
   #       to_host: "{{ hostvars['rpc-encointer-kusama-02']['container_ip'] }}:{{ hostvars['rpc-encointer-kusama-02']['default_p2p_port_wss'] }}"
   #       protocol: "tcp"
-  - host: "val-polkadot-01"
+  - host: "val-polkadot-02"
     proxmox_config:
-      vmid: "31021"
-      hostname: "{{ hostvars['val-polkadot-01']['host_name'] }}"
+      vmid: "31022"
+      hostname: "{{ hostvars['val-polkadot-02']['host_name'] }}"
       ostemplate: "local:vztmpl/{{ default_container_template }}"
-      netif: "{{ hostvars['val-polkadot-01']['netif'] }}"
+      netif: "{{ hostvars['val-polkadot-02']['netif'] }}"
       cores: 4
       memory: 32768
       swap: 8192
       password: "{{ default_password }}"
       disk: "{{ zfs_storage }}:20"
-      mounts: '{"mp0":"{{ zfs_storage }}:700,mp={{ hostvars["val-polkadot-01"]["default_database_path"] }}"}'
+      mounts: '{"mp0":"{{ zfs_storage }}:700,mp={{ hostvars["val-polkadot-02"]["default_database_path"] }}"}'
       onboot: True
       unprivileged: True
       validate_certs: False
-      description: "{{ hostvars['val-polkadot-01']['default_network'] }} {{ hostvars['val-polkadot-01']['default_node_type'] }}: {{ hostvars['val-polkadot-01']['host_name'] }}"
+      description: "{{ hostvars['val-polkadot-02']['default_network'] }} {{ hostvars['val-polkadot-02']['default_node_type'] }}: {{ hostvars['val-polkadot-02']['host_name'] }}"
       state: present
       features:
         - nesting=1
     port_forwards:
-      - from_port: "{{ hostvars['val-polkadot-01']['ansible_port'] }}"
-        to_host: "{{ hostvars['val-polkadot-01']['container_ip'] }}:{{ ssh_port }}"
+      - from_port: "{{ hostvars['val-polkadot-02']['ansible_port'] }}"
+        to_host: "{{ hostvars['val-polkadot-02']['container_ip'] }}:{{ ssh_port }}"
         protocol: "tcp"
-      - from_port: "{{ hostvars['val-polkadot-01']['zabbix_ext_port'] }}"
+      - from_port: "{{ hostvars['val-polkadot-02']['zabbix_ext_port'] }}"
         to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
         protocol: "tcp"
-      - from_port: "{{ hostvars['val-polkadot-01']['default_p2p_port'] }}"
-        to_host: "{{ hostvars['val-polkadot-01']['container_ip'] }}:{{ hostvars['val-polkadot-01']['default_p2p_port'] }}"
+      - from_port: "{{ hostvars['val-polkadot-02']['default_p2p_port'] }}"
+        to_host: "{{ hostvars['val-polkadot-02']['container_ip'] }}:{{ hostvars['val-polkadot-02']['default_p2p_port'] }}"
         protocol: "tcp"
-      - from_port: "{{ hostvars['val-polkadot-01']['default_p2p_port_ws'] }}"
-        to_host: "{{ hostvars['val-polkadot-01']['container_ip'] }}:{{ hostvars['val-polkadot-01']['default_p2p_port_ws'] }}"
+      - from_port: "{{ hostvars['val-polkadot-02']['default_p2p_port_ws'] }}"
+        to_host: "{{ hostvars['val-polkadot-02']['container_ip'] }}:{{ hostvars['val-polkadot-02']['default_p2p_port_ws'] }}"
         protocol: "tcp"
-      - from_port: "{{ hostvars['val-polkadot-01']['default_p2p_port_wss'] }}"
-        to_host: "{{ hostvars['val-polkadot-01']['container_ip'] }}:{{ hostvars['val-polkadot-01']['default_p2p_port_wss'] }}"
+      - from_port: "{{ hostvars['val-polkadot-02']['default_p2p_port_wss'] }}"
+        to_host: "{{ hostvars['val-polkadot-02']['container_ip'] }}:{{ hostvars['val-polkadot-02']['default_p2p_port_wss'] }}"
         protocol: "tcp"
-  - host: "val-kusama-01"
+  - host: "val-kusama-02"
     proxmox_config:
-      vmid: "32021"
-      hostname: "{{ hostvars['val-kusama-01']['host_name'] }}"
+      vmid: "32022"
+      hostname: "{{ hostvars['val-kusama-02']['host_name'] }}"
       ostemplate: "local:vztmpl/{{ default_container_template }}"
-      netif: "{{ hostvars['val-kusama-01']['netif'] }}"
+      netif: "{{ hostvars['val-kusama-02']['netif'] }}"
       cores: 4
       memory: 32768
       swap: 8192
       password: "{{ default_password }}"
       disk: "{{ zfs_storage }}:20"
-      mounts: '{"mp0":"{{ zfs_storage }}:700,mp={{ hostvars["val-kusama-01"]["default_database_path"] }}"}'
+      mounts: '{"mp0":"{{ zfs_storage }}:700,mp={{ hostvars["val-kusama-02"]["default_database_path"] }}"}'
       onboot: True
       unprivileged: True
       validate_certs: False
-      description: "{{ hostvars['val-kusama-01']['default_network'] }} {{ hostvars['val-kusama-01']['default_node_type'] }}: {{ hostvars['val-kusama-01']['host_name'] }}"
+      description: "{{ hostvars['val-kusama-02']['default_network'] }} {{ hostvars['val-kusama-02']['default_node_type'] }}: {{ hostvars['val-kusama-02']['host_name'] }}"
       state: present
       features:
         - nesting=1
     port_forwards:
-      - from_port: "{{ hostvars['val-kusama-01']['ansible_port'] }}"
-        to_host: "{{ hostvars['val-kusama-01']['container_ip'] }}:{{ ssh_port }}"
+      - from_port: "{{ hostvars['val-kusama-02']['ansible_port'] }}"
+        to_host: "{{ hostvars['val-kusama-02']['container_ip'] }}:{{ ssh_port }}"
         protocol: "tcp"
-      - from_port: "{{ hostvars['val-kusama-01']['zabbix_ext_port'] }}"
+      - from_port: "{{ hostvars['val-kusama-02']['zabbix_ext_port'] }}"
         to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
         protocol: "tcp"
-      - from_port: "{{ hostvars['val-kusama-01']['default_p2p_port'] }}"
-        to_host: "{{ hostvars['val-kusama-01']['container_ip'] }}:{{ hostvars['val-kusama-01']['default_p2p_port'] }}"
+      - from_port: "{{ hostvars['val-kusama-02']['default_p2p_port'] }}"
+        to_host: "{{ hostvars['val-kusama-02']['container_ip'] }}:{{ hostvars['val-kusama-02']['default_p2p_port'] }}"
         protocol: "tcp"
-      - from_port: "{{ hostvars['val-kusama-01']['default_p2p_port_ws'] }}"
-        to_host: "{{ hostvars['val-kusama-01']['container_ip'] }}:{{ hostvars['val-kusama-01']['default_p2p_port_ws'] }}"
+      - from_port: "{{ hostvars['val-kusama-02']['default_p2p_port_ws'] }}"
+        to_host: "{{ hostvars['val-kusama-02']['container_ip'] }}:{{ hostvars['val-kusama-02']['default_p2p_port_ws'] }}"
         protocol: "tcp"
-      - from_port: "{{ hostvars['val-kusama-01']['default_p2p_port_wss'] }}"
-        to_host: "{{ hostvars['val-kusama-01']['container_ip'] }}:{{ hostvars['val-kusama-01']['default_p2p_port_wss'] }}"
+      - from_port: "{{ hostvars['val-kusama-02']['default_p2p_port_wss'] }}"
+        to_host: "{{ hostvars['val-kusama-02']['container_ip'] }}:{{ hostvars['val-kusama-02']['default_p2p_port_wss'] }}"
         protocol: "tcp"

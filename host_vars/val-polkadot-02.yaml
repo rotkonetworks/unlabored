@@ -1,23 +1,23 @@
 ---
 ansible_host: "160.22.181.181"
-container_ip: "192.168.69.125"
-ansible_port: 2125
-host_name: "val-kusama-01.rotko.net"
+container_ip: "192.168.217.115"
+ansible_port: 2715
+host_name: "val-polkadot-01.rotko.net"
 host_timezone: "Asia/Bangkok"
 netif: '{"net0":"name=eth0,gw={{ default_nat_network_forward_cidr.split("/")[0] }},ip={{ default_host_ip }}/16,bridge={{ default_nat_device }}"}'
 role: "polkadot"
 pinned_service: True
 
 default_telemetry_name: "Rotko Networks - {{ host_name.split('.')[0] }} {{ default_node_type | capitalize }}"
-default_network: "kusama"
-default_chains_name: "ksmcc3"
+default_network: "polkadot"
+default_chains_name: "polkadot"
 default_node_type: "validator"
 default_pruning: 1000
 default_database: paritydb
 default_syncmode: warp
-default_p2p_port: 33125
-default_p2p_port_ws: 34125
-default_p2p_port_wss: 35125
-default_rpc_port: 9125
-default_secure_rpc_port: 42125
-zabbix_ext_port: 10125
+default_p2p_port: 31021
+default_p2p_port_ws: 30334
+default_p2p_port_wss: 30335
+default_rpc_port: 9300
+default_secure_rpc_port: 42715
+zabbix_ext_port: 10715
