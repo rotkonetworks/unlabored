@@ -34,7 +34,7 @@ ExecStart={{ default_base_path }}/polkadot \
      --wasm-execution compiled \
      --pruning 1000 \
      --workers-path {{ default_auxiliary_binary_path }} \
-     --db-cache {{ ansible_memtotal_mb // 2 }}
+     --db-cache {{ ansible_memtotal_mb // 2 }} \
      --sync {{ default_syncmode }}
 
 [Install]
