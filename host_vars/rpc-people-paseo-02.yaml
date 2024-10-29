@@ -21,5 +21,6 @@ default_node_type: "endpoint"
 zabbix_ext_port: 10967
 
 default_bootnode_domain: "{{ default_network }}.boot.rotko.net"
+default_bootnode_p2p_port: 34042
 default_bootnode_p2p_port_ws: 30434
 default_bootnode_p2p_port_wss: 30435

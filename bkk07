@@ -67,11 +67,13 @@ rpc-bridge-hub-polkadot-01
 rpc-bridge-hub-polkadot-02
 rpc-bridge-hub-westend-01
 rpc-bridge-hub-westend-02
+rpc-bridge-hub-kusama-01
 
 rpc-collectives-polkadot-01
 rpc-collectives-polkadot-02
 rpc-collectives-westend-01
 rpc-collectives-westend-02
+rpc-encointer-kusama-01
 
 [services]
 monitor

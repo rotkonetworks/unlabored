@@ -1,6 +1,6 @@
 ---
 ansible_host: "160.22.181.181"
-container_ip: "192.168.77.25"
+container_ip: "192.168.121.12"
 ansible_port: 2651
 host_name: "rpc-bridge-hub-kusama-01.rotko.net"
 host_timezone: "Asia/Bangkok"
@@ -11,16 +11,17 @@ pinned_service: True
 default_telemetry_name: "Rotko Networks - {{ host_name.split('.')[0] }} {{ default_node_type | capitalize }}"
 default_domain: "{{ host_name }}"
 default_network: "bridge-hub-kusama"
-default_relay_rpc: "ws://{{ hostvars['rpc-kusama-01']['container_ip'] }}:{{ hostvars['rpc-kusama-01']['default_rpc_port'] }}"
+default_relay_rpc: "ws://{{ hostvars['ksm26']['container_ip'] }}:{{ hostvars['ksm26']['default_rpc_port'] }}"
 default_relay_rpc_fallback: "ws://{{ hostvars['rpc-kusama-02']['container_ip'] }}:{{ hostvars['rpc-kusama-02']['default_rpc_port'] }}"
 default_database: paritydb # to be replaced with paritydb
 default_node_type: "endpoint"
 
 default_bootnode_domain: "{{ default_network }}.boot.rotko.net"
 
-default_p2p_port: 30333
+default_p2p_port: 32021
 default_p2p_port_ws: 30334
 default_p2p_port_wss: 30335
+default_bootnode_p2p_port: 32021
 default_bootnode_p2p_port_ws: 30434
 default_bootnode_p2p_port_wss: 30435
 default_rpc_port: 9300
