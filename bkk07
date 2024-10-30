@@ -61,6 +61,7 @@ rpc-asset-hub-polkadot-01
 rpc-asset-hub-polkadot-02
 rpc-asset-hub-westend-01
 rpc-asset-hub-westend-02
+rpc-asset-hub-kusama-01
 
 rpc-bridge-hub-paseo-02
 rpc-bridge-hub-polkadot-01
@@ -73,6 +74,8 @@ rpc-collectives-polkadot-01
 rpc-collectives-polkadot-02
 rpc-collectives-westend-01
 rpc-collectives-westend-02
+
+[encointer]
 rpc-encointer-kusama-01
 
 [services]

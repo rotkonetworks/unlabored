@@ -25,8 +25,8 @@ default_p2p_port_wss: 30335
 default_bootnode_p2p_port: 32061
 default_bootnode_p2p_port_ws: 30434
 default_bootnode_p2p_port_wss: 30435
-default_rpc_port: 9300
+default_rpc_port: 9400
 
 default_secure_rpc_port: 42601
-default_prom_port: 7601
+default_prom_port: 7400
 zabbix_ext_port: 10601
