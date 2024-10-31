@@ -4,7 +4,6 @@ rotko
 [rotko:children]
 proxmox_hosts
 proxmox_nodes
-proxmox_vms
 routers
 
 [proxmox_nodes:children]
@@ -136,5 +135,4 @@ bkk07
 [access_management:children]
 hardware
 proxmox_nodes
-proxmox_vms
 unmanaged
