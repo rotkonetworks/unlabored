@@ -25,7 +25,8 @@ default_secure_rpc_port: 42956
 default_prom_port: 7956
 zabbix_ext_port: 10956
 
-default_bootnode_domain: "boot-{{ default_network }}.rotko.net"
-default_bootnode_p2p_port: "{{ default_p2p_port + 10500 }}"
-default_bootnode_p2p_port_ws: "{{ default_p2p_port_ws + 10500 }}"
-default_bootnode_p2p_port_wss: "{{ default_p2p_port_wss + 10500 }}"
+# default_bootnode_domain: "{{ default_network }}.boot.rotko.net" #TODO: Change to this
+default_bootnode_domain: "pmint16.rotko.net"
+default_bootnode_p2p_port: 33946
+default_bootnode_p2p_port_ws: 34946
+default_bootnode_p2p_port_wss: 35946
