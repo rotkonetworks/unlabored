@@ -1,3 +1,4 @@
+---
 default_auxiliary_binary_path: /usr/libexec
 default_base_path: /opt/polkadot
 default_chain_spec: '{{ default_base_path }}/{{ default_network }}.json'
@@ -16,13 +17,10 @@ default_group: '{{ service_users[''polkadot''] }}'
 default_log_level: info
 default_network: polkadot
 default_node_type: validator
-# default_p2p_port: 33100
-# default_p2p_port_ws: 34100
 default_inet_p2p_port: 30333
 default_inet_p2p_port_ws: 30334
-default_p2p_port_wss: 30335
-default_p2p_para_port: 31333
-default_p2p_para_port_ws: 31334
+default_p2p_port: 30333
+default_p2p_port_ws: 30334
 default_p2p_port_wss: 30335
 default_prom_port: 7090
 default_rpc_para_port: 9955
