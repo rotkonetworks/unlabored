@@ -20,8 +20,8 @@ default_syncmode: full
 default_bootnode_domain: "{{ default_network }}.boot.rotko.net"
 
 default_p2p_port: 32061
-default_p2p_port_ws: 30334
-default_p2p_port_wss: 30335
+default_p2p_port_ws: 30434
+default_p2p_port_wss: 30435
 default_bootnode_p2p_port: 32061
 default_bootnode_p2p_port_ws: 30434
 default_bootnode_p2p_port_wss: 30435

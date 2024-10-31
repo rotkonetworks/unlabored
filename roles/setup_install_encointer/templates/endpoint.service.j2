@@ -15,11 +15,12 @@ ExecStart={{ default_base_path }}/encointer \
   --sync full \
   --listen-addr /ip4/0.0.0.0/tcp/{{ default_p2p_port }} \
   --listen-addr /ip4/0.0.0.0/tcp/{{ default_p2p_port_ws }}/ws \
-  --public-addr /ip4/{{ ansible_host }}/tcp/{{ default_p2p_port }} \
-  --public-addr /ip4/{{ ansible_host }}/tcp/{{ default_p2p_port_ws }}/ws \
+  --public-addr /dns/{{ default_domain }}/tcp/{{ default_p2p_port }} \
+  --public-addr /dns/{{ default_domain }}/tcp/{{ default_p2p_port_wss }}/wss \
+  {% if default_bootnode_domain is defined %}
   --public-addr /dns/{{ default_bootnode_domain }}/tcp/{{ default_p2p_port }} \
-  --public-addr /dns/{{ default_bootnode_domain }}/tcp/{{ default_p2p_port_ws }}/ws \
   --public-addr /dns/{{ default_bootnode_domain }}/tcp/{{ default_p2p_port_wss }}/wss \
+  {% endif %}--rpc-port {{ default_rpc_port }} \
   --enable-offchain-indexing=true \
   --rpc-port {{ default_rpc_port }} \
   --prometheus-port {{ default_prom_port }} \
