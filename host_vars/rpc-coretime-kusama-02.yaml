@@ -1,7 +1,7 @@
 ---
 ansible_host: "160.22.181.181"
 #WARN: ip still the same with kppl27
-container_ip: "192.168.77.28"
+container_ip: "192.168.122.15"
 ansible_port: 2828
 host_name: "rpc-coretime-kusama-02.rotko.net"
 host_timezone: "Asia/Bangkok"

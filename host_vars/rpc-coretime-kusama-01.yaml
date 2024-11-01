@@ -1,7 +1,6 @@
 ---
 ansible_host: "160.22.181.181"
-#WARN: ip and port still the same with kcore27
-container_ip: "192.168.77.27" # 27 for coretime-kusama
+container_ip: "192.168.121.15"
 ansible_port: 2827
 host_name: "rpc-coretime-kusama-01.rotko.net"
 host_timezone: "Asia/Bangkok"
