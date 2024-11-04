@@ -85,3 +85,29 @@ server {
     }
 }
 {% endif %}
+
+{% if transition_bootnode_domain is defined %}
+# Server 3: Bootnode Server
+server {
+    listen {{ transition_bootnode_p2p_port_wss }} ssl http2;
+    listen [::]:{{ transition_bootnode_p2p_port_wss }} ssl http2;
+    server_name {{ transition_bootnode_domain }};
+    
+    # SSL/TLS settings
+    ssl_certificate {{ letsencrypt_cert_path }};
+    ssl_certificate_key {{ letsencrypt_key_path }};
+
+    # SSL settings are inherited from the first server block
+    location / {
+        proxy_buffers 16 4k;
+        proxy_buffer_size 2k;
+        proxy_pass http://127.0.0.1:{{ transition_bootnode_p2p_port_ws }};
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+}
+{% endif %}
