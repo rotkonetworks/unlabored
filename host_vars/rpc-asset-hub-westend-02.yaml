@@ -2,7 +2,7 @@
 ansible_host: "160.22.181.181"
 container_ip: "192.168.132.11"
 ansible_port: 2634
-host_name: "rpc-asset-hub-westend-02.rotko.net"
+host_name: "rpc-asset-hub-westend-02.ct.rotko.net"
 host_timezone: "Asia/Bangkok"
 netif: '{"net0":"name=eth0,gw={{ default_nat_network_forward_cidr.split("/")[0] }},ip={{ default_host_ip }}/16,bridge={{ default_nat_device }}"}'
 role: "cumulus"
@@ -13,19 +13,14 @@ default_domain: "{{ host_name }}"
 default_network: "asset-hub-westend"
 default_relay_rpc: "ws://{{ hostvars['wnd26']['container_ip'] }}:{{ hostvars['wnd26']['default_rpc_port'] }}"
 default_relay_rpc_fallback: "ws://{{ hostvars['rpc-westend-02']['container_ip'] }}:{{ hostvars['rpc-westend-02']['default_rpc_port'] }}"
-default_database: paritydb
+default_database: rocksdb
 default_node_type: "endpoint"
 
 default_bootnode_domain: "{{ default_network }}.boot.rotko.net"
 
 default_p2p_port: 33012
-default_p2p_port_ws: 30334
-default_p2p_port_wss: 30335
 default_bootnode_p2p_port: 33012
 default_bootnode_p2p_port_ws: 30434
 default_bootnode_p2p_port_wss: 30435
-
-default_rpc_port: 9400
-default_prom_port: 7400
 default_secure_rpc_port: 42634
 zabbix_ext_port: 10634

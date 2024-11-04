@@ -2,7 +2,7 @@
 ansible_host: "160.22.181.181"
 container_ip: "192.168.77.45"
 ansible_port: 2642
-host_name: "rpc-bridge-hub-polkadot-02.rotko.net"
+host_name: "rpc-bridge-hub-polkadot-02.ct.rotko.net"
 host_timezone: "Asia/Bangkok"
 netif: '{"net0":"name=eth0,gw={{ default_nat_network_forward_cidr.split("/")[0] }},ip={{ default_host_ip }}/16,bridge={{ default_nat_device }}"}'
 role: "cumulus"
@@ -20,11 +20,7 @@ zabbix_ext_port: 10642
 default_bootnode_domain: "{{ default_network }}.boot.rotko.net"
 
 default_p2p_port: 31022
-default_p2p_port_ws: 30334
-default_p2p_port_wss: 30335
 default_bootnode_p2p_port: 31022
 default_bootnode_p2p_port_ws: 30434
 default_bootnode_p2p_port_wss: 30435
-default_rpc_port: 9400
 default_secure_rpc_port: 42642
-default_prom_port: 7400
