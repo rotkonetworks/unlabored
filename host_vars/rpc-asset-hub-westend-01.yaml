@@ -18,9 +18,9 @@ default_node_type: "endpoint"
 
 default_bootnode_domain: "{{ default_network }}.boot.rotko.net"
 transition_bootnode_domain: "wmint14.rotko.net"
-transition_bootnode_p2p_port: "33623"
-transition_bootnode_p2p_port_ws: "34623"
-transition_bootnode_p2p_port_wss: "35623"
+transition_bootnode_p2p_port: "33534"
+transition_bootnode_p2p_port_ws: "34534"
+transition_bootnode_p2p_port_wss: "35534"
 
 default_p2p_port: 33011
 default_bootnode_p2p_port: 33011

@@ -87,7 +87,7 @@ server {
 {% endif %}
 
 {% if transition_bootnode_domain is defined %}
-# Server 3: Bootnode Server
+# Server 4: Transition Bootnode Server
 server {
     listen {{ transition_bootnode_p2p_port_wss }} ssl http2;
     listen [::]:{{ transition_bootnode_p2p_port_wss }} ssl http2;

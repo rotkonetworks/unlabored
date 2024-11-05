@@ -19,9 +19,9 @@ zabbix_ext_port: 10641
 
 default_bootnode_domain: "{{ default_network }}.boot.rotko.net"
 transition_bootnode_domain: "pbr13.rotko.net"
-transition_bootnode_p2p_port: "33643"
-transition_bootnode_p2p_port_ws: "34643"
-transition_bootnode_p2p_port_wss: "35643"
+transition_bootnode_p2p_port: "33543"
+transition_bootnode_p2p_port_ws: "34543"
+transition_bootnode_p2p_port_wss: "35543"
 
 default_p2p_port: 31021
 default_bootnode_p2p_port: 31021
