@@ -1,6 +1,6 @@
 ---
 ansible_host: "160.22.181.181"
-container_ip: "192.168.77.52"
+container_ip: "192.168.132.13"
 ansible_port: 2692
 host_name: "rpc-collectives-westend-02.ct.rotko.net"
 host_timezone: "Asia/Bangkok"

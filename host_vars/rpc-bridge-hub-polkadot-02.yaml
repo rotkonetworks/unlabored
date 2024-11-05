@@ -1,6 +1,6 @@
 ---
 ansible_host: "160.22.181.181"
-container_ip: "192.168.77.45"
+container_ip: "192.168.112.12"
 ansible_port: 2642
 host_name: "rpc-bridge-hub-polkadot-02.ct.rotko.net"
 host_timezone: "Asia/Bangkok"
