@@ -47,10 +47,12 @@ wppl27
 rpc-people-polkadot-02
 rpc-people-paseo-02
 rpc-people-westend-02
+rpc-people-kusama-02
 
 rpc-coretime-paseo-02
 rpc-coretime-polkadot-02
 rpc-coretime-westend-02
+rpc-coretime-kusama-02
 
 rpc-asset-hub-paseo-02
 rpc-asset-hub-polkadot-02
