@@ -105,7 +105,7 @@
 - name: Install Polkadot v{{ default_client_version }}
   ansible.builtin.get_url:
     url: "{{ default_download_url }}"
-    dest: "{{ default_base_path }}/bin/polkadot-{{ default_client_version }}"
+    dest: "{{ default_base_path }}/bin/{{ default_client_version }}"
     mode: "u+r+x"
     owner: "{{ default_user }}"
     group: "{{ default_user }}"
@@ -114,7 +114,7 @@
 
 - name: Create soft link for Polkadot binary
   ansible.builtin.file:
-    src: "{{ default_base_path }}/bin/polkadot-{{ default_client_version }}"
+    src: "{{ default_base_path }}/bin/{{ default_client_version }}"
     dest: "{{ default_base_path }}/polkadot"
     state: link
     owner: "{{ default_user }}"
@@ -127,6 +127,37 @@
     - Stop Polkadot
     - Systemd daemon-reload
     - Start Polkadot
+
+    #NOTE: compare sha256
+- name: Download official SHA256 checksum file
+  ansible.builtin.get_url:
+    url: "{{ default_download_polkadotSHA256 }}"
+    dest: "{{ default_base_path }}/bin/{{ default_client_version }}.sha256"
+    mode: "0640"
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+  when: not polkadot_binary.stat.exists or force_update or ansible_local['noderole']['node']['version'] is not defined or ansible_local['noderole']['node']['version'] != default_client_version
+
+- name: Calculate SHA256 checksum of downloaded Polkadot binary
+  ansible.builtin.command:
+    cmd: "sha256sum {{ default_base_path }}/bin/{{ default_client_version }}"
+  register: calculated_checksum
+  changed_when: False
+  when: not polkadot_binary.stat.exists or force_update or ansible_local['noderole']['node']['version'] is not defined or ansible_local['noderole']['node']['version'] != default_client_version
+
+- name: Read official SHA256 checksum
+  ansible.builtin.command:
+    cmd: "cat {{ default_base_path }}/bin/{{ default_client_version }}.sha256"
+  register: official_checksum
+  changed_when: False
+  when: not polkadot_binary.stat.exists or force_update or ansible_local['noderole']['node']['version'] is not defined or ansible_local['noderole']['node']['version'] != default_client_version
+
+- name: Verify SHA256 checksum
+  ansible.builtin.fail:
+    msg: "SHA256 checksum mismatch. Expected: {{ official_checksum.stdout.split()[0] }}, Got: {{ calculated_checksum.stdout.split()[0] }}"
+  when:
+    - not polkadot_binary.stat.exists or force_update or ansible_local['noderole']['node']['version'] is not defined or ansible_local['noderole']['node']['version'] != default_client_version
+    - calculated_checksum.stdout.split()[0] != official_checksum.stdout.split()[0]
 
     #NOTE: please take a look at it -al
 - name: Perform validator-specific tasks
