@@ -32,6 +32,12 @@
     - setup_user_management
     - setup_log_rotation
 
+- name: Install Prometheus
+  hosts: prometheus
+  gather_facts: True
+  roles:
+    - setup_install_prometheus
+
 - name: Install Arbitrum services
   hosts: arbitrum
   gather_facts: True

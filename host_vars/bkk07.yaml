@@ -1226,3 +1226,28 @@ lxc_nodes:
       - from_port: "{{ hostvars['val-kusama-02']['default_p2p_port_wss'] }}"
         to_host: "{{ hostvars['val-kusama-02']['container_ip'] }}:{{ hostvars['val-kusama-02']['default_p2p_port_wss'] }}"
         protocol: "tcp"
+  - host: "ibp-bkk07"
+    proxmox_config:
+      vmid: "997"
+      hostname: "{{ hostvars['ibp-bkk07']['host_name'] }}"
+      ostemplate: "local:vztmpl/{{ default_container_template }}"
+      netif: "{{ hostvars['ibp-bkk07']['netif'] }}"
+      cores: 1
+      memory: 512
+      swap: 256
+      password: "{{ default_password }}"
+      disk: "{{ zfs_storage }}:20"
+      onboot: True
+      unprivileged: True
+      validate_certs: False
+      description: "{{ hostvars['ibp-bkk07']['default_network'] }} {{ hostvars['ibp-bkk07']['default_node_type'] }}: {{ hostvars['ibp-bkk07']['host_name'] }}"
+      state: present
+      features:
+        - nesting=1
+    port_forwards:
+      - from_port: "{{ hostvars['ibp-bkk07']['ansible_port'] }}"
+        to_host: "{{ hostvars['ibp-bkk07']['container_ip'] }}:{{ ssh_port }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['ibp-bkk07']['zabbix_ext_port'] }}"
+        to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
+        protocol: "tcp"

@@ -11,6 +11,10 @@ routers
 polkadot
 hydration
 cumulus
+prometheus
+
+[prometheus]
+ibp-bkk07
 
 [proxmox_vms:children]
 taloswrkr
