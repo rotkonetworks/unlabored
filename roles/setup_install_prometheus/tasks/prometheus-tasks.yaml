@@ -75,6 +75,7 @@
     owner: prometheus
     group: prometheus
     mode: "0644"
+  notify: Restart Prometheus
 
 - name: Validate Prometheus configuration
   ansible.builtin.command:
@@ -102,3 +103,6 @@
         daemon_reload: yes
         enabled: yes
         state: "{{ 'started' if not servicestatus.stat.exists else 'restarted' }}"
+
+- name: Flush handlers
+  meta: flush_handlers
