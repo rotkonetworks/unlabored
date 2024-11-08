@@ -8,5 +8,4 @@ netif: '{"net0":"name=eth0,gw={{ default_nat_network_forward_cidr.split("/")[0] 
 role: "ibp"
 pinned_service: False
 default_node_type: prometheus
-
 zabbix_ext_port: 10314

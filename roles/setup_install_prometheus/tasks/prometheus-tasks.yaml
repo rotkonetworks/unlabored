@@ -1,13 +1,34 @@
 ---
 - name: Set default Prometheus download URL as fallback
   ansible.builtin.set_fact:
-    prometheus_download_url: "https://example.com/default_prometheus.tar.gz"  # Fallback URL
+    prometheus_download_url: "https://example.com/default_prometheus.tar.gz" # Fallback URL
 
-- name: Attempt to fetch the latest version of Prometheus
+# - name: Attempt to fetch the latest version of Prometheus
+#   ansible.builtin.get_url:
+#     url: "{{ lookup('url', 'https://api.github.com/repos/prometheus/prometheus/releases/latest', wantlist=True) | default([]) | json_query('[0].assets[?content_type==`application/gzip`].browser_download_url') | first | default(prometheus_download_url) }}"
+#     dest: "/tmp/prometheus.tar.gz"
+#     mode: "0755"
+#   register: download_result
+#   until: download_result is succeeded
+#   retries: 3
+#   delay: 5
+
+# - name: Fetch the latest release information from GitHub
+#   ansible.builtin.uri:
+#     url: "https://api.github.com/repos/prometheus/prometheus/releases/latest"
+#     return_content: yes
+#   register: github_release_info
+#   failed_when: github_release_info.status != 200
+#
+# - name: Set Prometheus download URL
+#   ansible.builtin.set_fact:
+#     prometheus_download_url: "{{ github_release_info.json.assets | selectattr('content_type', '==', 'application/gzip') | map(attribute='browser_download_url') | first | default('https://example.com/default_prometheus.tar.gz') }}"
+
+- name: Attempt to download the latest Prometheus release
   ansible.builtin.get_url:
-    url: "{{ lookup('url', 'https://api.github.com/repos/prometheus/prometheus/releases/latest', wantlist=True) | default([]) | json_query('[0].assets[?content_type==`application/gzip`].browser_download_url') | first | default(prometheus_download_url) }}"
+    url: "{{ default_download_url }}"
     dest: "/tmp/prometheus.tar.gz"
-    mode: '0755'
+    mode: "0755"
   register: download_result
   until: download_result is succeeded
   retries: 3
@@ -20,12 +41,15 @@
     remote_src: yes
     creates: "/usr/local/bin/prometheus"
 
-- name: Move Prometheus binaries to the desired location
+- name: Move Prometheus & Promtool binaries to the desired location
   ansible.builtin.command:
-    cmd: "mv /tmp/prometheus-{{ prometheus_version }}/prometheus* /usr/local/bin/"
+    cmd: "mv /tmp/prometheus-{{ prometheus_version }}.linux-386/prometheus /usr/local/bin/prometheus"
     creates: "/usr/local/bin/prometheus"
-  vars:
-    prometheus_version: "{{ lookup('url', 'https://api.github.com/repos/prometheus/prometheus/releases/latest', wantlist=True) | json_query('[0].tag_name') }}"
+
+- name: Move Prometheus & Promtool binaries to the desired location
+  ansible.builtin.command:
+    cmd: "mv /tmp/prometheus-{{ prometheus_version }}.linux-386/promtool /usr/local/bin/promtool"
+    creates: "/usr/local/bin/promtool"
 
 - name: Ensure Prometheus directories exist
   ansible.builtin.file:
@@ -33,7 +57,7 @@
     state: directory
     owner: prometheus
     group: prometheus
-    mode: '0755'
+    mode: "0755"
   loop:
     - /etc/prometheus/
     - /var/lib/prometheus/
@@ -46,16 +70,17 @@
 
 - name: Deploy Prometheus configuration
   ansible.builtin.copy:
-    src: files/prometheus.yml
+    src: files/prometheus.yaml
     dest: /etc/prometheus/prometheus.yml
     owner: prometheus
     group: prometheus
-    mode: '0644'
+    mode: "0644"
 
 - name: Validate Prometheus configuration
   ansible.builtin.command:
-    cmd: "promtool check config /etc/prometheus/prometheus.yml"
-    creates: "/etc/prometheus/prometheus.yml.valid"
+    cmd: "/usr/local/bin/promtool check config /etc/prometheus/prometheus.yml"
+  become: true
+  become_user: prometheus
 
 - name: Manage Prometheus service
   block:
@@ -68,7 +93,7 @@
       ansible.builtin.template:
         src: files/prometheus.service
         dest: /etc/systemd/system/prometheus.service
-        mode: '0644'
+        mode: "0644"
       when: not servicestatus.stat.exists
 
     - name: Handle Prometheus service state

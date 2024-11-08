@@ -1228,7 +1228,7 @@ lxc_nodes:
         protocol: "tcp"
   - host: "ibp-bkk07"
     proxmox_config:
-      vmid: "997"
+      vmid: "996"
       hostname: "{{ hostvars['ibp-bkk07']['host_name'] }}"
       ostemplate: "local:vztmpl/{{ default_container_template }}"
       netif: "{{ hostvars['ibp-bkk07']['netif'] }}"
@@ -1236,11 +1236,11 @@ lxc_nodes:
       memory: 512
       swap: 256
       password: "{{ default_password }}"
-      disk: "{{ zfs_storage }}:20"
+      disk: "{{ zfs_storage }}:66"
       onboot: True
       unprivileged: True
       validate_certs: False
-      description: "{{ hostvars['ibp-bkk07']['default_network'] }} {{ hostvars['ibp-bkk07']['default_node_type'] }}: {{ hostvars['ibp-bkk07']['host_name'] }}"
+      description: "{{ hostvars['ibp-bkk07']['host_name'] }}"
       state: present
       features:
         - nesting=1

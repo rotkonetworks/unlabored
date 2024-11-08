@@ -1,11 +1,27 @@
 ---
 # tasks file for prometheus
 
+- name: Ensure prometheus group exists
+  ansible.builtin.group:
+    name: prometheus
+    state: present
+
+- name: Ensure prometheus user exists
+  ansible.builtin.user:
+    name: prometheus
+    group: prometheus
+    system: yes
+    create_home: no
+    shell: /sbin/nologin
+    state: present
+
 - name: Check latest version of Prometheus if not define from monitoring
   ansible.builtin.shell:
     cmd: |
       set -o pipefail
       curl -s https://api.github.com/repos/prometheus/prometheus/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4)}'
+  args:
+    executable: /bin/bash
   register: prometheus_latest
   when: hostvars['monitor']['prometheus_latest_mon'] is not defined
 

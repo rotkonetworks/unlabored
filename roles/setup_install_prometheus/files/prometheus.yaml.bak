@@ -1,0 +1,64 @@
+#
+# Ansible managed
+#
+# http://prometheus.io/docs/operating/configuration/
+
+global:
+  scrape_interval: 15s
+  scrape_timeout: 10s
+  evaluation_interval: 15s
+
+  external_labels:
+    member: rotko
+
+rule_files:
+  - /etc/prometheus/rules/*.rules
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+            - "localhost:9093" # Replace with your Alertmanager address
+
+scrape_configs:
+  - job_name: prometheus
+    metrics_path: /metrics
+    static_configs:
+      - targets:
+          - 127.0.0.1:9090
+  - job_name: substrate
+    metrics_path: /metrics
+    file_sd_configs:
+      - files:
+          - /etc/prometheus/file_sd/node.yml
+    metric_relabel_configs:
+      - action: replace
+        source_labels:
+          - chain
+        target_label: chain
+        regex: westend2
+        replacement: westend
+      - action: replace
+        source_labels:
+          - chain
+        target_label: chain
+        regex: ksmcc3
+        replacement: kusama
+      - action: replace
+        source_labels:
+          - chain
+        target_label: chain
+        regex: collectives_polkadot
+        replacement: collectives-polkadot
+      - action: replace
+        source_labels:
+          - chain
+        target_label: chain
+        regex: collectives_westend
+        replacement: collectives-westend
+      - action: replace
+        source_labels:
+          - chain
+        target_label: chain
+        regex: encointer-kusama
+        replacement: encointer
