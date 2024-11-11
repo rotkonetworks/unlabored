@@ -1,64 +1,102 @@
-#
-# Ansible managed
-#
-# http://prometheus.io/docs/operating/configuration/
-
+---
 global:
   scrape_interval: 15s
-  scrape_timeout: 10s
   evaluation_interval: 15s
 
-  external_labels:
-    member: rotko
-
-rule_files:
-  - /etc/prometheus/rules/*.rules
-
-alerting:
-  alertmanagers:
-    - static_configs:
-        - targets:
-            - "localhost:9093" # Replace with your Alertmanager address
-
 scrape_configs:
-  - job_name: prometheus
-    metrics_path: /metrics
+  - job_name: "prometheus"
+    scrape_interval: 5s
+    static_configs:
+      - targets: ["localhost:9090"]
+  - job_name: "node_exporter"
+    scrape_interval: 5s
+    static_configs:
+      - targets: ["localhost:9100"]
+
+  - job_name: turboflakes
+    metrics_path: /federate
+    honor_labels: true
+    scheme: https
+    params:
+      match[]:
+        - '{job="substrate"}'
     static_configs:
       - targets:
-          - 127.0.0.1:9090
-  - job_name: substrate
-    metrics_path: /metrics
-    file_sd_configs:
-      - files:
-          - /etc/prometheus/file_sd/node.yml
-    metric_relabel_configs:
-      - action: replace
-        source_labels:
-          - chain
-        target_label: chain
-        regex: westend2
-        replacement: westend
-      - action: replace
-        source_labels:
-          - chain
-        target_label: chain
-        regex: ksmcc3
-        replacement: kusama
-      - action: replace
-        source_labels:
-          - chain
-        target_label: chain
-        regex: collectives_polkadot
-        replacement: collectives-polkadot
-      - action: replace
-        source_labels:
-          - chain
-        target_label: chain
-        regex: collectives_westend
-        replacement: collectives-westend
-      - action: replace
-        source_labels:
-          - chain
-        target_label: chain
-        regex: encointer-kusama
-        replacement: encointer
+          - ibp-prometheus.turboflakes.io:9095
+
+  - job_name: amforc
+    metrics_path: /federate
+    honor_labels: true
+    scheme: https
+    params:
+      match[]:
+        - '{job="substrate"}'
+    static_configs:
+      - targets:
+          - ibp-monitor.amforc.com:9090
+
+  - job_name: "metaspan"
+    scrape_interval: 15s
+    honor_labels: true
+    metrics_path: "/federate"
+    params:
+      "match[]":
+        - '{job="substrate"}'
+    static_configs:
+      - targets:
+          - "195.144.22.130:9090"
+
+  - job_name: "stakeplus"
+    scrape_interval: 15s
+    honor_labels: true
+    metrics_path: "/federate"
+    params:
+      "match[]":
+        - '{job="substrate"}'
+    static_configs:
+      - targets:
+          - "192.96.202.185:59090"
+
+  - job_name: "helikon"
+    scrape_interval: 15s
+    honor_labels: true
+    metrics_path: "/federate"
+    params:
+      "match[]":
+        - '{job="substrate"}'
+    static_configs:
+      - targets:
+          - "82.222.18.146:19300"
+
+  - job_name: "gatotech"
+    scrape_interval: 15s
+    honor_labels: true
+    metrics_path: "/federate"
+    params:
+      "match[]":
+        - '{job="substrate"}'
+    static_configs:
+      - targets:
+          - "138.59.133.248:9090"
+
+  - job_name: dwellir
+    metrics_path: /713173e6-ff3f-46ab-b245-b41da8f717d3/federate
+    honor_labels: true
+    scheme: https
+    params:
+      match[]:
+        - '{__name__=~"substrate.*"}'
+    static_configs:
+      - targets:
+          - ibp-metrics-ng.dwellir.com
+
+  - job_name: rotko
+    metrics_path: /federate
+    honor_labels: true
+    scheme: https
+    params:
+      match[]:
+        - '{__name__=~"substrate.*"}'
+    static_configs:
+      - targets:
+          - ibp-monitor.rotko.net

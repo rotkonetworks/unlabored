@@ -41,19 +41,19 @@
   ansible.builtin.import_tasks: "prometheus-tasks.yaml"
   when: prometheus_latest.stdout != prometheus_installed.stdout
 
-- name: Copy file with owner and permissions
-  ansible.builtin.copy:
-    src: files/prometheus.yaml
-    dest: /etc/prometheus/prometheus.yaml
-    owner: prometheus
-    group: prometheus
-    mode: "0755"
-
-- name: Check Prometheus configuration
-  ansible.builtin.command:
-    cmd: promtool check config /etc/prometheus/prometheus.yaml
-  register: prometheus_config
-  when: prometheus_latest.stdout != prometheus_installed.stdout
+# - name: Copy file with owner and permissions
+#   ansible.builtin.copy:
+#     src: files/prometheus.yaml
+#     dest: /etc/prometheus/prometheus.yaml
+#     owner: prometheus
+#     group: prometheus
+#     mode: "0755"
+#
+# - name: Check Prometheus configuration
+#   ansible.builtin.command:
+#     cmd: promtool check config /etc/prometheus/prometheus.yaml
+#   register: prometheus_config
+#   when: prometheus_latest.stdout != prometheus_installed.stdout
 
 - name: Restart service
   ansible.builtin.systemd:
