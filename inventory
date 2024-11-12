@@ -16,6 +16,7 @@ polkadot
 ansible
 matrix
 ibp
+ibp_bkk07
 
 [routers]
 bkk10
