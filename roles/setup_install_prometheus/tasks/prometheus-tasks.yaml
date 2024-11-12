@@ -73,6 +73,47 @@
     path: "/tmp/prometheus.tar.gz"
     state: absent
 
+- name: Download Alertmanager
+  ansible.builtin.get_url:
+    url: "{{ default_alertmanager_download_url }}"
+    dest: "/tmp/alertmanager.tar.gz"
+    mode: "0644"
+  register: alertmanager_download
+  until: alertmanager_download is succeeded
+  retries: 3
+  delay: 5
+
+- name: Extract Alertmanager package
+  ansible.builtin.unarchive:
+    src: "/tmp/alertmanager.tar.gz"
+    dest: "/tmp"
+    remote_src: yes
+
+- name: Move Alertmanager binary to /bin
+  ansible.builtin.copy:
+    src: "/tmp/alertmanager-{{ alertmanager_version }}.linux-amd64/alertmanager"
+    dest: "/bin/prometheus-alertmanager"
+    mode: "0755"
+    remote_src: yes
+    force: yes
+
+- name: Remove downloaded and extracted Alertmanager files
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+    - "/tmp/alertmanager.tar.gz"
+    - "/tmp/alertmanager-{{ alertmanager_version }}.linux-amd64"
+
+# - name: Deploy Alertmanager configuration
+#   ansible.builtin.copy:
+#     src: files/alertmanager.yml
+#     dest: /etc/prometheus/alertmanager.yml
+#     owner: prometheus
+#     group: prometheus
+#     mode: "0644"
+#   notify: Restart Alertmanager
+
 - name: Deploy Prometheus configuration
   ansible.builtin.copy:
     src: files/prometheus.yaml
@@ -81,6 +122,19 @@
     group: prometheus
     mode: "0644"
   notify: Restart Prometheus
+
+# - name: Set up Alertmanager service
+#   ansible.builtin.template:
+#     src: files/alertmanager.service
+#     dest: /etc/systemd/system/alertmanager.service
+#     mode: "0644"
+
+# - name: Manage Alertmanager service
+#   ansible.builtin.systemd:
+#     name: alertmanager
+#     daemon_reload: yes
+#     enabled: yes
+#     state: started
 
 - name: Validate Prometheus configuration
   ansible.builtin.command:

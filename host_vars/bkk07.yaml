@@ -1257,7 +1257,7 @@ lxc_nodes:
       hostname: "{{ hostvars['haproxy-bkk07']['host_name'] }}"
       ostemplate: "local:vztmpl/{{ default_container_template }}"
       netif: "{{ hostvars['haproxy-bkk07']['netif'] }}"
-      cores: 2
+      cores: 8
       memory: 4000
       swap: 256
       password: "{{ default_password }}"

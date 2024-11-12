@@ -1,13 +1,12 @@
 ---
 - name: Add HAProxy GPG key
-  ansible.builtin.get_url:
+  ansible.builtin.apt_key:
     url: https://haproxy.debian.net/bernat.debian.org.gpg
-    dest: /usr/share/keyrings/haproxy.debian.net.gpg
-    mode: "0644"
+    state: present
 
 - name: Add HAProxy repository
   ansible.builtin.apt_repository:
-    repo: deb [signed-by=/usr/share/keyrings/haproxy.debian.net.gpg] http://haproxy.debian.net bookworm-backports-2.9 main
+    repo: deb https://haproxy.debian.net bookworm-backports-2.8 main
     state: present
     filename: haproxy
 
@@ -15,9 +14,9 @@
   ansible.builtin.apt:
     update_cache: yes
 
-- name: Ensure HAProxy 2.9.* is installed
+- name: Ensure HAProxy 2.8.* is installed
   ansible.builtin.apt:
-    name: "haproxy=2.9.*"
+    name: "haproxy=2.8.*"
     state: present
   when:
     - ansible_os_family == 'Debian'
@@ -32,29 +31,40 @@
   ansible.builtin.set_fact:
     haproxy_version: '{{ haproxy_version_result.stdout_lines[0] | regex_replace("^HA-?Proxy version (\d+(\.\d+)*).*$", "\1") }}'
 
-- name: Ensure HAProxy version is 2.9.x
+- name: Ensure HAProxy version is 2.8.x
   ansible.builtin.assert:
     that:
-      - haproxy_version is version('2.9', '>=')
-      - haproxy_version is version('2.10', '<')
-    fail_msg: "Installed HAProxy version ({{ haproxy_version }}) is not in the 2.9.x series"
+      - haproxy_version is version('2.8', '>=')
+      - haproxy_version is version('2.9', '<')
+    fail_msg: "Installed HAProxy version ({{ haproxy_version }}) is not in the 2.8.x series"
     success_msg: "HAProxy version {{ haproxy_version }} is correctly installed"
-  command: haproxy -v
-  register: haproxy_version_result
-  changed_when: false
-  check_mode: false
 
-- name: Set HAProxy version.
-  set_fact:
-    haproxy_version: '{{ haproxy_version_result.stdout_lines[0] | regex_replace("^HA-?Proxy version (\d+(\.\d+)*).*$", "\1") }}'
+- name: Display HAProxy template content
+  ansible.builtin.debug:
+    msg: "{{ lookup('template', haproxy_template) }}"
 
 - name: Copy HAProxy configuration in place.
-  template:
+  ansible.builtin.template:
     src: "{{ haproxy_template }}"
     dest: /etc/haproxy/haproxy.cfg
     mode: 0644
-    validate: haproxy -f %s -c -q
-  notify: restart haproxy
+  register: haproxy_config
+
+- name: Validate HAProxy configuration
+  ansible.builtin.command: haproxy -c -f /etc/haproxy/haproxy.cfg
+  register: haproxy_validate
+  changed_when: false
+  failed_when: haproxy_validate.rc != 0
+
+- name: Display HAProxy validation result
+  ansible.builtin.debug:
+    var: haproxy_validate
+
+- name: Restart HAProxy if configuration is valid
+  ansible.builtin.service:
+    name: haproxy
+    state: restarted
+  when: haproxy_validate.rc == 0
 
 - name: Ensure HAProxy is started and enabled on boot.
   service: name=haproxy state=started enabled=yes

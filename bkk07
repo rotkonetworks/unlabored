@@ -12,9 +12,13 @@ polkadot
 hydration
 cumulus
 prometheus
+haproxy
 
 [prometheus]
 ibp-bkk07
+
+[haproxy]
+haproxy-bkk07
 
 [proxmox_vms:children]
 taloswrkr
