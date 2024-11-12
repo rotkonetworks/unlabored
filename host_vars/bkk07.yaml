@@ -1251,3 +1251,28 @@ lxc_nodes:
       - from_port: "{{ hostvars['ibp-bkk07']['zabbix_ext_port'] }}"
         to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
         protocol: "tcp"
+  - host: "haproxy-bkk07"
+    proxmox_config:
+      vmid: "991"
+      hostname: "{{ hostvars['haproxy-bkk07']['host_name'] }}"
+      ostemplate: "local:vztmpl/{{ default_container_template }}"
+      netif: "{{ hostvars['haproxy-bkk07']['netif'] }}"
+      cores: 2
+      memory: 4000
+      swap: 256
+      password: "{{ default_password }}"
+      disk: "{{ zfs_storage }}:60"
+      onboot: True
+      unprivileged: True
+      validate_certs: False
+      description: "{{ hostvars['haproxy-bkk07']['host_name'] }}"
+      state: present
+      features:
+        - nesting=1
+    port_forwards:
+      - from_port: "{{ hostvars['haproxy-bkk07']['ansible_port'] }}"
+        to_host: "{{ hostvars['haproxy-bkk07']['container_ip'] }}:{{ ssh_port }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['haproxy-bkk07']['zabbix_ext_port'] }}"
+        to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
+        protocol: "tcp"
