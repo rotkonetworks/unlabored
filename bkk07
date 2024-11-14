@@ -11,14 +11,16 @@ routers
 polkadot
 hydration
 cumulus
-prometheus
-haproxy
+builder-container
 
 [prometheus]
 ibp-bkk07
 
 [haproxy]
 haproxy-bkk07
+
+[builder-container]
+build-node-07
 
 [proxmox_vms:children]
 taloswrkr
