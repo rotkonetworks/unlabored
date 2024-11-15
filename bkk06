@@ -22,6 +22,8 @@ hdx26
 [polkadot]
 dot14
 dot26
+rpc-polkadot-01
+rpc-kusama-01
 ksm14
 ksm26
 pso06
