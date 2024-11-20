@@ -1326,3 +1326,28 @@ lxc_nodes:
       - from_port: "{{ hostvars['interbtc']['zabbix_ext_port'] }}"
         to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
         protocol: "tcp"
+  - host: "proxy-bkk07"
+    proxmox_config:
+      vmid: "992"
+      hostname: "{{ hostvars['proxy-bkk07']['host_name'] }}"
+      ostemplate: "local:vztmpl/{{ default_container_template }}"
+      netif: "{{ hostvars['proxy-bkk07']['netif'] }}"
+      cores: 1
+      memory: 4000
+      swap: 256
+      password: "{{ default_password }}"
+      disk: "{{ zfs_storage }}:15"
+      onboot: True
+      unprivileged: True
+      validate_certs: False
+      description: "{{ hostvars['proxy-bkk07']['host_name'] }}"
+      state: present
+      features:
+        - nesting=1
+    port_forwards:
+      - from_port: "{{ hostvars['proxy-bkk07']['ansible_port'] }}"
+        to_host: "{{ hostvars['proxy-bkk07']['container_ip'] }}:{{ ssh_port }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['proxy-bkk07']['zabbix_ext_port'] }}"
+        to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
+        protocol: "tcp"

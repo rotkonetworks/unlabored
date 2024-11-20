@@ -22,6 +22,7 @@ haproxy-bkk07
 [misc-container]
 build-node-07
 interbtc
+proxy-bkk07
 
 [proxmox_vms:children]
 taloswrkr
