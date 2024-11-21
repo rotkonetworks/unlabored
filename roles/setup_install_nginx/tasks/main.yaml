@@ -69,7 +69,7 @@
   become: True
   become_user: root
 
-  #NOTE: added --dns-cloudflare-propagation-seconds 60 -al
+  #NOTE: added --dns-cloudflare-propagation-seconds 60 and --expand flag for multiple domains -al
 - name: Renew Let's Encrypt certificate using DNS challenge
   ansible.builtin.command: >
     certbot certonly --dns-cloudflare
@@ -77,6 +77,7 @@
     -d {{ default_domain }}
     {% if default_bootnode_domain is defined and default_bootnode_domain | length > 0 %}
     -d {{ default_bootnode_domain }}
+    --expand
     {% endif %}
     --non-interactive
     --agree-tos
@@ -121,7 +122,7 @@
 - name: Set up Certbot auto-renewal
   ansible.builtin.cron:
     name: "Certbot renewal"
-    job: "certbot renew --quiet --dns-cloudflare --dns-cloudflare-credentials /root/.secrets/certbot/cloudflare.ini --deploy-hook 'systemctl reload nginx'"
+    job: "certbot renew --quiet --dns-cloudflare --dns-cloudflare-credentials /root/.secrets/certbot/cloudflare.ini --expand --deploy-hook 'systemctl reload nginx'"
     minute: "0"
     hour: "3"
     weekday: "1"
