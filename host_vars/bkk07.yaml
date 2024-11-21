@@ -1247,12 +1247,12 @@ lxc_nodes:
       - from_port: "{{ hostvars['build-node-07']['zabbix_ext_port'] }}"
         to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
         protocol: "tcp"
-  - host: "interbtc"
+  - host: "dockers"
     proxmox_config:
       vmid: "992"
-      hostname: "{{ hostvars['interbtc']['host_name'] }}"
+      hostname: "{{ hostvars['dockers']['host_name'] }}"
       ostemplate: "local:vztmpl/{{ default_container_template }}"
-      netif: "{{ hostvars['interbtc']['netif'] }}"
+      netif: "{{ hostvars['dockers']['netif'] }}"
       cores: 1
       memory: 4000
       swap: 256
@@ -1261,15 +1261,15 @@ lxc_nodes:
       onboot: True
       unprivileged: True
       validate_certs: False
-      description: "{{ hostvars['interbtc']['host_name'] }}"
+      description: "{{ hostvars['dockers']['host_name'] }}"
       state: present
       features:
         - nesting=1
     port_forwards:
-      - from_port: "{{ hostvars['interbtc']['ansible_port'] }}"
-        to_host: "{{ hostvars['interbtc']['container_ip'] }}:{{ ssh_port }}"
+      - from_port: "{{ hostvars['dockers']['ansible_port'] }}"
+        to_host: "{{ hostvars['dockers']['container_ip'] }}:{{ ssh_port }}"
         protocol: "tcp"
-      - from_port: "{{ hostvars['interbtc']['zabbix_ext_port'] }}"
+      - from_port: "{{ hostvars['dockers']['zabbix_ext_port'] }}"
         to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
         protocol: "tcp"
   - host: "proxy-bkk07"
