@@ -16,6 +16,9 @@ polkadot
 [routers]
 bkk50
 
+[haproxy]
+haproxy-bkk06
+
 [hydration]
 hdx26
 
