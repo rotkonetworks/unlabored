@@ -35,6 +35,10 @@ ExecStart={{ default_base_path }}/polkadot \
      --pruning 1000 \
      --workers-path {{ default_auxiliary_binary_path }} \
      --db-cache {{ ansible_memtotal_mb // 2 }} \
+     --in-peers 32 \
+     --out-peers 16 \
+     --no-mdns \
+     --no-private-ip \
      --sync {{ default_syncmode }}
 
 [Install]
