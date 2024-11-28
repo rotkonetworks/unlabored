@@ -37,8 +37,8 @@ ExecStart={{ default_base_path }}/polkadot \
   --rpc-max-response-size 16 \
   --rpc-max-subscriptions-per-connection 1024 \
   --rpc-max-connections 10000 \
-  --in-peers 32 \
-  --out-peers 16 \
+  --in-peers {{ default_in_peers }} \
+  --out-peers {{ default_out_peers }} \
   --no-mdns 
 
 Restart=always
