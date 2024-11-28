@@ -20,6 +20,6 @@ default_p2p_port_ws: 30334
 default_p2p_port_wss: 30335
 default_rpc_port: 9300
 default_in_peers: 64
-default_out_peers: 16
+default_out_peers: 64
 default_secure_rpc_port: 42715
 zabbix_ext_port: 10715
