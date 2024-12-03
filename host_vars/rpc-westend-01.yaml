@@ -30,6 +30,11 @@ default_bootnode_p2p_port: 33001
 default_bootnode_p2p_port_ws: 30434
 default_bootnode_p2p_port_wss: 30435
 
+transition_bootnode_domain: "wnd14.rotko.net"
+transition_bootnode_p2p_port: 33234
+transition_bootnode_p2p_port_ws: 34234
+transition_bootnode_p2p_port_wss: 35234
+
 default_rpc_port: 9300
 default_prom_port: 7300
 
