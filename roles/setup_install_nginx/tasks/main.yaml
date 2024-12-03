@@ -83,7 +83,7 @@
     --agree-tos
     --email {{ default_certificate_email }}
     --deploy-hook "systemctl reload nginx"
-    --dns-cloudflare-propagation-seconds 60
+    --dns-cloudflare-propagation-seconds 300
   become: True
   become_user: root
   when: days_until_expiration is not defined or days_until_expiration | int < 30

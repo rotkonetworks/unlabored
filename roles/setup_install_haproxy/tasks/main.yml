@@ -29,8 +29,8 @@
 - name: Get HAProxy version
   ansible.builtin.command: haproxy -v
   register: haproxy_version_result
-  changed_when: false
-  check_mode: false
+  changed_when: False
+  check_mode: False
 
 - name: Set HAProxy version
   ansible.builtin.set_fact:
@@ -58,7 +58,7 @@
 - name: Validate HAProxy configuration
   ansible.builtin.command: haproxy -c -f /etc/haproxy/haproxy.cfg
   register: haproxy_validate
-  changed_when: false
+  changed_when: False
   failed_when: haproxy_validate.rc != 0
 
 - name: Display HAProxy validation result
@@ -71,5 +71,8 @@
     state: restarted
   when: haproxy_validate.rc == 0
 
-- name: Ensure HAProxy is started and enabled on boot.
-  service: name=haproxy state=started enabled=yes
+- name: Ensure HAProxy is started and enabled on boot
+  ansible.builtin.service:
+    name: haproxy
+    state: started
+    enabled: True

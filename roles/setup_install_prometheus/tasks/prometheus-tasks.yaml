@@ -139,8 +139,11 @@
 - name: Validate Prometheus configuration
   ansible.builtin.command:
     cmd: "/usr/local/bin/promtool check config /etc/prometheus/prometheus.yml"
-  become: true
+  become: True
   become_user: prometheus
+  changed_when: False
+  register: prometheus_config_check
+  failed_when: prometheus_config_check.rc != 0
 
 - name: Manage Prometheus service
   block:
@@ -163,4 +166,4 @@
         state: "{{ 'started' if not servicestatus.stat.exists else 'restarted' }}"
 
 - name: Flush handlers
-  meta: flush_handlers
+  ansible.builtin.meta: flush_handlers
