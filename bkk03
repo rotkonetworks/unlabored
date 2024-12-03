@@ -16,22 +16,12 @@ polkadot
 bkk50
 
 [polkadot]
-dot03
-dot23
-wnd23
-pso03
-ksm03
+val-polkadot-03
+val-kusama-03
 
 [cumulus]
-mint23
-wmint23
-pbr23
-wbr23
-pch23
-wch23
 
 [services]
-ibp
 
 [unmanaged]
 
@@ -48,5 +38,3 @@ unmanaged
 
 [referrence_nodes]
 monitor
-dot26
-wnd26
