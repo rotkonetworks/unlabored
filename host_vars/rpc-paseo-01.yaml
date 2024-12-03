@@ -1,8 +1,8 @@
 ---
 ansible_host: "160.22.181.181"
-container_ip: "192.168.121.10"
-ansible_port: 2321
-host_name: "rpc-kusama-01.ct.rotko.net"
+container_ip: "192.168.141.10"
+ansible_port: 2341
+host_name: "rpc-paseo-01.ct.rotko.net"
 host_timezone: "Asia/Bangkok"
 netif: '{"net0":"name=eth0,gw={{ default_nat_network_forward_cidr.split("/")[0] }},ip={{ default_host_ip }}/16,bridge={{ default_nat_device }}"}'
 role: "polkadot"
@@ -10,33 +10,28 @@ pinned_service: True
 
 default_telemetry_name: "Rotko Networks - {{ host_name.split('.')[0] }}"
 default_domain: "{{ host_name }}"
-default_domain_lb: "kusama.rotko.net"
+default_domain_lb: "paseo.rotko.net"
 default_domain_ibp: "rpc.ibp.network"
 default_domain_dotters: "rpc.dotters.network"
 default_ibp_repository: "git@github.com:GATOTECH-LTD/ibp-ssl"
 default_dotters_repository: "git@github.com:senseless/dotters-ssl"
-default_network: "kusama"
+default_network: "paseo"
 default_node_type: "endpoint"
 default_pruning: "archive"
 default_database: "rocksdb"
 default_syncmode: "full"
 
-default_p2p_port: 32001
+default_p2p_port: 34001
 default_p2p_port_ws: 30334
 default_p2p_port_wss: 30335
 
-default_bootnode_domain: "{{ default_network }}.boot.rotko.net"
-default_bootnode_p2p_port: 32001
-default_bootnode_p2p_port_ws: 30434
-default_bootnode_p2p_port_wss: 30435
-
-transition_bootnode_domain: "ksm14.rotko.net"
-transition_bootnode_p2p_port: 33224
-transition_bootnode_p2p_port_ws: 34224
-transition_bootnode_p2p_port_wss: 35224
-
 default_rpc_port: 9300
 default_prom_port: 7300
+default_secure_rpc_port: 42341
+zabbix_ext_port: 10341
 
-default_secure_rpc_port: 42321
-zabbix_ext_port: 10321
+# default_bootnode_domain: "boot-{{ default_network }}.rotko.net"
+transition_bootnode_domain: "pso16.rotko.net"
+transition_bootnode_p2p_port: 33246
+transition_bootnode_p2p_port_ws: 34246
+transition_bootnode_p2p_port_wss: 35246
