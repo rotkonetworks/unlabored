@@ -23,9 +23,9 @@ default_bootnode_p2p_port_ws: 30434
 default_bootnode_p2p_port_wss: 30435
 
 transition_bootnode_domain: "mine14.rotko.net"
-transition_bootnode_p2p_port: "33524"
-transition_bootnode_p2p_port_ws: "34524"
-transition_bootnode_p2p_port_wss: "35524"
+transition_bootnode_p2p_port: 33524
+transition_bootnode_p2p_port_ws: 34524
+transition_bootnode_p2p_port_wss: 35524
 
 default_rpc_port: 9400
 default_prom_port: 7400

@@ -2,13 +2,13 @@
 ansible_host: "160.22.181.181"
 container_ip: "192.168.121.16"
 ansible_port: 2601
-host_name: "rpc-encointer-kusama-01.rotko.net"
+host_name: "rpc-encointer-kusama-01.ct.rotko.net"
 host_timezone: "Asia/Bangkok"
 netif: '{"net0":"name=eth0,gw={{ default_nat_network_forward_cidr.split("/")[0] }},ip={{ default_host_ip }}/16,bridge={{ default_nat_device }}"}'
 role: "encointer"
 pinned_service: True
 
-default_telemetry_name: "Rotko Networks - {{ host_name.split('.')[0] }} {{ default_node_type | capitalize }}"
+default_telemetry_name: "Rotko Networks - {{ host_name.split('.')[0] }}"
 default_domain: "{{ host_name }}"
 default_network: encointer-kusama
 default_relay_rpc: "ws://{{ hostvars['ksm26']['container_ip'] }}:{{ hostvars['ksm26']['default_rpc_port'] }}"
