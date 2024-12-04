@@ -39,8 +39,6 @@ ExecStart={{ default_base_path }}/polkadot \
      --in-peers 64 \
      --workers-path {{ default_auxiliary_binary_path }} \
      --db-cache {{ ansible_memtotal_mb // 2 }} \
-     --in-peers {{ default_in_peers }} \
-     --out-peers {{ default_out_peers }} \
      --no-mdns \
      --sync {{ default_syncmode }}
 
