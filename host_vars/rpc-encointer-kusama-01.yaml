@@ -1,7 +1,7 @@
 ---
 ansible_host: "160.22.181.181"
 container_ip: "192.168.121.16"
-ansible_port: 2601
+ansible_port: 2602
 host_name: "rpc-encointer-kusama-01.ct.rotko.net"
 host_timezone: "Asia/Bangkok"
 netif: '{"net0":"name=eth0,gw={{ default_nat_network_forward_cidr.split("/")[0] }},ip={{ default_host_ip }}/16,bridge={{ default_nat_device }}"}'
@@ -11,22 +11,26 @@ pinned_service: True
 default_telemetry_name: "Rotko Networks - {{ host_name.split('.')[0] }}"
 default_domain: "{{ host_name }}"
 default_network: encointer-kusama
-default_relay_rpc: "ws://{{ hostvars['ksm26']['container_ip'] }}:{{ hostvars['ksm26']['default_rpc_port'] }}"
+default_relay_rpc: "ws://{{ hostvars['rpc-kusama-01']['container_ip'] }}:{{ hostvars['rpc-kusama-01']['default_rpc_port'] }}"
 default_relay_rpc_fallback: "ws://{{ hostvars['rpc-kusama-02']['container_ip'] }}:{{ hostvars['rpc-kusama-02']['default_rpc_port'] }}"
 default_node_type: "endpoint"
 default_pruning: "archive"
-default_database: paritydb # to be replaced with paritydb
+default_database: rocksdb
 default_syncmode: full
+
 default_bootnode_domain: "{{ default_network }}.boot.rotko.net"
 
+transition_bootnode_domain: "enc14.rotko.net"
+transition_bootnode_p2p_port: 33504
+transition_bootnode_p2p_port_ws: 34504
+transition_bootnode_p2p_port_wss: 35504
+
 default_p2p_port: 32061
-default_p2p_port_ws: 30434
-default_p2p_port_wss: 30435
 default_bootnode_p2p_port: 32061
 default_bootnode_p2p_port_ws: 30434
 default_bootnode_p2p_port_wss: 30435
 default_rpc_port: 9400
-
-default_secure_rpc_port: 42601
 default_prom_port: 7400
-zabbix_ext_port: 10601
+
+default_secure_rpc_port: 42602
+zabbix_ext_port: 10602
