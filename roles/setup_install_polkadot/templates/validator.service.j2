@@ -26,13 +26,17 @@ ExecStart={{ default_base_path }}/polkadot \
      --telemetry-url 'wss://telemetry-backend.w3f.community/submit 1' \
      --rpc-port {{ default_rpc_port }} \
      --listen-addr /ip4/0.0.0.0/tcp/{{ default_p2p_port }} \
-     --listen-addr /ip4/0.0.0.0/tcp/{{ default_p2p_port_ws }}/ws \
+#     --listen-addr /ip4/0.0.0.0/tcp/{{ default_p2p_port_ws }}/ws \
      --public-addr /ip4/{{ ansible_host }}/tcp/{{ default_p2p_port }} \
      --public-addr /ip4/{{ ansible_host }}/tcp/{{ default_p2p_port_ws }}/ws \
      --prometheus-port {{ default_prom_port }} \
      --prometheus-external \
      --wasm-execution compiled \
      --pruning 1000 \
+     --no-mdns \
+     --no-private-ip \
+     --out-peers 64 \
+     --in-peers 64 \
      --workers-path {{ default_auxiliary_binary_path }} \
      --db-cache {{ ansible_memtotal_mb // 2 }} \
      --in-peers {{ default_in_peers }} \
