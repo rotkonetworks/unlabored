@@ -14,13 +14,13 @@ ExecStart={{ default_base_path }}/encointer \
   --database {{ default_database }} \
   --sync full \
   --listen-addr /ip4/0.0.0.0/tcp/{{ default_p2p_port }} \
-  --listen-addr /ip4/0.0.0.0/tcp/{{ default_p2p_port_ws }}/ws \
+  --listen-addr /ip4/0.0.0.0/tcp/{{ default_bootnode_p2p_port_ws }}/ws \
   {% if transition_bootnode_domain is defined %}--listen-addr /ip4/0.0.0.0/tcp/{{ transition_bootnode_p2p_port }} \
   --listen-addr /ip4/0.0.0.0/tcp/{{ transition_bootnode_p2p_port_ws }}/ws \
   {% endif %}--public-addr /dns/{{ default_domain }}/tcp/{{ default_p2p_port }} \
-  --public-addr /dns/{{ default_domain }}/tcp/{{ default_p2p_port_wss }}/wss \
-  {% if default_bootnode_domain is defined %}--public-addr /dns/{{ default_bootnode_domain }}/tcp/{{ default_p2p_port }} \
-  --public-addr /dns/{{ default_bootnode_domain }}/tcp/{{ default_p2p_port_wss }}/wss \
+  --public-addr /dns/{{ default_domain }}/tcp/{{ default_bootnode_p2p_port_wss }}/wss \
+  {% if default_bootnode_domain is defined %}--public-addr /dns/{{ default_bootnode_domain }}/tcp/{{ default_bootnode_p2p_port }} \
+  --public-addr /dns/{{ default_bootnode_domain }}/tcp/{{ default_bootnode_p2p_port_wss }}/wss \
   {% endif %}{% if transition_bootnode_domain is defined %}--public-addr /dns/{{ transition_bootnode_domain }}/tcp/{{ transition_bootnode_p2p_port }} \
   --public-addr /dns/{{ transition_bootnode_domain }}/tcp/{{ transition_bootnode_p2p_port_ws }}/ws \
   --public-addr /dns/{{ transition_bootnode_domain }}/tcp/{{ transition_bootnode_p2p_port_wss }}/wss \
