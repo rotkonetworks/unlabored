@@ -14,7 +14,7 @@ default_network: "asset-hub-paseo"
 default_chain_spec: "{{ default_base_path }}/asset-hub-paseo.raw.json"
 default_chain_spec_dl_url: "https://media.githubusercontent.com/media/paseo-network/paseo-chain-specs/main/ah-paseo-spec.json"
 default_relay_rpc: "ws://{{ hostvars['pso26']['container_ip'] }}:{{ hostvars['pso26']['default_rpc_port'] }}"
-default_relay_rpc_fallback: "ws://{{ hostvars['pso24']['container_ip'] }}:{{ hostvars['pso24']['default_rpc_port'] }}"
+default_relay_rpc_fallback: "ws://{{ hostvars['rpc-paseo-02']['container_ip'] }}:{{ hostvars['rpc-paseo-02']['default_rpc_port'] }}"
 default_database: "rocksdb"
 default_node_type: "endpoint"
 default_p2p_port: 33956
