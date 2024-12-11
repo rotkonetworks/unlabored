@@ -21,6 +21,7 @@ haproxy-bkk06
 
 [hydration]
 hdx26
+rpc-hydration-polkadot-01
 
 [polkadot]
 dot14
