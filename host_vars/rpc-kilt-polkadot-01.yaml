@@ -11,7 +11,7 @@ pinned_service: True
 default_telemetry_name: "Rotko Networks - {{ host_name.split('.')[0] }} {{ default_node_type | capitalize }}"
 default_domain: "{{ host_name }}"
 default_network: "kilt"
-default_relay_rpc: "ws://{{ hostvars['dot26']['container_ip'] }}:{{ hostvars['dot26']['default_rpc_port'] }}"
+default_relay_rpc: "ws://{{ hostvars['rpc-polkadot-01']['container_ip'] }}:{{ hostvars['rpc-polkadot-01']['default_rpc_port'] }}"
 default_relay_rpc_fallback: "ws://{{ hostvars['dot23']['container_ip'] }}:{{ hostvars['dot23']['default_rpc_port'] }}"
 default_database: "rocksdb"
 default_node_type: "endpoint"
