@@ -110,9 +110,13 @@ hdx26
 hdx27
 
 [polkadot]
+rpc-polkadot-01
 rpc-polkadot-02
+rpc-kusama-01
 rpc-kusama-02
+rpc-westend-01
 rpc-westend-02
+rpc-paseo-01
 rpc-paseo-02
 val-polkadot-02
 val-kusama-02

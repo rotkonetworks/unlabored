@@ -1803,7 +1803,7 @@ lxc_nodes:
       swap: 8192
       password: "{{ default_password }}"
       disk: "{{ zfs_storage }}:20"
-      mounts: '{"mp0":"{{ zfs_storage }}:200,mp={{ hostvars["rpc-paseo-01"]["default_database_path"] }}"}'
+      mounts: '{"mp0":"{{ zfs_storage }}:300,mp={{ hostvars["rpc-paseo-01"]["default_database_path"] }}"}'
       onboot: True
       unprivileged: True
       validate_certs: False
@@ -1841,7 +1841,7 @@ lxc_nodes:
       swap: 8192
       password: "{{ default_password }}"
       disk: "{{ zfs_storage }}:20"
-      mounts: '{"mp0":"{{ zfs_storage }}:2000,mp={{ hostvars["rpc-kusama-01"]["default_database_path"] }}"}'
+      mounts: '{"mp0":"{{ zfs_storage }}:4000,mp={{ hostvars["rpc-kusama-01"]["default_database_path"] }}"}'
       onboot: True
       unprivileged: True
       validate_certs: False
