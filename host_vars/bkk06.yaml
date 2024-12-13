@@ -1227,12 +1227,6 @@ lxc_nodes:
   #     - from_port: "{{ hostvars['rpc-people-polkadot-01']['zabbix_ext_port'] }}"
   #       to_host: "{{ hostvars['monitor']['container_ip'] }}:10050"
   #       protocol: "tcp"
-  #     - from_port: "{{ hostvars['rpc-people-polkadot-01']['default_p2p_port'] }}"
-  #       to_host: "{{ hostvars['rpc-people-polkadot-01']['container_ip'] }}:{{ hostvars['rpc-people-polkadot-01']['default_p2p_port'] }}"
-  #       protocol: "tcp"
-  #     - from_port: "{{ hostvars['rpc-people-polkadot-01']['default_p2p_port_wss'] }}"
-  #       to_host: "{{ hostvars['rpc-people-polkadot-01']['container_ip'] }}:{{ hostvars['rpc-people-polkadot-01']['default_p2p_port_wss'] }}"
-  #       protocol: "tcp"
   # - host: "rpc-bridge-hub-paseo-01"
   #   proxmox_config:
   #     vmid: "340201"

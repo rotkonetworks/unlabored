@@ -27,6 +27,11 @@ default_p2p_port: 34001
 default_p2p_port_ws: 30334
 default_p2p_port_wss: 30335
 
+default_bootnode_domain: "{{ default_network }}.boot.rotko.net"
+default_bootnode_p2p_port: 34001
+default_bootnode_p2p_port_ws: 30334
+default_bootnode_p2p_port_wss: 30335
+
 default_rpc_port: 9300
 default_prom_port: 7300
 default_secure_rpc_port: 42341

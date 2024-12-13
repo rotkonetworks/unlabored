@@ -24,19 +24,10 @@ hdx26
 rpc-hydration-polkadot-01
 
 [polkadot]
-dot14
-dot26
 rpc-polkadot-01
 rpc-westend-01
 rpc-paseo-01
 rpc-kusama-01
-ksm14
-ksm26
-pso06
-pso16
-pso26
-wnd14
-wnd26
 
 [cumulus]
 ; rpc
