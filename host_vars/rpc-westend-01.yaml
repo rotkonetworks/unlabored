@@ -27,8 +27,8 @@ default_p2p_port_wss: 30335
 
 default_bootnode_domain: "{{ default_network }}.boot.rotko.net"
 default_bootnode_p2p_port: 33001
-default_bootnode_p2p_port_ws: 30434
-default_bootnode_p2p_port_wss: 30435
+default_bootnode_p2p_port_ws: 30334
+default_bootnode_p2p_port_wss: 30335
 
 transition_bootnode_domain: "wnd14.rotko.net"
 transition_bootnode_p2p_port: 33234
