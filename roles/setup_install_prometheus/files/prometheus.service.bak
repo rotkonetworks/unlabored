@@ -1,0 +1,22 @@
+[Unit]
+  Description=Prometheus Monitoring
+  Wants=network-online.target
+  After=network-online.target
+[Service]
+  User=prometheus
+  Group=prometheus
+  Type=simple
+  ExecReload=/bin/kill -HUP $MAINPID
+  ExecStart=/usr/local/bin/prometheus \
+  --storage.tsdb.path /var/lib/prometheus/ \
+  --storage.tsdb.retention.time 30d \
+  --storage.tsdb.retention.size 0 \
+  --web.config.file /etc/prometheus/prometheus.yaml \
+  --web.console.libraries=/etc/prometheus/console_libraries \
+  --web.console.templates=/etc/prometheus/consoles \
+  --web.listen-address=127.0.0.1:9090 \
+  --web.external-url=https://ibp.rotko.net \
+  --web.enable-admin-api
+  --config.file /etc/prometheus/prometheus.yaml \
+[Install]
+  WantedBy=multi-user.target

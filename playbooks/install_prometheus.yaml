@@ -1,0 +1,9 @@
+# Standards: 0.2
+---
+- name: Install Prometheus
+  hosts: prometheus
+  gather_facts: True
+  roles:
+    - setup_add_node_role
+    - setup_install_prometheus
+    - setup_install_nginx

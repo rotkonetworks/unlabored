@@ -1,11 +1,27 @@
 ---
 # tasks file for prometheus
 
+- name: Ensure prometheus group exists
+  ansible.builtin.group:
+    name: prometheus
+    state: present
+
+- name: Ensure prometheus user exists
+  ansible.builtin.user:
+    name: prometheus
+    group: prometheus
+    system: yes
+    create_home: no
+    shell: /sbin/nologin
+    state: present
+
 - name: Check latest version of Prometheus if not define from monitoring
   ansible.builtin.shell:
     cmd: |
       set -o pipefail
       curl -s https://api.github.com/repos/prometheus/prometheus/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4)}'
+  args:
+    executable: /bin/bash
   register: prometheus_latest
   when: hostvars['monitor']['prometheus_latest_mon'] is not defined
 
@@ -25,19 +41,19 @@
   ansible.builtin.import_tasks: "prometheus-tasks.yaml"
   when: prometheus_latest.stdout != prometheus_installed.stdout
 
-- name: Copy file with owner and permissions
-  ansible.builtin.copy:
-    src: files/prometheus.yaml
-    dest: /etc/prometheus/prometheus.yaml
-    owner: prometheus
-    group: prometheus
-    mode: "0755"
-
-- name: Check Prometheus configuration
-  ansible.builtin.command:
-    cmd: promtool check config /etc/prometheus/prometheus.yaml
-  register: prometheus_config
-  when: prometheus_latest.stdout != prometheus_installed.stdout
+# - name: Copy file with owner and permissions
+#   ansible.builtin.copy:
+#     src: files/prometheus.yaml
+#     dest: /etc/prometheus/prometheus.yaml
+#     owner: prometheus
+#     group: prometheus
+#     mode: "0755"
+#
+# - name: Check Prometheus configuration
+#   ansible.builtin.command:
+#     cmd: promtool check config /etc/prometheus/prometheus.yaml
+#   register: prometheus_config
+#   when: prometheus_latest.stdout != prometheus_installed.stdout
 
 - name: Restart service
   ansible.builtin.systemd:

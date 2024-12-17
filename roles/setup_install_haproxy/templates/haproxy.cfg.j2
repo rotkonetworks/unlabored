@@ -3,7 +3,7 @@ global
     log 127.0.0.1 local0
     chroot /var/lib/haproxy
     pidfile /var/run/haproxy.pid
-    maxconn 250000
+    maxconn 500000
     user haproxy
     group haproxy
     daemon
@@ -36,59 +36,332 @@ frontend stats
 ###
 # HTTP Frontend configuration
 ###
+frontend http-frontend
+    bind *:80
+    mode http
+    timeout client 300s
 
-#frontend http-frontend
-#   bind *:80
-#   mode http
-#   timeout client 300s
+    acl letsencrypt-acl path_beg -i /.well-known/acme-challenge/
+    http-request redirect scheme https if !letsencrypt-acl
+    use_backend letsencrypt if letsencrypt-acl
 
-#   acl is_http ssl_fc
-#   acl letsencrypt-acl path_beg -i /.well-known/acme-challenge/
-#   http-request redirect scheme https if !is_http !letsencrypt-acl
-#   use_backend letsencrypt if letsencrypt-acl
-#   default_backend letsencrypt
+    default_backend html-backend
 
 # SSL Frontend
 frontend ssl-frontend
-   bind *:443 ssl crt /etc/pki/certs # verify optional
-   mode http
-   timeout client 300s
+    bind *:443 ssl crt /etc/pki/certs # verify optional
+    mode http
+    timeout client 300s
 
-   # Detecting WebSocket Upgrade header
-   acl wss hdr(Upgrade) -i websocket
+    # Detecting WebSocket Upgrade header
+    acl wss hdr(Upgrade) -i websocket
 
-   # Relay chains
-   acl polkadot path_beg -i /polkadot
-   acl kusama path_beg -i /kusama
-   acl westend path_beg -i /westend
+    # paras	
+    acl rpc_rotko_net hdr(host) -i rpc.rotko.net
+    acl sys_rotko_net hdr(host) -i sys.rotko.net
+    acl up_rotko_net hdr(host) -i up.rotko.net
+    acl peering_rotko_net hdr(host) -i peering.rotko.net
+    acl rpc_dotters_network hdr(host) -i rpc.dotters.network
+    acl rpc_dotters_network hdr(host) -i sys.dotters.network
+    acl rpc_ibp_network hdr(host) -i rpc.ibp.network
+    acl rpc_ibp_network hdr(host) -i sys.ibp.network
 
-   # Horizontal chains
-#   acl westmint path_beg -i /westmint
-#   acl statemine path_beg -i /statemine
-#   acl statemint path_beg -i /statemint
-#   acl encointerKusama path_beg -i /encointer-kusama
-#   acl bridge-hubKusama path_beg -i /bridge-hub-kusama
-#   acl bridge-hubPolkadot path_beg -i /bridge-hub-polkadot
-#   acl bridge-hubWestend path_beg -i /bridge-hub-westend
-#   acl collectivesWestend path_beg -i /collectives-westend
-#   acl collectivesPolkadot path_beg -i /collectives-polkadot
+    # penumbra
+    acl penumbra_rotko_net hdr(host) -i penumbra.rotko.net
+    acl status_penumbra_rpc path_beg /status
+    use_backend status_penumbra_rotko_net_backend if penumbra_rotko_net status_penumbra_rpc
+    use_backend penumbra_rotko_net_backend if penumbra_rotko_net
 
-   # Polkadot
-   use_backend polkadot-backend if polkadot
-#   use_backend statemint-backend if statemint
-#   use_backend collectivesPolkadot-backend if collectivesPolkadot
-#   use_backend bridge-hubPolkadot-backend if bridge-hubPolkadot
-   # Kusama
-   use_backend kusama-backend if kusama
-#   use_backend statemine-backend if statemine
-#   use_backend encointerKusama-wss-backend if encointerKusama wss
-#   use_backend encointerKusama-rpc-backend if encointerKusama !wss
-#   use_backend bridge-hubKusama-backend if bridge-hubKusama
-   # Westend
-   use_backend westend-backend if westend
-#   use_backend westmint-backend if westmint
-#   use_backend collectivesWestend-backend if collectivesWestend
-#   use_backend bridge-hubWestend-backend if bridge-hubWestend
+  # Polkadot
+  acl polkadot_dotters hdr(host) -i polkadot.dotters.network
+  acl polkadot_ibp hdr(host) -i polkadot.ibp.network
+
+  use_backend polkadot-backend if polkadot_dotters or polkadot_ibp
+
+  # Asset Hub Polkadot
+  acl asset_hub_polkadot_dotters hdr(host) -i asset-hub-polkadot.dotters.network
+  acl asset_hub_polkadot_ibp hdr(host) -i asset-hub-polkadot.ibp.network
+
+  use_backend statemint-backend if asset_hub_polkadot_dotters or asset_hub_polkadot_ibp
+
+  # Bridge Hub Polkadot
+  acl bridge_hub_polkadot_dotters hdr(host) -i bridge-hub-polkadot.dotters.network
+  acl bridge_hub_polkadot_ibp hdr(host) -i bridge-hub-polkadot.ibp.network
+
+  use_backend bridgehubPolkadot-backend if bridge_hub_polkadot_dotters or bridge_hub_polkadot_ibp
+
+  # Coretime Polkadot
+  acl coretime_polkadot_dotters hdr(host) -i coretime-polkadot.dotters.network
+  acl coretime_polkadot_ibp hdr(host) -i coretime-polkadot.ibp.network
+
+  use_backend coretimePolkadot-backend if coretime_polkadot_dotters or coretime_polkadot_ibp
+
+  # People Polkadot
+  acl people_polkadot_dotters hdr(host) -i people-polkadot.dotters.network
+  acl people_polkadot_ibp hdr(host) -i people-polkadot.ibp.network
+
+  use_backend peoplePolkadot-backend if people_polkadot_dotters or people_polkadot_ibp
+
+  # Collectives Polkadot
+  acl collectives_polkadot_dotters hdr(host) -i collectives-polkadot.dotters.network
+  acl collectives_polkadot_ibp hdr(host) -i collectives-polkadot.ibp.network
+
+  use_backend collectivesPolkadot-backend if collectives_polkadot_dotters or collectives_polkadot_ibp
+
+  # Kusama
+  acl kusama_dotters hdr(host) -i kusama.dotters.network
+  acl kusama_ibp hdr(host) -i kusama.ibp.network
+
+  use_backend kusama-backend if kusama_dotters or kusama_ibp
+
+  # Asset Hub Kusama
+  acl asset_hub_kusama_dotters hdr(host) -i asset-hub-kusama.dotters.network
+  acl asset_hub_kusama_ibp hdr(host) -i asset-hub-kusama.ibp.network
+
+  use_backend statemine-backend if asset_hub_kusama_dotters or asset_hub_kusama_ibp
+
+  # Bridge Hub Kusama
+  acl bridge_hub_kusama_dotters hdr(host) -i bridge-hub-kusama.dotters.network
+  acl bridge_hub_kusama_ibp hdr(host) -i bridge-hub-kusama.ibp.network
+
+  use_backend bridgehubKusama-backend if bridge_hub_kusama_dotters or bridge_hub_kusama_ibp
+
+  # Coretime Kusama
+  acl coretime_kusama_dotters hdr(host) -i coretime-kusama.dotters.network
+  acl coretime_kusama_ibp hdr(host) -i coretime-kusama.ibp.network
+
+  use_backend coretimeKusama-backend if coretime_kusama_dotters or coretime_kusama_ibp
+
+  # People Kusama
+  acl people_kusama_dotters hdr(host) -i people-kusama.dotters.network
+  acl people_kusama_ibp hdr(host) -i people-kusama.ibp.network
+
+  use_backend peopleKusama-backend if people_kusama_dotters or people_kusama_ibp
+
+  # Encointer Kusama
+  acl encointer_kusama_dotters hdr(host) -i encointer-kusama.dotters.network
+  acl encointer_kusama_ibp hdr(host) -i encointer-kusama.ibp.network
+
+  use_backend encointerKusama-backend if encointer_kusama_dotters or encointer_kusama_ibp
+
+  # Westend
+  acl westend_dotters hdr(host) -i westend.dotters.network
+  acl westend_ibp hdr(host) -i westend.ibp.network
+
+  use_backend westend-backend if westend_dotters or westend_ibp
+
+  # Asset Hub Westend
+  acl asset_hub_westend_dotters hdr(host) -i asset-hub-westend.dotters.network
+  acl asset_hub_westend_ibp hdr(host) -i asset-hub-westend.ibp.network
+
+  use_backend westmint-backend if asset_hub_westend_dotters or asset_hub_westend_ibp
+
+  # Bridge Hub Westend
+  acl bridge_hub_westend_dotters hdr(host) -i bridge-hub-westend.dotters.network
+  acl bridge_hub_westend_ibp hdr(host) -i bridge-hub-westend.ibp.network
+
+  use_backend bridgehubWestend-backend if bridge_hub_westend_dotters or bridge_hub_westend_ibp
+
+  # Coretime Westend
+  acl coretime_westend_dotters hdr(host) -i coretime-westend.dotters.network
+  acl coretime_westend_ibp hdr(host) -i coretime-westend.ibp.network
+
+  use_backend coretimeWestend-backend if coretime_westend_dotters or coretime_westend_ibp
+
+  # People Westend
+  acl people_westend_dotters hdr(host) -i people-westend.dotters.network
+  acl people_westend_ibp hdr(host) -i people-westend.ibp.network
+
+  use_backend peopleWestend-backend if people_westend_dotters or people_westend_ibp
+
+  # Collectives Westend
+  acl collectives_westend_dotters hdr(host) -i collectives-westend.dotters.network
+  acl collectives_westend_ibp hdr(host) -i collectives-westend.ibp.network
+
+  use_backend collectivesWestend-backend if collectives_westend_dotters or collectives_westend_ibp
+
+  # Paseo
+  acl paseo_dotters hdr(host) -i paseo.dotters.network
+  acl paseo_ibp hdr(host) -i paseo.ibp.network
+
+  use_backend paseo-backend if paseo_dotters or paseo_ibp
+
+  # Asset Hub Paseo
+  acl asset_hub_paseo_dotters hdr(host) -i asset-hub-paseo.dotters.network
+  acl asset_hub_paseo_ibp hdr(host) -i asset-hub-paseo.ibp.network
+
+  use_backend asset-hub-paseo-backend if asset_hub_paseo_dotters or asset_hub_paseo_ibp
+
+  # Bridge Hub Paseo
+  acl bridge_hub_paseo_dotters hdr(host) -i bridge-hub-paseo.dotters.network
+  acl bridge_hub_paseo_ibp hdr(host) -i bridge-hub-paseo.ibp.network
+
+  use_backend bridge-hub-paseo-backend if bridge_hub_paseo_dotters or bridge_hub_paseo_ibp
+
+  # Coretime Paseo
+  acl coretime_paseo_dotters hdr(host) -i coretime-paseo.dotters.network
+  acl coretime_paseo_ibp hdr(host) -i coretime-paseo.ibp.network
+
+  use_backend coretime-paseo-backend if coretime_paseo_dotters or coretime_paseo_ibp
+
+  # People Paseo
+  acl people_paseo_dotters hdr(host) -i people-paseo.dotters.network
+  acl people_paseo_ibp hdr(host) -i people-paseo.ibp.network
+  acl people_paseo_rotko hdr(host) -i people-paseo.rpc.rotko.net
+
+  use_backend people-paseo-backend if people_paseo_dotters or people_paseo_ibp or people_paseo_rotko
+
+    # polkarun
+    acl ibtc_polka_run hdr(host) -i ibtc.polka.run
+    acl kbtc_polka_run hdr(host) -i kbtc.polka.run
+    # link to backend
+    use_backend ibtc-polka-run-backend if ibtc_polka_run
+    use_backend kbtc-polka-run-backend if kbtc_polka_run
+
+    #hydration
+    acl hydrationPolkadotDotters hdr(host) -i hydration.paras.dotters.network
+    acl hydrationPolkadotIBP hdr(host) -i hydration.paras.ibp.network
+    acl hydradxPolkadotDotters hdr(host) -i hydradx.paras.dotters.network
+    acl hydradxPolkadotIBP hdr(host) -i hydradx.paras.ibp.network
+
+    # Relay chains
+    acl polkadot path_beg -i /polkadot
+    acl kusama path_beg -i /kusama
+    acl westend path_beg -i /westend
+    acl paseo path_beg -i /paseo
+
+    # System parachains
+    acl statemint path_beg -i /statemint
+    acl assetHubPolkadot path_beg -i /asset-hub-polkadot
+    acl bridgehubPolkadot path_beg -i /bridgehub-polkadot
+    acl Bridge-Hub-Polkadot path_beg -i /bridge-hub-polkadot
+    acl collectivesPolkadot path_beg -i /collectives-polkadot
+    acl peoplePolkadot path_beg -i /people-polkadot
+    acl coretimePolkadot path_beg -i /coretime-polkadot
+
+    acl statemine path_beg -i /statemine
+    acl assetHubKusama path_beg -i /asset-hub-kusama
+    acl bridgehubKusama path_beg -i /bridgehub-kusama
+    acl Bridge-Hub-Kusama path_beg -i /bridge-hub-kusama
+    acl encointerKusama path_beg -i /encointer-kusama
+    acl peopleKusama path_beg -i /people-kusama
+    acl coretimeKusama path_beg -i /coretime-kusama
+
+    acl westmint path_beg -i /westmint
+    acl assetHubWestend path_beg -i /asset-hub-westend
+    acl bridgehubWestend path_beg -i /bridgehub-westend
+    acl Bridge-Hub-Westend path_beg -i /bridge-hub-westend
+    acl collectivesWestend path_beg -i /collectives-westend
+    acl peopleWestend path_beg -i /people-westend
+    acl coretimeWestend path_beg -i /coretime-westend
+
+    acl assetHubPaseo path_beg -i /asset-hub-paseo
+    acl bridgehubPaseo path_beg -i /bridgehub-paseo
+    acl Bridge-Hub-Paseo path_beg -i /bridge-hub-paseo
+    #acl collectivesPaseo path_beg -i /collectives-paseo
+    acl peoplePaseo path_beg -i /people-paseo
+    acl coretimePaseo path_beg -i /coretime-paseo
+
+    # Parachains
+    acl hydrationPolkadot path_beg -i /hydration
+
+    # Polkadot
+    use_backend polkadot-backend if polkadot
+    use_backend statemint-backend if statemint or assetHubPolkadot
+    use_backend collectivesPolkadot-backend if collectivesPolkadot
+    use_backend bridgehubPolkadot-backend if bridgehubPolkadot or Bridge-Hub-Polkadot
+    use_backend coretimePolkadot-backend if coretimePolkadot
+    use_backend peoplePolkadot-backend if peoplePolkadot 
+
+    # Paras
+    use_backend hydrationPolkadot-backend if wss hydrationPolkadotDotters or hydrationPolkadotIBP or hydrationPolkadot or hydradxPolkadotDotters or hydradxPolkadotIBP
+
+    # Kusama
+    use_backend kusama-backend if kusama
+    use_backend statemine-backend if statemine or assetHubKusama
+    use_backend encointerKusama-backend if encointerKusama
+    use_backend bridgehubKusama-backend if bridgehubKusama or Bridge-Hub-Kusama
+    use_backend coretimeKusama-backend if coretimeKusama
+    use_backend peopleKusama-backend if peopleKusama 
+
+    # Westend
+    use_backend westend-backend if westend
+    use_backend westmint-backend if westmint or assetHubWestend
+    use_backend collectivesWestend-backend if collectivesWestend
+    use_backend bridgehubWestend-backend if bridgehubWestend or Bridge-Hub-Westend
+    use_backend coretimeWestend-backend if coretimeWestend
+    use_backend peopleWestend-backend if peopleWestend 
+
+    # Paseo
+    use_backend paseo-backend if paseo
+    use_backend asset-hub-paseo-backend if assetHubPaseo
+    use_backend bridge-hub-paseo-backend if bridgehubPaseo or Bridge-Hub-Paseo
+    use_backend coretime-paseo-backend if coretimePaseo
+    use_backend people-paseo-backend if peoplePaseo
+
+    # Check for the hostname to match bkk.rotko.net
+    acl is_bkk01_rotko_net hdr_end(host) -i bkk01.rotko.net
+    use_backend bkk01-proxmox-backend if is_bkk01_rotko_net
+    acl is_bkk02_rotko_net hdr_end(host) -i bkk02.rotko.net
+    use_backend bkk02-proxmox-backend if is_bkk02_rotko_net
+    acl is_bkk03_rotko_net hdr_end(host) -i bkk03.rotko.net
+    use_backend bkk03-proxmox-backend if is_bkk03_rotko_net
+    acl is_bkk04_rotko_net hdr_end(host) -i bkk04.rotko.net
+    use_backend bkk04-proxmox-backend if is_bkk04_rotko_net
+    acl is_bkk06_rotko_net hdr_end(host) -i bkk06.rotko.net
+    use_backend bkk06-proxmox-backend if is_bkk06_rotko_net
+    acl is_bkk07_rotko_net hdr_end(host) -i bkk07.rotko.net
+    use_backend bkk07-proxmox-backend if is_bkk07_rotko_net
+    acl is_bkk07_kvm_rotko_net hdr_end(host) -i bkk07.kvm.rotko.net
+    use_backend bkk07-kvm-backend if is_bkk07_kvm_rotko_net
+
+
+    # api redirects
+    acl url_api path_beg /api
+
+    # up
+    use_backend up_rotko_net_backend if up_rotko_net
+    #peering
+    use_backend api_peering_rotko_net_backend if peering_rotko_net url_api
+    use_backend peering_rotko_net_backend if peering_rotko_net
+
+    # Check for the hostname to match ibp-metrics.rotko.net
+    acl is_ibp_metrics_rotko_net hdr_end(host) -i ibp-metrics.rotko.net
+
+    # whitelisted IPs for metrics
+    acl allow_amforc_metrics src 91.90.166.221/24
+
+    # Use ACLs to allow requests only from the allowed IPs and matching hostname
+    # use_backend ibp-metrics-backend if is_ibp_metrics_rotko_net allow_amforc_metrics
+    use_backend ibp-metrics-backend if is_ibp_metrics_rotko_net
+
+    # ibp-monitor.rotko.net
+    # acl is_ibp_monitor_rotko_net hdr_end(host) -i ibp-monitor.rotko.net
+    # use_backend ibp-monitor-backend if is_ibp_monitor_rotko_net
+
+    # mikromon.rotko.net
+    acl is_mikromon_rotko_net hdr_end(host) -i mikromon.rotko.net
+    use_backend mikrotik-monitoring if is_mikromon_rotko_net
+
+    # ibp.rotko.net
+    acl is_ibp_rotko_net hdr_end(host) -i ibp.rotko.net
+    use_backend ibp-monitor-backend if is_ibp_rotko_net
+    use_backend ibp-monitor-api-backend if is_ibp_rotko_net url_api
+
+    # alerts/watchdog
+    acl is_watchdog path_beg /watchdog
+    use_backend watchdog_backend if is_watchdog
+    acl is_alert path_beg /alert
+    use_backend alert_backend if is_alert
+
+    # beefy
+    acl is_beefy hdr_end(host) -i beefy.rotko.net
+    use_backend beefyapi-backend if is_beefy url_api
+    use_backend beefyfront-backend if is_beefy
+    acl is_astrolabe hdr_end(host) -i astrolabe.rotko.net
+    use_backend astrolabe-backend if is_astrolabe
+
+    default_backend html-backend
 
 ###
 # Polkadot Backend Configurations
@@ -97,8 +370,49 @@ frontend ssl-frontend
 backend polkadot-backend
     mode http
     balance leastconn
-    server polkadot1-rpc 192.168.69.13:9313 check inter 2s maxconn 200
-    server polkadot2-rpc 192.168.69.14:9314 check inter 2s maxconn 200
+    #server polkadot-bkk03-rpc 192.168.69.13:9313 check inter 2s maxconn 50000 will be deprecated
+    server polkadot-bkk06-rpc 192.168.76.16:9316 check inter 2s maxconn 50000
+    server rpc-polkadot-02-bkk07 192.168.77.12:9312 check inter 2s maxconn 50000
+
+backend statemint-backend
+    mode http
+    balance leastconn
+    #server statemint-bkk03-rpc 192.168.69.41:9613 check inter 2s maxconn 50000 # will be deprecated
+    server statemint-bkk06-rpc 192.168.76.41:9716 check inter 2s maxconn 50000 # for some reason doesnt work 9616
+    server rpc-asset-hub-polkadot-01 192.168.111.11:9400 check inter 2s maxconn 50000
+
+backend bridgehubPolkadot-backend
+    mode http
+    balance leastconn
+    #server bridgehub-polkadot-bkk03-rpc 192.168.69.44:9643 check inter 2s maxconn 50000# will be deprecated
+    server bridgehub-polkadot-bkk06-rpc 192.168.76.44:9646 check inter 2s maxconn 50000
+    server rpc-bridge-hub-polkadot-01 192.168.111.12:9400 check inter 2s maxconn 50000
+
+backend collectivesPolkadot-backend
+    mode http
+    balance leastconn
+    #server collectives-polkadot-bkk03-rpc 192.168.69.47:9673 check inter 2s maxconn 50000# will be deprecated
+    server collectives-polkadot-bkk06-rpc 192.168.76.47:9676 check inter 2s maxconn 50000
+    server rpc-collectives-polkadot-01 192.168.111.13:9400 check inter 2s maxconn 50000
+
+backend coretimePolkadot-backend
+    mode http
+    balance leastconn
+    server coretime-polkadot-bkk06-rpc 192.168.176.16:9816 check inter 2s maxconn 50000
+    #server coretime-polkadot-bkk07-rpc 192.168.177.16:9817 check inter 2s maxconn 50000
+    server coretime-polkadot-bkk07-rpc 192.168.77.16:9400 check inter 2s maxconn 50000
+
+backend peoplePolkadot-backend
+    mode http
+    balance leastconn
+    server people-polkadot-bkk06-rpc 192.168.76.18:9846 check inter 2s maxconn 50000
+    server people-polkadot-bkk07-rpc 192.168.77.18:9847 check inter 2s maxconn 50000
+
+backend hydrationPolkadot-backend
+    mode http
+    balance leastconn
+    server hydration-polkadot-bkk06-rpc 192.168.76.83:9836 check inter 2s maxconn 50000
+    server hydration-polkadot-bkk07-rpc 192.168.77.83:9837 check inter 2s maxconn 50000
 
 ###
 # Kusama Backend Configurations
@@ -107,8 +421,40 @@ backend polkadot-backend
 backend kusama-backend
     mode http
     balance leastconn
-    server kusama1-rpc 192.168.69.23:9323 check inter 2s maxconn 200
-    server kusama2-rpc 192.168.69.24:9324 check inter 2s maxconn 200
+    server kusama-bkk06-rpc 192.168.76.26:9326 check inter 2s maxconn 50000
+    server kusama-bkk07-rpc 192.168.77.22:9322 check inter 2s maxconn 50000 
+
+backend statemine-backend
+    mode http
+    balance leastconn
+    server statemine-bkk06-rpc 192.168.76.42:9626 check inter 2s maxconn 50000
+    server statemine-bkk07-rpc 192.168.121.11:9400 check inter 2s maxconn 50000
+
+backend bridgehubKusama-backend
+    mode http
+    balance leastconn
+    server bridgehub-kusama-bkk06-rpc 192.168.76.45:9656 check inter 2s maxconn 50000
+    server bridgehub-kusama-bkk07-rpc 192.168.121.12:9400 check inter 2s maxconn 50000
+
+backend encointerKusama-backend
+    mode http
+    balance leastconn
+    server encointer-bkk06-rpc 192.168.76.40:9606 check inter 2s maxconn 50000
+    server encointer-bkk07-rpc 192.168.121.16:9400 check inter 2s maxconn 50000
+
+backend coretimeKusama-backend
+    mode http
+    balance leastconn
+    server coretime-kusama-bkk06-rpc 192.168.76.27:9826 check inter 2s maxconn 50000
+    #server coretime-kusama-bkk07-rpc 192.168.77.27:9827 check inter 2s maxconn 50000 #will be deprecated
+    server rpc-coretime-kusama-bkk07 192.168.122.15:9400 check inter 2s maxconn 50000
+
+backend peopleKusama-backend
+    mode http
+    balance leastconn
+    server people-kusama-bkk06-rpc 192.168.76.28:9856 check inter 2s maxconn 50000
+    #server people-kusama-bkk07-rpc 192.168.77.28:9857 check inter 2s maxconn 50000 #will be deprecated
+    server rpc-people-kusama-bkk07 192.168.122.14:9400 check inter 2s maxconn 50000
 
 ###
 # Westend Backend Configurations
@@ -117,24 +463,393 @@ backend kusama-backend
 backend westend-backend
     mode http
     balance leastconn
-    server westend1-rpc 192.168.69.33:9333 check inter 2s maxconn 200
-    server westend2-rpc 192.168.69.34:9334 check inter 2s maxconn 200
+    #server westend-bkk03-rpc 192.168.69.33:9333 check inter 2s maxconn 50000
+    server westend-bkk06-rpc 192.168.76.36:9336 check inter 2s maxconn 50000
+    server westend-bkk07-rpc 192.168.77.32:9332 check inter 2s maxconn 50000
+
+backend westmint-backend
+    mode http
+    balance leastconn
+    #server westmint-bkk03-rpc 192.168.69.43:9633 check inter 2s maxconn 50000# will be deprecated
+    server westmint-bkk06-rpc 192.168.76.43:9636 check inter 2s maxconn 50000
+    server rpc-asset-hub-westend-01 192.168.131.11:9400 check inter 2s maxconn 50000
+
+backend bridgehubWestend-backend
+    mode http
+    balance leastconn
+    #server bridgehub-westend-bkk03-rpc 192.168.69.46:9663 check inter 2s maxconn 50000# will be deprecated
+    server bridgehub-westend-bkk06-rpc 192.168.76.48:9666 check inter 2s maxconn 50000
+    server rpc-bridge-hub-westend-01 192.168.131.12:9400 check inter 2s maxconn 50000
+
+backend collectivesWestend-backend
+    mode http
+    balance leastconn
+    #server collectives-westend-bkk03-rpc 192.168.69.49:9693 check inter 2s maxconn 50000# will be deprecated
+    server collectives-westend-bkk06-rpc 192.168.76.49:9696 check inter 2s maxconn 50000
+    server rpc-collectives-westend-01 192.168.131.13:9400 check inter 2s maxconn 50000
+
+backend coretimeWestend-backend
+    mode http
+    balance leastconn
+    server coretime-westend-bkk06-rpc 192.168.76.37:9936 check inter 2s maxconn 50000
+    #server coretime-westend-bkk07-rpc 192.168.77.37:9937 check inter 2s maxconn 50000 #will be deprecated
+    server rpc-coretime-westend-bkk07 192.168.132.15:9400 check inter 2s maxconn 50000
+
+backend peopleWestend-backend
+    mode http
+    balance leastconn
+    server people-westend-bkk06-rpc 192.168.76.38:9866 check inter 2s maxconn 50000
+    #server people-westend-bkk07-rpc 192.168.77.38:9867 check inter 2s maxconn 50000 #will be deprecated
+    server rpc-people-westend-bkk07 192.168.132.14:9400 check inter 2s maxconn 50000
+
+###
+# Paseo Backend Configurations
+###
+
+backend paseo-backend
+    mode http
+    balance leastconn
+#    server paseo-bkk04-rpc 192.168.69.48:9348 check inter 2s maxconn 2000
+    server paseo-bkk06-rpc 192.168.76.46:9346 check inter 2s maxconn 2000
+
+###
+# Paseo Parachain Backend Configurations
+###
+
+backend asset-hub-paseo-backend
+    mode http
+    balance leastconn
+    server asset-hub-paseo-bkk06-rpc 192.168.76.50:9956 check inter 2s maxconn 2000
+    server asset-hub-paseo-bkk07-rpc 192.168.77.50:9957 check inter 2s maxconn 2000
+
+backend bridge-hub-paseo-backend
+    mode http
+    balance leastconn
+    server bridge-hub-paseo-bkk06-rpc 192.168.76.60:9966 check inter 2s maxconn 2000
+    server bridge-hub-paseo-bkk07-rpc 192.168.77.60:9967 check inter 2s maxconn 2000
+
+backend coretime-paseo-backend
+    mode http
+    balance leastconn
+    server coretime-paseo-bkk06-rpc 192.168.46.90:9400 check inter 2s maxconn 2000
+    server coretime-paseo-bkk07-rpc 192.168.47.90:9400 check inter 2s maxconn 2000
+
+backend people-paseo-backend
+    mode http
+    balance leastconn
+    server people-paseo-bkk06-rpc 192.168.46.94:9400 check inter 2s maxconn 2000
+    server people-paseo-bkk07-rpc 192.168.47.94:9400 check inter 2s maxconn 2000
+
+###
+# WSS reverse proxy
+###
+
+  ###
+  # Parachains Frontend
+  ###
+
+frontend p2p-para-wss-passthrough
+    bind *:30435
+    mode tcp
+    tcp-request inspect-delay 2s
+    tcp-request content accept if { req_ssl_hello_type 1 }
+
+    ###
+    # Polkadot
+    ###
+    acl domain-match-asset-hub-polkadot req_ssl_sni -i asset-hub-polkadot.boot.rotko.net
+    acl domain-match-bridge-hub-polkadot req_ssl_sni -i bridge-hub-polkadot.boot.rotko.net
+    acl domain-match-collectives-polkadot req_ssl_sni -i collectives-polkadot.boot.rotko.net
+
+    use_backend asset-hub-polkadot-p2p-wss-backend if domain-match-asset-hub-polkadot
+    use_backend bridge-hub-polkadot-p2p-wss-backend if domain-match-bridge-hub-polkadot
+    use_backend collectives-polkadot-p2p-wss-backend if domain-match-collectives-polkadot
+
+    ###
+    # Kusama
+    ###
+    acl domain-match-asset-hub-kusama req_ssl_sni -i asset-hub-kusama.boot.rotko.net
+    acl domain-match-bridge-hub-kusama req_ssl_sni -i bridge-hub-kusama.boot.rotko.net
+    acl domain-match-encointer-kusama req_ssl_sni -i encointer-kusama.boot.rotko.net
+    acl domain-match-people-kusama req_ssl_sni -i people-kusama.boot.rotko.net
+    acl domain-match-coretime-kusama req_ssl_sni -i coretime-kusama.boot.rotko.net
+
+    use_backend asset-hub-kusama-p2p-wss-backend if domain-match-asset-hub-kusama
+    use_backend bridge-hub-kusama-p2p-wss-backend if domain-match-bridge-hub-kusama
+    use_backend encointer-kusama-p2p-wss-backend if domain-match-encointer-kusama
+    use_backend people-kusama-p2p-wss-backend if domain-match-people-kusama
+    use_backend coretime-kusama-p2p-wss-backend if domain-match-coretime-kusama
+
+    ###
+    # Westend
+    ###
+    acl domain-match-asset-hub-westend req_ssl_sni -i asset-hub-westend.boot.rotko.net
+    acl domain-match-bridge-hub-westend req_ssl_sni -i bridge-hub-westend.boot.rotko.net
+    acl domain-match-collectives-westend req_ssl_sni -i collectives-westend.boot.rotko.net
+    acl domain-match-people-westend req_ssl_sni -i people-westend.boot.rotko.net
+    acl domain-match-coretime-westend req_ssl_sni -i coretime-westend.boot.rotko.net
+
+    use_backend asset-hub-westend-p2p-wss-backend if domain-match-asset-hub-westend
+    use_backend bridge-hub-westend-p2p-wss-backend if domain-match-bridge-hub-westend
+    use_backend collectives-westend-p2p-wss-backend if domain-match-collectives-westend
+    use_backend people-westend-p2p-wss-backend if domain-match-people-westend
+    use_backend coretime-westend-p2p-wss-backend if domain-match-coretime-westend
+
+    ###
+    # Paseo
+    ###
+
+    acl domain-match-people-paseo req_ssl_sni -i people-paseo.boot.rotko.net
+    acl domain-match-coretime-paseo req_ssl_sni -i coretime-paseo.boot.rotko.net
+
+    use_backend people-paseo-p2p-wss-backend if domain-match-people-paseo
+    use_backend coretime-paseo-p2p-wss-backend if domain-match-coretime-paseo
+
+  ###
+  # Relaychains Frontend
+  ###
+
+frontend p2p-relay-wss-passthrough
+    bind *:30335
+    mode tcp
+    tcp-request inspect-delay 2s
+    tcp-request content accept if { req_ssl_hello_type 1 }
+
+
+    ###
+    # Polkadot
+    ###
+    acl domain-match-val-polkadot-01 req_ssl_sni -i val-polkadot-01.rotko.net
+    acl domain-match-val-polkadot-02 req_ssl_sni -i val-polkadot-02.rotko.net
+
+    use_backend val-polkadot-01-p2p-wss-backend if domain-match-val-polkadot-01
+    use_backend val-polkadot-02-p2p-wss-backend if domain-match-val-polkadot-02
+
+    ###
+    # Kusama
+    ###
+    acl domain-match-val-kusama-01 req_ssl_sni -i val-kusama-01.rotko.net
+    acl domain-match-val-kusama-02 req_ssl_sni -i val-kusama-02.rotko.net
+
+    use_backend val-kusama-01-p2p-wss-backend if domain-match-val-kusama-01
+    use_backend val-kusama-02-p2p-wss-backend if domain-match-val-kusama-02
+
+###
+# Polkadot p2p-wss backend
+###
+
+backend val-polkadot-01-p2p-wss-backend
+    mode tcp
+    server container 192.168.69.115:30335 check
+
+backend val-polkadot-02-p2p-wss-backend
+    mode tcp
+    server container 192.168.217.115:30335 check
+
+backend asset-hub-polkadot-p2p-wss-backend
+    mode tcp
+    balance leastconn
+    server rpc-asset-hub-polkadot-bkk06 192.168.111.11:30435 check
+    server rpc-asset-hub-polkadot-bkk07 192.168.112.11:30435 check
+
+backend bridge-hub-polkadot-p2p-wss-backend
+    mode tcp
+    balance leastconn
+    server rpc-bridge-hub-polkadot-bkk06 192.168.111.12:30435 check
+    server rpc-bridge-hub-polkadot-bkk07 192.168.112.12:30435 check
+
+backend collectives-polkadot-p2p-wss-backend
+    mode tcp
+    balance leastconn
+    server rpc-collectives-polkadot-bkk06 192.168.111.13:30435 check
+    server rpc-collectives-polkadot-bkk07 192.168.112.13:30435 check
+
+###
+# Kusama p2p-wss backend
+###
+
+backend val-kusama-01-p2p-wss-backend
+    mode tcp
+    server val-kusama-bkk04 192.168.69.125:30335 check
+
+backend val-kusama-02-p2p-wss-backend
+    mode tcp
+    server val-kusama-bkk07 192.168.227.125:30335 check
+
+backend asset-hub-kusama-p2p-wss-backend
+    mode tcp
+    server asset-hub-kusama-bkk07 192.168.121.11:30435 check
+
+backend bridge-hub-kusama-p2p-wss-backend
+    mode tcp
+    server bridge-hub-kusama-bkk07 192.168.121.12:30435 check
+
+backend people-kusama-p2p-wss-backend
+    mode tcp
+    server people-kusama-bkk07 192.168.122.14:30435 check
+
+backend coretime-kusama-p2p-wss-backend
+    mode tcp
+    server coretime-kusama-bkk07 192.168.122.15:30435 check
+
+backend encointer-kusama-p2p-wss-backend
+    mode tcp
+    server encointer-kusama-bkk07 192.168.121.16:30435 check
+
+###
+# Westend p2p-wss backend
+###
+
+backend asset-hub-westend-p2p-wss-backend
+    mode tcp
+    balance leastconn
+    server rpc-asset-hub-westend-bkk06 192.168.131.11:30435 check
+    server rpc-asset-hub-westend-bkk07 192.168.132.11:30435 check
+
+backend bridge-hub-westend-p2p-wss-backend
+    mode tcp
+    balance leastconn
+    server rpc-bridge-hub-westend-bkk06 192.168.131.12:30435 check
+    server rpc-bridge-hub-westend-bkk07 192.168.132.12:30435 check
+
+backend collectives-westend-p2p-wss-backend
+    mode tcp
+    balance leastconn
+    server rpc-collectives-westend-bkk06 192.168.131.13:30435 check
+    server rpc-collectives-westend-bkk07 192.168.132.13:30435 check
+
+backend people-westend-p2p-wss-backend
+    mode tcp
+    server rpc-people-westend-bkk07 192.168.132.14:30435 check
+
+backend coretime-westend-p2p-wss-backend
+    mode tcp
+    server rpc-coretime-westend-bkk07 192.168.132.15:30435 check
+
+###
+# Paseo p2p-wss backend
+###
+
+backend people-paseo-p2p-wss-backend
+    mode tcp
+    balance leastconn
+    server rpc-people-paseo-bkk06 192.168.46.94:30435 check
+    server rpc-people-paseo-bkk07 192.168.47.94:30435 check
+
+backend coretime-paseo-p2p-wss-backend
+    mode tcp
+    balance leastconn
+    server rpc-coretime-paseo-bkk06 192.168.46.90:30435 check
+    server rpc-coretime-paseo-bkk07 192.168.47.90:30435 check
+
 
 ###
 # MISC Backend Configurations
 ###
+backend bkk01-proxmox-backend
+    mode http
+    server bkk01-proxmox 192.168.69.101:8006 ssl verify none
 
-#backend letsencrypt
-#   mode http
-#   balance leastconn
-#   server letsencrypt 192.168.69.95:80 check inter 2s maxconn 200
+backend bkk02-proxmox-backend
+    mode http
+    server bkk02-proxmox 192.168.69.102:8006 ssl verify none
 
-#backend monitor
-#   mode http
-#   balance leastconn
-#   server monitor 192.168.69.98:80 check inter 2s maxconn 200
+backend bkk03-proxmox-backend
+    mode http
+    server bkk03-proxmox 192.168.69.103:8006 ssl verify none
 
-#backend ibp
-#   mode http
-#   balance leastconn
-#   server monitor 192.168.69.97:80 check inter 2s maxconn 200
+backend bkk04-proxmox-backend
+    mode http
+    server bkk04-proxmox 192.168.69.104:8006 ssl verify none
+
+backend bkk06-proxmox-backend
+    mode http
+    server bkk06-proxmox 192.168.76.1:8006 ssl verify none
+
+backend bkk07-proxmox-backend
+    mode http
+    server bkk07-proxmox 192.168.77.1:8006 ssl verify none
+
+backend bkk07-kvm-backend
+    mode http
+    server bkk07-kvm 192.168.77.10:443 ssl verify none
+
+backend html-backend
+    mode http
+    server html_localhost 192.168.69.103:6969
+
+backend up_rotko_net_backend
+    mode http
+    server up_rotko_net_bkk06 192.168.76.1:16969
+
+backend peering_rotko_net_backend
+    mode http
+    server peering_rotko_net_bkk06 192.168.69.103:28080
+
+backend api_peering_rotko_net_backend
+    mode http
+    server api_peering_rotko_net_bkk06 192.168.69.103:28081
+
+backend ibp-monitor-backend
+    mode http
+    balance leastconn
+    server ibp-monitor 192.168.69.103:30001 check inter 2s
+
+backend ibp-monitor-api-backend
+    mode http
+    balance leastconn
+    server ibp-monitor-api 192.168.69.103:30002 check inter 2s
+
+backend ibp-metrics-backend
+    mode http
+    #balance leastconn
+    server ibp-metrics 192.168.69.97:80 # check inter 2s
+    #server ibp-metrics 192.168.69.97:9090 # check inter 2s
+
+backend letsencrypt
+    mode http
+    server certbot localhost:8888
+
+backend mikrotik-monitoring
+    mode http
+    server mikrotik-monitoring localhost:2080
+
+backend beefyfront-backend
+    mode http
+    server ibp-monitor 192.168.69.103:3636 check inter 2s
+
+backend astrolabe-backend
+    mode http
+    server docker-astrolabe 192.168.69.103:42300 check inter 2s
+
+backend ibtc-polka-run-backend
+    mode http
+    server ibtc-polka-run 192.168.69.103:14011 check inter 2s
+
+backend kbtc-polka-run-backend
+    mode http
+    server kbtc-polka-run 192.168.69.103:14010 check inter 2s
+
+backend beefyapi-backend
+    mode http
+    server ibp-monitor 192.168.69.103:4000 check inter 2s
+
+backend watchdog_backend
+    mode http
+    server watchdog-ibp-bkk06 192.168.76.1:7000
+
+backend alert_backend
+    mode http
+    server alert-ibp-bkk06 192.168.76.1:7000
+
+# penumbra
+backend penumbra_rotko_net_backend
+    mode http
+    option httpchk
+    server penumbra-web 127.0.0.1:13371 check
+
+backend status_penumbra_rotko_net_backend
+    mode http
+    option httpchk
+    http-check send meth GET uri /status
+    server penumbra-status-1 127.0.0.1:13372 check
