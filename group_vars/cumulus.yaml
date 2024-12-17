@@ -1,25 +1,25 @@
----
 default_base_path: /opt/cumulus
-default_chain_spec_dl_url: https://raw.githubusercontent.com/paritytech/polkadot-sdk/master/cumulus/parachains/chain-specs/{{ default_network }}.json
-default_client_version: polkadot-stable2409-2
+default_chain_spec_dl_url: https://raw.githubusercontent.com/paritytech/polkadot-sdk/master/cumulus/parachains/chain-specs/{{
+  default_network }}.json
+default_client_version: polkadot-stable2412
 default_database: paritydb
-default_database_path: "{{ default_base_path }}/chains"
+default_database_path: '{{ default_base_path }}/chains'
 default_download_base_url: https://github.com/paritytech/polkadot-sdk/releases/download/
-default_download_url: "{{ default_download_base_url }}{{ default_client_version }}/polkadot-parachain"
-default_group: "{{ service_users['cumulus'] }}"
+default_download_url: '{{ default_download_base_url }}{{ default_client_version }}/polkadot-parachain'
+default_group: '{{ service_users[''cumulus''] }}'
+default_in_peers: 32
 default_log_level: info
 default_network: asset-hub-polkadot
 default_node_type: bootnode
+default_out_peers: 16
 default_p2p_port: 30433
 default_p2p_port_ws: 30434
 default_p2p_port_wss: 30435
 default_prom_port: 7400
 default_rpc_port: 9400
 default_secure_rpc_port: 42400
-default_in_peers: 32
-default_out_peers: 16
 default_service: cumulus
-default_storage: "{{ default_base_path }}/chains"
+default_storage: '{{ default_base_path }}/chains'
 default_telemetry_url: wss://telemetry-backend.w3f.community/submit/ 1
-default_user: "{{ service_users['cumulus'] }}"
+default_user: '{{ service_users[''cumulus''] }}'
 zabbix_ext_port: 10400
