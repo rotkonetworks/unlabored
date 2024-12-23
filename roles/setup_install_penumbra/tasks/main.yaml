@@ -23,7 +23,7 @@
     path: "{{ item }}"
     owner: "{{ default_user }}"
     group: "{{ default_user }}"
-    mode: '0750'
+    mode: "0750"
     state: directory
   loop:
     - "{{ default_base_path }}"
@@ -61,3 +61,17 @@
   args:
     warn: False
     executable: /bin/bash
+
+- name: Download and install cometbft
+  ansible.builtin.get_url:
+    url: "{{ cometbft_download_url }}"
+    dest: "{{ default_home_path }}"
+    mode: "u+r+x"
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+  when: ansible_local['noderole']['node']['version'] != default_client_version
+
+- name: Generate network config
+  ansible.builtin.command:
+    cmd: "./polkadot key generate-node-key --file {{ default_base_path }}/chains/{{ default_chains_name }}/network/secret_ed25519"
+    chdir: "{{ default_base_path }}"

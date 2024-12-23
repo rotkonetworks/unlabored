@@ -94,6 +94,14 @@ bkk07
 bkk07
 
 [referrence_nodes]
+rpc-kusama-02
+rpc-paseo-02
+rpc-polkadot-02
+rpc-westend-02
+rpc-kusama-01
+rpc-paseo-01
+rpc-polkadot-01
+rpc-westend-01
 dot14
 ksm14
 wnd14

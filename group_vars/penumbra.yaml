@@ -1,13 +1,14 @@
 ---
 # penumbra version
-penumbra_version: "0.73.1"
+penumbra_version: "0.81.0"
 penumbra_chain_id: ""
+cometbft_version: "0.37.14"
 
 # dl locations
 penumbra_download_pcli_url: "https://github.com/penumbra-zone/penumbra/releases/download/v{{ penumbra_version }}/pcli-installer.sh"
 penumbra_download_pd_url: "https://github.com/penumbra-zone/penumbra/releases/download/v{{ penumbra_version }}/pd-installer.sh"
 penumbra_download_pclientd_url: "https://github.com/penumbra-zone/penumbra/releases/download/v{{ penumbra_version }}/pclientd-installer.sh"
-
+cometbft_download_url: "https://github.com/cometbft/cometbft/releases/download/v{{ cometbft_version }}/cometbft_{{ cometbft_version }}_linux_amd64.tar.gz"
 default_git_repo: "https://github.com/penumbra-zone/penumbra"
 
 # service/user
