@@ -11,7 +11,7 @@ pinned_service: True
 default_network: polkadot
 default_node_type: "validator"
 # default_telemetry_name: "Rotko Networks - {{ host_name.split('.')[0] }} {{ default_node_type | capitalize }}"
-default_telemetry_name: "Rotko Networks - ksm03 Validator"
+default_telemetry_name: "Rotko Networks - dot03 Validator"
 default_pruning: 1000
 default_database: paritydb
 default_syncmode: warp
