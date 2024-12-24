@@ -149,7 +149,7 @@
     mode: "0640"
     owner: "{{ default_user }}"
     group: "{{ default_user }}"
-    force: true
+    force: True
   when: not cometbft_dir.stat.exists
 
 - name: Download Polkachu's Penumbra genesis file
@@ -159,7 +159,7 @@
     mode: "0640"
     owner: "{{ default_user }}"
     group: "{{ default_user }}"
-    force: true
+    force: True
   when: not cometbft_dir.stat.exists
 
 - name: Copy Cometbft & pd service templates
