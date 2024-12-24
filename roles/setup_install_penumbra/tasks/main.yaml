@@ -142,6 +142,26 @@
     state: absent
   when: not cometbft_dir.stat.exists
 
+- name: Download Polkachu's Penumbra address book
+  ansible.builtin.get_url:
+    url: "https://snapshots.polkachu.com/addrbook/penumbra/addrbook.json"
+    dest: "{{ default_database_path }}/node0/cometbft/config/addrbook.json"
+    mode: "0640"
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+    force: true
+  when: not cometbft_dir.stat.exists
+
+- name: Download Polkachu's Penumbra genesis file
+  ansible.builtin.get_url:
+    url: "https://snapshots.polkachu.com/genesis/penumbra/genesis.json"
+    dest: "{{ default_database_path }}/node0/cometbft/config/genesis.json"
+    mode: "0640"
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+    force: true
+  when: not cometbft_dir.stat.exists
+
 - name: Copy Cometbft & pd service templates
   ansible.builtin.template:
     src: "{{ item }}.service.j2"
