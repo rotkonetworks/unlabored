@@ -2,7 +2,15 @@
 Description={{ host_name.split('.')[0] }} - cometbft service
 
 [Service]
-ExecStart={{ default_home_path }}/cometbft start --home {{ default_database_path }}/node0/cometbft
+ExecStart={{ default_home_path }}/cometbft start \
+          --moniker "{{ host_name }}" \
+          --home {{ default_database_path }}/node0/cometbft \
+          --p2p.laddr "tcp://0.0.0.0:{{ default_cometbft_p2p_port }}" \
+          --p2p.external-address "{{ ansible_host }}:{{ default_cometbft_p2p_port }}" \
+          --rpc.laddr "tcp://127.0.0.1:{{ default_cometbft_rpc_port }}" \
+          --proxy_app tcp://127.0.0.1:{{ default_acbi_port }} \
+          --db_backend {{ default_cometbft_database }}
+
 Restart=no
 User=penumbra
 # Raise filehandle limit for RPC and P2P connections.
