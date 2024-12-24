@@ -1,17 +1,42 @@
 ---
 - name: Stop Penumbra
   ansible.builtin.systemd:
-    name: pclientd
+    name: pd
     state: stopped
     enabled: True
+
+- name: Stop Cometbft
+  ansible.builtin.systemd:
+    name: cometbft
+    state: stopped
+    enabled: True
+
+- name: Symlink cometbft & pd service to systemd
+  ansible.builtin.file:
+    src: "{{ default_home_path }}/{{ item }}.service"
+    dest: "/etc/systemd/system/{{ item }}.service"
+    state: link
+    force: True
+    owner: "root"
+    group: "root"
+    mode: "0644"
+  loop:
+    - pd
+    - cometbft
 
 - name: Systemd daemon-reload
   ansible.builtin.systemd:
     daemon_reload: True
 
+- name: Start Cometbft
+  ansible.builtin.systemd:
+    name: cometbft
+    state: started
+    enabled: True
+
 - name: Start Penumbra
   ansible.builtin.systemd:
-    name: pclientd
+    name: pd
     state: started
     enabled: True
 

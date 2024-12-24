@@ -2,7 +2,7 @@
 Description=CometBFT for Penumbra
 
 [Service]
-ExecStart={{ default_home_path }}/cometbft start --home /home/penumbra/.penumbra/network_data/node0/cometbft
+ExecStart={{ default_home_path }}/cometbft start --home {{ default_database_path }}/node0/cometbft
 Restart=no
 User=penumbra
 # Raise filehandle limit for RPC and P2P connections.

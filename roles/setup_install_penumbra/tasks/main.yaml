@@ -34,44 +34,136 @@
 
 - name: Download and install pcli
   ansible.builtin.shell:
-    cmd: "set -o pipefail && curl --proto '=https' --tlsv1.2 -LsSf https://github.com/penumbra-zone/penumbra/releases/download/v{{ default_client_version }}/pcli-installer.sh | sh"
+    cmd: "set -o pipefail && curl --proto '=https' --tlsv1.2 -LsSf https://github.com/penumbra-zone/penumbra/releases/download/v{{ penumbra_version }}/pcli-installer.sh | sh"
   become: True
   become_user: "{{ default_user }}"
-  when: ansible_local['noderole']['node']['version'] != default_client_version
+  when: ansible_local['noderole']['node']['version'] != penumbra_version
   args:
     warn: False
     executable: /bin/bash
 
 - name: Download and install pd
   ansible.builtin.shell:
-    cmd: "set -o pipefail && curl --proto '=https' --tlsv1.2 -LsSf https://github.com/penumbra-zone/penumbra/releases/download/v{{ default_client_version }}/pd-installer.sh | sh"
+    cmd: "set -o pipefail && curl --proto '=https' --tlsv1.2 -LsSf https://github.com/penumbra-zone/penumbra/releases/download/v{{ penumbra_version }}/pd-installer.sh | sh"
   become: True
   become_user: "{{ default_user }}"
-  when: ansible_local['noderole']['node']['version'] != default_client_version
+  when: ansible_local['noderole']['node']['version'] != penumbra_version
   args:
     warn: False
     executable: /bin/bash
 
 - name: Download and install pclientd
   ansible.builtin.shell:
-    cmd: "set -o pipefail && curl --proto '=https' --tlsv1.2 -LsSf https://github.com/penumbra-zone/penumbra/releases/download/v{{ default_client_version }}/pclientd-installer.sh | sh"
+    cmd: "set -o pipefail && curl --proto '=https' --tlsv1.2 -LsSf https://github.com/penumbra-zone/penumbra/releases/download/v{{ penumbra_version }}/pclientd-installer.sh | sh"
   become: True
   become_user: "{{ default_user }}"
-  when: ansible_local['noderole']['node']['version'] != default_client_version
+  when: ansible_local['noderole']['node']['version'] != penumbra_version
   args:
     warn: False
     executable: /bin/bash
 
-- name: Download and install cometbft
+- name: Download cometbft
   ansible.builtin.get_url:
     url: "{{ cometbft_download_url }}"
     dest: "{{ default_home_path }}"
     mode: "u+r+x"
     owner: "{{ default_user }}"
     group: "{{ default_user }}"
-  when: ansible_local['noderole']['node']['version'] != default_client_version
+  when: ansible_local['noderole']['node']['version'] != cometbft_version
 
-- name: Generate network config
-  ansible.builtin.command:
-    cmd: "./polkadot key generate-node-key --file {{ default_base_path }}/chains/{{ default_chains_name }}/network/secret_ed25519"
-    chdir: "{{ default_base_path }}"
+- name: Unpack cometbft
+  ansible.builtin.unarchive:
+    src: "{{ default_home_path }}/cometbft_{{ cometbft_version }}_linux_amd64.tar.gz"
+    dest: "{{ default_home_path }}"
+    remote_src: True
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+    mode: "u+r+x"
+  when: ansible_local['noderole']['node']['version'] != cometbft_version
+
+- name: Create soft links for penumbra binaries
+  ansible.builtin.file:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    state: link
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+  loop:
+    - src: "{{ default_installation_path }}/pd"
+      dest: "{{ default_home_path }}/pd"
+    - src: "{{ default_installation_path }}/pcli"
+      dest: "{{ default_home_path }}/pcli"
+    - src: "{{ default_installation_path }}/pclientd"
+      dest: "{{ default_home_path }}/pclientd"
+
+- name: Install lz4 package
+  ansible.builtin.package:
+    name: lz4
+    state: present
+  become: True
+  become_user: root
+
+- name: Check if cometbft directory exists
+  ansible.builtin.stat:
+    path: "{{ default_database_path }}/node0/cometbft"
+  register: cometbft_dir
+
+- name: Create node0 directory if it doesn't exist
+  ansible.builtin.file:
+    path: "{{ default_database_path }}/node0"
+    state: directory
+    mode: "0750"
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+  when: not cometbft_dir.stat.exists
+
+- name: Download Polkachu Cometbft snapshot
+  ansible.builtin.get_url:
+    url: "{{ polkachu_download_url }}"
+    dest: "{{ default_database_path }}/node0/"
+    mode: "u+r+x"
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+  when: not cometbft_dir.stat.exists
+
+- name: Extract and decompress Polkachu snapshot
+  ansible.builtin.shell:
+    cmd: "set -o pipefail && lz4 -c -d {{ default_database_path }}/node0/penumbra_{{ polkachu_version }}.tar.lz4 | tar -x -C {{ default_database_path }}/node0/"
+  args:
+    executable: /bin/bash
+    creates: "{{ default_database_path }}/node0/cometbft"
+  become: true
+  become_user: "{{ default_user }}"
+  when: not cometbft_dir.stat.exists
+
+- name: Remove lz4 archive after decompression
+  ansible.builtin.file:
+    path: "{{ default_database_path }}/node0/penumbra_{{ polkachu_version }}.tar.lz4"
+    state: absent
+  when: not cometbft_dir.stat.exists
+
+- name: Copy Cometbft & pd service templates
+  ansible.builtin.template:
+    src: "{{ item }}.service.j2"
+    dest: "{{ default_home_path }}/{{ item }}.service"
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+    mode: "0640"
+  loop:
+    - pd
+    - cometbft
+
+- name: Flush handlers after service copy
+  ansible.builtin.meta: flush_handlers
+
+- name: Ensure cometbft service is running
+  ansible.builtin.systemd:
+    name: cometbft
+    state: started
+    enabled: True
+
+- name: Ensure pd service is running
+  ansible.builtin.systemd:
+    name: pd
+    state: started
+    enabled: True

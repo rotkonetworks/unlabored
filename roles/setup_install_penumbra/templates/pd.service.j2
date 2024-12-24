@@ -1,5 +1,5 @@
 [Unit]
-Description=Penumbra pd
+Description=Penumbra Node
 Wants=cometbft.service
 
 [Service]
@@ -7,7 +7,7 @@ Wants=cometbft.service
 CapabilityBoundingSet=CAP_NET_BIND_SERVICE
 AmbientCapabilities=CAP_NET_BIND_SERVICE
 
-ExecStart={{ default_home_path }}/pd start
+ExecStart={{ default_home_path }}/pd start --home {{ default_database_path }}/node0/pd
 # Consider adding an HTTPS URL if you have DNS set up:
 # ExecStart=/usr/local/bin/pd start --grpc-auto-https www.example.com
 
