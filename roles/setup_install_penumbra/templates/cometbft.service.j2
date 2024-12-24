@@ -1,5 +1,5 @@
 [Unit]
-Description=CometBFT for Penumbra
+Description={{ host_name.split('.')[0] }} - cometbft service
 
 [Service]
 ExecStart={{ default_home_path }}/cometbft start --home {{ default_database_path }}/node0/cometbft

@@ -11,6 +11,7 @@ routers
 polkadot
 hydration
 cumulus
+penumbra
 misc-container
 
 [prometheus]
@@ -40,6 +41,9 @@ bkk50
 
 [hydration]
 hdx27
+
+[penumbra]
+penumbra02
 
 [polkadot]
 rpc-polkadot-02
