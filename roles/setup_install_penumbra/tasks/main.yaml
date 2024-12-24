@@ -132,7 +132,7 @@
   args:
     executable: /bin/bash
     creates: "{{ default_database_path }}/node0/cometbft"
-  become: true
+  become: True
   become_user: "{{ default_user }}"
   when: not cometbft_dir.stat.exists
 
