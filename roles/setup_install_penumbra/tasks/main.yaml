@@ -12,7 +12,7 @@
     create_home: False
     group: "{{ default_user }}"
     groups: []
-    home: "{{ default_base_path }}"
+    home: "{{ default_home_path }}"
     name: "{{ default_user }}"
     shell: "/sbin/nologin"
     state: present
@@ -26,7 +26,7 @@
     mode: "0750"
     state: directory
   loop:
-    - "{{ default_base_path }}"
+    - "{{ default_home_path }}"
     - "{{ default_database_path }}"
 
 - name: Gather facts
@@ -39,7 +39,6 @@
   become_user: "{{ default_user }}"
   when: ansible_local['noderole']['node']['version'] != penumbra_version
   args:
-    warn: False
     executable: /bin/bash
 
 - name: Download and install pd
@@ -49,7 +48,6 @@
   become_user: "{{ default_user }}"
   when: ansible_local['noderole']['node']['version'] != penumbra_version
   args:
-    warn: False
     executable: /bin/bash
 
 - name: Download and install pclientd
@@ -59,13 +57,21 @@
   become_user: "{{ default_user }}"
   when: ansible_local['noderole']['node']['version'] != penumbra_version
   args:
-    warn: False
     executable: /bin/bash
+
+- name: Ensure tmp directory exists
+  ansible.builtin.file:
+    path: "{{ default_home_path }}/tmp"
+    state: directory
+    mode: "0750"
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+  when: ansible_local['noderole']['node']['version'] != cometbft_version
 
 - name: Download cometbft
   ansible.builtin.get_url:
     url: "{{ cometbft_download_url }}"
-    dest: "{{ default_home_path }}"
+    dest: "{{ default_home_path }}/tmp"
     mode: "u+r+x"
     owner: "{{ default_user }}"
     group: "{{ default_user }}"
@@ -73,7 +79,7 @@
 
 - name: Unpack cometbft
   ansible.builtin.unarchive:
-    src: "{{ default_home_path }}/cometbft_{{ cometbft_version }}_linux_amd64.tar.gz"
+    src: "{{ default_home_path }}/tmp/cometbft_{{ cometbft_version }}_linux_amd64.tar.gz"
     dest: "{{ default_home_path }}"
     remote_src: True
     owner: "{{ default_user }}"
@@ -89,11 +95,11 @@
     owner: "{{ default_user }}"
     group: "{{ default_user }}"
   loop:
-    - src: "{{ default_installation_path }}/pd"
+    - src: "{{ default_home_path }}/.cargo/bin/pd"
       dest: "{{ default_home_path }}/pd"
-    - src: "{{ default_installation_path }}/pcli"
+    - src: "{{ default_home_path }}/.cargo/bin/pcli"
       dest: "{{ default_home_path }}/pcli"
-    - src: "{{ default_installation_path }}/pclientd"
+    - src: "{{ default_home_path }}/.cargo/bin/pclientd"
       dest: "{{ default_home_path }}/pclientd"
 
 - name: Install lz4 package

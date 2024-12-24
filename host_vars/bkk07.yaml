@@ -858,34 +858,34 @@ lxc_nodes:
       - from_port: "{{ hostvars['rpc-asset-hub-kusama-02']['default_p2p_port'] }}"
         to_host: "{{ hostvars['rpc-asset-hub-kusama-02']['container_ip'] }}:{{ hostvars['rpc-asset-hub-kusama-02']['default_p2p_port'] }}"
         protocol: "tcp"
-  - host: "rpc-bridge-hub-kusama-01"
+  - host: "rpc-bridge-hub-kusama-02"
     proxmox_config:
-      vmid: "32021"
-      hostname: "{{ hostvars['rpc-bridge-hub-kusama-01']['host_name'] }}"
+      vmid: "32022"
+      hostname: "{{ hostvars['rpc-bridge-hub-kusama-02']['host_name'] }}"
       ostemplate: "local:vztmpl/{{ default_container_template }}"
-      netif: "{{ hostvars['rpc-bridge-hub-kusama-01']['netif'] }}"
+      netif: "{{ hostvars['rpc-bridge-hub-kusama-02']['netif'] }}"
       cores: 4
       memory: 16384
       swap: 8192
       password: "{{ default_password }}"
       disk: "{{ zfs_storage }}:20"
-      mounts: '{"mp0":"{{ zfs_storage }}:100,mp={{ hostvars["rpc-bridge-hub-kusama-01"]["default_database_path"] }}"}'
+      mounts: '{"mp0":"{{ zfs_storage }}:100,mp={{ hostvars["rpc-bridge-hub-kusama-02"]["default_database_path"] }}"}'
       onboot: True
       unprivileged: True
       validate_certs: False
-      description: "{{ hostvars['rpc-bridge-hub-kusama-01']['default_network'] }} {{ hostvars['rpc-bridge-hub-kusama-01']['default_node_type'] }}: {{ hostvars['rpc-bridge-hub-kusama-01']['host_name'] }}"
+      description: "{{ hostvars['rpc-bridge-hub-kusama-02']['default_network'] }} {{ hostvars['rpc-bridge-hub-kusama-02']['default_node_type'] }}: {{ hostvars['rpc-bridge-hub-kusama-02']['host_name'] }}"
       state: present
       features:
         - nesting=1
     port_forwards:
-      - from_port: "{{ hostvars['rpc-bridge-hub-kusama-01']['ansible_port'] }}"
-        to_host: "{{ hostvars['rpc-bridge-hub-kusama-01']['container_ip'] }}:{{ ssh_port }}"
+      - from_port: "{{ hostvars['rpc-bridge-hub-kusama-02']['ansible_port'] }}"
+        to_host: "{{ hostvars['rpc-bridge-hub-kusama-02']['container_ip'] }}:{{ ssh_port }}"
         protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-bridge-hub-kusama-01']['zabbix_ext_port'] }}"
+      - from_port: "{{ hostvars['rpc-bridge-hub-kusama-02']['zabbix_ext_port'] }}"
         to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
         protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-bridge-hub-kusama-01']['default_p2p_port'] }}"
-        to_host: "{{ hostvars['rpc-bridge-hub-kusama-01']['container_ip'] }}:{{ hostvars['rpc-bridge-hub-kusama-01']['default_p2p_port'] }}"
+      - from_port: "{{ hostvars['rpc-bridge-hub-kusama-02']['default_p2p_port'] }}"
+        to_host: "{{ hostvars['rpc-bridge-hub-kusama-02']['container_ip'] }}:{{ hostvars['rpc-bridge-hub-kusama-02']['default_p2p_port'] }}"
         protocol: "tcp"
   - host: "rpc-coretime-kusama-02"
     proxmox_config:
@@ -1156,4 +1156,30 @@ lxc_nodes:
         protocol: "tcp"
       - from_port: "{{ hostvars['proxy-bkk07']['zabbix_ext_port'] }}"
         to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
+        protocol: "tcp"
+  - host: "penumbra-02"
+    proxmox_config:
+      vmid: "1102"
+      hostname: "{{ hostvars['penumbra-02']['host_name'] }}"
+      ostemplate: "local:vztmpl/{{ default_container_template }}"
+      netif: "{{ hostvars['penumbra-02']['netif'] }}"
+      cores: 4
+      memory: 8192
+      swap: 8192
+      password: "{{ default_password }}"
+      disk: "{{ zfs_storage }}:20"
+      mounts: '{"mp0":"{{ zfs_storage }}:200,mp={{ hostvars["penumbra-02"]["default_database_path"] }}"}'
+      onboot: True
+      unprivileged: True
+      validate_certs: False
+      description: "{{ hostvars['penumbra-02']['default_network'] }} {{ hostvars['penumbra-02']['default_node_type'] }}: {{ hostvars['penumbra-02']['host_name'] }}"
+      state: present
+      features:
+        - nesting=1
+    port_forwards:
+      - from_port: "{{ hostvars['penumbra-02']['ansible_port'] }}"
+        to_host: "{{ hostvars['penumbra-02']['container_ip'] }}:{{ ssh_port }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['penumbra-02']['default_cometbft_p2p_port'] }}"
+        to_host: "{{ hostvars['penumbra-02']['container_ip'] }}:{{ hostvars['penumbra-02']['default_cometbft_p2p_port'] }}"
         protocol: "tcp"
