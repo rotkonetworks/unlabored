@@ -133,15 +133,28 @@
     group: "{{ default_user }}"
   when: not cometbft_dir.stat.exists
 
+  #NOTE: i dont know if this will work, but the wget cmd that commented out below will be working
 - name: Download Polkachu Cometbft snapshot
-  ansible.builtin.shell:
-    cmd: "wget -O {{ default_database_path }}/node0/penumbra_{{ polkachu_version }}.tar.lz4 https://snapshots.polkachu.com/snapshots/penumbra/penumbra_{{ polkachu_version }}.tar.lz4 --inet4-only"
-  become: True
+  ansible.builtin.get_url:
+    url: "https://snapshots.polkachu.com/snapshots/penumbra/penumbra_{{ polkachu_version }}.tar.lz4"
+    dest: "{{ default_database_path }}/node0/penumbra_{{ polkachu_version }}.tar.lz4"
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+    mode: "0640"
+    force: true
+  become: true
   become_user: "{{ default_user }}"
   when: not cometbft_dir.stat.exists
-  # when: ansible_local['noderole']['node']['version'] != penumbra_version
-  args:
-    executable: /bin/bash
+
+# - name: Download Polkachu Cometbft snapshot
+#   ansible.builtin.shell:
+#     cmd: "wget -O {{ default_database_path }}/node0/penumbra_{{ polkachu_version }}.tar.lz4 https://snapshots.polkachu.com/snapshots/penumbra/penumbra_{{ polkachu_version }}.tar.lz4 --inet4-only"
+#   become: True
+#   become_user: "{{ default_user }}"
+#   when: not cometbft_dir.stat.exists
+#   # when: ansible_local['noderole']['node']['version'] != penumbra_version
+#   args:
+#     executable: /bin/bash
 
 - name: Extract and decompress Polkachu snapshot
   ansible.builtin.shell:
