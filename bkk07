@@ -12,7 +12,6 @@ polkadot
 hydration
 cumulus
 penumbra
-misc-container
 
 [prometheus]
 ibp-bkk07

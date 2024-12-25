@@ -1,17 +1,5 @@
 ---
-- name: Stop Penumbra
-  ansible.builtin.systemd:
-    name: pd
-    state: stopped
-    enabled: True
-
-- name: Stop Cometbft
-  ansible.builtin.systemd:
-    name: cometbft
-    state: stopped
-    enabled: True
-
-- name: Symlink cometbft & pd service to systemd
+- name: Symlink cometbft & validator service to systemd
   ansible.builtin.file:
     src: "{{ default_home_path }}/{{ item }}.service"
     dest: "/etc/systemd/system/{{ item }}.service"
@@ -21,8 +9,20 @@
     group: "root"
     mode: "0644"
   loop:
-    - pd
+    - validator
     - cometbft
+
+- name: Stop Penumbra
+  ansible.builtin.systemd:
+    name: validator
+    state: stopped
+    enabled: True
+
+- name: Stop Cometbft
+  ansible.builtin.systemd:
+    name: cometbft
+    state: stopped
+    enabled: True
 
 - name: Systemd daemon-reload
   ansible.builtin.systemd:
@@ -36,9 +36,33 @@
 
 - name: Start Penumbra
   ansible.builtin.systemd:
-    name: pd
+    name: validator
     state: started
     enabled: True
+
+- name: Add type of service fact
+  ansible.builtin.lineinfile:
+    path: /etc/ansible/facts.d/noderole.fact
+    regexp: "^type="
+    line: "type={{ default_node_type }}"
+    create: True
+    mode: "0644"
+
+- name: Add Penumbra service version
+  ansible.builtin.lineinfile:
+    path: /etc/ansible/facts.d/noderole.fact
+    regexp: "^version="
+    line: "version={{ penumbra_version }}"
+    create: True
+    mode: "0644"
+
+- name: Add Service Pinned Status
+  ansible.builtin.lineinfile:
+    path: /etc/ansible/facts.d/noderole.fact
+    regexp: "^pinned="
+    line: "pinned=False"
+    create: True
+    mode: "0644"
 
 - name: Flush Handlers
   ansible.builtin.meta: flush_handlers

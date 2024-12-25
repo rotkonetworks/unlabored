@@ -80,14 +80,14 @@
 - name: Unpack cometbft
   ansible.builtin.unarchive:
     src: "{{ default_home_path }}/tmp/cometbft_{{ cometbft_version }}_linux_amd64.tar.gz"
-    dest: "{{ default_home_path }}"
+    dest: "{{ default_home_path }}/tmp"
     remote_src: True
     owner: "{{ default_user }}"
     group: "{{ default_user }}"
     mode: "u+r+x"
   when: ansible_local['noderole']['node']['version'] != cometbft_version
 
-- name: Create soft links for penumbra binaries
+- name: Create soft links for penumbra & cometbft binaries
   ansible.builtin.file:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
@@ -101,6 +101,8 @@
       dest: "{{ default_home_path }}/pcli"
     - src: "{{ default_home_path }}/.cargo/bin/pclientd"
       dest: "{{ default_home_path }}/pclientd"
+    - src: "{{ default_home_path }}/tmp/cometbft"
+      dest: "{{ default_home_path }}/cometbft"
 
 - name: Install lz4 package
   ansible.builtin.package:
@@ -124,13 +126,14 @@
   when: not cometbft_dir.stat.exists
 
 - name: Download Polkachu Cometbft snapshot
-  ansible.builtin.get_url:
-    url: "{{ polkachu_download_url }}"
-    dest: "{{ default_database_path }}/node0/"
-    mode: "u+r+x"
-    owner: "{{ default_user }}"
-    group: "{{ default_user }}"
+  ansible.builtin.shell:
+    cmd: "wget -O {{ default_database_path }}/node0/penumbra_{{ polkachu_version }}.tar.lz4 https://snapshots.polkachu.com/snapshots/penumbra/penumbra_{{ polkachu_version }}.tar.lz4 --inet4-only"
+  become: True
+  become_user: "{{ default_user }}"
   when: not cometbft_dir.stat.exists
+  # when: ansible_local['noderole']['node']['version'] != penumbra_version
+  args:
+    executable: /bin/bash
 
 - name: Extract and decompress Polkachu snapshot
   ansible.builtin.shell:
@@ -142,11 +145,19 @@
   become_user: "{{ default_user }}"
   when: not cometbft_dir.stat.exists
 
-- name: Remove lz4 archive after decompression
+# NOTE: i still commented this out cause its58GB file and still for experimenting in case something wrong
+# - name: Remove lz4 archive after decompression
+#   ansible.builtin.file:
+#     path: "{{ default_database_path }}/node0/penumbra_{{ polkachu_version }}.tar.lz4"
+#     state: absent
+#   when: not cometbft_dir.stat.exists
+- name: Ensure cometbft config directory exists
   ansible.builtin.file:
-    path: "{{ default_database_path }}/node0/penumbra_{{ polkachu_version }}.tar.lz4"
-    state: absent
-  when: not cometbft_dir.stat.exists
+    path: "{{ default_database_path }}/node0/cometbft/config"
+    state: directory
+    mode: "0750"
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
 
 - name: Download Polkachu's Penumbra address book
   ansible.builtin.get_url:
@@ -168,15 +179,49 @@
     force: True
   when: not cometbft_dir.stat.exists
 
-- name: Copy Cometbft & pd service templates
+- name: Ensure proper ownership of cometbft and pd directories
+  ansible.builtin.file:
+    path: "{{ default_database_path }}/node0/{{ item }}"
+    state: directory
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+    mode: "0750"
+    recurse: true
+  loop:
+    - cometbft
+    - pd
+
+- name: Flush handlers after service copy
+  ansible.builtin.meta: flush_handlers
+
+- name: Copy Cometbft & validator service templates
   ansible.builtin.template:
     src: "{{ item }}.service.j2"
     dest: "{{ default_home_path }}/{{ item }}.service"
     owner: "{{ default_user }}"
     group: "{{ default_user }}"
     mode: "0640"
+  when: default_node_type in ["validator", "bootnode", "endpoint"]
   loop:
-    - pd
+    - validator
+    - cometbft
+  notify:
+    - Symlink cometbft & validator service to systemd
+    - Systemd daemon-reload
+    - Start Cometbft
+    - Start Penumbra
+
+- name: Symlink cometbft & validator service to systemd
+  ansible.builtin.file:
+    src: "{{ default_home_path }}/{{ item }}.service"
+    dest: "/etc/systemd/system/{{ item }}.service"
+    state: link
+    force: True
+    owner: "root"
+    group: "root"
+    mode: "0644"
+  loop:
+    - validator
     - cometbft
 
 - name: Flush handlers after service copy
@@ -188,8 +233,8 @@
     state: started
     enabled: True
 
-- name: Ensure pd service is running
+- name: Ensure validator service is running
   ansible.builtin.systemd:
-    name: pd
+    name: validator
     state: started
     enabled: True
