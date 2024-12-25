@@ -32,6 +32,10 @@
 - name: Gather facts
   ansible.builtin.setup:
 
+- name: Set version fact
+  ansible.builtin.set_fact:
+    needs_update: "{{ ansible_local['noderole']['node']['version'] != penumbra_version }}"
+
 - name: Download and install pcli
   ansible.builtin.shell:
     cmd: "set -o pipefail && curl --proto '=https' --tlsv1.2 -LsSf https://github.com/penumbra-zone/penumbra/releases/download/v{{ penumbra_version }}/pcli-installer.sh | sh"
@@ -103,6 +107,10 @@
       dest: "{{ default_home_path }}/pclientd"
     - src: "{{ default_home_path }}/tmp/cometbft"
       dest: "{{ default_home_path }}/cometbft"
+  notify:
+    - Add type of service fact
+    - Add Penumbra service version
+    - Add Service Pinned Status
 
 - name: Install lz4 package
   ansible.builtin.package:
@@ -203,25 +211,25 @@
     - validator
     - cometbft
   notify:
-    - Symlink cometbft & validator service to systemd
     - Stop Cometbft
     - Stop Penumbra
+    - Symlink cometbft & validator service to systemd
     - Systemd daemon-reload
     - Start Cometbft
     - Start Penumbra
 
-- name: Symlink cometbft & validator service to systemd
-  ansible.builtin.file:
-    src: "{{ default_home_path }}/{{ item }}.service"
-    dest: "/etc/systemd/system/{{ item }}.service"
-    state: link
-    force: True
-    owner: "root"
-    group: "root"
-    mode: "0644"
-  loop:
-    - validator
-    - cometbft
+# - name: Symlink cometbft & validator service to systemd
+#   ansible.builtin.file:
+#     src: "{{ default_home_path }}/{{ item }}.service"
+#     dest: "/etc/systemd/system/{{ item }}.service"
+#     state: link
+#     force: True
+#     owner: "root"
+#     group: "root"
+#     mode: "0644"
+#   loop:
+#     - validator
+#     - cometbft
 
 - name: Flush handlers to execute pending handler tasks
   ansible.builtin.meta: flush_handlers
