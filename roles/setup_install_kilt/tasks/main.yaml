@@ -88,10 +88,33 @@
     - ansible_local['noderole']['node']['version'] != default_client_version
     - not kilt_binary.stat.exists
 
+- name: Install protobuf compiler and dependencies
+  ansible.builtin.package:
+    name:
+      - protobuf-compiler
+      - libprotobuf-dev
+    state: present
+  become: true
+  become_user: root
+  when:
+    - ansible_local['noderole']['node']['pinned'] != "True"
+    - ansible_local['noderole']['node']['version'] != default_client_version
+    - not kilt_binary.stat.exists
+
+- name: Install libclang and related dependencies
+  ansible.builtin.package:
+    name:
+      - libclang-dev
+      - clang
+      - llvm-dev
+    state: present
+  become: true
+  become_user: root
+
 #NOTE: take look at it -al
 - name: Build client from source as root
   ansible.builtin.command:
-    cmd: cargo build --release
+    cmd: cargo build --release -p kilt-parachain
     chdir: "{{ default_base_path }}/kilt-node-{{ default_client_version }}"
   become: True # Build as root
   become_user: root
