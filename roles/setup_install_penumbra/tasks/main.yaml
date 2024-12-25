@@ -186,13 +186,10 @@
     owner: "{{ default_user }}"
     group: "{{ default_user }}"
     mode: "0750"
-    recurse: true
+    recurse: True
   loop:
     - cometbft
     - pd
-
-- name: Flush handlers after service copy
-  ansible.builtin.meta: flush_handlers
 
 - name: Copy Cometbft & validator service templates
   ansible.builtin.template:
@@ -207,6 +204,8 @@
     - cometbft
   notify:
     - Symlink cometbft & validator service to systemd
+    - Stop Cometbft
+    - Stop Penumbra
     - Systemd daemon-reload
     - Start Cometbft
     - Start Penumbra
@@ -224,7 +223,7 @@
     - validator
     - cometbft
 
-- name: Flush handlers after service copy
+- name: Flush handlers to execute pending handler tasks
   ansible.builtin.meta: flush_handlers
 
 - name: Ensure cometbft service is running
