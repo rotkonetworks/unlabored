@@ -1,8 +1,8 @@
 ---
 ansible_host: "160.22.181.181"
-container_ip: "192.168.86.86"
-ansible_port: 3866
-host_name: "rpc-kilt-polkadot-01.ct.rotko.net"
+container_ip: "192.168.112.34"
+ansible_port: 3834
+host_name: "rpc-kilt-polkadot-02.ct.rotko.net"
 host_timezone: "Asia/Bangkok"
 netif: '{"net0":"name=eth0,gw={{ default_nat_network_forward_cidr.split("/")[0] }},ip={{ default_host_ip }}/16,bridge={{ default_nat_device }}"}'
 role: "kilt"
@@ -15,5 +15,5 @@ default_relay_rpc: "ws://{{ hostvars['rpc-polkadot-01']['container_ip'] }}:{{ ho
 default_relay_rpc_fallback: "ws://{{ hostvars['rpc-polkadot-02']['container_ip'] }}:{{ hostvars['rpc-polkadot-02']['default_rpc_port'] }}"
 default_database: "rocksdb"
 default_node_type: "endpoint"
-zabbix_ext_port: 10836
-default_p2p_port: 31241
+zabbix_ext_port: 10834
+default_p2p_port: 31242

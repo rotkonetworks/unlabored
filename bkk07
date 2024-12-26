@@ -12,6 +12,7 @@ polkadot
 hydration
 cumulus
 penumbra
+kilt
 
 [prometheus]
 ibp-bkk07
@@ -40,6 +41,9 @@ bkk50
 
 [hydration]
 hdx27
+
+[kilt]
+rpc-kilt-polkadot-02
 
 [penumbra]
 penumbra-02

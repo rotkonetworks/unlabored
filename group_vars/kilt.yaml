@@ -17,9 +17,8 @@ default_service: kilt
 default_storage: "{{ default_base_path }}/chains"
 default_telemetry_url: wss://telemetry-backend.w3f.community/submit/ 1
 default_user: "{{ service_users['kilt'] }}"
-default_p2p_port: 33400
-default_p2p_port_ws: 34400
-default_p2p_port_wss: 35400
+default_p2p_port_ws: 30434
+default_p2p_port_wss: 30435
 default_prom_port: 7400
 default_rpc_port: 9400
 default_secure_rpc_port: 42400
