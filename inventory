@@ -32,6 +32,10 @@ bkk10
 bkk20
 bkk50
 
+[kilt]
+rpc-kilt-polkadot-01
+rpc-kilt-polkadot-02
+
 [cumulus]
 mint14
 pbr13
@@ -65,7 +69,6 @@ kcore27
 kppl27
 wppl27
 mint27
-rpc-kilt-polkadot-01
 rpc-asset-hub-polkadot-01
 rpc-asset-hub-polkadot-02
 rpc-asset-hub-westend-01
@@ -111,6 +114,8 @@ enc24
 enc26
 
 [hydration]
+rpc-hydration-polkadot-01
+rpc-hydration-polkadot-02
 hdx26
 hdx27
 

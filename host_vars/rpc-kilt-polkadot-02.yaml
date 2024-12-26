@@ -17,3 +17,4 @@ default_database: "rocksdb"
 default_node_type: "endpoint"
 zabbix_ext_port: 10834
 default_p2p_port: 31242
+default_bootnode_domain: "kilt.boot.rotko.net"
