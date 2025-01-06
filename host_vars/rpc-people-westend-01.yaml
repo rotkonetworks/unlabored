@@ -1,15 +1,14 @@
 ---
 ansible_host: "160.22.181.181"
-#WARN: ip still the same with wppl27
-container_ip: "192.168.77.38" # people westend 38
-ansible_port: 2867
-host_name: "wppl27.rotko.net"
+container_ip: "192.168.131.14"
+ansible_port: 2814
+host_name: "rpc-people-westend-01.ct.rotko.net"
 host_timezone: "Asia/Bangkok"
 netif: '{"net0":"name=eth0,gw={{ default_nat_network_forward_cidr.split("/")[0] }},ip={{ default_host_ip }}/16,bridge={{ default_nat_device }}"}'
 role: "cumulus"
 pinned_service: True
 
-default_telemetry_name: "Rotko Networks - {{ host_name.split('.')[0] }} {{ default_node_type | capitalize }}"
+default_telemetry_name: "Rotko Networks - {{ host_name.split('.')[0] }}"
 default_domain: "{{ host_name }}"
 default_network: "people-westend"
 default_chain_spec: "{{ default_base_path }}/people-westend.json"
@@ -17,17 +16,19 @@ default_chain_spec: "{{ default_base_path }}/people-westend.json"
 default_chain_spec_dl_url: "https://raw.githubusercontent.com/paritytech/polkadot-sdk/fca5044c06c6ce9a0dbdacc54b0f4ad0ce422ddd/cumulus/parachains/chain-specs/people-westend.json"
 default_relay_rpc: "ws://{{ hostvars['rpc-westend-01']['container_ip'] }}:{{ hostvars['rpc-westend-01']['default_rpc_port'] }}"
 default_relay_rpc_fallback: "ws://{{ hostvars['rpc-westend-02']['container_ip'] }}:{{ hostvars['rpc-westend-02']['default_rpc_port'] }}"
-default_database: "paritydb"
+default_database: "rocksdb"
 default_node_type: "endpoint"
 
-default_bootnode_domain: "{{ default_network }}.boot.rotko.net"
+transition_bootnode_domain: "wppl16.rotko.net"
+transition_bootnode_p2p_port: 33766
+transition_bootnode_p2p_port_ws: 34766
+transition_bootnode_p2p_port_wss: 35766
 
-default_p2p_port: 30333
-default_p2p_port_ws: 30334
-default_p2p_port_wss: 30335
-default_rpc_port: 9300
+default_p2p_port: 33041
+default_bootnode_domain: "{{ default_network }}.boot.rotko.net"
+default_bootnode_p2p_port: 33041
 default_bootnode_p2p_port_ws: 30434
 default_bootnode_p2p_port_wss: 30435
-default_secure_rpc_port: 42867
-default_prom_port: 7867
-zabbix_ext_port: 10867
+
+default_secure_rpc_port: 42814
+zabbix_ext_port: 10814

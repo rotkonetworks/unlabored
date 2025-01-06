@@ -154,13 +154,10 @@ proxmox_defaults:
   api_user: "{{ proxmox_default_admin_account }}"
   api_token_id: "{{ proxmox_default_admin_token }}-{{ inventory_hostname }}"
   api_token_secret: "{{ ansible_local.proxmox.api.token | unvault(default_passphrase) }}"
+  #ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKB5Gd/uGkKr2c9Kv/F5dUzyFPooHNX90UBLhrfzZKWa proxy@rotko.net
   pubkey: |
     ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAPBgdF5W2e5iMFt1iiLRuRdz7RxJzmj9v30nn9vZTYP user@pc02
     ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBIrOT9g9BblH6u28wAQGmpqA/sH+EiKdhrqrfuDdZu2 hq@rotko.net
-  # pubkey: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBIrOT9g9BblH6u28wAQGmpqA/sH+EiKdhrqrfuDdZu2 hq@rotko.net"
-  # pubkeys:
-  #   - "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAPBgdF5W2e5iMFt1iiLRuRdz7RxJzmj9v30nn9vZTYP user@pc02"
-  #   - "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBIrOT9g9BblH6u28wAQGmpqA/sH+EiKdhrqrfuDdZu2 hq@rotko.net"
   node: "{{ host_name.split('.')[0] }}"
   timeout: 1200
 
@@ -185,3 +182,4 @@ service_users:
   unique: "unique"
   polimec: "polimec"
   ajuna: "ajuna"
+  penumbra: "penumbra"

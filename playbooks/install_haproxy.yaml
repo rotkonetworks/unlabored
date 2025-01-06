@@ -1,0 +1,8 @@
+# Standards: 0.2
+---
+- name: Install Haproxy
+  hosts: haproxy
+  gather_facts: True
+  roles:
+    - setup_add_node_role
+    - setup_install_haproxy

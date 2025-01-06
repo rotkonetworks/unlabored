@@ -14,7 +14,7 @@ default_network: "people-paseo"
 default_network_pathname: "paseo-people"
 default_chain_spec: "{{ default_base_path }}/people-paseo.raw.json"
 default_chain_spec_dl_url: "https://github.com/paseo-network/paseo-chain-specs/raw/refs/heads/main/paseo-people.raw.json"
-default_relay_rpc: "ws://{{ hostvars['pso26']['container_ip'] }}:{{ hostvars['pso26']['default_rpc_port'] }}"
+default_relay_rpc: "ws://{{ hostvars['rpc-paseo-01']['container_ip'] }}:{{ hostvars['rpc-paseo-01']['default_rpc_port'] }}"
 default_relay_rpc_fallback: "ws://{{ hostvars['rpc-paseo-02']['container_ip'] }}:{{ hostvars['rpc-paseo-02']['default_rpc_port'] }}"
 default_database: "rocksdb"
 default_node_type: "endpoint"
@@ -22,6 +22,7 @@ zabbix_ext_port: 10966
 
 default_bootnode_domain: "{{ default_network }}.boot.rotko.net"
 
+#dont change p2p port
 default_p2p_port: 34041
 default_bootnode_p2p_port: 34041
 default_bootnode_p2p_port_ws: 30434

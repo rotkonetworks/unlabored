@@ -1,0 +1,32 @@
+[Unit]
+Description={{ host_name.split('.')[0] }} validator - Penumbra service
+Wants=cometbft.service
+
+[Service]
+# Support binding to 443/TCP for HTTPS.
+CapabilityBoundingSet=CAP_NET_BIND_SERVICE
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+
+ExecStart={{ default_home_path }}/pd start \
+          --home {{ default_database_path }}/node0/pd \
+          --metrics-bind 0.0.0.0:{{ default_penumbra_metric_port }} \
+          --cometbft-addr http://127.0.0.1:{{ default_cometbft_rpc_port }} \
+          --abci-bind 127.0.0.1:{{ default_acbi_port }}
+
+# Consider adding an HTTPS URL if you have DNS set up:
+# ExecStart=/usr/local/bin/pd start --grpc-auto-https www.example.com
+
+# Disable automatic restart, since governance votes can intentionally halt the chain.
+# If you're running a validator, you should configure uptime monitoring.
+Restart=no
+
+# Assumes that the `penumbra` user exists.
+User=penumbra
+
+# Raise filehandle limit for tower-abci.
+LimitNOFILE=65536
+# Consider configuring logrotate if using debug logs
+# Environment=RUST_LOG=info,pd=debug,penumbra=debug,jmt=debug
+
+[Install]
+WantedBy=default.target

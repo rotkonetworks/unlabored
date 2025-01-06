@@ -39,7 +39,9 @@ ExecStart={{ default_base_path }}/cumulus \
   --rpc-external \
   --rpc-methods safe \
   --rpc-cors all \
-  --allow-private-ipv4
+  --in-peers {{ default_in_peers }} \
+  --out-peers {{ default_out_peers }} \
+  --no-mdns 
 
 Restart=always
 RestartSec=120

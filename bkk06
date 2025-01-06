@@ -16,63 +16,45 @@ polkadot
 [routers]
 bkk50
 
+[haproxy]
+haproxy-bkk06
+
 [hydration]
 hdx26
+rpc-hydration-polkadot-01
 
 [polkadot]
-dot14
-dot26
-ksm14
-ksm26
-pso06
-pso16
-pso26
-wnd14
-wnd26
+rpc-polkadot-01
+rpc-westend-01
+rpc-paseo-01
+rpc-kusama-01
 
 [cumulus]
 ; rpc
-boot-asset-hub-paseo
-kbr13
-kbr26
-kcore16
-kcore26
-kppl16
-kppl26
-mine14
-mine26
-mint14
-mint26
-pbr13
-pbr26
-pch16
-pch26
 rpc-asset-hub-polkadot-01
+rpc-asset-hub-kusama-01
 rpc-asset-hub-westend-01
 rpc-asset-hub-paseo-01
-rpc-bridge-hub-paseo-01
 rpc-bridge-hub-polkadot-01
+rpc-bridge-hub-kusama-01
 rpc-bridge-hub-westend-01
+rpc-bridge-hub-paseo-01
 rpc-coretime-paseo-01
+rpc-coretime-polkadot-01
+rpc-coretime-kusama-01
+rpc-coretime-westend-01
 rpc-collectives-polkadot-01
 rpc-collectives-westend-01
 rpc-people-paseo-01
 rpc-people-polkadot-01
-wbr13
-wbr26
-wch13
-wch26
-wcore16
-wcore26
-wmint14
-wmint26
-wppl16
-wppl26
+rpc-people-kusama-01
+rpc-people-westend-01
 
 [kilt]
 rpc-kilt-polkadot-01
 
 [encointer]
+rpc-encointer-kusama-01
 enc14
 enc26
 

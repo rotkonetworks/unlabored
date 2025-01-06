@@ -29,143 +29,108 @@ port_forwards:
     protocol: "tcp"
 
 lxc_nodes:
-  # - host: "rpc-polkadot-02"
+  # - host: "hdx27"
   #   proxmox_config:
-  #     vmid: "340202"
-  #     hostname: "{{ hostvars['rpc-polkadot-02']['host_name'] }}"
+  #     vmid: "837"
+  #     hostname: "{{ hostvars['hdx27']['host_name'] }}"
   #     ostemplate: "local:vztmpl/{{ default_container_template }}"
-  #     netif: "{{ hostvars['rpc-polkadot-02']['netif'] }}"
-  #     cores: 4
+  #     netif: "{{ hostvars['hdx27']['netif'] }}"
+  #     cores: 8
   #     memory: 16384
   #     swap: 8192
   #     password: "{{ default_password }}"
-  #     disk: "{{ zfs_storage }}:20"
-  #     mounts: '{"mp0":"{{ zfs_storage }}:2000,mp={{ hostvars["rpc-polkadot-02"]["default_database_path"] }}"}'
+  #     disk: "{{ default_storage }}:20"
+  #     mounts: '{"mp0":"{{ default_storage }}:150,mp={{ hostvars["hdx27"]["default_database_path"] }}"}'
   #     onboot: True
   #     unprivileged: True
   #     validate_certs: False
-  #     description: "{{ hostvars['rpc-polkadot-02']['default_network'] }} {{ hostvars['rpc-polkadot-02']['default_node_type'] }}: {{ hostvars['rpc-polkadot-02']['host_name'] }}"
+  #     description: "{{ hostvars['hdx27']['default_network'] }} {{ hostvars['hdx27']['default_node_type'] }}: {{ hostvars['hdx27']['host_name'] }}"
   #     state: present
   #     features:
   #       - nesting=1
   #   port_forwards:
-  #     - from_port: "{{ hostvars['rpc-polkadot-02']['ansible_port'] }}"
-  #       to_host: "{{ hostvars['rpc-polkadot-02']['container_ip'] }}:22"
+  #     - from_port: "{{ hostvars['hdx27']['ansible_port'] }}"
+  #       to_host: "{{ hostvars['hdx27']['container_ip'] }}:22"
   #       protocol: "tcp"
-  #     - from_port: "{{ hostvars['rpc-polkadot-02']['zabbix_ext_port'] }}"
+  #     - from_port: "{{ hostvars['hdx27']['zabbix_ext_port'] }}"
   #       to_host: "{{ hostvars['monitor']['container_ip'] }}:10050"
   #       protocol: "tcp"
-  #     - from_port: "{{ hostvars['rpc-polkadot-02']['default_p2p_port'] }}"
-  #       to_host: "{{ hostvars['rpc-polkadot-02']['container_ip'] }}:{{ hostvars['rpc-polkadot-02']['default_p2p_port'] }}"
+  #     - from_port: "{{ hostvars['hdx27']['default_p2p_port'] }}"
+  #       to_host: "{{ hostvars['hdx27']['container_ip'] }}:{{ hostvars['hdx27']['default_p2p_port'] }}"
   #       protocol: "tcp"
-  #     - from_port: "{{ hostvars['rpc-polkadot-02']['default_p2p_port_ws'] }}"
-  #       to_host: "{{ hostvars['rpc-polkadot-02']['container_ip'] }}:{{ hostvars['rpc-polkadot-02']['default_p2p_port_ws'] }}"
+  #     - from_port: "{{ hostvars['hdx27']['default_p2p_port_ws'] }}"
+  #       to_host: "{{ hostvars['hdx27']['container_ip'] }}:{{ hostvars['hdx27']['default_p2p_port_ws'] }}"
   #       protocol: "tcp"
-  #     - from_port: "{{ hostvars['rpc-polkadot-02']['default_p2p_port_wss'] }}"
-  #       to_host: "{{ hostvars['rpc-polkadot-02']['container_ip'] }}:{{ hostvars['rpc-polkadot-02']['default_p2p_port_wss'] }}"
+  #     - from_port: "{{ hostvars['hdx27']['default_p2p_port_wss'] }}"
+  #       to_host: "{{ hostvars['hdx27']['container_ip'] }}:{{ hostvars['hdx27']['default_p2p_port_wss'] }}"
   #       protocol: "tcp"
-  - host: "hdx27"
-    proxmox_config:
-      vmid: "837"
-      hostname: "{{ hostvars['hdx27']['host_name'] }}"
-      ostemplate: "local:vztmpl/{{ default_container_template }}"
-      netif: "{{ hostvars['hdx27']['netif'] }}"
-      cores: 8
-      memory: 16384
-      swap: 8192
-      password: "{{ default_password }}"
-      disk: "{{ default_storage }}:20"
-      mounts: '{"mp0":"{{ default_storage }}:150,mp={{ hostvars["hdx27"]["default_database_path"] }}"}'
-      onboot: True
-      unprivileged: True
-      validate_certs: False
-      description: "{{ hostvars['hdx27']['default_network'] }} {{ hostvars['hdx27']['default_node_type'] }}: {{ hostvars['hdx27']['host_name'] }}"
-      state: present
-      features:
-        - nesting=1
-    port_forwards:
-      - from_port: "{{ hostvars['hdx27']['ansible_port'] }}"
-        to_host: "{{ hostvars['hdx27']['container_ip'] }}:22"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['hdx27']['zabbix_ext_port'] }}"
-        to_host: "{{ hostvars['monitor']['container_ip'] }}:10050"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['hdx27']['default_p2p_port'] }}"
-        to_host: "{{ hostvars['hdx27']['container_ip'] }}:{{ hostvars['hdx27']['default_p2p_port'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['hdx27']['default_p2p_port_ws'] }}"
-        to_host: "{{ hostvars['hdx27']['container_ip'] }}:{{ hostvars['hdx27']['default_p2p_port_ws'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['hdx27']['default_p2p_port_wss'] }}"
-        to_host: "{{ hostvars['hdx27']['container_ip'] }}:{{ hostvars['hdx27']['default_p2p_port_wss'] }}"
-        protocol: "tcp"
-  - host: "pso07"
-    proxmox_config:
-      vmid: "1007"
-      hostname: "{{ hostvars['pso07']['host_name'] }}"
-      ostemplate: "local:vztmpl/{{ default_container_template }}"
-      netif: "{{ hostvars['pso07']['netif'] }}"
-      cores: 4
-      memory: 16384
-      swap: 8192
-      password: "{{ default_password }}"
-      disk: "{{ default_storage }}:20"
-      mounts: '{"mp0":"{{ default_storage }}:200,mp={{ hostvars["pso07"]["default_base_path"] }}"}'
-      onboot: True
-      unprivileged: True
-      validate_certs: False
-      description: "{{ hostvars['pso07']['default_network'] }} {{ hostvars['pso07']['default_node_type'] }}: {{ hostvars['pso07']['host_name'] }}"
-      state: present
-      features:
-        - nesting=1
-    port_forwards:
-      - from_port: "{{ hostvars['pso07']['ansible_port'] }}"
-        to_host: "{{ hostvars['pso07']['container_ip'] }}:22"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['pso07']['zabbix_ext_port'] }}"
-        to_host: "{{ hostvars['monitor']['container_ip'] }}:10050"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['pso07']['default_p2p_port'] }}"
-        to_host: "{{ hostvars['pso07']['container_ip'] }}:{{ hostvars['pso07']['default_p2p_port'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['pso07']['default_p2p_port_ws'] }}"
-        to_host: "{{ hostvars['pso07']['container_ip'] }}:{{ hostvars['pso07']['default_p2p_port_ws'] }}"
-        protocol: "tcp"
-  - host: "kcore27"
-    proxmox_config:
-      vmid: "827"
-      hostname: "{{ hostvars['kcore27']['host_name'] }}"
-      ostemplate: "local:vztmpl/{{ default_container_template }}"
-      netif: "{{ hostvars['kcore27']['netif'] }}"
-      cores: 4
-      memory: 16384
-      swap: 8192
-      password: "{{ default_password }}"
-      disk: "{{ default_storage }}:20"
-      mounts: '{"mp0":"{{ default_storage }}:100,mp={{ hostvars["kcore27"]["default_database_path"] }}"}'
-      onboot: True
-      unprivileged: True
-      validate_certs: False
-      description: "{{ hostvars['kcore27']['default_network'] }} {{ hostvars['kcore27']['default_node_type'] }}: {{ hostvars['kcore27']['host_name'] }}"
-      state: present
-      features:
-        - nesting=1
-    port_forwards:
-      - from_port: "{{ hostvars['kcore27']['ansible_port'] }}"
-        to_host: "{{ hostvars['kcore27']['container_ip'] }}:22"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['kcore27']['zabbix_ext_port'] }}"
-        to_host: "{{ hostvars['monitor']['container_ip'] }}:10050"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['kcore27']['default_p2p_port'] }}"
-        to_host: "{{ hostvars['kcore27']['container_ip'] }}:{{ hostvars['kcore27']['default_p2p_port'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['kcore27']['default_p2p_port_ws'] }}"
-        to_host: "{{ hostvars['kcore27']['container_ip'] }}:{{ hostvars['kcore27']['default_p2p_port_ws'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['kcore27']['default_p2p_port_wss'] }}"
-        to_host: "{{ hostvars['kcore27']['container_ip'] }}:{{ hostvars['kcore27']['default_p2p_port_wss'] }}"
-        protocol: "tcp"
+  # - host: "pso07"
+  #   proxmox_config:
+  #     vmid: "1007"
+  #     hostname: "{{ hostvars['pso07']['host_name'] }}"
+  #     ostemplate: "local:vztmpl/{{ default_container_template }}"
+  #     netif: "{{ hostvars['pso07']['netif'] }}"
+  #     cores: 4
+  #     memory: 16384
+  #     swap: 8192
+  #     password: "{{ default_password }}"
+  #     disk: "{{ default_storage }}:20"
+  #     mounts: '{"mp0":"{{ default_storage }}:200,mp={{ hostvars["pso07"]["default_base_path"] }}"}'
+  #     onboot: True
+  #     unprivileged: True
+  #     validate_certs: False
+  #     description: "{{ hostvars['pso07']['default_network'] }} {{ hostvars['pso07']['default_node_type'] }}: {{ hostvars['pso07']['host_name'] }}"
+  #     state: present
+  #     features:
+  #       - nesting=1
+  #   port_forwards:
+  #     - from_port: "{{ hostvars['pso07']['ansible_port'] }}"
+  #       to_host: "{{ hostvars['pso07']['container_ip'] }}:22"
+  #       protocol: "tcp"
+  #     - from_port: "{{ hostvars['pso07']['zabbix_ext_port'] }}"
+  #       to_host: "{{ hostvars['monitor']['container_ip'] }}:10050"
+  #       protocol: "tcp"
+  #     - from_port: "{{ hostvars['pso07']['default_p2p_port'] }}"
+  #       to_host: "{{ hostvars['pso07']['container_ip'] }}:{{ hostvars['pso07']['default_p2p_port'] }}"
+  #       protocol: "tcp"
+  #     - from_port: "{{ hostvars['pso07']['default_p2p_port_ws'] }}"
+  #       to_host: "{{ hostvars['pso07']['container_ip'] }}:{{ hostvars['pso07']['default_p2p_port_ws'] }}"
+  #       protocol: "tcp"
+  # - host: "kcore27"
+  #   proxmox_config:
+  #     vmid: "827"
+  #     hostname: "{{ hostvars['kcore27']['host_name'] }}"
+  #     ostemplate: "local:vztmpl/{{ default_container_template }}"
+  #     netif: "{{ hostvars['kcore27']['netif'] }}"
+  #     cores: 4
+  #     memory: 16384
+  #     swap: 8192
+  #     password: "{{ default_password }}"
+  #     disk: "{{ default_storage }}:20"
+  #     mounts: '{"mp0":"{{ default_storage }}:100,mp={{ hostvars["kcore27"]["default_database_path"] }}"}'
+  #     onboot: True
+  #     unprivileged: True
+  #     validate_certs: False
+  #     description: "{{ hostvars['kcore27']['default_network'] }} {{ hostvars['kcore27']['default_node_type'] }}: {{ hostvars['kcore27']['host_name'] }}"
+  #     state: present
+  #     features:
+  #       - nesting=1
+  #   port_forwards:
+  #     - from_port: "{{ hostvars['kcore27']['ansible_port'] }}"
+  #       to_host: "{{ hostvars['kcore27']['container_ip'] }}:22"
+  #       protocol: "tcp"
+  #     - from_port: "{{ hostvars['kcore27']['zabbix_ext_port'] }}"
+  #       to_host: "{{ hostvars['monitor']['container_ip'] }}:10050"
+  #       protocol: "tcp"
+  #     - from_port: "{{ hostvars['kcore27']['default_p2p_port'] }}"
+  #       to_host: "{{ hostvars['kcore27']['container_ip'] }}:{{ hostvars['kcore27']['default_p2p_port'] }}"
+  #       protocol: "tcp"
+  #     - from_port: "{{ hostvars['kcore27']['default_p2p_port_ws'] }}"
+  #       to_host: "{{ hostvars['kcore27']['container_ip'] }}:{{ hostvars['kcore27']['default_p2p_port_ws'] }}"
+  #       protocol: "tcp"
+  #     - from_port: "{{ hostvars['kcore27']['default_p2p_port_wss'] }}"
+  #       to_host: "{{ hostvars['kcore27']['container_ip'] }}:{{ hostvars['kcore27']['default_p2p_port_wss'] }}"
+  #       protocol: "tcp"
   # - host: "kppl27"
   #   proxmox_config:
   #     vmid: "857"
@@ -201,76 +166,76 @@ lxc_nodes:
   #     - from_port: "{{ hostvars['kppl27']['default_p2p_port_wss'] }}"
   #       to_host: "{{ hostvars['kppl27']['container_ip'] }}:{{ hostvars['kppl27']['default_p2p_port_wss'] }}"
   #       protocol: "tcp"
-  - host: "wcore27"
-    proxmox_config:
-      vmid: "937"
-      hostname: "{{ hostvars['wcore27']['host_name'] }}"
-      ostemplate: "local:vztmpl/{{ default_container_template }}"
-      netif: "{{ hostvars['wcore27']['netif'] }}"
-      cores: 4
-      memory: 16384
-      swap: 8192
-      password: "{{ default_password }}"
-      disk: "{{ default_storage }}:20"
-      mounts: '{"mp0":"{{ default_storage }}:100,mp={{ hostvars["wcore27"]["default_database_path"] }}"}'
-      onboot: True
-      unprivileged: True
-      validate_certs: False
-      description: "{{ hostvars['wcore27']['default_network'] }} {{ hostvars['wcore27']['default_node_type'] }}: {{ hostvars['wcore27']['host_name'] }}"
-      state: present
-      features:
-        - nesting=1
-    port_forwards:
-      - from_port: "{{ hostvars['wcore27']['ansible_port'] }}"
-        to_host: "{{ hostvars['wcore27']['container_ip'] }}:22"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['wcore27']['zabbix_ext_port'] }}"
-        to_host: "{{ hostvars['monitor']['container_ip'] }}:10050"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['wcore27']['default_p2p_port'] }}"
-        to_host: "{{ hostvars['wcore27']['container_ip'] }}:{{ hostvars['wcore27']['default_p2p_port'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['wcore27']['default_p2p_port_ws'] }}"
-        to_host: "{{ hostvars['wcore27']['container_ip'] }}:{{ hostvars['wcore27']['default_p2p_port_ws'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['wcore27']['default_p2p_port_wss'] }}"
-        to_host: "{{ hostvars['wcore27']['container_ip'] }}:{{ hostvars['wcore27']['default_p2p_port_wss'] }}"
-        protocol: "tcp"
-  - host: "wppl27"
-    proxmox_config:
-      vmid: "867"
-      hostname: "{{ hostvars['wppl27']['host_name'] }}"
-      ostemplate: "local:vztmpl/{{ default_container_template }}"
-      netif: "{{ hostvars['wppl27']['netif'] }}"
-      cores: 4
-      memory: 16384
-      swap: 8192
-      password: "{{ default_password }}"
-      disk: "{{ default_storage }}:20"
-      mounts: '{"mp0":"{{ default_storage }}:100,mp={{ hostvars["wppl27"]["default_database_path"] }}"}'
-      onboot: True
-      unprivileged: True
-      validate_certs: False
-      description: "{{ hostvars['wppl27']['default_network'] }} {{ hostvars['wppl27']['default_node_type'] }}: {{ hostvars['wppl27']['host_name'] }}"
-      state: present
-      features:
-        - nesting=1
-    port_forwards:
-      - from_port: "{{ hostvars['wppl27']['ansible_port'] }}"
-        to_host: "{{ hostvars['wppl27']['container_ip'] }}:22"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['wppl27']['zabbix_ext_port'] }}"
-        to_host: "{{ hostvars['monitor']['container_ip'] }}:10050"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['wppl27']['default_p2p_port'] }}"
-        to_host: "{{ hostvars['wppl27']['container_ip'] }}:{{ hostvars['wppl27']['default_p2p_port'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['wppl27']['default_p2p_port_ws'] }}"
-        to_host: "{{ hostvars['wppl27']['container_ip'] }}:{{ hostvars['wppl27']['default_p2p_port_ws'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['wppl27']['default_p2p_port_wss'] }}"
-        to_host: "{{ hostvars['wppl27']['container_ip'] }}:{{ hostvars['wppl27']['default_p2p_port_wss'] }}"
-        protocol: "tcp"
+  # - host: "wcore27"
+  #   proxmox_config:
+  #     vmid: "937"
+  #     hostname: "{{ hostvars['wcore27']['host_name'] }}"
+  #     ostemplate: "local:vztmpl/{{ default_container_template }}"
+  #     netif: "{{ hostvars['wcore27']['netif'] }}"
+  #     cores: 4
+  #     memory: 16384
+  #     swap: 8192
+  #     password: "{{ default_password }}"
+  #     disk: "{{ default_storage }}:20"
+  #     mounts: '{"mp0":"{{ default_storage }}:100,mp={{ hostvars["wcore27"]["default_database_path"] }}"}'
+  #     onboot: True
+  #     unprivileged: True
+  #     validate_certs: False
+  #     description: "{{ hostvars['wcore27']['default_network'] }} {{ hostvars['wcore27']['default_node_type'] }}: {{ hostvars['wcore27']['host_name'] }}"
+  #     state: present
+  #     features:
+  #       - nesting=1
+  #   port_forwards:
+  #     - from_port: "{{ hostvars['wcore27']['ansible_port'] }}"
+  #       to_host: "{{ hostvars['wcore27']['container_ip'] }}:22"
+  #       protocol: "tcp"
+  #     - from_port: "{{ hostvars['wcore27']['zabbix_ext_port'] }}"
+  #       to_host: "{{ hostvars['monitor']['container_ip'] }}:10050"
+  #       protocol: "tcp"
+  #     - from_port: "{{ hostvars['wcore27']['default_p2p_port'] }}"
+  #       to_host: "{{ hostvars['wcore27']['container_ip'] }}:{{ hostvars['wcore27']['default_p2p_port'] }}"
+  #       protocol: "tcp"
+  #     - from_port: "{{ hostvars['wcore27']['default_p2p_port_ws'] }}"
+  #       to_host: "{{ hostvars['wcore27']['container_ip'] }}:{{ hostvars['wcore27']['default_p2p_port_ws'] }}"
+  #       protocol: "tcp"
+  #     - from_port: "{{ hostvars['wcore27']['default_p2p_port_wss'] }}"
+  #       to_host: "{{ hostvars['wcore27']['container_ip'] }}:{{ hostvars['wcore27']['default_p2p_port_wss'] }}"
+  #       protocol: "tcp"
+  # - host: "wppl27"
+  #   proxmox_config:
+  #     vmid: "867"
+  #     hostname: "{{ hostvars['wppl27']['host_name'] }}"
+  #     ostemplate: "local:vztmpl/{{ default_container_template }}"
+  #     netif: "{{ hostvars['wppl27']['netif'] }}"
+  #     cores: 4
+  #     memory: 16384
+  #     swap: 8192
+  #     password: "{{ default_password }}"
+  #     disk: "{{ default_storage }}:20"
+  #     mounts: '{"mp0":"{{ default_storage }}:100,mp={{ hostvars["wppl27"]["default_database_path"] }}"}'
+  #     onboot: True
+  #     unprivileged: True
+  #     validate_certs: False
+  #     description: "{{ hostvars['wppl27']['default_network'] }} {{ hostvars['wppl27']['default_node_type'] }}: {{ hostvars['wppl27']['host_name'] }}"
+  #     state: present
+  #     features:
+  #       - nesting=1
+  #   port_forwards:
+  #     - from_port: "{{ hostvars['wppl27']['ansible_port'] }}"
+  #       to_host: "{{ hostvars['wppl27']['container_ip'] }}:22"
+  #       protocol: "tcp"
+  #     - from_port: "{{ hostvars['wppl27']['zabbix_ext_port'] }}"
+  #       to_host: "{{ hostvars['monitor']['container_ip'] }}:10050"
+  #       protocol: "tcp"
+  #     - from_port: "{{ hostvars['wppl27']['default_p2p_port'] }}"
+  #       to_host: "{{ hostvars['wppl27']['container_ip'] }}:{{ hostvars['wppl27']['default_p2p_port'] }}"
+  #       protocol: "tcp"
+  #     - from_port: "{{ hostvars['wppl27']['default_p2p_port_ws'] }}"
+  #       to_host: "{{ hostvars['wppl27']['container_ip'] }}:{{ hostvars['wppl27']['default_p2p_port_ws'] }}"
+  #       protocol: "tcp"
+  #     - from_port: "{{ hostvars['wppl27']['default_p2p_port_wss'] }}"
+  #       to_host: "{{ hostvars['wppl27']['container_ip'] }}:{{ hostvars['wppl27']['default_p2p_port_wss'] }}"
+  #       protocol: "tcp"
   - host: "rpc-asset-hub-paseo-02"
     proxmox_config:
       vmid: "340102"
@@ -306,41 +271,41 @@ lxc_nodes:
       - from_port: "{{ hostvars['rpc-asset-hub-paseo-02']['default_p2p_port_wss'] }}"
         to_host: "{{ hostvars['rpc-asset-hub-paseo-02']['container_ip'] }}:{{ hostvars['rpc-asset-hub-paseo-02']['default_p2p_port_wss'] }}"
         protocol: "tcp"
-  - host: "mint27"
-    proxmox_config:
-      vmid: "617"
-      hostname: "{{ hostvars['mint27']['host_name'] }}"
-      ostemplate: "local:vztmpl/{{ default_container_template }}"
-      netif: "{{ hostvars['mint27']['netif'] }}"
-      cores: 4
-      memory: 16384
-      swap: 8192
-      password: "{{ default_password }}"
-      disk: "{{ lvm_storage }}:20"
-      mounts: '{"mp0":"{{ lvm_storage }}:100,mp={{ hostvars["mint27"]["default_database_path"] }}"}'
-      onboot: True
-      unprivileged: True
-      validate_certs: False
-      description: "{{ hostvars['mint27']['default_network'] }} {{ hostvars['mint27']['default_node_type'] }}: {{ hostvars['mint27']['host_name'] }}"
-      state: present
-      features:
-        - nesting=1
-    port_forwards:
-      - from_port: "{{ hostvars['mint27']['ansible_port'] }}"
-        to_host: "{{ hostvars['mint27']['container_ip'] }}:22"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['mint27']['zabbix_ext_port'] }}"
-        to_host: "{{ hostvars['monitor']['container_ip'] }}:10050"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['mint27']['default_p2p_port'] }}"
-        to_host: "{{ hostvars['mint27']['container_ip'] }}:{{ hostvars['mint27']['default_p2p_port'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['mint27']['default_p2p_port_ws'] }}"
-        to_host: "{{ hostvars['mint27']['container_ip'] }}:{{ hostvars['mint27']['default_p2p_port_ws'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['mint27']['default_p2p_port_wss'] }}"
-        to_host: "{{ hostvars['mint27']['container_ip'] }}:{{ hostvars['mint27']['default_p2p_port_wss'] }}"
-        protocol: "tcp"
+  # - host: "mint27"
+  #   proxmox_config:
+  #     vmid: "617"
+  #     hostname: "{{ hostvars['mint27']['host_name'] }}"
+  #     ostemplate: "local:vztmpl/{{ default_container_template }}"
+  #     netif: "{{ hostvars['mint27']['netif'] }}"
+  #     cores: 4
+  #     memory: 16384
+  #     swap: 8192
+  #     password: "{{ default_password }}"
+  #     disk: "{{ lvm_storage }}:20"
+  #     mounts: '{"mp0":"{{ lvm_storage }}:100,mp={{ hostvars["mint27"]["default_database_path"] }}"}'
+  #     onboot: True
+  #     unprivileged: True
+  #     validate_certs: False
+  #     description: "{{ hostvars['mint27']['default_network'] }} {{ hostvars['mint27']['default_node_type'] }}: {{ hostvars['mint27']['host_name'] }}"
+  #     state: present
+  #     features:
+  #       - nesting=1
+  #   port_forwards:
+  #     - from_port: "{{ hostvars['mint27']['ansible_port'] }}"
+  #       to_host: "{{ hostvars['mint27']['container_ip'] }}:22"
+  #       protocol: "tcp"
+  #     - from_port: "{{ hostvars['mint27']['zabbix_ext_port'] }}"
+  #       to_host: "{{ hostvars['monitor']['container_ip'] }}:10050"
+  #       protocol: "tcp"
+  #     - from_port: "{{ hostvars['mint27']['default_p2p_port'] }}"
+  #       to_host: "{{ hostvars['mint27']['container_ip'] }}:{{ hostvars['mint27']['default_p2p_port'] }}"
+  #       protocol: "tcp"
+  #     - from_port: "{{ hostvars['mint27']['default_p2p_port_ws'] }}"
+  #       to_host: "{{ hostvars['mint27']['container_ip'] }}:{{ hostvars['mint27']['default_p2p_port_ws'] }}"
+  #       protocol: "tcp"
+  #     - from_port: "{{ hostvars['mint27']['default_p2p_port_wss'] }}"
+  #       to_host: "{{ hostvars['mint27']['container_ip'] }}:{{ hostvars['mint27']['default_p2p_port_wss'] }}"
+  #       protocol: "tcp"
   - host: "rpc-people-polkadot-02"
     proxmox_config:
       vmid: "310602"
@@ -632,12 +597,6 @@ lxc_nodes:
       - from_port: "{{ hostvars['rpc-asset-hub-polkadot-02']['default_p2p_port'] }}"
         to_host: "{{ hostvars['rpc-asset-hub-polkadot-02']['container_ip'] }}:{{ hostvars['rpc-asset-hub-polkadot-02']['default_p2p_port'] }}"
         protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-asset-hub-polkadot-02']['default_p2p_port_ws'] }}"
-        to_host: "{{ hostvars['rpc-asset-hub-polkadot-02']['container_ip'] }}:{{ hostvars['rpc-asset-hub-polkadot-02']['default_p2p_port_ws'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-asset-hub-polkadot-02']['default_p2p_port_wss'] }}"
-        to_host: "{{ hostvars['rpc-asset-hub-polkadot-02']['container_ip'] }}:{{ hostvars['rpc-asset-hub-polkadot-02']['default_p2p_port_wss'] }}"
-        protocol: "tcp"
   - host: "rpc-bridge-hub-polkadot-02"
     proxmox_config:
       vmid: "310202"
@@ -666,12 +625,6 @@ lxc_nodes:
         protocol: "tcp"
       - from_port: "{{ hostvars['rpc-bridge-hub-polkadot-02']['default_p2p_port'] }}"
         to_host: "{{ hostvars['rpc-bridge-hub-polkadot-02']['container_ip'] }}:{{ hostvars['rpc-bridge-hub-polkadot-02']['default_p2p_port'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-bridge-hub-polkadot-02']['default_p2p_port_ws'] }}"
-        to_host: "{{ hostvars['rpc-bridge-hub-polkadot-02']['container_ip'] }}:{{ hostvars['rpc-bridge-hub-polkadot-02']['default_p2p_port_ws'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-bridge-hub-polkadot-02']['default_p2p_port_wss'] }}"
-        to_host: "{{ hostvars['rpc-bridge-hub-polkadot-02']['container_ip'] }}:{{ hostvars['rpc-bridge-hub-polkadot-02']['default_p2p_port_wss'] }}"
         protocol: "tcp"
   - host: "rpc-bridge-hub-westend-02"
     proxmox_config:
@@ -702,12 +655,6 @@ lxc_nodes:
       - from_port: "{{ hostvars['rpc-bridge-hub-westend-02']['default_p2p_port'] }}"
         to_host: "{{ hostvars['rpc-bridge-hub-westend-02']['container_ip'] }}:{{ hostvars['rpc-bridge-hub-westend-02']['default_p2p_port'] }}"
         protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-bridge-hub-westend-02']['default_p2p_port_ws'] }}"
-        to_host: "{{ hostvars['rpc-bridge-hub-westend-02']['container_ip'] }}:{{ hostvars['rpc-bridge-hub-westend-02']['default_p2p_port_ws'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-bridge-hub-westend-02']['default_p2p_port_wss'] }}"
-        to_host: "{{ hostvars['rpc-bridge-hub-westend-02']['container_ip'] }}:{{ hostvars['rpc-bridge-hub-westend-02']['default_p2p_port_wss'] }}"
-        protocol: "tcp"
   - host: "rpc-collectives-polkadot-02"
     proxmox_config:
       vmid: "310702"
@@ -736,12 +683,6 @@ lxc_nodes:
         protocol: "tcp"
       - from_port: "{{ hostvars['rpc-collectives-polkadot-02']['default_p2p_port'] }}"
         to_host: "{{ hostvars['rpc-collectives-polkadot-02']['container_ip'] }}:{{ hostvars['rpc-collectives-polkadot-02']['default_p2p_port'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-collectives-polkadot-02']['default_p2p_port_ws'] }}"
-        to_host: "{{ hostvars['rpc-collectives-polkadot-02']['container_ip'] }}:{{ hostvars['rpc-collectives-polkadot-02']['default_p2p_port_ws'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-collectives-polkadot-02']['default_p2p_port_wss'] }}"
-        to_host: "{{ hostvars['rpc-collectives-polkadot-02']['container_ip'] }}:{{ hostvars['rpc-collectives-polkadot-02']['default_p2p_port_wss'] }}"
         protocol: "tcp"
   - host: "rpc-collectives-westend-02"
     proxmox_config:
@@ -772,12 +713,6 @@ lxc_nodes:
       - from_port: "{{ hostvars['rpc-collectives-westend-02']['default_p2p_port'] }}"
         to_host: "{{ hostvars['rpc-collectives-westend-02']['container_ip'] }}:{{ hostvars['rpc-collectives-westend-02']['default_p2p_port'] }}"
         protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-collectives-westend-02']['default_p2p_port_ws'] }}"
-        to_host: "{{ hostvars['rpc-collectives-westend-02']['container_ip'] }}:{{ hostvars['rpc-collectives-westend-02']['default_p2p_port_ws'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-collectives-westend-02']['default_p2p_port_wss'] }}"
-        to_host: "{{ hostvars['rpc-collectives-westend-02']['container_ip'] }}:{{ hostvars['rpc-collectives-westend-02']['default_p2p_port_wss'] }}"
-        protocol: "tcp"
   - host: "rpc-coretime-polkadot-02"
     proxmox_config:
       vmid: "310402"
@@ -806,12 +741,6 @@ lxc_nodes:
         protocol: "tcp"
       - from_port: "{{ hostvars['rpc-coretime-polkadot-02']['default_p2p_port'] }}"
         to_host: "{{ hostvars['rpc-coretime-polkadot-02']['container_ip'] }}:{{ hostvars['rpc-coretime-polkadot-02']['default_p2p_port'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-coretime-polkadot-02']['default_p2p_port_ws'] }}"
-        to_host: "{{ hostvars['rpc-coretime-polkadot-02']['container_ip'] }}:{{ hostvars['rpc-coretime-polkadot-02']['default_p2p_port_ws'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-coretime-polkadot-02']['default_p2p_port_wss'] }}"
-        to_host: "{{ hostvars['rpc-coretime-polkadot-02']['container_ip'] }}:{{ hostvars['rpc-coretime-polkadot-02']['default_p2p_port_wss'] }}"
         protocol: "tcp"
   - host: "rpc-coretime-westend-02"
     proxmox_config:
@@ -900,140 +829,64 @@ lxc_nodes:
       - from_port: "{{ hostvars['rpc-people-westend-02']['default_p2p_port'] }}"
         to_host: "{{ hostvars['rpc-people-westend-02']['container_ip'] }}:{{ hostvars['rpc-people-westend-02']['default_p2p_port'] }}"
         protocol: "tcp"
-  - host: "rpc-asset-hub-kusama-01"
+  - host: "rpc-asset-hub-kusama-02"
     proxmox_config:
       vmid: "32011"
-      hostname: "{{ hostvars['rpc-asset-hub-kusama-01']['host_name'] }}"
+      hostname: "{{ hostvars['rpc-asset-hub-kusama-02']['host_name'] }}"
       ostemplate: "local:vztmpl/{{ default_container_template }}"
-      netif: "{{ hostvars['rpc-asset-hub-kusama-01']['netif'] }}"
+      netif: "{{ hostvars['rpc-asset-hub-kusama-02']['netif'] }}"
       cores: 4
       memory: 16384
       swap: 8192
       password: "{{ default_password }}"
       disk: "{{ zfs_storage }}:20"
-      mounts: '{"mp0":"{{ zfs_storage }}:250,mp={{ hostvars["rpc-asset-hub-kusama-01"]["default_database_path"] }}"}'
+      mounts: '{"mp0":"{{ zfs_storage }}:250,mp={{ hostvars["rpc-asset-hub-kusama-02"]["default_database_path"] }}"}'
       onboot: True
       unprivileged: True
       validate_certs: False
-      description: "{{ hostvars['rpc-asset-hub-kusama-01']['default_network'] }} {{ hostvars['rpc-asset-hub-kusama-01']['default_node_type'] }}: {{ hostvars['rpc-asset-hub-kusama-01']['host_name'] }}"
+      description: "{{ hostvars['rpc-asset-hub-kusama-02']['default_network'] }} {{ hostvars['rpc-asset-hub-kusama-02']['default_node_type'] }}: {{ hostvars['rpc-asset-hub-kusama-02']['host_name'] }}"
       state: present
       features:
         - nesting=1
     port_forwards:
-      - from_port: "{{ hostvars['rpc-asset-hub-kusama-01']['ansible_port'] }}"
-        to_host: "{{ hostvars['rpc-asset-hub-kusama-01']['container_ip'] }}:{{ ssh_port }}"
+      - from_port: "{{ hostvars['rpc-asset-hub-kusama-02']['ansible_port'] }}"
+        to_host: "{{ hostvars['rpc-asset-hub-kusama-02']['container_ip'] }}:{{ ssh_port }}"
         protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-asset-hub-kusama-01']['zabbix_ext_port'] }}"
+      - from_port: "{{ hostvars['rpc-asset-hub-kusama-02']['zabbix_ext_port'] }}"
         to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
         protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-asset-hub-kusama-01']['default_p2p_port'] }}"
-        to_host: "{{ hostvars['rpc-asset-hub-kusama-01']['container_ip'] }}:{{ hostvars['rpc-asset-hub-kusama-01']['default_p2p_port'] }}"
+      - from_port: "{{ hostvars['rpc-asset-hub-kusama-02']['default_p2p_port'] }}"
+        to_host: "{{ hostvars['rpc-asset-hub-kusama-02']['container_ip'] }}:{{ hostvars['rpc-asset-hub-kusama-02']['default_p2p_port'] }}"
         protocol: "tcp"
-  # - host: "rpc-asset-hub-kusama-02"
-  #   proxmox_config:
-  #     vmid: "320102"
-  #     hostname: "{{ hostvars['rpc-asset-hub-kusama-02']['host_name'] }}"
-  #     ostemplate: "local:vztmpl/{{ default_container_template }}"
-  #     netif: "{{ hostvars['rpc-asset-hub-kusama-02']['netif'] }}"
-  #     cores: 4
-  #     memory: 16384
-  #     swap: 8192
-  #     password: "{{ default_password }}"
-  #     disk: "{{ zfs_storage }}:20"
-  #     mounts: '{"mp0":"{{ zfs_storage }}:100,mp={{ hostvars["rpc-asset-hub-kusama-02"]["default_database_path"] }}"}'
-  #     onboot: True
-  #     unprivileged: True
-  #     validate_certs: False
-  #     description: "{{ hostvars['rpc-asset-hub-kusama-02']['default_network'] }} {{ hostvars['rpc-asset-hub-kusama-02']['default_node_type'] }}: {{ hostvars['rpc-asset-hub-kusama-02']['host_name'] }}"
-  #     state: present
-  #     features:
-  #       - nesting=1
-  #   port_forwards:
-  #     - from_port: "{{ hostvars['rpc-asset-hub-kusama-02']['ansible_port'] }}"
-  #       to_host: "{{ hostvars['rpc-asset-hub-kusama-02']['container_ip'] }}:{{ ssh_port }}"
-  #       protocol: "tcp"
-  #     - from_port: "{{ hostvars['rpc-asset-hub-kusama-02']['zabbix_ext_port'] }}"
-  #       to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
-  #       protocol: "tcp"
-  #     - from_port: "{{ hostvars['rpc-asset-hub-kusama-02']['default_p2p_port'] }}"
-  #       to_host: "{{ hostvars['rpc-asset-hub-kusama-02']['container_ip'] }}:{{ hostvars['rpc-asset-hub-kusama-02']['default_p2p_port'] }}"
-  #       protocol: "tcp"
-  #     - from_port: "{{ hostvars['rpc-asset-hub-kusama-02']['default_p2p_port_ws'] }}"
-  #       to_host: "{{ hostvars['rpc-asset-hub-kusama-02']['container_ip'] }}:{{ hostvars['rpc-asset-hub-kusama-02']['default_p2p_port_ws'] }}"
-  #       protocol: "tcp"
-  #     - from_port: "{{ hostvars['rpc-asset-hub-kusama-02']['default_p2p_port_wss'] }}"
-  #       to_host: "{{ hostvars['rpc-asset-hub-kusama-02']['container_ip'] }}:{{ hostvars['rpc-asset-hub-kusama-02']['default_p2p_port_wss'] }}"
-  #       protocol: "tcp"
-  - host: "rpc-bridge-hub-kusama-01"
+  - host: "rpc-bridge-hub-kusama-02"
     proxmox_config:
-      vmid: "32021"
-      hostname: "{{ hostvars['rpc-bridge-hub-kusama-01']['host_name'] }}"
+      vmid: "32022"
+      hostname: "{{ hostvars['rpc-bridge-hub-kusama-02']['host_name'] }}"
       ostemplate: "local:vztmpl/{{ default_container_template }}"
-      netif: "{{ hostvars['rpc-bridge-hub-kusama-01']['netif'] }}"
+      netif: "{{ hostvars['rpc-bridge-hub-kusama-02']['netif'] }}"
       cores: 4
       memory: 16384
       swap: 8192
       password: "{{ default_password }}"
       disk: "{{ zfs_storage }}:20"
-      mounts: '{"mp0":"{{ zfs_storage }}:100,mp={{ hostvars["rpc-bridge-hub-kusama-01"]["default_database_path"] }}"}'
+      mounts: '{"mp0":"{{ zfs_storage }}:100,mp={{ hostvars["rpc-bridge-hub-kusama-02"]["default_database_path"] }}"}'
       onboot: True
       unprivileged: True
       validate_certs: False
-      description: "{{ hostvars['rpc-bridge-hub-kusama-01']['default_network'] }} {{ hostvars['rpc-bridge-hub-kusama-01']['default_node_type'] }}: {{ hostvars['rpc-bridge-hub-kusama-01']['host_name'] }}"
+      description: "{{ hostvars['rpc-bridge-hub-kusama-02']['default_network'] }} {{ hostvars['rpc-bridge-hub-kusama-02']['default_node_type'] }}: {{ hostvars['rpc-bridge-hub-kusama-02']['host_name'] }}"
       state: present
       features:
         - nesting=1
     port_forwards:
-      - from_port: "{{ hostvars['rpc-bridge-hub-kusama-01']['ansible_port'] }}"
-        to_host: "{{ hostvars['rpc-bridge-hub-kusama-01']['container_ip'] }}:{{ ssh_port }}"
+      - from_port: "{{ hostvars['rpc-bridge-hub-kusama-02']['ansible_port'] }}"
+        to_host: "{{ hostvars['rpc-bridge-hub-kusama-02']['container_ip'] }}:{{ ssh_port }}"
         protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-bridge-hub-kusama-01']['zabbix_ext_port'] }}"
+      - from_port: "{{ hostvars['rpc-bridge-hub-kusama-02']['zabbix_ext_port'] }}"
         to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
         protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-bridge-hub-kusama-01']['default_p2p_port'] }}"
-        to_host: "{{ hostvars['rpc-bridge-hub-kusama-01']['container_ip'] }}:{{ hostvars['rpc-bridge-hub-kusama-01']['default_p2p_port'] }}"
+      - from_port: "{{ hostvars['rpc-bridge-hub-kusama-02']['default_p2p_port'] }}"
+        to_host: "{{ hostvars['rpc-bridge-hub-kusama-02']['container_ip'] }}:{{ hostvars['rpc-bridge-hub-kusama-02']['default_p2p_port'] }}"
         protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-bridge-hub-kusama-01']['default_p2p_port_ws'] }}"
-        to_host: "{{ hostvars['rpc-bridge-hub-kusama-01']['container_ip'] }}:{{ hostvars['rpc-bridge-hub-kusama-01']['default_p2p_port_ws'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-bridge-hub-kusama-01']['default_p2p_port_wss'] }}"
-        to_host: "{{ hostvars['rpc-bridge-hub-kusama-01']['container_ip'] }}:{{ hostvars['rpc-bridge-hub-kusama-01']['default_p2p_port_wss'] }}"
-        protocol: "tcp"
-  # - host: "rpc-bridge-hub-kusama-02"
-  #   proxmox_config:
-  #     vmid: "320202"
-  #     hostname: "{{ hostvars['rpc-bridge-hub-kusama-02']['host_name'] }}"
-  #     ostemplate: "local:vztmpl/{{ default_container_template }}"
-  #     netif: "{{ hostvars['rpc-bridge-hub-kusama-02']['netif'] }}"
-  #     cores: 4
-  #     memory: 16384
-  #     swap: 8192
-  #     password: "{{ default_password }}"
-  #     disk: "{{ zfs_storage }}:20"
-  #     mounts: '{"mp0":"{{ zfs_storage }}:100,mp={{ hostvars["rpc-bridge-hub-kusama-02"]["default_database_path"] }}"}'
-  #     onboot: True
-  #     unprivileged: True
-  #     validate_certs: False
-  #     description: "{{ hostvars['rpc-bridge-hub-kusama-02']['default_network'] }} {{ hostvars['rpc-bridge-hub-kusama-02']['default_node_type'] }}: {{ hostvars['rpc-bridge-hub-kusama-02']['host_name'] }}"
-  #     state: present
-  #     features:
-  #       - nesting=1
-  #   port_forwards:
-  #     - from_port: "{{ hostvars['rpc-bridge-hub-kusama-02']['ansible_port'] }}"
-  #       to_host: "{{ hostvars['rpc-bridge-hub-kusama-02']['container_ip'] }}:{{ ssh_port }}"
-  #       protocol: "tcp"
-  #     - from_port: "{{ hostvars['rpc-bridge-hub-kusama-02']['zabbix_ext_port'] }}"
-  #       to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
-  #       protocol: "tcp"
-  #     - from_port: "{{ hostvars['rpc-bridge-hub-kusama-02']['default_p2p_port'] }}"
-  #       to_host: "{{ hostvars['rpc-bridge-hub-kusama-02']['container_ip'] }}:{{ hostvars['rpc-bridge-hub-kusama-02']['default_p2p_port'] }}"
-  #       protocol: "tcp"
-  #     - from_port: "{{ hostvars['rpc-bridge-hub-kusama-02']['default_p2p_port_ws'] }}"
-  #       to_host: "{{ hostvars['rpc-bridge-hub-kusama-02']['container_ip'] }}:{{ hostvars['rpc-bridge-hub-kusama-02']['default_p2p_port_ws'] }}"
-  #       protocol: "tcp"
-  #     - from_port: "{{ hostvars['rpc-bridge-hub-kusama-02']['default_p2p_port_wss'] }}"
-  #       to_host: "{{ hostvars['rpc-bridge-hub-kusama-02']['container_ip'] }}:{{ hostvars['rpc-bridge-hub-kusama-02']['default_p2p_port_wss'] }}"
-  #       protocol: "tcp"
   - host: "rpc-coretime-kusama-02"
     proxmox_config:
       vmid: "32052"
@@ -1092,70 +945,35 @@ lxc_nodes:
       - from_port: "{{ hostvars['rpc-people-kusama-02']['default_p2p_port'] }}"
         to_host: "{{ hostvars['rpc-people-kusama-02']['container_ip'] }}:{{ hostvars['rpc-people-kusama-02']['default_p2p_port'] }}"
         protocol: "tcp"
-  - host: "rpc-encointer-kusama-01"
+  - host: "rpc-encointer-kusama-02"
     proxmox_config:
       vmid: "32061"
-      hostname: "{{ hostvars['rpc-encointer-kusama-01']['host_name'] }}"
+      hostname: "{{ hostvars['rpc-encointer-kusama-02']['host_name'] }}"
       ostemplate: "local:vztmpl/{{ default_container_template }}"
-      netif: "{{ hostvars['rpc-encointer-kusama-01']['netif'] }}"
+      netif: "{{ hostvars['rpc-encointer-kusama-02']['netif'] }}"
       cores: 4
       memory: 16384
       swap: 8192
       password: "{{ default_password }}"
       disk: "{{ zfs_storage }}:20"
-      mounts: '{"mp0":"{{ zfs_storage }}:100,mp={{ hostvars["rpc-encointer-kusama-01"]["default_database_path"] }}"}'
+      mounts: '{"mp0":"{{ zfs_storage }}:100,mp={{ hostvars["rpc-encointer-kusama-02"]["default_database_path"] }}"}'
       onboot: True
       unprivileged: True
       validate_certs: False
-      description: "{{ hostvars['rpc-encointer-kusama-01']['default_network'] }} {{ hostvars['rpc-encointer-kusama-01']['default_node_type'] }}: {{ hostvars['rpc-encointer-kusama-01']['host_name'] }}"
+      description: "{{ hostvars['rpc-encointer-kusama-02']['default_network'] }} {{ hostvars['rpc-encointer-kusama-02']['default_node_type'] }}: {{ hostvars['rpc-encointer-kusama-02']['host_name'] }}"
       state: present
       features:
         - nesting=1
     port_forwards:
-      - from_port: "{{ hostvars['rpc-encointer-kusama-01']['ansible_port'] }}"
-        to_host: "{{ hostvars['rpc-encointer-kusama-01']['container_ip'] }}:{{ ssh_port }}"
+      - from_port: "{{ hostvars['rpc-encointer-kusama-02']['ansible_port'] }}"
+        to_host: "{{ hostvars['rpc-encointer-kusama-02']['container_ip'] }}:{{ ssh_port }}"
         protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-encointer-kusama-01']['zabbix_ext_port'] }}"
+      - from_port: "{{ hostvars['rpc-encointer-kusama-02']['zabbix_ext_port'] }}"
         to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
         protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-encointer-kusama-01']['default_p2p_port'] }}"
-        to_host: "{{ hostvars['rpc-encointer-kusama-01']['container_ip'] }}:{{ hostvars['rpc-encointer-kusama-01']['default_p2p_port'] }}"
+      - from_port: "{{ hostvars['rpc-encointer-kusama-02']['default_p2p_port'] }}"
+        to_host: "{{ hostvars['rpc-encointer-kusama-02']['container_ip'] }}:{{ hostvars['rpc-encointer-kusama-02']['default_p2p_port'] }}"
         protocol: "tcp"
-  # - host: "rpc-encointer-kusama-02"
-  #   proxmox_config:
-  #     vmid: "320702"
-  #     hostname: "{{ hostvars['rpc-encointer-kusama-02']['host_name'] }}"
-  #     ostemplate: "local:vztmpl/{{ default_container_template }}"
-  #     netif: "{{ hostvars['rpc-encointer-kusama-02']['netif'] }}"
-  #     cores: 4
-  #     memory: 16384
-  #     swap: 8192
-  #     password: "{{ default_password }}"
-  #     disk: "{{ zfs_storage }}:20"
-  #     mounts: '{"mp0":"{{ zfs_storage }}:100,mp={{ hostvars["rpc-encointer-kusama-02"]["default_database_path"] }}"}'
-  #     onboot: True
-  #     unprivileged: True
-  #     validate_certs: False
-  #     description: "{{ hostvars['rpc-encointer-kusama-02']['default_network'] }} {{ hostvars['rpc-encointer-kusama-02']['default_node_type'] }}: {{ hostvars['rpc-encointer-kusama-02']['host_name'] }}"
-  #     state: present
-  #     features:
-  #       - nesting=1
-  #   port_forwards:
-  #     - from_port: "{{ hostvars['rpc-encointer-kusama-02']['ansible_port'] }}"
-  #       to_host: "{{ hostvars['rpc-encointer-kusama-02']['container_ip'] }}:{{ ssh_port }}"
-  #       protocol: "tcp"
-  #     - from_port: "{{ hostvars['rpc-encointer-kusama-02']['zabbix_ext_port'] }}"
-  #       to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
-  #       protocol: "tcp"
-  #     - from_port: "{{ hostvars['rpc-encointer-kusama-02']['default_p2p_port'] }}"
-  #       to_host: "{{ hostvars['rpc-encointer-kusama-02']['container_ip'] }}:{{ hostvars['rpc-encointer-kusama-02']['default_p2p_port'] }}"
-  #       protocol: "tcp"
-  #     - from_port: "{{ hostvars['rpc-encointer-kusama-02']['default_p2p_port_ws'] }}"
-  #       to_host: "{{ hostvars['rpc-encointer-kusama-02']['container_ip'] }}:{{ hostvars['rpc-encointer-kusama-02']['default_p2p_port_ws'] }}"
-  #       protocol: "tcp"
-  #     - from_port: "{{ hostvars['rpc-encointer-kusama-02']['default_p2p_port_wss'] }}"
-  #       to_host: "{{ hostvars['rpc-encointer-kusama-02']['container_ip'] }}:{{ hostvars['rpc-encointer-kusama-02']['default_p2p_port_wss'] }}"
-  #       protocol: "tcp"
   - host: "val-polkadot-02"
     proxmox_config:
       vmid: "31022"
@@ -1184,12 +1002,6 @@ lxc_nodes:
         protocol: "tcp"
       - from_port: "{{ hostvars['val-polkadot-02']['default_p2p_port'] }}"
         to_host: "{{ hostvars['val-polkadot-02']['container_ip'] }}:{{ hostvars['val-polkadot-02']['default_p2p_port'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['val-polkadot-02']['default_p2p_port_ws'] }}"
-        to_host: "{{ hostvars['val-polkadot-02']['container_ip'] }}:{{ hostvars['val-polkadot-02']['default_p2p_port_ws'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['val-polkadot-02']['default_p2p_port_wss'] }}"
-        to_host: "{{ hostvars['val-polkadot-02']['container_ip'] }}:{{ hostvars['val-polkadot-02']['default_p2p_port_wss'] }}"
         protocol: "tcp"
   - host: "val-kusama-02"
     proxmox_config:
@@ -1220,9 +1032,209 @@ lxc_nodes:
       - from_port: "{{ hostvars['val-kusama-02']['default_p2p_port'] }}"
         to_host: "{{ hostvars['val-kusama-02']['container_ip'] }}:{{ hostvars['val-kusama-02']['default_p2p_port'] }}"
         protocol: "tcp"
-      - from_port: "{{ hostvars['val-kusama-02']['default_p2p_port_ws'] }}"
-        to_host: "{{ hostvars['val-kusama-02']['container_ip'] }}:{{ hostvars['val-kusama-02']['default_p2p_port_ws'] }}"
+  - host: "ibp-bkk07"
+    proxmox_config:
+      vmid: "996"
+      hostname: "{{ hostvars['ibp-bkk07']['host_name'] }}"
+      ostemplate: "local:vztmpl/{{ default_container_template }}"
+      netif: "{{ hostvars['ibp-bkk07']['netif'] }}"
+      cores: 1
+      memory: 512
+      swap: 256
+      password: "{{ default_password }}"
+      disk: "{{ zfs_storage }}:66"
+      onboot: True
+      unprivileged: True
+      validate_certs: False
+      description: "{{ hostvars['ibp-bkk07']['host_name'] }}"
+      state: present
+      features:
+        - nesting=1
+    port_forwards:
+      - from_port: "{{ hostvars['ibp-bkk07']['ansible_port'] }}"
+        to_host: "{{ hostvars['ibp-bkk07']['container_ip'] }}:{{ ssh_port }}"
         protocol: "tcp"
-      - from_port: "{{ hostvars['val-kusama-02']['default_p2p_port_wss'] }}"
-        to_host: "{{ hostvars['val-kusama-02']['container_ip'] }}:{{ hostvars['val-kusama-02']['default_p2p_port_wss'] }}"
+      - from_port: "{{ hostvars['ibp-bkk07']['zabbix_ext_port'] }}"
+        to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
+        protocol: "tcp"
+  - host: "haproxy-bkk07"
+    proxmox_config:
+      vmid: "991"
+      hostname: "{{ hostvars['haproxy-bkk07']['host_name'] }}"
+      ostemplate: "local:vztmpl/{{ default_container_template }}"
+      netif: "{{ hostvars['haproxy-bkk07']['netif'] }}"
+      cores: 8
+      memory: 4000
+      swap: 256
+      password: "{{ default_password }}"
+      disk: "{{ zfs_storage }}:60"
+      onboot: True
+      unprivileged: True
+      validate_certs: False
+      description: "{{ hostvars['haproxy-bkk07']['host_name'] }}"
+      state: present
+      features:
+        - nesting=1
+    port_forwards:
+      - from_port: "{{ hostvars['haproxy-bkk07']['ansible_port'] }}"
+        to_host: "{{ hostvars['haproxy-bkk07']['container_ip'] }}:{{ ssh_port }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['haproxy-bkk07']['zabbix_ext_port'] }}"
+        to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
+        protocol: "tcp"
+  - host: "build-node-07"
+    proxmox_config:
+      vmid: "977"
+      hostname: "{{ hostvars['build-node-07']['host_name'] }}"
+      ostemplate: "local:vztmpl/{{ default_container_template }}"
+      netif: "{{ hostvars['build-node-07']['netif'] }}"
+      cores: 16
+      memory: 16384
+      swap: 256
+      password: "{{ default_password }}"
+      disk: "{{ zfs_storage }}:50"
+      onboot: True
+      unprivileged: True
+      validate_certs: False
+      description: "{{ hostvars['build-node-07']['host_name'] }}"
+      state: present
+      features:
+        - nesting=1
+    port_forwards:
+      - from_port: "{{ hostvars['build-node-07']['ansible_port'] }}"
+        to_host: "{{ hostvars['build-node-07']['container_ip'] }}:{{ ssh_port }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['build-node-07']['zabbix_ext_port'] }}"
+        to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
+        protocol: "tcp"
+  - host: "dockers"
+    proxmox_config:
+      vmid: "992"
+      hostname: "{{ hostvars['dockers']['host_name'] }}"
+      ostemplate: "local:vztmpl/{{ default_container_template }}"
+      netif: "{{ hostvars['dockers']['netif'] }}"
+      cores: 1
+      memory: 4000
+      swap: 256
+      password: "{{ default_password }}"
+      disk: "{{ zfs_storage }}:15"
+      onboot: True
+      unprivileged: True
+      validate_certs: False
+      description: "{{ hostvars['dockers']['host_name'] }}"
+      state: present
+      features:
+        - nesting=1
+    port_forwards:
+      - from_port: "{{ hostvars['dockers']['ansible_port'] }}"
+        to_host: "{{ hostvars['dockers']['container_ip'] }}:{{ ssh_port }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['dockers']['zabbix_ext_port'] }}"
+        to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
+        protocol: "tcp"
+  - host: "proxy-bkk07"
+    proxmox_config:
+      vmid: "993"
+      hostname: "{{ hostvars['proxy-bkk07']['host_name'] }}"
+      ostemplate: "local:vztmpl/{{ default_container_template }}"
+      netif: "{{ hostvars['proxy-bkk07']['netif'] }}"
+      cores: 1
+      memory: 4000
+      swap: 256
+      password: "{{ default_password }}"
+      disk: "{{ zfs_storage }}:15"
+      onboot: True
+      unprivileged: True
+      validate_certs: False
+      description: "{{ hostvars['proxy-bkk07']['host_name'] }}"
+      state: present
+      features:
+        - nesting=1
+    port_forwards:
+      - from_port: "{{ hostvars['proxy-bkk07']['ansible_port'] }}"
+        to_host: "{{ hostvars['proxy-bkk07']['container_ip'] }}:{{ ssh_port }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['proxy-bkk07']['zabbix_ext_port'] }}"
+        to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
+        protocol: "tcp"
+  - host: "penumbra-02"
+    proxmox_config:
+      vmid: "1102"
+      hostname: "{{ hostvars['penumbra-02']['host_name'] }}"
+      ostemplate: "local:vztmpl/{{ default_container_template }}"
+      netif: "{{ hostvars['penumbra-02']['netif'] }}"
+      cores: 4
+      memory: 8192
+      swap: 8192
+      password: "{{ default_password }}"
+      disk: "{{ zfs_storage }}:20"
+      mounts: '{"mp0":"{{ zfs_storage }}:200,mp={{ hostvars["penumbra-02"]["default_database_path"] }}"}'
+      onboot: True
+      unprivileged: True
+      validate_certs: False
+      description: "{{ hostvars['penumbra-02']['default_network'] }} {{ hostvars['penumbra-02']['default_node_type'] }}: {{ hostvars['penumbra-02']['host_name'] }}"
+      state: present
+      features:
+        - nesting=1
+    port_forwards:
+      - from_port: "{{ hostvars['penumbra-02']['ansible_port'] }}"
+        to_host: "{{ hostvars['penumbra-02']['container_ip'] }}:{{ ssh_port }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['penumbra-02']['default_cometbft_p2p_port'] }}"
+        to_host: "{{ hostvars['penumbra-02']['container_ip'] }}:{{ hostvars['penumbra-02']['default_cometbft_p2p_port'] }}"
+        protocol: "tcp"
+  - host: "rpc-kilt-polkadot-02"
+    proxmox_config:
+      vmid: "31242"
+      hostname: "{{ hostvars['rpc-kilt-polkadot-02']['host_name'] }}"
+      ostemplate: "local:vztmpl/{{ default_container_template }}"
+      netif: "{{ hostvars['rpc-kilt-polkadot-02']['netif'] }}"
+      cores: 4
+      memory: 16384
+      swap: 8192
+      password: "{{ default_password }}"
+      disk: "{{ zfs_storage }}:20"
+      mounts: '{"mp0":"{{ zfs_storage }}:200,mp={{ hostvars["rpc-kilt-polkadot-02"]["default_database_path"] }}"}'
+      onboot: True
+      unprivileged: True
+      validate_certs: False
+      description: "{{ hostvars['rpc-kilt-polkadot-02']['default_network'] }} {{ hostvars['rpc-kilt-polkadot-02']['default_node_type'] }}: {{ hostvars['rpc-kilt-polkadot-02']['host_name'] }}"
+      state: present
+      features:
+        - nesting=1
+    port_forwards:
+      - from_port: "{{ hostvars['rpc-kilt-polkadot-02']['ansible_port'] }}"
+        to_host: "{{ hostvars['rpc-kilt-polkadot-02']['container_ip'] }}:{{ ssh_port }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['rpc-kilt-polkadot-02']['default_p2p_port'] }}"
+        to_host: "{{ hostvars['rpc-kilt-polkadot-02']['container_ip'] }}:{{ hostvars['rpc-kilt-polkadot-02']['default_p2p_port'] }}"
+        protocol: "tcp"
+  - host: "rpc-hydration-polkadot-02"
+    proxmox_config:
+      vmid: "31262"
+      hostname: "{{ hostvars['rpc-hydration-polkadot-02']['host_name'] }}"
+      ostemplate: "local:vztmpl/{{ default_container_template }}"
+      netif: "{{ hostvars['rpc-hydration-polkadot-02']['netif'] }}"
+      cores: 4
+      memory: 16384
+      swap: 8192
+      password: "{{ default_password }}"
+      disk: "{{ zfs_storage }}:20"
+      mounts: '{"mp0":"{{ zfs_storage }}:150,mp={{ hostvars["rpc-hydration-polkadot-02"]["default_database_path"] }}"}'
+      onboot: True
+      unprivileged: True
+      validate_certs: False
+      description: "{{ hostvars['rpc-hydration-polkadot-02']['default_network'] }} {{ hostvars['rpc-hydration-polkadot-02']['default_node_type'] }}: {{ hostvars['rpc-hydration-polkadot-02']['host_name'] }}"
+      state: present
+      features:
+        - nesting=1
+    port_forwards:
+      - from_port: "{{ hostvars['rpc-hydration-polkadot-02']['ansible_port'] }}"
+        to_host: "{{ hostvars['rpc-hydration-polkadot-02']['container_ip'] }}:{{ ssh_port }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['rpc-hydration-polkadot-02']['zabbix_ext_port'] }}"
+        to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['rpc-hydration-polkadot-02']['default_p2p_port'] }}"
+        to_host: "{{ hostvars['rpc-hydration-polkadot-02']['container_ip'] }}:{{ hostvars['rpc-hydration-polkadot-02']['default_p2p_port'] }}"
         protocol: "tcp"

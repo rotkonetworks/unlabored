@@ -1,30 +1,31 @@
 ---
 ansible_host: "160.22.181.181"
-container_ip: "192.168.77.36" # i changed it to 36 for westend coretime 01 -al # 37 for coretime-westend
-ansible_port: 2936
-host_name: "rpc-coretime-westend-01.rotko.net"
+container_ip: "192.168.131.15"
+ansible_port: 2916
+host_name: "rpc-coretime-westend-01.ct.rotko.net"
 host_timezone: "Asia/Bangkok"
 netif: '{"net0":"name=eth0,gw={{ default_nat_network_forward_cidr.split("/")[0] }},ip={{ default_host_ip }}/16,bridge={{ default_nat_device }}"}'
 role: "cumulus"
 pinned_service: False
 
-default_telemetry_name: "Rotko Networks - {{ host_name.split('.')[0] }} {{ default_node_type | capitalize }}"
+default_telemetry_name: "Rotko Networks - {{ host_name.split('.')[0] }}"
 default_domain: "{{ host_name }}"
 default_network: "coretime-westend"
 default_relay_rpc: "ws://{{ hostvars['rpc-westend-01']['container_ip'] }}:{{ hostvars['rpc-westend-01']['default_rpc_port'] }}"
 default_relay_rpc_fallback: "ws://{{ hostvars['rpc-westend-02']['container_ip'] }}:{{ hostvars['rpc-westend-02']['default_rpc_port'] }}"
-default_database: paritydb
+default_database: rocksdb
 default_node_type: "endpoint"
 
-default_bootnode_domain: "{{ default_network }}.boot.rotko.net"
+transition_bootnode_domain: "wcore16.rotko.net"
+transition_bootnode_p2p_port: 33736
+transition_bootnode_p2p_port_ws: 34736
+transition_bootnode_p2p_port_wss: 35736
 
-default_p2p_port: 30333
-default_p2p_port_ws: 30334
-default_p2p_port_wss: 30335
-default_rpc_port: 9300
+default_p2p_port: 33051
+default_bootnode_domain: "{{ default_network }}.boot.rotko.net"
+default_bootnode_p2p_port: 33051
 default_bootnode_p2p_port_ws: 30434
 default_bootnode_p2p_port_wss: 30435
 
-default_secure_rpc_port: 42936
-default_prom_port: 7936
-zabbix_ext_port: 10936
+default_secure_rpc_port: 42916
+zabbix_ext_port: 10916
