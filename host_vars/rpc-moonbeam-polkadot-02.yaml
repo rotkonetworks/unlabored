@@ -19,6 +19,8 @@ default_bootnode_domain: "moonbeam.boot.rotko.net"
 default_p2p_port: 31202
 default_p2p_port_ws: 30434
 default_p2p_port_wss: 30435
+default_bootnode_p2p_port_ws: 30434
+default_bootnode_p2p_port_wss: 30435
 default_rpc_port: 9400
 default_prom_port: 7400
 default_secure_rpc_port: 42132
