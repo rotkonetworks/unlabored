@@ -132,6 +132,7 @@ val-polkadot-02
 val-kusama-02
 val-polkadot-03
 val-kusama-03
+val-paseo-01
 dot01
 dot02
 dot04
@@ -151,6 +152,9 @@ ksm26
 wnd26
 pso24
 pso26
+
+[moonbeam]
+rpc-moonbeam-polkadot-02
 
 [services]
 monitor

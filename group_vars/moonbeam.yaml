@@ -1,16 +1,18 @@
 ---
-moonbeam_version: 0.30.3
-moonbeam_download_url: https://github.com/PureStake/moonbeam/releases/download/v{{ moonbeam_version }}/moonbeam
+default_client_version: 0.42.1
+default_download_url: https://github.com/moonbeam-foundation/moonbeam/releases/download/v{{ default_client_version }}/moonbeam
 
-moonbeam_service: moonbeam
-moonbeam_user: "{{ service_users['moonbeam'] }}"
-moonbeam_base: /opt/moonbeam
-moonbeam_log_level: info
-moonbeam_base_port: 30333
-moonbeam_base_rpc_port: 9933
-moonbeam_base_ws_port: 9944
-moonbeam_blockchain: moonbeam
-moonbeam_chain_port: 30334
-moonbeam_chain_rpc_port: 9934
-moonbeam_chain_ws_port: 9945
-moonbeam_pruning: archive
+default_service: moonbeam
+default_user: "{{ service_users['moonbeam'] }}"
+default_group: "{{ service_users['moonbeam'] }}"
+default_base_path: /opt/moonbeam
+default_database_path: /opt/moonbeam/chains
+default_log_level: info
+default_base_port: 30333
+default_base_rpc_port: 9400
+default_base_ws_port: 9944
+default_blockchain: moonbeam
+default_chain_port: 30334
+default_chain_rpc_port: 9934
+default_chain_ws_port: 9945
+default_pruning: archive

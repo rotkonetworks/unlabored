@@ -12,6 +12,7 @@ polkadot
 hydration
 cumulus
 kilt
+moonbeam
 
 [prometheus]
 ibp-bkk07
@@ -56,6 +57,10 @@ rpc-paseo-02
 pso07
 val-polkadot-02
 val-kusama-02
+val-paseo-01
+
+[moonbeam]
+rpc-moonbeam-polkadot-02
 
 [cumulus]
 mint27

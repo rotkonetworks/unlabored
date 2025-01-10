@@ -1238,3 +1238,61 @@ lxc_nodes:
       - from_port: "{{ hostvars['rpc-hydration-polkadot-02']['default_p2p_port'] }}"
         to_host: "{{ hostvars['rpc-hydration-polkadot-02']['container_ip'] }}:{{ hostvars['rpc-hydration-polkadot-02']['default_p2p_port'] }}"
         protocol: "tcp"
+  - host: "val-paseo-01"
+    proxmox_config:
+      vmid: "34004"
+      hostname: "{{ hostvars['val-paseo-01']['host_name'] }}"
+      ostemplate: "local:vztmpl/{{ default_container_template }}"
+      netif: "{{ hostvars['val-paseo-01']['netif'] }}"
+      cores: 8
+      memory: 32768
+      swap: 8192
+      password: "{{ default_password }}"
+      disk: "{{ zfs_storage }}:20"
+      mounts: '{"mp0":"{{ zfs_storage }}:700,mp={{ hostvars["val-paseo-01"]["default_database_path"] }}"}'
+      onboot: True
+      unprivileged: True
+      validate_certs: False
+      description: "{{ hostvars['val-paseo-01']['default_network'] }} {{ hostvars['val-paseo-01']['default_node_type'] }}: {{ hostvars['val-paseo-01']['host_name'] }}"
+      state: present
+      features:
+        - nesting=1
+    port_forwards:
+      - from_port: "{{ hostvars['val-paseo-01']['ansible_port'] }}"
+        to_host: "{{ hostvars['val-paseo-01']['container_ip'] }}:{{ ssh_port }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['val-paseo-01']['zabbix_ext_port'] }}"
+        to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['val-paseo-01']['default_p2p_port'] }}"
+        to_host: "{{ hostvars['val-paseo-01']['container_ip'] }}:{{ hostvars['val-paseo-01']['default_p2p_port'] }}"
+        protocol: "tcp"
+  - host: "rpc-moonbeam-polkadot-02"
+    proxmox_config:
+      vmid: "31202"
+      hostname: "{{ hostvars['rpc-moonbeam-polkadot-02']['host_name'] }}"
+      ostemplate: "local:vztmpl/{{ default_container_template }}"
+      netif: "{{ hostvars['rpc-moonbeam-polkadot-02']['netif'] }}"
+      cores: 4
+      memory: 16384
+      swap: 8192
+      password: "{{ default_password }}"
+      disk: "{{ zfs_storage }}:20"
+      mounts: '{"mp0":"{{ zfs_storage }}:250,mp={{ hostvars["rpc-moonbeam-polkadot-02"]["default_database_path"] }}"}'
+      onboot: True
+      unprivileged: True
+      validate_certs: False
+      description: "{{ hostvars['rpc-moonbeam-polkadot-02']['default_network'] }} {{ hostvars['rpc-moonbeam-polkadot-02']['default_node_type'] }}: {{ hostvars['rpc-moonbeam-polkadot-02']['host_name'] }}"
+      state: present
+      features:
+        - nesting=1
+    port_forwards:
+      - from_port: "{{ hostvars['rpc-moonbeam-polkadot-02']['ansible_port'] }}"
+        to_host: "{{ hostvars['rpc-moonbeam-polkadot-02']['container_ip'] }}:{{ ssh_port }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['rpc-moonbeam-polkadot-02']['zabbix_ext_port'] }}"
+        to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['rpc-moonbeam-polkadot-02']['default_p2p_port'] }}"
+        to_host: "{{ hostvars['rpc-moonbeam-polkadot-02']['container_ip'] }}:{{ hostvars['rpc-moonbeam-polkadot-02']['default_p2p_port'] }}"
+        protocol: "tcp"
