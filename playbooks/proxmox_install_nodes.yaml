@@ -44,12 +44,12 @@
 #   roles:
 #     - setup_install_prometheus
 
-- name: Install Penumbra services
-  hosts: penumbra
-  gather_facts: True
-  roles:
-    - setup_install_penumbra
-    - setup_install_nginx
+# - name: Install Penumbra services
+#   hosts: penumbra
+#   gather_facts: True
+#   roles:
+#     - setup_install_penumbra
+#     - setup_install_nginx
 
 - name: Install Arbitrum services
   hosts: arbitrum
@@ -87,11 +87,19 @@
   roles:
     - setup_install_evmos
 
+- name: Install Ajuna services
+  hosts: ajuna
+  gather_facts: True
+  roles:
+    - setup_install_ajuna
+    - setup_install_nginx
+
 - name: Install Moonbeam services
   hosts: moonbeam
   gather_facts: True
   roles:
     - setup_install_moonbeam
+    - setup_install_nginx
 
 - name: Install Kava services
   hosts: kava

@@ -13,6 +13,7 @@ hydration
 cumulus
 kilt
 moonbeam
+ajuna
 
 [prometheus]
 ibp-bkk07
@@ -39,9 +40,11 @@ talosctl0701
 [routers]
 bkk50
 
+[ajuna]
+rpc-ajuna-polkadot-02
+
 [hydration]
 rpc-hydration-polkadot-02
-hdx27
 
 [kilt]
 rpc-kilt-polkadot-02

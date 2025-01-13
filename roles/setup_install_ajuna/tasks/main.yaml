@@ -50,6 +50,22 @@
 - name: Flush handlers after Ajuna service copy
   ansible.builtin.meta: flush_handlers
 
+- name: Check if the local chain spec file exists
+  ansible.builtin.stat:
+    path: "{{ default_chain_spec }}"
+  register: local_chain_spec
+  delegate_to: "{{ inventory_hostname }}"
+
+- name: Download chain spec if not present
+  ansible.builtin.get_url:
+    url: "{{ default_chain_spec_dl_url }}"
+    dest: "{{ default_chain_spec }}"
+    mode: "0644"
+    timeout: 60
+  when:
+    - not local_chain_spec.stat.exists
+  delegate_to: "{{ inventory_hostname }}"
+
 - name: Install Ajuna {{ default_client_version }}
   ansible.builtin.get_url:
     url: "{{ default_download_url }}"
@@ -70,6 +86,15 @@
   when:
     - ansible_local['noderole']['node']['pinned'] != "True"
     - ansible_local['noderole']['node']['version'] != default_client_version
+
+- name: Symlink Ajuna release
+  ansible.builtin.file:
+    src: "{{ default_base_path }}/ajuna-{{ default_client_version }}"
+    dest: "{{ default_base_path }}/ajuna"
+    force: True
+    state: link
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
 
 - name: Flush handlers after Ajuna install
   ansible.builtin.meta: flush_handlers

@@ -37,6 +37,24 @@
     state: directory
   with_items:
     - "{{ default_database_path }}"
+    - "{{ default_database_path }}/polkadot"
+
+- name: Create base polkadot directory
+  ansible.builtin.file:
+    path: "{{ default_base_path }}/polkadot"
+    state: directory
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+    mode: "0755"
+
+- name: Create symlink from database to base path
+  ansible.builtin.file:
+    src: "{{ default_database_path }}/polkadot"
+    dest: "{{ default_base_path }}/polkadot"
+    state: link
+    force: true
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
 
 - name: Refresh facts
   ansible.builtin.setup:

@@ -154,7 +154,12 @@ pso24
 pso26
 
 [moonbeam]
+rpc-moonbeam-polkadot-01
 rpc-moonbeam-polkadot-02
+
+[ajuna]
+rpc-ajuna-polkadot-01
+rpc-ajuna-polkadot-02
 
 [services]
 monitor
