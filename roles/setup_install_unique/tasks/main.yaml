@@ -32,6 +32,22 @@
 - name: Gather facts
   ansible.builtin.setup:
 
+- name: Check if the local chain spec file exists
+  ansible.builtin.stat:
+    path: "{{ default_chain_spec }}"
+  register: local_chain_spec
+  delegate_to: "{{ inventory_hostname }}"
+
+- name: Download chain spec if not present
+  ansible.builtin.get_url:
+    url: "{{ default_chain_spec_dl_url }}"
+    dest: "{{ default_chain_spec }}"
+    mode: "0644"
+    timeout: 60
+  when:
+    - not local_chain_spec.stat.exists
+  delegate_to: "{{ inventory_hostname }}"
+
 - name: Copy Unique systemd service for specific node type
   ansible.builtin.template:
     src: "{{ default_node_type + '.service.j2' }}"
@@ -63,13 +79,21 @@
     - Add Unique service version
     - Symlink Unique service to systemd
     - Symlink Unique release
-    - Symlink binary executable
     - Stop Unique
     - Systemd daemon-reload
     - Start Unique
   when:
     - ansible_local['noderole']['node']['pinned'] != "True"
     - ansible_local['noderole']['node']['version'] != default_client_version
+
+- name: Symlink Unique release
+  ansible.builtin.file:
+    src: "{{ default_base_path }}/unique-{{ default_client_version }}"
+    dest: "{{ default_base_path }}/unique"
+    force: True
+    state: link
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
 
 - name: Flush handlers after Unique install
   ansible.builtin.meta: flush_handlers

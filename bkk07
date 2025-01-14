@@ -15,6 +15,7 @@ kilt
 moonbeam
 ajuna
 polimec
+unique
 
 [prometheus]
 ibp-bkk07
@@ -40,6 +41,9 @@ talosctl0701
 
 [routers]
 bkk50
+
+[unique]
+rpc-unique-polkadot-02
 
 [ajuna]
 rpc-ajuna-polkadot-02

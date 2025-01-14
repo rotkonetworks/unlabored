@@ -165,6 +165,10 @@ rpc-ajuna-polkadot-02
 rpc-polimec-polkadot-01
 rpc-polimec-polkadot-02
 
+[unique]
+rpc-unique-polkadot-01
+rpc-unique-polkadot-02
+
 [services]
 monitor
 
