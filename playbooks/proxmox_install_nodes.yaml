@@ -87,6 +87,13 @@
   roles:
     - setup_install_evmos
 
+- name: Install Polimec services
+  hosts: polimec
+  gather_facts: True
+  roles:
+    - setup_install_polimec
+    - setup_install_nginx
+
 - name: Install Ajuna services
   hosts: ajuna
   gather_facts: True

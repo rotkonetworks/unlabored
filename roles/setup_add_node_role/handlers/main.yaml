@@ -321,6 +321,34 @@
     mode: "0644"
   when: role == "ajuna"
 
+- name: Add Polimec service version
+  community.general.ini_file:
+    create: True
+    no_extra_spaces: True
+    option: "version"
+    section: "node"
+    state: present
+    value: "{{ default_client_version }}"
+    path: "{{ noderole_file }}"
+    owner: root
+    group: root
+    mode: "0644"
+  when: role == "polimec"
+
+- name: Add Unique service version
+  community.general.ini_file:
+    create: True
+    no_extra_spaces: True
+    option: "version"
+    section: "node"
+    state: present
+    value: "{{ default_client_version }}"
+    path: "{{ noderole_file }}"
+    owner: root
+    group: root
+    mode: "0644"
+  when: role == "unique"
+
 - name: Add type of service fact
   community.general.ini_file:
     create: True

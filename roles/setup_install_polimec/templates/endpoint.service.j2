@@ -23,11 +23,10 @@ ExecStart={{ default_base_path }}/polimec \
   --sync full \
   --listen-addr /ip4/0.0.0.0/tcp/{{ default_p2p_port }} \
   --listen-addr /ip4/0.0.0.0/tcp/{{ default_p2p_port_ws }}/ws \
-  --public-addr /ip4/{{ ansible_host }}/tcp/{{ default_p2p_port }} \
-  --public-addr /ip4/{{ ansible_host }}/tcp/{{ default_p2p_port_ws }}/ws \
   --public-addr /dns/{{ default_domain }}/tcp/{{ default_p2p_port }} \
-  --public-addr /dns/{{ default_domain }}/tcp/{{ default_p2p_port_ws }}/ws \
   --public-addr /dns/{{ default_domain }}/tcp/{{ default_p2p_port_wss }}/wss \
+  --public-addr /dns/{{ default_bootnode_domain }}/tcp/{{ default_bootnode_p2p_port }} \
+  --public-addr /dns/{{ default_bootnode_domain }}/tcp/{{ default_bootnode_p2p_port_wss }}/wss \
   --rpc-port {{ default_rpc_port }} \
   --prometheus-port {{ default_prom_port }} \
   --prometheus-external \
@@ -42,6 +41,8 @@ ExecStart={{ default_base_path }}/polimec \
   --rpc-max-response-size 16 \
   --rpc-max-subscriptions-per-connection 512 \
   --rpc-max-connections 10000 \
+  --in-peers {{ default_in_peers }} \
+  --out-peers {{ default_out_peers }} \
   --allow-private-ipv4
 
 [Install]

@@ -14,6 +14,7 @@ kilt
 polkadot
 moonbeam
 ajuna
+polimec
 
 [routers]
 bkk50
@@ -23,6 +24,9 @@ haproxy-bkk06
 
 [ajuna]
 rpc-ajuna-polkadot-01
+
+[polimec]
+rpc-polimec-polkadot-01
 
 [moonbeam]
 rpc-moonbeam-polkadot-01

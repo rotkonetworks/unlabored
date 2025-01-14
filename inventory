@@ -161,6 +161,10 @@ rpc-moonbeam-polkadot-02
 rpc-ajuna-polkadot-01
 rpc-ajuna-polkadot-02
 
+[polimec]
+rpc-polimec-polkadot-01
+rpc-polimec-polkadot-02
+
 [services]
 monitor
 
