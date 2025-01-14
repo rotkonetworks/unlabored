@@ -166,6 +166,7 @@ service_users:
   arbitrum: "arbitrum"
   avalanche: "avalanche"
   binance: "binance"
+  bifrost: "bifrost"
   cumulus: "cumulus"
   erigon: "erigon"
   ethereum: "ethereum"

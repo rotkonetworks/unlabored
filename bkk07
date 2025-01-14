@@ -16,6 +16,7 @@ moonbeam
 ajuna
 polimec
 unique
+bifrost
 
 [prometheus]
 ibp-bkk07
@@ -44,6 +45,9 @@ bkk50
 
 [unique]
 rpc-unique-polkadot-02
+
+[bifrost]
+rpc-bifrost-polkadot-02
 
 [ajuna]
 rpc-ajuna-polkadot-02

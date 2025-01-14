@@ -63,13 +63,21 @@
     - Add Bifrost service version
     - Symlink Bifrost service to systemd
     - Symlink Bifrost release
-    - Symlink binary executable
     - Stop Bifrost
     - Systemd daemon-reload
     - Start Bifrost
   when:
     - ansible_local['noderole']['node']['pinned'] != "True"
     - ansible_local['noderole']['node']['version'] != default_client_version
+
+- name: Symlink Bifrost release
+  ansible.builtin.file:
+    src: "{{ default_base_path }}/bifrost-{{ default_client_version }}"
+    dest: "{{ default_base_path }}/bifrost"
+    force: True
+    state: link
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
 
 - name: Flush handlers after Bifrost install
   ansible.builtin.meta: flush_handlers

@@ -169,6 +169,10 @@ rpc-polimec-polkadot-02
 rpc-unique-polkadot-01
 rpc-unique-polkadot-02
 
+[bifrost]
+rpc-bifrost-polkadot-01
+rpc-bifrost-polkadot-02
+
 [services]
 monitor
 

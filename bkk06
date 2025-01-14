@@ -16,6 +16,7 @@ moonbeam
 ajuna
 polimec
 unique
+bifrost
 
 [routers]
 bkk50
@@ -31,6 +32,9 @@ rpc-unique-polkadot-01
 
 [polimec]
 rpc-polimec-polkadot-01
+
+[bifrost]
+rpc-bifrost-polkadot-01
 
 [moonbeam]
 rpc-moonbeam-polkadot-01
