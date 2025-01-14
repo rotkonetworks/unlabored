@@ -52,7 +52,7 @@
     src: "{{ default_database_path }}/polkadot"
     dest: "{{ default_base_path }}/polkadot"
     state: link
-    force: true
+    force: True
     owner: "{{ default_user }}"
     group: "{{ default_user }}"
 
