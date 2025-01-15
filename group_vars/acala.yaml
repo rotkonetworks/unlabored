@@ -1,0 +1,25 @@
+---
+default_base_path: /opt/acala
+default_src_path: "{{ default_base_path }}/src"
+default_client_version: 3.0.1
+default_database: rocksdb
+default_database_path: "{{ default_base_path }}/chains"
+#TODO: we need to compile acala ourselves
+default_download_base_url: https://github.com/AcalaNetwork/acala-node
+default_download_url: "{{ default_download_base_url }}/archive/refs/tags/{{ default_client_version }}.tar.gz"
+default_group: "{{ service_users['acala'] }}"
+default_user: "{{ service_users['acala'] }}"
+default_log_level: info
+default_network: acala
+default_node_type: endpoint
+default_service: acala
+default_storage: "{{ default_base_path }}/chains"
+default_telemetry_url: wss://telemetry-backend.w3f.community/submit/ 1
+default_p2p_port_ws: 30434
+default_p2p_port_wss: 30435
+default_bootnode_p2p_port_ws: 30434
+default_bootnode_p2p_port_wss: 30435
+default_prom_port: 7400
+default_rpc_port: 9400
+default_secure_rpc_port: 42400
+zabbix_ext_port: 10400

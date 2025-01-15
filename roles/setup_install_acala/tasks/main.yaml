@@ -1,0 +1,203 @@
+---
+- name: Ensure group {{ default_user }} exists
+  ansible.builtin.group:
+    name: "{{ default_user }}"
+    state: present
+    system: True
+
+- name: Ensure user {{ default_user }} exists without unnecessary privileges
+  ansible.builtin.user:
+    append: True
+    comment: acala service user
+    create_home: False
+    group: "{{ default_user }}"
+    groups: []
+    home: "{{ default_base_path }}"
+    name: "{{ default_user }}"
+    shell: "/sbin/nologin"
+    state: present
+    system: True
+
+- name: Ensure user {{ default_user }} owns directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+    mode: "0750"
+    state: directory
+  loop:
+    - "{{ default_base_path }}"
+    - "{{ default_database_path }}"
+    - "{{ default_src_path }}"
+
+- name: Gather facts
+  ansible.builtin.setup:
+
+- name: Ensure /etc/ansible/facts.d/ directory exists
+  ansible.builtin.file:
+    path: /etc/ansible/facts.d/
+    state: directory
+    mode: "0755"
+  become: True
+  become_user: root
+
+- name: Copy Acala systemd service for specific node type
+  ansible.builtin.template:
+    src: "{{ default_node_type }}.service.j2"
+    dest: "{{ default_base_path }}/acala.service"
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+    mode: "0640"
+  when: default_node_type in ["collator", "bootnode", "endpoint"]
+  notify:
+    - Symlink Acala service to systemd
+    - Stop Acala
+    - Systemd daemon-reload
+    - Start Acala
+    - Add type of service fact
+
+- name: Flush handlers after Acala service copy
+  ansible.builtin.meta: flush_handlers
+
+- name: Check if Acala binary exists
+  ansible.builtin.stat:
+    path: "{{ default_base_path }}/acala-{{ default_client_version }}"
+  register: acala_binary
+
+- name: Acquire acala source
+  ansible.builtin.get_url:
+    url: "{{ default_download_url }}"
+    dest: "{{ default_src_path }}/{{ default_client_version }}.tar.gz"
+    mode: "0644"
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+  when:
+    - ansible_local['noderole']['node']['pinned'] != "True"
+    - ansible_local['noderole']['node']['version'] != default_client_version
+    - not acala_binary.stat.exists
+
+- name: Extract source tarball
+  ansible.builtin.unarchive:
+    src: "{{ default_src_path }}/{{ default_client_version }}.tar.gz"
+    dest: "{{ default_base_path }}"
+    remote_src: True
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+  when:
+    - ansible_local['noderole']['node']['pinned'] != "True"
+    - ansible_local['noderole']['node']['version'] != default_client_version
+    - not acala_binary.stat.exists
+
+- name: Install protobuf compiler and dependencies
+  ansible.builtin.package:
+    name:
+      - protobuf-compiler
+      - libprotobuf-dev
+    state: present
+  become: True
+  become_user: root
+  when:
+    - ansible_local['noderole']['node']['pinned'] != "True"
+    - ansible_local['noderole']['node']['version'] != default_client_version
+    - not acala_binary.stat.exists
+
+- name: Install libclang and related dependencies
+  ansible.builtin.package:
+    name:
+      - libclang-dev
+      - clang
+      - llvm-dev
+    state: present
+  become: True
+  become_user: root
+
+#NOTE: take look at it -al
+- name: Build client from source as root
+  ansible.builtin.command:
+    cmd: cargo build --release
+    #WARN: chdir folder need to be checked again
+    chdir: "{{ default_base_path }}/acala-node-{{ default_client_version }}"
+  become: True # Build as root
+  become_user: root
+  environment:
+    PATH: "{{ ansible_env.PATH }}:/usr/local/cargo/bin"
+  when:
+    - ansible_local['noderole']['node']['pinned'] != "True"
+    - ansible_local['noderole']['node']['version'] != default_client_version
+    - not acala_binary.stat.exists
+
+- name: Change ownership of built binary to {{ default_user }}
+  ansible.builtin.file:
+    #WARN: chdir folder need to be checked again
+    path: "{{ default_base_path }}/acala-node-{{ default_client_version }}/target/release/acala-parachain"
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+    mode: "0755"
+  when:
+    - ansible_local['noderole']['node']['pinned'] != "True"
+    - ansible_local['noderole']['node']['version'] != default_client_version
+    - acala_binary.stat.exists
+#NOTE: until here
+
+# - name: Build client from source
+#   ansible.builtin.command:
+#     cmd: cargo build --release
+#     chdir: "{{ default_base_path }}/acala-node-{{ default_client_version }}"
+#   become: True
+#   become_user: "{{ default_user }}"
+#   environment:
+#     PATH: "{{ ansible_env.PATH }}:/usr/local/cargo/bin"
+#   when:
+#     - ansible_local['noderole']['node']['pinned'] != "True"
+#     - ansible_local['noderole']['node']['version'] != default_client_version
+#     - not acala_binary.stat.exists
+#   register: build_result
+#   changed_when: build_result.rc == 0
+#   async: 3600
+#   poll: 30
+
+- name: Install acala {{ default_client_version }}
+  ansible.builtin.copy:
+    src: "{{ default_base_path }}/acala-node-{{ default_client_version }}/target/release/acala-parachain"
+    dest: "{{ default_base_path }}/acala-{{ default_client_version }}"
+    remote_src: True
+    mode: "0744"
+    group: "{{ default_user }}"
+    owner: "{{ default_user }}"
+  when:
+    - ansible_local['noderole']['node']['pinned'] != "True"
+    - ansible_local['noderole']['node']['version'] != default_client_version
+    - not acala_binary.stat.exists
+  notify:
+    - Add Acala service version
+    - Add Service Pinned Status
+    - Symlink acala release
+    - Symlink binary executable
+    - Systemd daemon-reload
+    - Stop Acala
+    - Start Acala
+
+- name: Flush handlers after Acala install
+  ansible.builtin.meta: flush_handlers
+
+- name: Ensure Acala service is running
+  ansible.builtin.systemd:
+    name: acala
+    state: started
+    enabled: True
+
+- name: Final service status check
+  ansible.builtin.systemd:
+    name: acala
+  register: acala_status
+
+- name: Report final service status
+  ansible.builtin.debug:
+    msg: "Acala service final status: {{ acala_status.status.ActiveState }}"
+
+- name: Fail the play if service is not running
+  ansible.builtin.fail:
+    msg: "Acala service is not running after all attempts. Manual intervention may be required."
+  when:
+    - ansible_local['noderole']['node']['pinned'] != "True"
+    - acala_status.status.ActiveState != 'active'
