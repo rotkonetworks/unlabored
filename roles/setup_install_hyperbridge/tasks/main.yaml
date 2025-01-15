@@ -50,14 +50,28 @@
 - name: Flush handlers after Hyperbridge service copy
   ansible.builtin.meta: flush_handlers
 
-- name: Install Hyperbridge v{{ default_client_version }}
+- name: Download Hyperbridge v{{ default_client_version }}
   ansible.builtin.get_url:
     url: "{{ default_download_url }}"
-    dest: "{{ default_base_path }}/hyperbridge-v{{ default_client_version }}"
-    mode: "u+r+x"
+    dest: "{{ default_base_path }}/hyperbridge-v{{ default_client_version }}.tar.gz"
+    mode: "0640"
     owner: "{{ default_user }}"
     group: "{{ default_user }}"
   register: download_result
+  when:
+    - ansible_local['noderole']['node']['pinned'] != "True"
+    - ansible_local['noderole']['node']['version'] != default_client_version
+
+- name: Extract Hyperbridge archive
+  ansible.builtin.unarchive:
+    src: "{{ default_base_path }}/hyperbridge-v{{ default_client_version }}.tar.gz"
+    dest: "{{ default_base_path }}/hyperbridge-v{{ default_client_version }}"
+    remote_src: true
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+    mode: "0750"
+  when: download_result.changed
+  register: extract_result
   notify:
     - Add Service Pinned Status
     - Add Hyperbridge service version
@@ -67,9 +81,12 @@
     - Stop Hyperbridge
     - Systemd daemon-reload
     - Start Hyperbridge
-  when:
-    - ansible_local['noderole']['node']['pinned'] != "True"
-    - ansible_local['noderole']['node']['version'] != default_client_version
+
+- name: Clean up downloaded archive
+  ansible.builtin.file:
+    path: "{{ default_base_path }}/hyperbridge-v{{ default_client_version }}.tar.gz"
+    state: absent
+  when: extract_result.changed
 
 - name: Flush handlers after Hyperbridge install
   ansible.builtin.meta: flush_handlers

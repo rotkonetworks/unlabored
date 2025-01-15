@@ -1,17 +1,15 @@
 ---
-default_base_path: /opt/unique
-default_client_version: v10030070
+default_base_path: /opt/hyperbridge
+default_client_version: v1.0.0
 default_database: rocksdb
 default_database_path: "{{ default_base_path }}/chains"
-default_download_base_url: https://github.com/UniqueNetwork/unique-chain/releases/download
-default_download_url: "{{ default_download_base_url }}/{{ default_client_version }}/unique-collator-{{ default_client_version }}"
-default_user: "{{ service_users['unique'] }}"
-default_group: "{{ service_users['unique'] }}"
+default_download_base_url: https://github.com/polytope-labs/hyperbridge/releases/download
+default_download_url: "{{ default_download_base_url }}/hyperbridge-{{ default_client_version }}/hyperbridge-x86_64-unknown-linux-gnu.tar.gz"
+default_user: "{{ service_users['hyperbridge'] }}"
+default_group: "{{ service_users['hyperbridge'] }}"
 default_log_level: info
-default_network: unique
+default_network: hyperbridge
 default_node_type: endpoint
-#havent touch below
-#NOTE: please check it
 default_p2p_port_ws: 30434
 default_p2p_port_wss: 30435
 default_bootnode_p2p_port_ws: 30434
@@ -19,7 +17,7 @@ default_bootnode_p2p_port_wss: 30435
 default_prom_port: 7400
 default_rpc_port: 9400
 default_secure_rpc_port: 42800
-default_service: unique
+default_service: hyperbridge
 default_storage: "{{ default_base_path }}/chains"
 default_telemetry_url: wss://telemetry-backend.w3f.community/submit/ 1
 zabbix_ext_port: 10800
