@@ -11,6 +11,18 @@ routers
 polkadot
 hydration
 cumulus
+kilt
+
+[prometheus]
+ibp-bkk07
+
+[haproxy]
+haproxy-bkk07
+
+[misc-container]
+build-node-07
+dockers
+proxy-bkk07
 
 [proxmox_vms:children]
 taloswrkr
@@ -27,7 +39,14 @@ talosctl0701
 bkk50
 
 [hydration]
+rpc-hydration-polkadot-02
 hdx27
+
+[kilt]
+rpc-kilt-polkadot-02
+
+[penumbra]
+penumbra-02
 
 [polkadot]
 rpc-polkadot-02
@@ -57,18 +76,18 @@ rpc-coretime-kusama-02
 rpc-asset-hub-paseo-02
 rpc-asset-hub-polkadot-02
 rpc-asset-hub-westend-02
-rpc-asset-hub-kusama-01
+rpc-asset-hub-kusama-02
 
 rpc-bridge-hub-paseo-02
 rpc-bridge-hub-polkadot-02
 rpc-bridge-hub-westend-02
-rpc-bridge-hub-kusama-01
+rpc-bridge-hub-kusama-02
 
 rpc-collectives-polkadot-02
 rpc-collectives-westend-02
 
 [encointer]
-rpc-encointer-kusama-01
+rpc-encointer-kusama-02
 
 [services]
 monitor
@@ -82,6 +101,14 @@ bkk07
 bkk07
 
 [referrence_nodes]
+rpc-kusama-02
+rpc-paseo-02
+rpc-polkadot-02
+rpc-westend-02
+rpc-kusama-01
+rpc-paseo-01
+rpc-polkadot-01
+rpc-westend-01
 dot14
 ksm14
 wnd14

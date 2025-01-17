@@ -13,7 +13,7 @@ default_domain: "{{ host_name }}"
 default_network: "people-kusama"
 default_chain_spec: "{{ default_base_path }}/people-kusama.json"
 default_chain_spec_dl_url: "https://raw.githubusercontent.com/paritytech/polkadot-sdk/master/cumulus/parachains/chain-specs/people-kusama.json"
-default_relay_rpc: "ws://{{ hostvars['ksm26']['container_ip'] }}:{{ hostvars['ksm26']['default_rpc_port'] }}"
+default_relay_rpc: "ws://{{ hostvars['rpc-kusama-01']['container_ip'] }}:{{ hostvars['rpc-kusama-01']['default_rpc_port'] }}"
 default_relay_rpc_fallback: "ws://{{ hostvars['rpc-kusama-02']['container_ip'] }}:{{ hostvars['rpc-kusama-02']['default_rpc_port'] }}"
 default_database: rocksdb
 default_node_type: "endpoint"

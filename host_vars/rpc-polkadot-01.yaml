@@ -1,14 +1,14 @@
 ---
 ansible_host: "160.22.181.181"
-container_ip: "192.168.77.11"
+container_ip: "192.168.111.10"
 ansible_port: 2311
-host_name: "rpc-polkadot-01.rotko.net"
+host_name: "rpc-polkadot-01.ct.rotko.net"
 host_timezone: "Asia/Bangkok"
 netif: '{"net0":"name=eth0,gw={{ default_nat_network_forward_cidr.split("/")[0] }},ip={{ default_host_ip }}/16,bridge={{ default_nat_device }}"}'
 role: "polkadot"
 pinned_service: True
 
-default_telemetry_name: "Rotko Networks - {{ host_name.split('.')[0] }} {{ default_node_type | capitalize }}"
+default_telemetry_name: "Rotko Networks - {{ host_name.split('.')[0] }}"
 default_domain: "{{ host_name }}"
 default_domain_lb: "polkadot.rotko.net"
 default_domain_ibp: "rpc.ibp.network"
@@ -20,15 +20,23 @@ default_node_type: "endpoint"
 default_pruning: "archive"
 default_database: "rocksdb"
 default_syncmode: full
-zabbix_ext_port: 10311
 
-default_bootnode_domain: "{{ default_network }}.boot.rotko.net"
-
-default_p2p_port: 30333
+default_p2p_port: 31001
 default_p2p_port_ws: 30334
 default_p2p_port_wss: 30335
-default_bootnode_p2p_port_ws: 30434
-default_bootnode_p2p_port_wss: 30435
+
+default_bootnode_domain: "{{ default_network }}.boot.rotko.net"
+default_bootnode_p2p_port: 31001
+default_bootnode_p2p_port_ws: 30334
+default_bootnode_p2p_port_wss: 30335
+
+transition_bootnode_domain: "dot14.rotko.net"
+transition_bootnode_p2p_port: 33214
+transition_bootnode_p2p_port_ws: 34214
+transition_bootnode_p2p_port_wss: 35214
+
 default_rpc_port: 9300
+default_prom_port: 7300
+
 default_secure_rpc_port: 42311
-default_prom_port: 7311
+zabbix_ext_port: 10311

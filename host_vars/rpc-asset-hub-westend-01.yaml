@@ -11,18 +11,18 @@ pinned_service: True
 default_telemetry_name: "Rotko Networks - {{ host_name.split('.')[0] }}"
 default_domain: "{{ host_name }}"
 default_network: "asset-hub-westend"
-default_relay_rpc: "ws://{{ hostvars['wnd26']['container_ip'] }}:{{ hostvars['wnd26']['default_rpc_port'] }}"
+default_relay_rpc: "ws://{{ hostvars['rpc-westend-01']['container_ip'] }}:{{ hostvars['rpc-westend-01']['default_rpc_port'] }}"
 default_relay_rpc_fallback: "ws://{{ hostvars['rpc-westend-02']['container_ip'] }}:{{ hostvars['rpc-westend-02']['default_rpc_port'] }}"
 default_database: rocksdb
 default_node_type: "endpoint"
 
-default_bootnode_domain: "{{ default_network }}.boot.rotko.net"
 transition_bootnode_domain: "wmint14.rotko.net"
-transition_bootnode_p2p_port: "33534"
-transition_bootnode_p2p_port_ws: "34534"
-transition_bootnode_p2p_port_wss: "35534"
+transition_bootnode_p2p_port: 33534
+transition_bootnode_p2p_port_ws: 34534
+transition_bootnode_p2p_port_wss: 35534
 
 default_p2p_port: 33011
+default_bootnode_domain: "{{ default_network }}.boot.rotko.net"
 default_bootnode_p2p_port: 33011
 default_bootnode_p2p_port_ws: 30434
 default_bootnode_p2p_port_wss: 30435
