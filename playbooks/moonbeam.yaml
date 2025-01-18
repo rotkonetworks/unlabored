@@ -6,3 +6,4 @@
   roles:
     - setup_add_node_role
     - setup_install_moonbeam
+    - setup_install_nginx

@@ -1,0 +1,47 @@
+[Unit]
+Description="{{ host_name.split('.')[0] }} endpoint - Acala service"
+After=network-online.target
+Wants=network-online.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=on-failure
+RestartSec=10
+SyslogIdentifier=acala-n1
+SyslogFacility=local7
+KillSignal=SIGHUP
+User={{ default_user }}
+Group={{ default_group }}
+ExecStart={{ default_base_path }}/acala \
+  --name "{{ default_telemetry_name }}" \
+  --chain {{ default_network }} \
+  --base-path {{ default_base_path }} \
+  --blocks-pruning archive \
+  --state-pruning archive \
+  --database {{ default_database }} \
+  --sync full \
+  --listen-addr /ip4/0.0.0.0/tcp/{{ default_p2p_port }} \
+  --listen-addr /ip4/0.0.0.0/tcp/{{ default_p2p_port_ws }}/ws \
+  --public-addr /dns/{{ default_domain }}/tcp/{{ default_p2p_port }} \
+  --public-addr /dns/{{ default_domain }}/tcp/{{ default_p2p_port_wss }}/wss \
+  {% if default_bootnode_domain is defined %}--public-addr /dns/{{ default_bootnode_domain }}/tcp/{{ default_p2p_port }} \
+  --public-addr /dns/{{ default_bootnode_domain }}/tcp/{{ default_bootnode_p2p_port_wss }}/wss \
+  {% endif %}--rpc-port {{ default_rpc_port }} \
+  --prometheus-port {{ default_prom_port }} \
+  --prometheus-external \
+  --relay-chain-rpc-urls {{ default_relay_rpc }} {{ default_relay_rpc_fallback }} \
+  --wasm-execution Compiled \
+  --no-hardware-benchmarks \
+  --rpc-external \
+  --rpc-methods safe \
+  --rpc-cors all \
+  --max-runtime-instances 32 \
+  --rpc-max-request-size 16 \
+  --rpc-max-response-size 16 \
+  --rpc-max-subscriptions-per-connection 512 \
+  --rpc-max-connections 10000 \
+  --allow-private-ipv4
+
+[Install]
+WantedBy=multi-user.target

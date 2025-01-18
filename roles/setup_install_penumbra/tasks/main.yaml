@@ -141,8 +141,8 @@
     owner: "{{ default_user }}"
     group: "{{ default_user }}"
     mode: "0640"
-    force: true
-  become: true
+    force: True
+  become: True
   become_user: "{{ default_user }}"
   when: not cometbft_dir.stat.exists
 

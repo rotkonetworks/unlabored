@@ -63,13 +63,21 @@
     - Add Polimec service version
     - Symlink Polimec service to systemd
     - Symlink Polimec release
-    - Symlink binary executable
     - Stop Polimec
     - Systemd daemon-reload
     - Start Polimec
   when:
     - ansible_local['noderole']['node']['pinned'] != "True"
     - ansible_local['noderole']['node']['version'] != default_client_version
+
+- name: Symlink Polimec release
+  ansible.builtin.file:
+    src: "{{ default_base_path }}/polimec-{{ default_client_version }}"
+    dest: "{{ default_base_path }}/polimec"
+    force: True
+    state: link
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
 
 - name: Flush handlers after Polimec install
   ansible.builtin.meta: flush_handlers

@@ -1,0 +1,10 @@
+# Standards: 0.2
+---
+- name: Bifrost installation
+  hosts: bifrost
+  gather_facts: True
+  roles:
+    - setup_add_node_role
+    - setup_install_rust
+    - setup_install_bifrost
+    - setup_install_nginx

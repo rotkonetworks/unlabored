@@ -87,11 +87,40 @@
   roles:
     - setup_install_evmos
 
+- name: Install Bifrost services
+  hosts: bifrost
+  gather_facts: True
+  roles:
+    - setup_install_bifrost
+    - setup_install_nginx
+
+- name: Install Unique services
+  hosts: unique
+  gather_facts: True
+  roles:
+    - setup_install_unique
+    - setup_install_nginx
+
+- name: Install Polimec services
+  hosts: polimec
+  gather_facts: True
+  roles:
+    - setup_install_polimec
+    - setup_install_nginx
+
+- name: Install Ajuna services
+  hosts: ajuna
+  gather_facts: True
+  roles:
+    - setup_install_ajuna
+    - setup_install_nginx
+
 - name: Install Moonbeam services
   hosts: moonbeam
   gather_facts: True
   roles:
     - setup_install_moonbeam
+    - setup_install_nginx
 
 - name: Install Kava services
   hosts: kava

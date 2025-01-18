@@ -94,7 +94,7 @@
       - protobuf-compiler
       - libprotobuf-dev
     state: present
-  become: true
+  become: True
   become_user: root
   when:
     - ansible_local['noderole']['node']['pinned'] != "True"
@@ -108,7 +108,7 @@
       - clang
       - llvm-dev
     state: present
-  become: true
+  become: True
   become_user: root
 
 #NOTE: take look at it -al

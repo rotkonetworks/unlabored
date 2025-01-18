@@ -1,24 +1,27 @@
 ---
 default_base_path: /opt/ajuna
-default_client_version: v0.7.7
+default_client_version: v0.8.3
 default_database: rocksdb
 default_database_path: "{{ default_base_path }}/chains"
 default_download_base_url: https://github.com/ajuna-network/ajuna-parachain/releases/download/
 default_download_url: "{{ default_download_base_url }}{{ default_client_version }}/ajuna-node"
+default_chain_spec: "{{ default_base_path }}/ajuna-raw.json"
+default_chain_spec_dl_url: "https://raw.githubusercontent.com/ajuna-network/ajuna-parachain/refs/heads/develop/resources/ajuna/ajuna-raw.json"
+default_user: "{{ service_users['ajuna'] }}"
 default_group: "{{ service_users['ajuna'] }}"
 default_log_level: info
 default_network: ajuna
 #havent touch below
 #NOTE: please check it
 default_node_type: endpoint
-default_p2p_port: 33800
-default_p2p_port_ws: 34800
-default_p2p_port_wss: 35800
-default_prom_port: 7800
-default_rpc_port: 9800
+default_p2p_port_ws: 30434
+default_p2p_port_wss: 30435
+default_bootnode_p2p_port_ws: 30434
+default_bootnode_p2p_port_wss: 30435
+default_prom_port: 7400
+default_rpc_port: 9400
 default_secure_rpc_port: 42800
 default_service: ajuna
 default_storage: "{{ default_base_path }}/chains"
 default_telemetry_url: wss://telemetry-backend.w3f.community/submit/ 1
-default_user: "{{ service_users['ajuna'] }}"
 zabbix_ext_port: 10800

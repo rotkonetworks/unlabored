@@ -7,8 +7,8 @@ default_client_version: 1.14.5
 default_database: rocksdb
 default_database_path: "{{ default_base_path }}/chains"
 #TODO: we need to compile KILT ourselves
-default_download_base_url: https://github.com/KILTprotocol/kilt-node/archive/refs/tags/
-default_download_url: "{{ default_download_base_url }}{{ default_client_version }}.tar.gz"
+default_download_base_url: https://github.com/KILTprotocol/kilt-node/archive/refs/tags
+default_download_url: "{{ default_download_base_url }}/{{ default_client_version }}.tar.gz"
 default_group: "{{ service_users['kilt'] }}"
 default_log_level: info
 default_network: kilt

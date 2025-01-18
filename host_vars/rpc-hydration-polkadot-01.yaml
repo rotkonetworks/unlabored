@@ -1,6 +1,6 @@
 ---
 ansible_host: "160.22.181.181"
-container_ip: "192.168.111.36"
+container_ip: "192.168.111.35"
 ansible_port: 2838
 host_name: "rpc-hydration-polkadot-01.ct.rotko.net"
 host_timezone: "Asia/Bangkok"
@@ -15,7 +15,7 @@ default_relay_rpc: "ws://{{ hostvars['rpc-polkadot-01']['container_ip'] }}:{{ ho
 default_relay_rpc_fallback: "ws://{{ hostvars['rpc-polkadot-02']['container_ip'] }}:{{ hostvars['rpc-polkadot-02']['default_rpc_port'] }}"
 default_database: "rocksdb"
 default_node_type: "endpoint"
-default_p2p_port: 31261
+default_p2p_port: 31251
 default_p2p_port_ws: 30434
 default_p2p_port_wss: 30435
 default_rpc_port: 9400

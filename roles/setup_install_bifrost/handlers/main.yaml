@@ -39,6 +39,6 @@
 
 - name: Start Bifrost
   ansible.builtin.systemd:
-    name: Bifrost
+    name: bifrost
     state: started
     enabled: True

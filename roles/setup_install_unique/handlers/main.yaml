@@ -39,6 +39,6 @@
 
 - name: Start Unique
   ansible.builtin.systemd:
-    name: Unique
+    name: unique
     state: started
     enabled: True

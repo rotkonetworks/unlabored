@@ -26,9 +26,19 @@
 
 - name: Symlink Moonbeam release
   ansible.builtin.file:
-    src: "{{ moonbeam_base }}/moonbeam-v{{ moonbeam_version }}"
-    dest: "{{ moonbeam_base }}/moonbeam"
+    src: "{{ default_base_path }}/moonbeam-v{{ default_client_version }}"
+    dest: "{{ default_base_path }}/moonbeam"
     force: True
     state: link
-    owner: "{{ moonbeam_user }}"
-    group: "{{ moonbeam_user }}"
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+
+- name: Symlink Moonbeam service to systemd
+  ansible.builtin.file:
+    src: "{{ default_base_path }}/moonbeam.service"
+    dest: "/etc/systemd/system/moonbeam.service"
+    state: link
+    force: True
+    owner: "root"
+    group: "root"
+    mode: "0644"

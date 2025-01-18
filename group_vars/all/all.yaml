@@ -163,9 +163,11 @@ proxmox_defaults:
 
 # Service users named after clients
 service_users:
+  ajuna: "ajuna"
   arbitrum: "arbitrum"
   avalanche: "avalanche"
   binance: "binance"
+  bifrost: "bifrost"
   cumulus: "cumulus"
   erigon: "erigon"
   ethereum: "ethereum"
@@ -181,5 +183,5 @@ service_users:
   interlay: "interlay"
   unique: "unique"
   polimec: "polimec"
-  ajuna: "ajuna"
   penumbra: "penumbra"
+  invarch: "invarch"
