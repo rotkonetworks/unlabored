@@ -64,6 +64,12 @@ rpc-kilt-polkadot-02
 [penumbra]
 penumbra-02
 
+[kilt]
+rpc-kilt-polkadot-02
+
+[penumbra]
+penumbra-02
+
 [polkadot]
 rpc-polkadot-02
 rpc-kusama-02

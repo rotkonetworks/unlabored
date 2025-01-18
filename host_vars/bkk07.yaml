@@ -1412,3 +1412,5 @@ lxc_nodes:
       - from_port: "{{ hostvars['rpc-bifrost-polkadot-02']['default_p2p_port'] }}"
         to_host: "{{ hostvars['rpc-bifrost-polkadot-02']['container_ip'] }}:{{ hostvars['rpc-bifrost-polkadot-02']['default_p2p_port'] }}"
         protocol: "tcp"
+      - from_port: "{{ hostvars['rpc-hydration-polkadot-02']['default_p2p_port'] }}"
+        to_host: "{{ hostvars['rpc-hydration-polkadot-02']['container_ip'] }}:{{ hostvars['rpc-hydration-polkadot-02']['default_p2p_port'] }}"
