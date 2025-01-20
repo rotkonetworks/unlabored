@@ -1,6 +1,6 @@
 ---
 # penumbra version
-penumbra_version: "0.81.0"
+penumbra_version: "0.81.2"
 penumbra_chain_id: ""
 cometbft_version: "0.37.14"
 polkachu_version: "2681688"

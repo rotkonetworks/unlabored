@@ -7,6 +7,7 @@
     state: link
     owner: "{{ default_user }}"
     group: "{{ default_user }}"
+  listen: Setup Hyperbridge symlinks
 
 - name: Symlink binary executable
   ansible.builtin.file:
@@ -16,6 +17,7 @@
     state: link
     owner: "{{ default_user }}"
     group: "{{ default_user }}"
+  listen: Setup Hyperbridge symlinks
 
 - name: Symlink Hyperbridge service to systemd
   ansible.builtin.file:
@@ -26,19 +28,23 @@
     owner: "root"
     group: "root"
     mode: '0644'
+  listen: Setup Hyperbridge symlinks
 
 - name: Stop Hyperbridge
   ansible.builtin.systemd:
     name: hyperbridge
     state: stopped
     enabled: True
+  listen: Restart Hyperbridge service
 
 - name: Systemd daemon-reload
   ansible.builtin.systemd:
     daemon_reload: True
+  listen: Restart Hyperbridge service
 
 - name: Start Hyperbridge
   ansible.builtin.systemd:
     name: hyperbridge
     state: started
     enabled: True
+  listen: Restart Hyperbridge service

@@ -66,11 +66,10 @@
   ansible.builtin.unarchive:
     src: "{{ default_base_path }}/hyperbridge-v{{ default_client_version }}.tar.gz"
     dest: "{{ default_base_path }}/hyperbridge-v{{ default_client_version }}"
-    remote_src: true
+    remote_src: True
     owner: "{{ default_user }}"
     group: "{{ default_user }}"
     mode: "0750"
-  when: download_result.changed
   register: extract_result
   notify:
     - Add Service Pinned Status
@@ -86,7 +85,6 @@
   ansible.builtin.file:
     path: "{{ default_base_path }}/hyperbridge-v{{ default_client_version }}.tar.gz"
     state: absent
-  when: extract_result.changed
 
 - name: Flush handlers after Hyperbridge install
   ansible.builtin.meta: flush_handlers
