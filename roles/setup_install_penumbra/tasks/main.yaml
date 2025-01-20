@@ -112,6 +112,9 @@
     - Add Penumbra service version
     - Add Service Pinned Status
 
+- name: Flush handlers to execute pending handler tasks
+  ansible.builtin.meta: flush_handlers
+
 - name: Install lz4 package
   ansible.builtin.package:
     name: lz4

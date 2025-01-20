@@ -36,6 +36,9 @@ bkk50
 rpc-kilt-polkadot-01
 rpc-kilt-polkadot-02
 
+[penumbra]
+penumbra-02
+
 [cumulus]
 mint14
 pbr13
