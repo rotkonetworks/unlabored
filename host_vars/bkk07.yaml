@@ -1113,7 +1113,7 @@ lxc_nodes:
       hostname: "{{ hostvars['dockers']['host_name'] }}"
       ostemplate: "local:vztmpl/{{ default_container_template }}"
       netif: "{{ hostvars['dockers']['netif'] }}"
-      cores: 1
+      cores: 8
       memory: 4000
       swap: 256
       password: "{{ default_password }}"
@@ -1412,5 +1412,29 @@ lxc_nodes:
       - from_port: "{{ hostvars['rpc-bifrost-polkadot-02']['default_p2p_port'] }}"
         to_host: "{{ hostvars['rpc-bifrost-polkadot-02']['container_ip'] }}:{{ hostvars['rpc-bifrost-polkadot-02']['default_p2p_port'] }}"
         protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-hydration-polkadot-02']['default_p2p_port'] }}"
-        to_host: "{{ hostvars['rpc-hydration-polkadot-02']['container_ip'] }}:{{ hostvars['rpc-hydration-polkadot-02']['default_p2p_port'] }}"
+  - host: "peering-node-07"
+    proxmox_config:
+      vmid: "967"
+      hostname: "{{ hostvars['peering-node-07']['host_name'] }}"
+      ostemplate: "local:vztmpl/ubuntu-24.04-standard_24.04-2_amd64.tar.zst"
+      netif: "{{ hostvars['peering-node-07']['netif'] }}"
+      cores: 4
+      memory: 8192
+      swap: 256
+      password: "{{ default_password }}"
+      disk: "{{ zfs_storage }}:20"
+      mounts: '{"mp0":"{{ zfs_storage }}:50,mp=/root"}'
+      onboot: True
+      unprivileged: True
+      validate_certs: False
+      description: "{{ hostvars['peering-node-07']['host_name'] }}"
+      state: present
+      features:
+        - nesting=1
+    port_forwards:
+      - from_port: "{{ hostvars['peering-node-07']['ansible_port'] }}"
+        to_host: "{{ hostvars['peering-node-07']['container_ip'] }}:{{ ssh_port }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['peering-node-07']['zabbix_ext_port'] }}"
+        to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
+        protocol: "tcp"

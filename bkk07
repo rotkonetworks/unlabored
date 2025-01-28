@@ -17,6 +17,7 @@ ajuna
 polimec
 unique
 bifrost
+misc-container
 
 [prometheus]
 ibp-bkk07
@@ -28,6 +29,7 @@ haproxy-bkk07
 build-node-07
 dockers
 proxy-bkk07
+peering-node-07
 
 [proxmox_vms:children]
 taloswrkr

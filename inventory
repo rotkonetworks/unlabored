@@ -18,8 +18,11 @@ ibp-bkk07
 [haproxy]
 haproxy-bkk07
 
-[builder-container]
+[misc-container]
 build-node-07
+dockers
+proxy-bkk07
+peering-node-07
 
 [proxmox_nodes]
 ansible

@@ -1,0 +1,13 @@
+---
+ansible_host: "160.22.181.181"
+container_ip: "192.168.77.167"
+ansible_port: 2167
+host_name: "peering-node-07"
+#pm.rotko.net server
+host_timezone: "Asia/Bangkok"
+netif: '{"net0":"name=eth0,gw={{ default_nat_network_forward_cidr.split("/")[0] }},ip={{ default_host_ip }}/16,bridge={{ default_nat_device }}"}'
+pinned_service: False
+
+zabbix_ext_port: 10167
+
+default_container_template: "ubuntu-24.04-standard_24.04-2_amd64.tar.zst"
