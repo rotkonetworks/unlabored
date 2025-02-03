@@ -1,0 +1,25 @@
+---
+default_base_path: /opt/mythos
+default_client_version: 1.15.6
+default_database: paritydb
+default_database_path: "{{ default_base_path }}/chains"
+default_download_base_url: https://github.com/paritytech/project-mythical/archive/refs/tags
+default_download_url: "/{{ default_download_base_url }}/v{{ default_client_version }}.zip"
+default_src_path: "{{ default_base_path }}/bin"
+default_in_peers: 32
+default_log_level: info
+default_network: asset-hub-polkadot
+default_node_type: bootnode
+default_out_peers: 16
+default_p2p_port: 30433
+default_p2p_port_ws: 30434
+default_p2p_port_wss: 30435
+default_prom_port: 7400
+default_rpc_port: 9400
+default_secure_rpc_port: 42400
+default_service: mythos
+default_storage: "{{ default_base_path }}/chains"
+default_telemetry_url: wss://telemetry-backend.w3f.community/submit/ 1
+default_group: "{{ service_users['mythos'] }}"
+default_user: "{{ service_users['mythos'] }}"
+zabbix_ext_port: 10400

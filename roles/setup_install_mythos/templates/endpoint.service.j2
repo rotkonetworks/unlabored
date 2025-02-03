@@ -1,0 +1,50 @@
+[Unit]
+Description="{{ host_name.split('.')[0] }} endpoint - Mythos service"
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User={{ default_user }}
+Group={{ default_group }}
+ExecStart={{ default_base_path }}/mythos \
+  --name "{{ default_telemetry_name }}" \
+  --chain {% if needs_custom_chain_spec %}{{ default_chain_spec }}{% else %}{{ default_network }}{% endif %} \
+  --base-path {{ default_base_path }} \
+  --state-pruning archive \
+  --blocks-pruning archive \
+  --database {{ default_database }} \
+  --sync full \
+  --listen-addr /ip4/0.0.0.0/tcp/{{ default_p2p_port }} \
+  --listen-addr /ip4/0.0.0.0/tcp/{{ default_p2p_port_ws }}/ws \
+  {% if transition_bootnode_domain is defined %}--listen-addr /ip4/0.0.0.0/tcp/{{ transition_bootnode_p2p_port }} \
+  --listen-addr /ip4/0.0.0.0/tcp/{{ transition_bootnode_p2p_port_ws }}/ws \
+  {% endif %}--public-addr /dns/{{ default_domain }}/tcp/{{ default_p2p_port }} \
+  --public-addr /dns/{{ default_domain }}/tcp/{{ default_p2p_port_wss }}/wss \
+  {% if transition_bootnode_domain is defined %}--public-addr /dns/{{ transition_bootnode_domain }}/tcp/{{ transition_bootnode_p2p_port }} \
+  --public-addr /dns/{{ transition_bootnode_domain }}/tcp/{{ transition_bootnode_p2p_port_ws }}/ws \
+  --public-addr /dns/{{ transition_bootnode_domain }}/tcp/{{ transition_bootnode_p2p_port_wss }}/wss \
+  {% endif %}{% if default_bootnode_domain is defined %}--public-addr /dns/{{ default_bootnode_domain }}/tcp/{{ default_bootnode_p2p_port }} \
+  --public-addr /dns/{{ default_bootnode_domain }}/tcp/{{ default_bootnode_p2p_port_wss }}/wss \
+  {% endif %}--rpc-port {{ default_rpc_port }} \
+  --prometheus-port {{ default_prom_port }} \
+  --prometheus-external \
+  --relay-chain-rpc-urls {{ default_relay_rpc }} {{ default_relay_rpc_fallback }} \
+  --wasm-execution Compiled \
+  --no-hardware-benchmarks \
+  --max-runtime-instances 32 \
+  --rpc-max-request-size 16 \
+  --rpc-max-response-size 16 \
+  --rpc-max-subscriptions-per-connection 1024 \
+  --rpc-max-connections 10000 \
+  --rpc-external \
+  --rpc-methods safe \
+  --rpc-cors all \
+  --in-peers {{ default_in_peers }} \
+  --out-peers {{ default_out_peers }} \
+  --no-mdns 
+
+Restart=always
+RestartSec=120
+
+[Install]
+WantedBy=multi-user.target
