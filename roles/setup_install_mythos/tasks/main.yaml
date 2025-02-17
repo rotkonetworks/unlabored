@@ -73,6 +73,12 @@
     path: "{{ default_base_path }}/mythos-{{ default_client_version }}"
   register: mythos_binary
 
+- name: Check if build is needed
+  ansible.builtin.set_fact:
+    needs_build: "{{ not mythos_binary.stat.exists and
+      ansible_local['noderole']['node']['pinned'] != 'True' and
+      ansible_local['noderole']['node']['version'] != default_client_version }}"
+
 - name: Acquire Mythos source
   ansible.builtin.get_url:
     url: "{{ default_download_url }}"
@@ -80,35 +86,29 @@
     mode: "0644"
     owner: "{{ default_user }}"
     group: "{{ default_user }}"
-  when:
-    - ansible_local['noderole']['node']['pinned'] != "True"
-    - ansible_local['noderole']['node']['version'] != default_client_version
-    - not mythos_binary.stat.exists
+  when: needs_build
 
-- name: Extract source tarball
+- name: Extract source
   ansible.builtin.unarchive:
     src: "{{ default_src_path }}/project-mythical-{{ default_client_version }}.zip"
     dest: "{{ default_src_path }}"
     remote_src: True
     owner: "{{ default_user }}"
     group: "{{ default_user }}"
-  when:
-    - ansible_local['noderole']['node']['pinned'] != "True"
-    - ansible_local['noderole']['node']['version'] != default_client_version
-    - not mythos_binary.stat.exists
+  when: needs_build
 
 - name: Build client from source as root
   ansible.builtin.command:
     cmd: cargo build --release
     chdir: "{{ default_src_path }}/project-mythical-{{ default_client_version }}"
-  become: True # Build as root
+  become: True
   become_user: root
   environment:
     PATH: "{{ ansible_env.PATH }}:/usr/local/cargo/bin"
-  when:
-    - ansible_local['noderole']['node']['pinned'] != "True"
-    - ansible_local['noderole']['node']['version'] != default_client_version
-    - not mythos_binary.stat.exists
+  register: build_result
+  when: needs_build
+  failed_when:
+    build_result.rc != 0
 
     #NOTE: need to be checked
 - name: Change ownership of built binary to {{ default_user }}
@@ -127,13 +127,10 @@
     src: "{{ default_src_path }}/project-mythical-{{ default_client_version }}/target/release/mythos"
     dest: "{{ default_base_path }}/mythos-{{ default_client_version }}"
     remote_src: True
-    mode: "0744"
+    mode: "0755"
     group: "{{ default_user }}"
     owner: "{{ default_user }}"
-  when:
-    - ansible_local['noderole']['node']['pinned'] != "True"
-    - ansible_local['noderole']['node']['version'] != default_client_version
-    - not mythos_binary.stat.exists
+  when: needs_build
   notify:
     - Add Mythos service version
     - Add Service Pinned Status
