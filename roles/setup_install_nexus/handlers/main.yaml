@@ -1,7 +1,7 @@
 ---
 - name: Symlink Nexus release
   ansible.builtin.file:
-    src: "{{ default_base_path }}/nexus-v{{ default_client_version }}/hyperbridge"
+    src: "{{ default_base_path }}/source/{{ default_client_version }}/hyperbridge-x86_64-unknown-linux-gnu/hyperbridge"
     dest: "{{ default_base_path }}/nexus"
     force: True
     state: link

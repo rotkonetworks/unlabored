@@ -87,6 +87,13 @@
   roles:
     - setup_install_evmos
 
+- name: Install Nexus services
+  hosts: nexus
+  gather_facts: True
+  roles:
+    - setup_install_nexus
+    - setup_install_nginx
+
 - name: Install Bifrost services
   hosts: bifrost
   gather_facts: True

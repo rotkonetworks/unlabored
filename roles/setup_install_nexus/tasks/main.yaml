@@ -39,13 +39,13 @@
     owner: "{{ default_user }}"
     group: "{{ default_user }}"
     mode: "0640"
-  when: default_node_type in ["node", "validator", "full-node"]
   notify:
     - Symlink Nexus service to systemd
     - Stop Nexus
     - Systemd daemon-reload
     - Start Nexus
     - Add type of service fact
+    - Symlink Nexus release
 
 - name: Flush handlers after Nexus service copy
   ansible.builtin.meta: flush_handlers
@@ -62,15 +62,29 @@
     - ansible_local['noderole']['node']['pinned'] != "True"
     - ansible_local['noderole']['node']['version'] != default_client_version
 
+- name: Create version-specific source directory
+  ansible.builtin.file:
+    path: "{{ default_base_path }}/source/{{ default_client_version }}"
+    state: directory
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+    mode: "0750"
+  when:
+    - ansible_local['noderole']['node']['pinned'] != "True"
+    - ansible_local['noderole']['node']['version'] != default_client_version
+
 - name: Extract Nexus archive
   ansible.builtin.unarchive:
     src: "{{ default_base_path }}/nexus-v{{ default_client_version }}.tar.gz"
-    dest: "{{ default_base_path }}/nexus-v{{ default_client_version }}"
+    dest: "{{ default_base_path }}/source/{{ default_client_version }}"
     remote_src: True
     owner: "{{ default_user }}"
     group: "{{ default_user }}"
     mode: "0750"
   register: extract_result
+  when:
+    - ansible_local['noderole']['node']['pinned'] != "True"
+    - ansible_local['noderole']['node']['version'] != default_client_version
   notify:
     - Add Service Pinned Status
     - Add Nexus service version
@@ -85,6 +99,9 @@
   ansible.builtin.file:
     path: "{{ default_base_path }}/nexus-v{{ default_client_version }}.tar.gz"
     state: absent
+  when:
+    - ansible_local['noderole']['node']['pinned'] != "True"
+    - ansible_local['noderole']['node']['version'] != default_client_version
 
 - name: Flush handlers after Nexus install
   ansible.builtin.meta: flush_handlers
