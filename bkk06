@@ -18,6 +18,7 @@ polimec
 unique
 bifrost
 penumbra
+nexus
 
 [routers]
 bkk50
@@ -42,6 +43,9 @@ rpc-bifrost-polkadot-01
 
 [moonbeam]
 rpc-moonbeam-polkadot-01
+
+[nexus]
+rpc-nexus-polkadot-01
 
 [hydration]
 rpc-hydration-polkadot-01
