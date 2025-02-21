@@ -16,6 +16,7 @@ polkadot
 ibp-bkk07
 
 [haproxy]
+haproxy-bkk06
 haproxy-bkk07
 
 [misc-container]

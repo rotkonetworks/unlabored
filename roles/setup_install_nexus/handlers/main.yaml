@@ -1,0 +1,50 @@
+---
+- name: Symlink Nexus release
+  ansible.builtin.file:
+    src: "{{ default_base_path }}/nexus-v{{ default_client_version }}"
+    dest: "{{ default_base_path }}/nexus"
+    force: True
+    state: link
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+  listen: Setup Nexus symlinks
+
+- name: Symlink binary executable
+  ansible.builtin.file:
+    src: "{{ default_base_path }}/nexus-v{{ default_client_version }}"
+    dest: "/usr/local/bin/nexus"
+    force: True
+    state: link
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+  listen: Setup Nexus symlinks
+
+- name: Symlink Nexus service to systemd
+  ansible.builtin.file:
+    src: "{{ default_base_path }}/nexus.service"
+    dest: "/etc/systemd/system/nexus.service"
+    state: link
+    force: True
+    owner: "root"
+    group: "root"
+    mode: '0644'
+  listen: Setup Nexus symlinks
+
+- name: Stop Nexus
+  ansible.builtin.systemd:
+    name: nexus
+    state: stopped
+    enabled: True
+  listen: Restart Nexus service
+
+- name: Systemd daemon-reload
+  ansible.builtin.systemd:
+    daemon_reload: True
+  listen: Restart Nexus service
+
+- name: Start Nexus
+  ansible.builtin.systemd:
+    name: nexus
+    state: started
+    enabled: True
+  listen: Restart Nexus service

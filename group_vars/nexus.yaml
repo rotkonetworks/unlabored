@@ -1,14 +1,14 @@
 ---
-default_base_path: /opt/hyperbridge
+default_base_path: /opt/nexus
 default_client_version: v1.0.0
 default_database: rocksdb
 default_database_path: "{{ default_base_path }}/chains"
-default_download_base_url: https://github.com/polytope-labs/hyperbridge/releases/download
-default_download_url: "{{ default_download_base_url }}/hyperbridge-{{ default_client_version }}/hyperbridge-x86_64-unknown-linux-gnu.tar.gz"
-default_user: "{{ service_users['hyperbridge'] }}"
-default_group: "{{ service_users['hyperbridge'] }}"
+default_download_base_url: https://github.com/polytope-labs/nexus/releases/download
+default_download_url: "{{ default_download_base_url }}/nexus-{{ default_client_version }}/nexus-x86_64-unknown-linux-gnu.tar.gz"
+default_user: "{{ service_users['nexus'] }}"
+default_group: "{{ service_users['nexus'] }}"
 default_log_level: info
-default_network: hyperbridge
+default_network: nexus
 default_node_type: endpoint
 default_p2p_port_ws: 30434
 default_p2p_port_wss: 30435
@@ -17,7 +17,7 @@ default_bootnode_p2p_port_wss: 30435
 default_prom_port: 7400
 default_rpc_port: 9400
 default_secure_rpc_port: 42800
-default_service: hyperbridge
+default_service: nexus
 default_storage: "{{ default_base_path }}/chains"
 default_telemetry_url: wss://telemetry-backend.w3f.community/submit/ 1
 zabbix_ext_port: 10800
