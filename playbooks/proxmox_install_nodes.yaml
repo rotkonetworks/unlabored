@@ -87,6 +87,13 @@
   roles:
     - setup_install_evmos
 
+- name: Install Invarch services
+  hosts: invarch
+  gather_facts: True
+  roles:
+    - setup_install_invarch
+    - setup_install_nginx
+
 - name: Install Nexus services
   hosts: nexus
   gather_facts: True

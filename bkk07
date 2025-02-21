@@ -18,6 +18,7 @@ polimec
 unique
 bifrost
 nexus
+invarch
 misc-container
 
 [prometheus]
@@ -47,6 +48,9 @@ bkk50
 
 [nexus]
 rpc-nexus-polkadot-02
+
+[invarch]
+rpc-invarch-polkadot-02
 
 [unique]
 rpc-unique-polkadot-02
