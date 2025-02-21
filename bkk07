@@ -17,6 +17,7 @@ ajuna
 polimec
 unique
 bifrost
+nexus
 misc-container
 
 [prometheus]
@@ -44,6 +45,9 @@ talosctl0701
 
 [routers]
 bkk50
+
+[nexus]
+rpc-nexus-polkadot-02
 
 [unique]
 rpc-unique-polkadot-02

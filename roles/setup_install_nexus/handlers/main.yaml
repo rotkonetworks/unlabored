@@ -1,7 +1,7 @@
 ---
 - name: Symlink Nexus release
   ansible.builtin.file:
-    src: "{{ default_base_path }}/nexus-v{{ default_client_version }}"
+    src: "{{ default_base_path }}/nexus-v{{ default_client_version }}/hyperbridge"
     dest: "{{ default_base_path }}/nexus"
     force: True
     state: link
@@ -27,7 +27,7 @@
     force: True
     owner: "root"
     group: "root"
-    mode: '0644'
+    mode: "0644"
   listen: Setup Nexus symlinks
 
 - name: Stop Nexus
