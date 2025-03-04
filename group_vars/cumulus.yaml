@@ -1,3 +1,4 @@
+---
 default_base_path: /opt/cumulus
 default_chain_spec_dl_url: https://raw.githubusercontent.com/paritytech/polkadot-sdk/master/cumulus/parachains/chain-specs/{{
   default_network }}.json

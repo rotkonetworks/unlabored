@@ -35,6 +35,9 @@ ExecStart={{ default_base_path }}/polkadot \
      --pruning 1000 \
      --no-private-ip \
      --out-peers 64 \
+{% if default_network == 'kusama' %}
+     --network-backend litep2p \
+{% endif %}
      --in-peers 64 \
      --workers-path {{ default_auxiliary_binary_path }} \
      --db-cache {{ ansible_memtotal_mb // 2 }} \

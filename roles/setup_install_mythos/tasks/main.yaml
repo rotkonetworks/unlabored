@@ -1,0 +1,149 @@
+---
+- name: Ensure group {{ default_user }} exists
+  ansible.builtin.group:
+    name: "{{ default_user }}"
+    state: present
+    system: True
+
+- name: Ensure user {{ default_user }} exists without unnecessary privileges
+  ansible.builtin.user:
+    append: True
+    comment: mythos service user
+    create_home: False
+    group: "{{ default_user }}"
+    groups: []
+    home: "{{ default_base_path }}"
+    name: "{{ default_user }}"
+    shell: "/sbin/nologin"
+    state: present
+    system: True
+
+- name: Ensure user {{ default_user }} owns directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+    mode: "0750"
+    state: directory
+  loop:
+    - "{{ default_base_path }}"
+    - "{{ default_database_path }}"
+
+- name: Gather facts
+  ansible.builtin.setup:
+
+- name: Check if the local chain spec file exists
+  ansible.builtin.stat:
+    path: "{{ default_chain_spec }}"
+  register: local_chain_spec
+  when: needs_custom_chain_spec
+  delegate_to: "{{ inventory_hostname }}"
+
+- name: Download chain spec if not present
+  ansible.builtin.get_url:
+    url: "{{ default_chain_spec_dl_url }}"
+    dest: "{{ default_chain_spec }}"
+    mode: "0644"
+    timeout: 60
+  when:
+    - needs_custom_chain_spec
+    - not local_chain_spec.stat.exists
+  delegate_to: "{{ inventory_hostname }}"
+
+- name: Copy Mythos systemd service for specific node type
+  ansible.builtin.template:
+    src: "{{ default_node_type + '.service.j2' }}"
+    dest: "{{ default_base_path }}/mythos.service"
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+    mode: "0640"
+  when: default_node_type in ["collator", "bootnode", "endpoint"]
+  notify:
+    - Symlink Mythos service to systemd
+    - Stop Mythos
+    - Systemd daemon-reload
+    - Start Mythos
+    - Add type of service fact
+
+- name: Flush handlers after service copy
+  ansible.builtin.meta: flush_handlers
+
+- name: Check if Mythos binary exists
+  ansible.builtin.stat:
+    path: "{{ default_base_path }}/mythos-{{ default_client_version }}"
+  register: mythos_binary
+
+- name: Check if build is needed
+  ansible.builtin.set_fact:
+    needs_build: "{{ not mythos_binary.stat.exists and
+      ansible_local['noderole']['node']['pinned'] != 'True' and
+      ansible_local['noderole']['node']['version'] != default_client_version }}"
+
+- name: Acquire Mythos source
+  ansible.builtin.get_url:
+    url: "{{ default_download_url }}"
+    dest: "{{ default_src_path }}"
+    mode: "0644"
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+  when: needs_build
+
+- name: Extract source
+  ansible.builtin.unarchive:
+    src: "{{ default_src_path }}/project-mythical-{{ default_client_version }}.zip"
+    dest: "{{ default_src_path }}"
+    remote_src: True
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+  when: needs_build
+
+- name: Build client from source as root
+  ansible.builtin.command:
+    cmd: cargo build --release
+    chdir: "{{ default_src_path }}/project-mythical-{{ default_client_version }}"
+  become: True
+  become_user: root
+  environment:
+    PATH: "{{ ansible_env.PATH }}:/usr/local/cargo/bin"
+  register: build_result
+  when: needs_build
+  failed_when:
+    build_result.rc != 0
+
+    #NOTE: need to be checked
+- name: Change ownership of built binary to {{ default_user }}
+  ansible.builtin.file:
+    path: "{{ default_src_path }}/project-mythical-{{ default_client_version }}/target/release/mythos"
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+    mode: "0755"
+  when:
+    - ansible_local['noderole']['node']['pinned'] != "True"
+    - ansible_local['noderole']['node']['version'] != default_client_version
+    - mythos_binary.stat.exists
+
+- name: Install Mythos {{ default_client_version }}
+  ansible.builtin.copy:
+    src: "{{ default_src_path }}/project-mythical-{{ default_client_version }}/target/release/mythos"
+    dest: "{{ default_base_path }}/mythos-{{ default_client_version }}"
+    remote_src: True
+    mode: "0755"
+    group: "{{ default_user }}"
+    owner: "{{ default_user }}"
+  when: needs_build
+  notify:
+    - Add Mythos service version
+    - Add Service Pinned Status
+    - Symlink Mythos release
+    - Symlink binary executable
+    - Systemd daemon-reload
+    - Stop Mythos
+    - Start Mythos
+
+- name: Flush handlers
+  ansible.builtin.meta: flush_handlers
+
+- name: Ensure Mythos service is running
+  ansible.builtin.systemd:
+    name: mythos
+    state: started

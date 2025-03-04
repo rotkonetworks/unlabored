@@ -2188,3 +2188,57 @@ lxc_nodes:
       - from_port: "{{ hostvars['rpc-bifrost-polkadot-01']['default_p2p_port'] }}"
         to_host: "{{ hostvars['rpc-bifrost-polkadot-01']['container_ip'] }}:{{ hostvars['rpc-bifrost-polkadot-01']['default_p2p_port'] }}"
         protocol: "tcp"
+  - host: "penumbra-01"
+    proxmox_config:
+      vmid: "1101"
+      hostname: "{{ hostvars['penumbra-01']['host_name'] }}"
+      ostemplate: "local:vztmpl/{{ default_container_template }}"
+      netif: "{{ hostvars['penumbra-01']['netif'] }}"
+      cores: 4
+      memory: 8192
+      swap: 8192
+      password: "{{ default_password }}"
+      disk: "{{ zfs_storage }}:20"
+      mounts: '{"mp0":"{{ zfs_storage }}:250,mp={{ hostvars["penumbra-01"]["default_database_path"] }}"}'
+      onboot: True
+      unprivileged: True
+      validate_certs: False
+      description: "{{ hostvars['penumbra-01']['default_network'] }} {{ hostvars['penumbra-01']['default_node_type'] }}: {{ hostvars['penumbra-01']['host_name'] }}"
+      state: present
+      features:
+        - nesting=1
+    port_forwards:
+      - from_port: "{{ hostvars['penumbra-01']['ansible_port'] }}"
+        to_host: "{{ hostvars['penumbra-01']['container_ip'] }}:{{ ssh_port }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['penumbra-01']['default_cometbft_p2p_port'] }}"
+        to_host: "{{ hostvars['penumbra-01']['container_ip'] }}:{{ hostvars['penumbra-01']['default_cometbft_p2p_port'] }}"
+        protocol: "tcp"
+  - host: "rpc-nexus-polkadot-01"
+    proxmox_config:
+      vmid: "31211"
+      hostname: "{{ hostvars['rpc-nexus-polkadot-01']['host_name'] }}"
+      ostemplate: "local:vztmpl/{{ default_container_template }}"
+      netif: "{{ hostvars['rpc-nexus-polkadot-01']['netif'] }}"
+      cores: 4
+      memory: 16384
+      swap: 8192
+      password: "{{ default_password }}"
+      disk: "{{ zfs_storage }}:20"
+      mounts: '{"mp0":"{{ zfs_storage }}:320,mp={{ hostvars["rpc-nexus-polkadot-01"]["default_database_path"] }}"}'
+      onboot: True
+      unprivileged: True
+      validate_certs: False
+      description: "{{ hostvars['rpc-nexus-polkadot-01']['default_network'] }} {{ hostvars['rpc-nexus-polkadot-01']['default_node_type'] }}: {{ hostvars['rpc-nexus-polkadot-01']['host_name'] }}"
+      state: present
+      features: "nesting=1"
+    port_forwards:
+      - from_port: "{{ hostvars['rpc-nexus-polkadot-01']['ansible_port'] }}"
+        to_host: "{{ hostvars['rpc-nexus-polkadot-01']['container_ip'] }}:{{ ssh_port }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['rpc-nexus-polkadot-01']['zabbix_ext_port'] }}"
+        to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['rpc-nexus-polkadot-01']['default_p2p_port'] }}"
+        to_host: "{{ hostvars['rpc-nexus-polkadot-01']['container_ip'] }}:{{ hostvars['rpc-nexus-polkadot-01']['default_p2p_port'] }}"
+        protocol: "tcp"

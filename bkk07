@@ -17,6 +17,9 @@ ajuna
 polimec
 unique
 bifrost
+nexus
+invarch
+misc-container
 
 [prometheus]
 ibp-bkk07
@@ -43,6 +46,12 @@ talosctl0701
 [routers]
 bkk50
 
+[nexus]
+rpc-nexus-polkadot-02
+
+[invarch]
+rpc-invarch-polkadot-02
+
 [unique]
 rpc-unique-polkadot-02
 
@@ -60,9 +69,6 @@ rpc-hydration-polkadot-02
 
 [kilt]
 rpc-kilt-polkadot-02
-
-[penumbra]
-penumbra-02
 
 [kilt]
 rpc-kilt-polkadot-02
@@ -84,11 +90,6 @@ val-paseo-01
 rpc-moonbeam-polkadot-02
 
 [cumulus]
-mint27
-wcore27
-kcore27
-kppl27
-wppl27
 rpc-people-polkadot-02
 rpc-people-paseo-02
 rpc-people-westend-02

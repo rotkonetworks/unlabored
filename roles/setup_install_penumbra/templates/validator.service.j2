@@ -11,7 +11,8 @@ ExecStart={{ default_home_path }}/pd start \
           --home {{ default_database_path }}/node0/pd \
           --metrics-bind 0.0.0.0:{{ default_penumbra_metric_port }} \
           --cometbft-addr http://127.0.0.1:{{ default_cometbft_rpc_port }} \
-          --abci-bind 127.0.0.1:{{ default_acbi_port }}
+          --abci-bind 127.0.0.1:{{ default_acbi_port }} \
+          --grpc-bind 127.0.0.1:{{ default_grpc_port }}
 
 # Consider adding an HTTPS URL if you have DNS set up:
 # ExecStart=/usr/local/bin/pd start --grpc-auto-https www.example.com

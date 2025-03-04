@@ -8,7 +8,7 @@
 - name: Ensure user {{ default_user }} exists without unnecessary privileges
   ansible.builtin.user:
     append: True
-    comment: hyperbridge service user
+    comment: nexus service user
     create_home: False
     group: "{{ default_user }}"
     groups: []
@@ -32,28 +32,28 @@
 - name: Gather facts
   ansible.builtin.setup:
 
-- name: Copy Hyperbridge systemd service for specific node type
+- name: Copy Nexus systemd service for specific node type
   ansible.builtin.template:
     src: "{{ default_node_type + '.service.j2' }}"
-    dest: "{{ default_base_path }}/hyperbridge.service"
+    dest: "{{ default_base_path }}/nexus.service"
     owner: "{{ default_user }}"
     group: "{{ default_user }}"
     mode: "0640"
-  when: default_node_type in ["node", "validator", "full-node"]
   notify:
-    - Symlink Hyperbridge service to systemd
-    - Stop Hyperbridge
+    - Symlink Nexus service to systemd
+    - Stop Nexus
     - Systemd daemon-reload
-    - Start Hyperbridge
+    - Start Nexus
     - Add type of service fact
+    - Symlink Nexus release
 
-- name: Flush handlers after Hyperbridge service copy
+- name: Flush handlers after Nexus service copy
   ansible.builtin.meta: flush_handlers
 
-- name: Download Hyperbridge v{{ default_client_version }}
+- name: Download Nexus v{{ default_client_version }}
   ansible.builtin.get_url:
     url: "{{ default_download_url }}"
-    dest: "{{ default_base_path }}/hyperbridge-v{{ default_client_version }}.tar.gz"
+    dest: "{{ default_base_path }}/nexus-v{{ default_client_version }}.tar.gz"
     mode: "0640"
     owner: "{{ default_user }}"
     group: "{{ default_user }}"
@@ -62,40 +62,57 @@
     - ansible_local['noderole']['node']['pinned'] != "True"
     - ansible_local['noderole']['node']['version'] != default_client_version
 
-- name: Extract Hyperbridge archive
+- name: Create version-specific source directory
+  ansible.builtin.file:
+    path: "{{ default_base_path }}/source/{{ default_client_version }}"
+    state: directory
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+    mode: "0750"
+  when:
+    - ansible_local['noderole']['node']['pinned'] != "True"
+    - ansible_local['noderole']['node']['version'] != default_client_version
+
+- name: Extract Nexus archive
   ansible.builtin.unarchive:
-    src: "{{ default_base_path }}/hyperbridge-v{{ default_client_version }}.tar.gz"
-    dest: "{{ default_base_path }}/hyperbridge-v{{ default_client_version }}"
+    src: "{{ default_base_path }}/nexus-v{{ default_client_version }}.tar.gz"
+    dest: "{{ default_base_path }}/source/{{ default_client_version }}"
     remote_src: True
     owner: "{{ default_user }}"
     group: "{{ default_user }}"
     mode: "0750"
   register: extract_result
+  when:
+    - ansible_local['noderole']['node']['pinned'] != "True"
+    - ansible_local['noderole']['node']['version'] != default_client_version
   notify:
     - Add Service Pinned Status
-    - Add Hyperbridge service version
-    - Symlink Hyperbridge service to systemd
-    - Symlink Hyperbridge release
+    - Add Nexus service version
+    - Symlink Nexus service to systemd
+    - Symlink Nexus release
     - Symlink binary executable
-    - Stop Hyperbridge
+    - Stop Nexus
     - Systemd daemon-reload
-    - Start Hyperbridge
+    - Start Nexus
 
 - name: Clean up downloaded archive
   ansible.builtin.file:
-    path: "{{ default_base_path }}/hyperbridge-v{{ default_client_version }}.tar.gz"
+    path: "{{ default_base_path }}/nexus-v{{ default_client_version }}.tar.gz"
     state: absent
+  when:
+    - ansible_local['noderole']['node']['pinned'] != "True"
+    - ansible_local['noderole']['node']['version'] != default_client_version
 
-- name: Flush handlers after Hyperbridge install
+- name: Flush handlers after Nexus install
   ansible.builtin.meta: flush_handlers
 
-- name: Verify Hyperbridge version
-  ansible.builtin.command: "{{ default_base_path }}/hyperbridge --version"
+- name: Verify Nexus version
+  ansible.builtin.command: "{{ default_base_path }}/nexus --version"
   register: default_client_version_result
   changed_when: False
   failed_when: "default_client_version not in default_client_version_result.stdout"
 
-- name: Ensure Hyperbridge service is running
+- name: Ensure Nexus service is running
   ansible.builtin.systemd:
-    name: hyperbridge
+    name: nexus
     state: started

@@ -17,6 +17,8 @@ ajuna
 polimec
 unique
 bifrost
+penumbra
+nexus
 
 [routers]
 bkk50
@@ -26,6 +28,9 @@ haproxy-bkk06
 
 [ajuna]
 rpc-ajuna-polkadot-01
+
+[penumbra]
+penumbra-01
 
 [unique]
 rpc-unique-polkadot-01
@@ -38,6 +43,9 @@ rpc-bifrost-polkadot-01
 
 [moonbeam]
 rpc-moonbeam-polkadot-01
+
+[nexus]
+rpc-nexus-polkadot-01
 
 [hydration]
 rpc-hydration-polkadot-01

@@ -180,6 +180,8 @@ service_users:
   kilt: "kilt"
   hydration: "hydration"
   moonbeam: "moonbeam"
+  mythos: "mythos"
+  nexus: "nexus"
   interlay: "interlay"
   unique: "unique"
   polimec: "polimec"
