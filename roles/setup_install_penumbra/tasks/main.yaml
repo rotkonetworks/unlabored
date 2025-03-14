@@ -70,7 +70,7 @@
     mode: "0750"
     owner: "{{ default_user }}"
     group: "{{ default_user }}"
-  when: ansible_local['noderole']['node']['version'] != cometbft_version
+  when: ansible_local['noderole']['node']['cometbft_version'] != cometbft_version
 
 - name: Download cometbft
   ansible.builtin.get_url:
@@ -79,7 +79,7 @@
     mode: "u+r+x"
     owner: "{{ default_user }}"
     group: "{{ default_user }}"
-  when: ansible_local['noderole']['node']['version'] != cometbft_version
+  when: ansible_local['noderole']['node']['cometbft_version'] != cometbft_version
 
 - name: Unpack cometbft
   ansible.builtin.unarchive:
@@ -89,7 +89,7 @@
     owner: "{{ default_user }}"
     group: "{{ default_user }}"
     mode: "u+r+x"
-  when: ansible_local['noderole']['node']['version'] != cometbft_version
+  when: ansible_local['noderole']['node']['cometbft_version'] != cometbft_version
 
 - name: Create soft links for penumbra & cometbft binaries
   ansible.builtin.file:
@@ -164,7 +164,7 @@
   retries: 3
   delay: 5
 
-  # NOTE: this one is working
+# NOTE: this one is working
 # - name: Download Polkachu Cometbft snapshot
 #   ansible.builtin.shell:
 #     cmd: "wget -O {{ default_database_path }}/node0/penumbra_{{ polkachu_version }}.tar.lz4 https://snapshots.polkachu.com/snapshots/penumbra/penumbra_{{ polkachu_version }}.tar.lz4 --inet4-only"
