@@ -14,8 +14,8 @@ default_need_routeros_port_forwarding: True
 routeros_delegate_host: "bkk50"
 default_need_iptables_port_forwarding: False
 default_gw_device: "vmbr0"
-# default_storage: "bkk07pool"
-# zfs_storage: "bkk07pool"
+default_storage: "bkk08pool"
+zfs_storage: "bkk08pool"
 # lvm_storage: "tank07lvm" # old
 # default_resource_pool: "bkk07_resource_pool"
 # default_max_cores: 192
