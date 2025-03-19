@@ -62,6 +62,8 @@
   when: ansible_local['noderole']['node']['version'] != penumbra_version
   args:
     executable: /bin/bash
+  notify:
+    - Add Penumbra service version
 
 - name: Ensure tmp directory exists
   ansible.builtin.file:
@@ -90,6 +92,8 @@
     group: "{{ default_user }}"
     mode: "u+r+x"
   when: ansible_local['noderole']['node']['cometbft_version'] != cometbft_version
+  notify:
+    - Add Cometbft service version
 
 - name: Create soft links for penumbra & cometbft binaries
   ansible.builtin.file:
