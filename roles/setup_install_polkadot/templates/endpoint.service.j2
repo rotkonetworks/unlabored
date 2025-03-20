@@ -31,6 +31,8 @@ ExecStart={{ default_base_path }}/polkadot \
   {% endif %}--rpc-port {{ default_rpc_port }} \
   --prometheus-port {{ default_prom_port }} \
   --prometheus-external \
+  --telemetry-url "wss://telemetry.rotko.net/submit/ 1" \
+  --telemetry-url 'wss://telemetry.polkadot.io/submit 0' \
   --enable-offchain-indexing true \
   --wasm-execution Compiled \
   --no-hardware-benchmarks \
