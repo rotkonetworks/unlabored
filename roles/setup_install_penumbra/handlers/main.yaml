@@ -56,6 +56,14 @@
     create: True
     mode: "0644"
 
+- name: Add Cometbft service version
+  ansible.builtin.lineinfile:
+    path: /etc/ansible/facts.d/noderole.fact
+    regexp: "^cometbft_version="
+    line: "version={{ cometbft_version }}"
+    create: True
+    mode: "0644"
+
 - name: Add Service Pinned Status
   ansible.builtin.lineinfile:
     path: /etc/ansible/facts.d/noderole.fact

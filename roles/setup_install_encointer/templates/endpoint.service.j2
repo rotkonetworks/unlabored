@@ -28,6 +28,8 @@ ExecStart={{ default_base_path }}/encointer \
   --enable-offchain-indexing=true \
   --prometheus-port {{ default_prom_port }} \
   --prometheus-external \
+  --telemetry-url "wss://telemetry.rotko.net/submit/ 1" \
+  --telemetry-url 'wss://telemetry.polkadot.io/submit 0' \
   --relay-chain-rpc-urls {{ default_relay_rpc }} {{ default_relay_rpc_fallback }} \
   --wasm-execution Compiled \
   --execution native-else-wasm \

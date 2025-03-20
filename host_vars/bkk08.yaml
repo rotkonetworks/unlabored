@@ -1,0 +1,31 @@
+---
+host_name: "bkk08.rotko.net"
+host_timezone: "Asia/Bangkok"
+ansible_host: "160.22.181.181"
+ansible_port: 22788
+role: "proxmox"
+
+kernel_modules:
+  - k10temp
+
+# default_kvm_host: "192.168.69.208"
+# default_kvm_port: "22798"
+default_need_routeros_port_forwarding: True
+routeros_delegate_host: "bkk50"
+default_need_iptables_port_forwarding: False
+default_gw_device: "vmbr0"
+default_storage: "bkk08pool"
+zfs_storage: "bkk08pool"
+# lvm_storage: "tank07lvm" # old
+# default_resource_pool: "bkk07_resource_pool"
+# default_max_cores: 192
+
+port_forwards:
+  - from_port: "{{ ansible_port }}"
+    to_host: "{{ container_ip }}:22"
+    protocol: "tcp"
+# - from_port: "20817" #  Proxmox UI
+#   to_host: "{{ container_ip }}:8006"
+#   protocol: "tcp"
+
+lxc_nodes:

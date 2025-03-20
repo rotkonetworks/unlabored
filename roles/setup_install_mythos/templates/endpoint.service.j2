@@ -1,12 +1,12 @@
 [Unit]
-Description="{{ host_name.split('.')[0] }} endpoint - Cumulus service"
+Description="{{ host_name.split('.')[0] }} endpoint - Mythos service"
 After=network-online.target
 Wants=network-online.target
 
 [Service]
 User={{ default_user }}
 Group={{ default_group }}
-ExecStart={{ default_base_path }}/cumulus \
+ExecStart={{ default_base_path }}/mythos \
   --name "{{ default_telemetry_name }}" \
   --chain {% if needs_custom_chain_spec %}{{ default_chain_spec }}{% else %}{{ default_network }}{% endif %} \
   --base-path {{ default_base_path }} \
@@ -29,8 +29,6 @@ ExecStart={{ default_base_path }}/cumulus \
   --prometheus-port {{ default_prom_port }} \
   --prometheus-external \
   --relay-chain-rpc-urls {{ default_relay_rpc }} {{ default_relay_rpc_fallback }} \
-  --telemetry-url "wss://telemetry.rotko.net/submit/ 1" \
-  --telemetry-url 'wss://telemetry.polkadot.io/submit 0' \
   --wasm-execution Compiled \
   --no-hardware-benchmarks \
   --max-runtime-instances 32 \

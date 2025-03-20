@@ -17,7 +17,7 @@
     path: "{{ noderole_file }}"
     owner: root
     group: root
-    mode: '0644'
+    mode: "0644"
   when:
     - not noderole_result.stat.exists
   with_items:
@@ -38,9 +38,27 @@
     path: "{{ noderole_file }}"
     owner: root
     group: root
-    mode: '0644'
+    mode: "0644"
   when:
     - not noderole_result.stat.exists
     - role == "ethereum" or role == "reth"
   with_items:
     - { section: "lighthouse", option: "version", value: "undefined" }
+
+- name: Add default cometbft fact to /etc/ansible/facts.d/noderole
+  community.general.ini_file:
+    create: True
+    no_extra_spaces: True
+    option: "{{ item.option }}"
+    section: "{{ item.section }}"
+    state: present
+    value: "{{ item.value }}"
+    path: "{{ noderole_file }}"
+    owner: root
+    group: root
+    mode: "0644"
+  when:
+    - not noderole_result.stat.exists
+    - role == "penumbra"
+  with_items:
+    - { section: "node", option: "cometbft_version", value: "undefined" }

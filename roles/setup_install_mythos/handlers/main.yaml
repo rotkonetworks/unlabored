@@ -1,0 +1,45 @@
+# handlers/main.yaml
+---
+- name: Symlink Mythos service to systemd
+  ansible.builtin.file:
+    src: "{{ default_base_path }}/mythos.service"
+    dest: "/etc/systemd/system/mythos.service"
+    state: link
+    force: True
+    owner: "root"
+    group: "root"
+    mode: '0644'
+
+- name: Symlink Mythos release
+  ansible.builtin.file:
+    src: "{{ default_base_path }}/{{ default_client_version }}"
+    dest: "{{ default_base_path }}/mythos"
+    force: True
+    state: link
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+
+- name: Symlink binary executable
+  ansible.builtin.file:
+    src: "{{ default_base_path }}/{{ default_client_version }}"
+    dest: "/usr/local/bin/mythos"
+    force: True
+    state: link
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+
+- name: Systemd daemon-reload
+  ansible.builtin.systemd:
+    daemon_reload: True
+
+- name: Stop Mythos
+  ansible.builtin.systemd:
+    name: mythos
+    state: stopped
+    enabled: True
+
+- name: Start Mythos
+  ansible.builtin.systemd:
+    name: mythos
+    state: started
+    enabled: True

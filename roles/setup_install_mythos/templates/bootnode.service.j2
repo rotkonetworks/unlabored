@@ -1,17 +1,19 @@
 [Unit]
-Description="{{ host_name.split('.')[0] }} bootnode - Hyperbridge service"
+Description="{{ host_name.split('.')[0] }} bootnode - Mythos service"
 After=network-online.target
 Wants=network-online.target
 
 [Service]
 User={{ default_user }}
 Group={{ default_group }}
-ExecStart={{ default_base_path }}/hyperbridge \
+ExecStart={{ default_base_path }}/mythos \
   --name "{{ default_telemetry_name }}" \
-  --chain {{ default_network }} \
+  --chain {% if needs_custom_chain_spec %}{{ default_chain_spec }}{% else %}{{ default_network }}{% endif %} \
   --base-path {{ default_base_path }} \
   --database {{ default_database }} \
+  --sync {{ default_syncmode | default('fast-unsafe') }} \
   --state-pruning 256 \
+  --blocks-pruning 1000 \
   --log sync=warn,afg=warn,babe=warn \
   --telemetry-url 'wss://telemetry-backend.w3f.community/submit 1' \
   --telemetry-url 'wss://telemetry.polkadot.io/submit/ 1' \
@@ -27,7 +29,6 @@ ExecStart={{ default_base_path }}/hyperbridge \
   --prometheus-external \
   --relay-chain-rpc-urls {{ default_relay_rpc }} {{ default_relay_rpc_fallback }} \
   --wasm-execution Compiled \
-  --sync {{ default_syncmode | default('warp') }} \
   --no-hardware-benchmarks \
   --rpc-external \
   --rpc-methods safe \
