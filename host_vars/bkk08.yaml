@@ -8,8 +8,8 @@ role: "proxmox"
 kernel_modules:
   - k10temp
 
-# default_kvm_host: "192.168.69.208"
-# default_kvm_port: "22798"
+default_kvm_host: "192.168.69.220"
+default_kvm_port: "22798"
 default_need_routeros_port_forwarding: True
 routeros_delegate_host: "bkk50"
 default_need_iptables_port_forwarding: False
@@ -29,3 +29,28 @@ port_forwards:
 #   protocol: "tcp"
 
 lxc_nodes:
+  - host: "build-node-08"
+    proxmox_config:
+      vmid: "978"
+      hostname: "{{ hostvars['build-node-08']['host_name'] }}"
+      ostemplate: "local:vztmpl/{{ default_container_template }}"
+      netif: "{{ hostvars['build-node-08']['netif'] }}"
+      cores: 16
+      memory: 16384
+      swap: 256
+      password: "{{ default_password }}"
+      disk: "{{ zfs_storage }}:50"
+      onboot: True
+      unprivileged: True
+      validate_certs: False
+      description: "{{ hostvars['build-node-08']['host_name'] }}"
+      state: present
+      features:
+        - nesting=1
+    port_forwards:
+      - from_port: "{{ hostvars['build-node-08']['ansible_port'] }}"
+        to_host: "{{ hostvars['build-node-08']['container_ip'] }}:{{ ssh_port }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['build-node-08']['zabbix_ext_port'] }}"
+        to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
+        protocol: "tcp"

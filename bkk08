@@ -8,12 +8,17 @@ proxmox_vms
 routers
 
 [proxmox_nodes:children]
+misc-container
+
+[misc-container]
+build-node-08
 
 [routers]
 bkk50
 
 [services]
 monitor
+
 
 [unmanaged]
 
