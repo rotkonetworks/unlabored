@@ -8,7 +8,11 @@ proxmox_vms
 routers
 
 [proxmox_nodes:children]
+polkadot
 misc-container
+
+[polkadot]
+val-paseo-02
 
 [misc-container]
 build-node-08

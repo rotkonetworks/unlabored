@@ -54,3 +54,46 @@ lxc_nodes:
       - from_port: "{{ hostvars['build-node-08']['zabbix_ext_port'] }}"
         to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
         protocol: "tcp"
+  - host: "val-paseo-02"
+    proxmox_config:
+      vmid: "34005"
+      hostname: "{{ hostvars['val-paseo-02']['host_name'] }}"
+      ostemplate: "local:vztmpl/{{ default_container_template }}"
+      netif: "{{ hostvars['val-paseo-02']['netif'] }}"
+      cores: 8
+      memory: 32768
+      swap: 8192
+      password: "{{ default_password }}"
+      disk: "{{ zfs_storage }}:20"
+      # mounts: '{"mp0":"{{ zfs_storage }}:700,mp={{ hostvars["val-paseo-02"]["default_database_path"] }}"}'
+      # mount_volumes:
+      #   - id: "mp0"
+      #     storage: "{{ zfs_storage }}"
+      #     size: 700
+      #     mountpoint: "{{ hostvars['val-paseo-02']['default_database_path'] }}"
+      # mounts:
+      #   mp0: "{{ zfs_storage }}:700,mp=/opt/polkadot/chains"
+      # mounts:
+      #   mp0: "{{ zfs_storage }}:size=700,mp={{ hostvars['val-paseo-02']['default_database_path'] }}"
+      mount_volumes:
+        - id: mp0
+          mountpoint: "{{ hostvars['val-paseo-02']['default_database_path'] }}"
+          storage: "{{ zfs_storage }}"
+          size: 700
+      onboot: True
+      unprivileged: True
+      validate_certs: False
+      description: "{{ hostvars['val-paseo-02']['default_network'] }} {{ hostvars['val-paseo-02']['default_node_type'] }}: {{ hostvars['val-paseo-02']['host_name'] }}"
+      state: present
+      features:
+        - nesting=1
+    port_forwards:
+      - from_port: "{{ hostvars['val-paseo-02']['ansible_port'] }}"
+        to_host: "{{ hostvars['val-paseo-02']['container_ip'] }}:{{ ssh_port }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['val-paseo-02']['zabbix_ext_port'] }}"
+        to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['val-paseo-02']['default_p2p_port'] }}"
+        to_host: "{{ hostvars['val-paseo-02']['container_ip'] }}:{{ hostvars['val-paseo-02']['default_p2p_port'] }}"
+        protocol: "tcp"
