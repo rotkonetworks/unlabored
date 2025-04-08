@@ -24,6 +24,14 @@
     state: stopped
     enabled: True
 
+- name: Export 
+  ansible.builtin.command:
+    cmd: "pd migrate --home {{ default_database_path }} --comet-home {{ default_database_path }}/node0/cometbft"
+    executable: /bin/bash
+  args:
+    executable: /bin/bash
+  when: ansible_distribution == "Ubuntu"
+
 - name: Systemd daemon-reload
   ansible.builtin.systemd:
     daemon_reload: True
