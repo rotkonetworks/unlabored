@@ -28,6 +28,15 @@
   ansible.builtin.systemd:
     daemon_reload: True
 
+#- name: Backup network node
+#  ansible.builtin.command:
+#    cmd: "tar -czf {{ default_home_path }}/network_data_{{ ansible_date_time.iso8601 }}.tar.gz -C {{ default_database_path }}/node0 ."
+#  args:
+#    chdir: "{{ default_database_path }}"
+#  register: backup_result
+#  changed_when: backup_result.rc == 0
+#  when: ansible_local['noderole']['node']['version'] != penumbra_version
+
 - name: Start Cometbft
   ansible.builtin.systemd:
     name: cometbft
