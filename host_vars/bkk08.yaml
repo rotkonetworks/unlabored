@@ -97,3 +97,29 @@ lxc_nodes:
       - from_port: "{{ hostvars['val-paseo-02']['default_p2p_port'] }}"
         to_host: "{{ hostvars['val-paseo-02']['container_ip'] }}:{{ hostvars['val-paseo-02']['default_p2p_port'] }}"
         protocol: "tcp"
+  - host: "penumbra-03"
+    proxmox_config:
+      vmid: "1103"
+      hostname: "{{ hostvars['penumbra-03']['host_name'] }}"
+      ostemplate: "local:vztmpl/{{ default_container_template }}"
+      netif: "{{ hostvars['penumbra-03']['netif'] }}"
+      cores: 4
+      memory: 8192
+      swap: 8192
+      password: "{{ default_password }}"
+      disk: "{{ zfs_storage }}:20"
+      mounts: '{"mp0":"{{ zfs_storage }}:300,mp={{ hostvars["penumbra-03"]["default_database_path"] }}"}'
+      onboot: True
+      unprivileged: True
+      validate_certs: False
+      description: "{{ hostvars['penumbra-03']['default_network'] }} {{ hostvars['penumbra-03']['default_node_type'] }}: {{ hostvars['penumbra-03']['host_name'] }}"
+      state: present
+      features:
+        - nesting=1
+    port_forwards:
+      - from_port: "{{ hostvars['penumbra-03']['ansible_port'] }}"
+        to_host: "{{ hostvars['penumbra-03']['container_ip'] }}:{{ ssh_port }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['penumbra-03']['default_cometbft_p2p_port'] }}"
+        to_host: "{{ hostvars['penumbra-03']['container_ip'] }}:{{ hostvars['penumbra-03']['default_cometbft_p2p_port'] }}"
+        protocol: "tcp"
