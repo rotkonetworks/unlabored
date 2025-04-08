@@ -8,7 +8,7 @@ netif: '{"net0":"name=eth0,gw={{ default_nat_network_forward_cidr.split("/")[0] 
 role: "polkadot"
 pinned_service: True
 
-default_telemetry_name: "Kusama XI Validator"
+default_telemetry_name: "rotko-net-ksm02"
 default_network: "kusama"
 default_chains_name: "ksmcc3"
 default_node_type: "validator"
