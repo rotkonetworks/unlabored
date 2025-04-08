@@ -1,8 +1,8 @@
 ---
 # penumbra version
-penumbra_version: "0.81.2"
+penumbra_version: "1.3.1"
 penumbra_chain_id: ""
-cometbft_version: "0.37.14"
+cometbft_version: "1.0.1"
 polkachu_version: "2681688"
 
 # dl locations
