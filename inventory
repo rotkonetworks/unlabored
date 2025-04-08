@@ -16,10 +16,14 @@ polkadot
 ibp-bkk07
 
 [haproxy]
+haproxy-bkk06
 haproxy-bkk07
 
-[builder-container]
+[misc-container]
 build-node-07
+dockers
+proxy-bkk07
+peering-node-07
 
 [proxmox_nodes]
 ansible
@@ -35,6 +39,10 @@ bkk50
 [kilt]
 rpc-kilt-polkadot-01
 rpc-kilt-polkadot-02
+
+[penumbra]
+penumbra-01
+penumbra-02
 
 [cumulus]
 mint14
@@ -187,6 +195,9 @@ bkk07
 [unmanaged]
 bkk02
 bkk05
+bkk09
+bkk11
+bkk13
 zabbix
 gatus
 
@@ -197,6 +208,7 @@ bkk03
 bkk04
 bkk06
 bkk07
+bkk08
 
 [access_management:children]
 hardware

@@ -4,45 +4,31 @@ rotko
 [rotko:children]
 proxmox_hosts
 proxmox_nodes
+proxmox_vms
 routers
 
 [proxmox_nodes:children]
-cumulus
-encointer
-polkadot
+misc-container
+
+[misc-container]
+build-node-08
 
 [routers]
 bkk50
 
-[polkadot]
-val-polkadot-01
-val-kusama-01
-
-[cumulus]
-mine24
-kbr24
-
-[encointer]
-enc24
-
 [services]
 monitor
 
-[proxmox_hosts]
-bkk04
 
 [unmanaged]
 
+[proxmox_hosts]
+bkk08
+
 [hardware]
-bkk04
+bkk08
 
 [access_management:children]
 hardware
 proxmox_nodes
 unmanaged
-
-[referrence_nodes]
-ksm14
-ksm24
-ksm26
-pso26
