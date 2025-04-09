@@ -30,7 +30,7 @@
     executable: /bin/bash
   args:
     executable: /bin/bash
-  when: ansible_distribution == "Ubuntu"
+  when: "{{ ansible_local['noderole']['node']['version'] != penumbra_version }}"
 
 - name: Systemd daemon-reload
   ansible.builtin.systemd:
