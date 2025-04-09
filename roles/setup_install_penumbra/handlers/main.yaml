@@ -24,9 +24,9 @@
     state: stopped
     enabled: True
 
-- name: Export 
+- name: Migrate Penumbra database
   ansible.builtin.command:
-    cmd: "pd migrate --home {{ default_database_path }} --comet-home {{ default_database_path }}/node0/cometbft"
+    cmd: "{{ default_home_path }}/pd migrate --home {{ default_database_path }} --comet-home {{ default_database_path }}/node0/cometbft"
     executable: /bin/bash
   args:
     executable: /bin/bash
