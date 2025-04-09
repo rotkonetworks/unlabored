@@ -45,6 +45,19 @@
   when: lxc_nodes is defined
   register: container_creation_result
 
+  #NOTE: increased ulimit for pd migrate
+- name: Ensure custom lxc.prlimit.nofile for penumbra network containers
+  become: yes
+  ansible.builtin.lineinfile:
+    path: "/etc/pve/lxc/{{ item.proxmox_config.vmid }}.conf"
+    regexp: "^lxc.prlimit.nofile"
+    line: "lxc.prlimit.nofile: 1048000:1048000"
+    state: present
+    insertafter: EOF
+  loop: "{{ lxc_nodes }}"
+  when: (hostvars[item.host].default_network | default('')) == 'penumbra'
+  register: penumbra_config_results
+
 - name: Start predefined nodes
   community.general.proxmox: "{{ proxmox_defaults | combine({'vmid': item.proxmox_config['vmid'], 'state': 'started'}) }}"
   loop: "{{ lxc_nodes }}"
