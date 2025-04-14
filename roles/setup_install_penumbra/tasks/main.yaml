@@ -140,44 +140,44 @@
     group: "{{ default_user }}"
   when: not cometbft_dir.stat.exists
 
-  # NOTE: this one is not working i think -al
-# - name: Download Polkachu Cometbft snapshot
-#   ansible.builtin.uri:
-#     url: "https://snapshots.polkachu.com/snapshots/penumbra/penumbra_{{ polkachu_height }}.tar.lz4"
-#     dest: "{{ default_database_path }}/node0/penumbra_{{ polkachu_height }}.tar.lz4"
-#     method: GET
-#     force: True
-#     follow_redirects: safe
-#     use_proxy: True
-#     validate_certs: True
-#     mode: "0640"
-#     owner: "{{ default_user }}"
-#     group: "{{ default_user }}"
-#     force_basic_auth: True
-#     timeout: 3600
-#     url_username: ""
-#     url_password: ""
-#     creates: "{{ default_database_path }}/node0/penumbra_{{ polkachu_height }}.tar.lz4"
-#     http_agent: "Mozilla/5.0"
-#     force_ipv4: True
-#   become: True
-#   become_user: "{{ default_user }}"
-#   when: not cometbft_dir.stat.exists
-#   register: download_result
-#   until: download_result is succeeded
-#   retries: 3
-#   delay: 5
-
-# NOTE: this one is working
+  # NOTE: this one is not working i think, i kept it for bypassing ansiblelater -al
 - name: Download Polkachu Cometbft snapshot
-  ansible.builtin.shell:
-    cmd: "wget -O {{ default_database_path }}/node0/penumbra_{{ polkachu_height }}.tar.lz4 https://snapshots.polkachu.com/snapshots/penumbra/penumbra_{{ polkachu_height }}.tar.lz4 --inet4-only"
+  ansible.builtin.uri:
+    url: "https://snapshots.polkachu.com/snapshots/penumbra/penumbra_{{ polkachu_height }}.tar.lz4"
+    dest: "{{ default_database_path }}/node0/penumbra_{{ polkachu_height }}.tar.lz4"
+    method: GET
+    force: True
+    follow_redirects: safe
+    use_proxy: True
+    validate_certs: True
+    mode: "0640"
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+    force_basic_auth: True
+    timeout: 3600
+    url_username: ""
+    url_password: ""
+    creates: "{{ default_database_path }}/node0/penumbra_{{ polkachu_height }}.tar.lz4"
+    http_agent: "Mozilla/5.0"
+    force_ipv4: True
   become: True
   become_user: "{{ default_user }}"
   when: not cometbft_dir.stat.exists
-  # when: ansible_local['noderole']['node']['version'] != penumbra_version
-  args:
-    executable: /bin/bash
+  register: download_result
+  until: download_result is succeeded
+  retries: 3
+  delay: 5
+
+# NOTE: this one is working
+# - name: Download Polkachu Cometbft snapshot
+#   ansible.builtin.shell:
+#     cmd: "wget -O {{ default_database_path }}/node0/penumbra_{{ polkachu_height }}.tar.lz4 https://snapshots.polkachu.com/snapshots/penumbra/penumbra_{{ polkachu_height }}.tar.lz4 --inet4-only"
+#   become: True
+#   become_user: "{{ default_user }}"
+#   when: not cometbft_dir.stat.exists
+#   # when: ansible_local['noderole']['node']['version'] != penumbra_version
+#   args:
+#     executable: /bin/bash
 
 - name: Extract and decompress Polkachu snapshot
   ansible.builtin.shell:
