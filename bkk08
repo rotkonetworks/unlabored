@@ -9,6 +9,7 @@ routers
 
 [proxmox_nodes:children]
 misc-container
+polkadot
 
 [misc-container]
 build-node-08
@@ -19,6 +20,8 @@ bkk50
 [services]
 monitor
 
+[polkadot]
+val-paseo-02
 
 [unmanaged]
 
