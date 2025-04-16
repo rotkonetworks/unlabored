@@ -13,6 +13,7 @@ misc-container
 penumbra
 
 [polkadot]
+rpc-polkadot-03
 val-paseo-02
 
 [penumbra]

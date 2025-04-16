@@ -130,6 +130,7 @@ hdx27
 [polkadot]
 rpc-polkadot-01
 rpc-polkadot-02
+rpc-polkadot-03
 rpc-kusama-01
 rpc-kusama-02
 rpc-westend-01
