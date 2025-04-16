@@ -60,7 +60,7 @@
   ansible.builtin.lineinfile:
     path: /etc/ansible/facts.d/noderole.fact
     regexp: "^cometbft_version="
-    line: "version={{ cometbft_version }}"
+    line: "cometbft_version={{ cometbft_version }}"
     create: True
     mode: "0644"
 

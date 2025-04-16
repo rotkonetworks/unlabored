@@ -1,0 +1,35 @@
+---
+ansible_host: "160.22.181.181"
+container_ip: "192.168.113.10"
+ansible_port: 3313
+host_name: "rpc-polkadot-03.rotko.net"
+host_timezone: "Asia/Bangkok"
+netif: '{"net0":"name=eth0,gw={{ default_nat_network_forward_cidr.split("/")[0] }},ip={{ default_host_ip }}/16,bridge={{ default_nat_device }}"}'
+role: "polkadot"
+pinned_service: True
+
+default_telemetry_name: "Rotko Networks - {{ host_name.split('.')[0] }}"
+default_domain: "{{ host_name }}"
+default_domain_lb: "polkadot.rotko.net"
+default_domain_ibp: "rpc.ibp.network"
+default_domain_dotters: "rpc.dotters.network"
+default_ibp_repository: "git@github.com:GATOTECH-LTD/ibp-ssl"
+default_dotters_repository: "git@github.com:senseless/dotters-ssl"
+default_network: "polkadot"
+default_node_type: "endpoint"
+default_pruning: "archive"
+default_database: "rocksdb"
+default_syncmode: "full"
+default_p2p_port: 31003
+default_p2p_port_ws: 30334
+default_p2p_port_wss: 30335
+default_rpc_port: 9300
+default_secure_rpc_port: 43313
+default_prom_port: 7300
+zabbix_ext_port: 13313
+# default_bootnode_domain: "boot-{{ default_network }}.rotko.net"
+# default_bootnode_domain: "dot14.rotko.net"
+#
+# default_bootnode_p2p_port: "{{ default_p2p_port + 10500 }}"
+# default_bootnode_p2p_port_ws: "{{ default_p2p_port_ws + 10500 }}"
+# default_bootnode_p2p_port_wss: "{{ default_p2p_port_wss + 10500 }}"
