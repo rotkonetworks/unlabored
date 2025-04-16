@@ -1,0 +1,22 @@
+---
+#val-kusama-4 on qemu vm on nix bkk13
+ansible_host: "160.22.181.181"
+container_ip: "192.168.224.10"
+ansible_port: 22413
+host_name: "val-kusama-04.ct.rotko.net"
+host_timezone: "Asia/Bangkok"
+netif: '{"net0":"name=eth0,gw={{ default_nat_network_forward_cidr.split("/")[0] }},ip={{ default_host_ip }}/16,bridge={{ default_nat_device }}"}'
+role: "polkadot"
+pinned_service: True
+
+default_network: kusama
+default_node_type: "validator"
+default_telemetry_name: "rotko-net-ksm04"
+default_pruning: 1000
+default_database: paritydb
+default_syncmode: warp
+default_p2p_port: 32007
+default_p2p_port_ws: 42007
+default_p2p_port_wss: 52007
+zabbix_ext_port: 12007
+default_chains_name: "ksmcc3"

@@ -138,9 +138,10 @@ rpc-westend-02
 rpc-paseo-01
 rpc-paseo-02
 val-polkadot-02
-val-kusama-02
 val-polkadot-03
+val-kusama-02
 val-kusama-03
+val-kusama-04
 val-paseo-01
 val-paseo-02
 val-paseo-03
