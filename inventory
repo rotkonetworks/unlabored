@@ -21,6 +21,7 @@ haproxy-bkk07
 
 [misc-container]
 build-node-07
+build-node-08
 dockers
 proxy-bkk07
 peering-node-07

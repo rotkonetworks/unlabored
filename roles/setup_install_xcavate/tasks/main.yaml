@@ -1,0 +1,174 @@
+---
+- name: Ensure group {{ default_user }} exists
+  ansible.builtin.group:
+    name: "{{ default_user }}"
+    state: present
+    system: True
+
+- name: Ensure user {{ default_user }} exists without unnecessary privileges
+  ansible.builtin.user:
+    append: True
+    comment: xcavate service user
+    create_home: False
+    group: "{{ default_user }}"
+    groups: []
+    home: "{{ default_base_path }}"
+    name: "{{ default_user }}"
+    shell: "/sbin/nologin"
+    state: present
+    system: True
+
+- name: Ensure user {{ default_user }} owns directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+    mode: "0750"
+    state: directory
+  loop:
+    - "{{ default_base_path }}"
+    - "{{ default_database_path }}"
+    - "{{ default_src_path }}"
+
+- name: Gather facts
+  ansible.builtin.setup:
+
+- name: Ensure /etc/ansible/facts.d/ directory exists
+  ansible.builtin.file:
+    path: /etc/ansible/facts.d/
+    state: directory
+    mode: "0755"
+  become: True
+  become_user: root
+
+- name: Copy Xcavate systemd service for specific node type
+  ansible.builtin.template:
+    src: "{{ default_node_type }}.service.j2"
+    dest: "{{ default_base_path }}/xcavate.service"
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+    mode: "0640"
+  when: default_node_type in ["collator", "bootnode", "endpoint"]
+  notify:
+    - Symlink Xcavate service to systemd
+    - Stop Xcavate
+    - Systemd daemon-reload
+    - Start Xcavate
+    - Add type of service fact
+
+- name: Flush handlers after Xcavate service copy
+  ansible.builtin.meta: flush_handlers
+
+- name: Check if Xcavate binary exists
+  ansible.builtin.stat:
+    path: "{{ default_base_path }}/xcavate-{{ default_client_version }}"
+  register: xcavate_binary
+
+- name: Clone Xcavate source from GitHub
+  ansible.builtin.git:
+    repo: https://github.com/XcavateBlockchain/Xcavate_CustomPallets.git
+    dest: "{{ default_src_path }}/xcavate-{{ default_client_version }}"
+    version: "{{ default_client_version | default('main') }}"
+    update: yes
+    force: yes
+  become: true
+  become_user: "{{ default_user }}"
+  when:
+    - ansible_local['noderole']['node']['pinned'] != "True"
+    - ansible_local['noderole']['node']['version'] != default_client_version
+    - not xcavate_binary.stat.exists
+
+- name: Install protobuf compiler and dependencies
+  ansible.builtin.package:
+    name:
+      - protobuf-compiler
+      - libprotobuf-dev
+    state: present
+  become: True
+  become_user: root
+  when:
+    - ansible_local['noderole']['node']['pinned'] != "True"
+    - ansible_local['noderole']['node']['version'] != default_client_version
+    - not xcavate_binary.stat.exists
+
+- name: Install libclang and related dependencies
+  ansible.builtin.package:
+    name:
+      - libclang-dev
+      - clang
+      - llvm-dev
+    state: present
+  become: True
+  become_user: root
+
+#NOTE: take look at it -al
+- name: Build client from source as root
+  ansible.builtin.command:
+    cmd: cargo build --release
+    chdir: "{{ default_src_path }}/xcavate-{{ default_client_version }}"
+  become: True # Build as root
+  become_user: root
+  environment:
+    PATH: "{{ ansible_env.PATH }}:/usr/local/cargo/bin"
+  when:
+    - ansible_local['noderole']['node']['pinned'] != "True"
+    - ansible_local['noderole']['node']['version'] != default_client_version
+    - not xcavate_binary.stat.exists
+
+- name: Change ownership of built binary to {{ default_user }}
+  ansible.builtin.file:
+    path: "{{ default_src_path }}/xcavate-{{ default_client_version }}/target/release/node-template"
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+    mode: "0755"
+  when:
+    - ansible_local['noderole']['node']['pinned'] != "True"
+    - ansible_local['noderole']['node']['version'] != default_client_version
+    - xcavate_binary.stat.exists
+#NOTE: until here
+
+- name: Install xcavate {{ default_client_version }}
+  ansible.builtin.copy:
+    src: "{{ default_src_path }}/xcavate-{{ default_client_version }}/target/release/node-template"
+    dest: "{{ default_base_path }}/xcavate-{{ default_client_version }}"
+    remote_src: True
+    mode: "0744"
+    group: "{{ default_user }}"
+    owner: "{{ default_user }}"
+  when:
+    - ansible_local['noderole']['node']['pinned'] != "True"
+    - ansible_local['noderole']['node']['version'] != default_client_version
+    - not xcavate_binary.stat.exists
+  notify:
+    - Add Xcavate service version
+    - Add Service Pinned Status
+    - Symlink xcavate release
+    - Symlink binary executable
+    - Systemd daemon-reload
+    - Stop Xcavate
+    - Start Xcavate
+
+- name: Flush handlers after Xcavate install
+  ansible.builtin.meta: flush_handlers
+
+- name: Ensure Xcavate service is running
+  ansible.builtin.systemd:
+    name: xcavate
+    state: started
+    enabled: True
+
+- name: Final service status check
+  ansible.builtin.systemd:
+    name: xcavate
+  register: xcavate_status
+
+- name: Report final service status
+  ansible.builtin.debug:
+    msg: "Xcavate service final status: {{ xcavate_status.status.ActiveState }}"
+
+- name: Fail the play if service is not running
+  ansible.builtin.fail:
+    msg: "Xcavate service is not running after all attempts. Manual intervention may be required."
+  when:
+    - ansible_local['noderole']['node']['pinned'] != "True"
+    - xcavate_status.status.ActiveState != 'active'
