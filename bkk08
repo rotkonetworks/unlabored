@@ -10,7 +10,7 @@ routers
 [proxmox_nodes:children]
 polkadot
 misc-container
-penumbra
+xcavate
 polkadot
 
 [polkadot]
@@ -20,7 +20,11 @@ val-paseo-02
 [penumbra]
 penumbra-03
 
+[xcavate]
+rpc-xcavate-polkadot-01
+
 [misc-container]
+dockers-08
 build-node-08
 
 [routers]

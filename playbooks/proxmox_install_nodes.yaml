@@ -148,6 +148,13 @@
   roles:
     - setup_install_optimism
 
+- name: Install Xcavate services
+  hosts: xcavate
+  gather_facts: True
+  roles:
+    - setup_install_xcavate
+    - setup_install_nginx
+
 - name: Install Polkadot services
   hosts: polkadot
   gather_facts: True
