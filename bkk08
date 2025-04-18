@@ -12,6 +12,10 @@ polkadot
 misc-container
 xcavate
 polkadot
+prometheus
+
+[prometheus]
+ibp-bkk08
 
 [polkadot]
 rpc-polkadot-03
@@ -48,3 +52,13 @@ bkk08
 hardware
 proxmox_nodes
 unmanaged
+
+[referrence_nodes]
+rpc-kusama-02
+rpc-paseo-02
+rpc-polkadot-02
+rpc-westend-02
+rpc-kusama-01
+rpc-paseo-01
+rpc-polkadot-01
+rpc-westend-01

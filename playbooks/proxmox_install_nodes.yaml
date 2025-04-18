@@ -32,12 +32,14 @@
     - setup_user_management
     - setup_log_rotation
 
+    # NOTE: better to comment, for long term
 # - name: Install Haproxy
 #   hosts: haproxy
 #   gather_facts: True
 #   roles:
 #     - setup_install_haproxy
 #
+# NOTE: better to comment, for long term
 # - name: Install Prometheus
 #   hosts: prometheus
 #   gather_facts: True

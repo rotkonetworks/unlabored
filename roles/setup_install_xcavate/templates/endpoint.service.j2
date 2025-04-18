@@ -15,7 +15,7 @@ User={{ default_user }}
 Group={{ default_group }}
 ExecStart={{ default_base_path }}/xcavate \
   --name "{{ default_telemetry_name }}" \
-  --chain {{ default_network }} \
+  #--chain {{ default_network }} \
   --base-path {{ default_base_path }} \
   --blocks-pruning archive \
   --state-pruning archive \
@@ -30,9 +30,9 @@ ExecStart={{ default_base_path }}/xcavate \
   {% endif %}--rpc-port {{ default_rpc_port }} \
   --prometheus-port {{ default_prom_port }} \
   --prometheus-external \
-  --relay-chain-rpc-urls {{ default_relay_rpc }} {{ default_relay_rpc_fallback }} \
+  #--relay-chain-rpc-urls {{ default_relay_rpc }} {{ default_relay_rpc_fallback }} \
   --wasm-execution Compiled \
-  --no-hardware-benchmarks \
+  #--no-hardware-benchmarks \
   --rpc-external \
   --rpc-methods safe \
   --rpc-cors all \

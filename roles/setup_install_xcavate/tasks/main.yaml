@@ -68,7 +68,7 @@
   ansible.builtin.git:
     repo: https://github.com/XcavateBlockchain/Xcavate_CustomPallets.git
     dest: "{{ default_src_path }}/xcavate-{{ default_client_version }}"
-    version: "{{ default_client_version | default('main') }}"
+    version: "Xcavate_node"
     update: yes
     force: yes
   become: true
@@ -100,6 +100,34 @@
     state: present
   become: True
   become_user: root
+
+- name: Add wasm32-unknown-unknown target
+  ansible.builtin.command:
+    cmd: rustup target add wasm32-unknown-unknown
+  become: true
+  become_user: root
+  environment:
+    PATH: "{{ ansible_env.PATH }}:/usr/local/cargo/bin"
+  register: rustup_target
+  changed_when: "'installed' in rustup_target.stdout or 'unchanged' not in rustup_target.stdout"
+  when:
+    - ansible_local['noderole']['node']['pinned'] != "True"
+    - ansible_local['noderole']['node']['version'] != default_client_version
+    - not xcavate_binary.stat.exists
+
+- name: Add rust-src component
+  ansible.builtin.command:
+    cmd: rustup component add rust-src
+  become: true
+  become_user: root
+  environment:
+    PATH: "{{ ansible_env.PATH }}:/usr/local/cargo/bin"
+  register: rustup_src
+  changed_when: "'installed' in rustup_src.stdout or 'unchanged' not in rustup_src.stdout"
+  when:
+    - ansible_local['noderole']['node']['pinned'] != "True"
+    - ansible_local['noderole']['node']['version'] != default_client_version
+    - not xcavate_binary.stat.exists
 
 #NOTE: take look at it -al
 - name: Build client from source as root
