@@ -37,3 +37,7 @@ default_rpc_port: 9691
 default_secure_rpc_port: 42691
 default_prom_port: 7691
 zabbix_ext_port: 10691
+
+inotify_max_user_instances: 131072
+inotify_max_user_watches: 4194304
+inotify_max_queued_events: 8388608
