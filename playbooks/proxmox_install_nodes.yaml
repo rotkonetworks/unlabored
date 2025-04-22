@@ -161,6 +161,7 @@
   hosts: polkadot
   gather_facts: True
   roles:
+    - setup_install_promtail
     - setup_install_polkadot
     - setup_install_nginx
 
@@ -168,6 +169,7 @@
   hosts: cumulus
   gather_facts: True
   roles:
+    - setup_install_promtail
     - setup_install_cumulus
     - setup_install_nginx
 

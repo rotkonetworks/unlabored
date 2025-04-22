@@ -164,7 +164,7 @@ lxc_nodes:
       memory: 4000
       swap: 256
       password: "{{ default_password }}"
-      disk: "{{ zfs_storage }}:20"
+      disk: "{{ zfs_storage }}:50"
       onboot: True
       unprivileged: True
       validate_certs: False
