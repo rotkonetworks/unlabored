@@ -2,13 +2,13 @@
 default_base_path: /opt/xcavate
 default_src_path: "{{ default_base_path }}/github"
 # xcavate version
-default_client_version: 4.0.0
+default_client_version: 1.0.0
 # database
 default_database: rocksdb
 default_database_path: "{{ default_base_path }}/chains"
 #TODO: we need to compile xcavate ourselves
-default_download_base_url: https://github.com/xcavateprotocol/xcavate-node/archive/refs/tags
-default_download_url: "{{ default_download_base_url }}/{{ default_client_version }}.tar.gz"
+default_download_base_url: https://github.com/XcavateBlockchain/xcavate-node-paseo
+default_branch: main
 default_group: "{{ service_users['xcavate'] }}"
 default_log_level: info
 default_network: xcavate

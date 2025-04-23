@@ -28,6 +28,7 @@
   loop:
     - "{{ default_base_path }}"
     - "{{ default_database_path }}"
+    - "{{ default_database_path }}/polkadot"
     - "{{ default_src_path }}"
 
 - name: Gather facts
@@ -40,6 +41,15 @@
     mode: "0755"
   become: True
   become_user: root
+
+- name: Symlink chains/polkadot into {{ default_base_path }}
+  ansible.builtin.file:
+    src: "{{ default_database_path }}/polkadot"
+    dest: "{{ default_base_path }}/polkadot"
+    state: link
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+    force: true
 
 - name: Copy Xcavate systemd service for specific node type
   ansible.builtin.template:
@@ -66,9 +76,9 @@
 
 - name: Clone Xcavate source from GitHub
   ansible.builtin.git:
-    repo: https://github.com/XcavateBlockchain/Xcavate_CustomPallets.git
+    repo: "{{ default_download_base_url }}"
     dest: "{{ default_src_path }}/xcavate-{{ default_client_version }}"
-    version: "Xcavate_node"
+    version: "main"
     update: yes
     force: yes
   become: true
@@ -130,22 +140,22 @@
     - not xcavate_binary.stat.exists
 
 #NOTE: take look at it -al
-- name: Build client from source as root
-  ansible.builtin.command:
-    cmd: cargo build --release
-    chdir: "{{ default_src_path }}/xcavate-{{ default_client_version }}"
-  become: True # Build as root
-  become_user: root
-  environment:
-    PATH: "{{ ansible_env.PATH }}:/usr/local/cargo/bin"
-  when:
-    - ansible_local['noderole']['node']['pinned'] != "True"
-    - ansible_local['noderole']['node']['version'] != default_client_version
-    - not xcavate_binary.stat.exists
+# - name: Build client from source as root
+#   ansible.builtin.command:
+#     cmd: cargo build --release
+#     chdir: "{{ default_src_path }}/xcavate-{{ default_client_version }}"
+#   become: True # Build as root
+#   become_user: root
+#   environment:
+#     PATH: "{{ ansible_env.PATH }}:/usr/local/cargo/bin"
+#   when:
+#     - ansible_local['noderole']['node']['pinned'] != "True"
+#     - ansible_local['noderole']['node']['version'] != default_client_version
+#     - not xcavate_binary.stat.exists
 
 - name: Change ownership of built binary to {{ default_user }}
   ansible.builtin.file:
-    path: "{{ default_src_path }}/xcavate-{{ default_client_version }}/target/release/node-template"
+    path: "{{ default_src_path }}/xcavate-{{ default_client_version }}/target/release/xcavate-node"
     owner: "{{ default_user }}"
     group: "{{ default_user }}"
     mode: "0755"
@@ -157,7 +167,7 @@
 
 - name: Install xcavate {{ default_client_version }}
   ansible.builtin.copy:
-    src: "{{ default_src_path }}/xcavate-{{ default_client_version }}/target/release/node-template"
+    src: "{{ default_src_path }}/xcavate-{{ default_client_version }}/target/release/xcavate-node"
     dest: "{{ default_base_path }}/xcavate-{{ default_client_version }}"
     remote_src: True
     mode: "0744"
