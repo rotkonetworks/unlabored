@@ -19,6 +19,7 @@ ibp-bkk08
 [haproxy]
 haproxy-bkk06
 haproxy-bkk07
+haproxy-bkk08
 
 [misc-container]
 build-node-07

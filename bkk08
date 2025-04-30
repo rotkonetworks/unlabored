@@ -12,10 +12,13 @@ polkadot
 misc-container
 xcavate
 polkadot
-prometheus
+haproxy
 
 [prometheus]
 ibp-bkk08
+
+[haproxy]
+haproxy-bkk08
 
 [polkadot]
 rpc-polkadot-03

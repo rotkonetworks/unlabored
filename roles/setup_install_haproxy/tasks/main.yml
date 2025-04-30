@@ -48,12 +48,12 @@
   ansible.builtin.debug:
     msg: "{{ lookup('template', haproxy_template) }}"
 
-# - name: Copy HAProxy configuration in place.
-#   ansible.builtin.template:
-#     src: "{{ haproxy_template }}"
-#     dest: /etc/haproxy/haproxy.cfg
-#     mode: 0644
-#   register: haproxy_config
+- name: Copy HAProxy configuration in place.
+  ansible.builtin.template:
+    src: "{{ haproxy_template }}"
+    dest: /etc/haproxy/haproxy.cfg
+    mode: 0644
+  register: haproxy_config
 
 - name: Validate HAProxy configuration
   ansible.builtin.command: haproxy -c -f /etc/haproxy/haproxy.cfg
