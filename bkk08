@@ -31,6 +31,7 @@ penumbra-03
 rpc-xcavate-polkadot-01
 
 [misc-container]
+log-ct-08
 dockers-08
 build-node-08
 

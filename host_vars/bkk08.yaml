@@ -255,3 +255,28 @@ lxc_nodes:
       - from_port: "{{ hostvars['haproxy-bkk08']['zabbix_ext_port'] }}"
         to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
         protocol: "tcp"
+  - host: "log-ct-08"
+    proxmox_config:
+      vmid: "985"
+      hostname: "{{ hostvars['log-ct-08']['host_name'] }}"
+      ostemplate: "local:vztmpl/{{ default_container_template }}"
+      netif: "{{ hostvars['log-ct-08']['netif'] }}"
+      cores: 4
+      memory: 4000
+      swap: 256
+      password: "{{ default_password }}"
+      disk: "{{ zfs_storage }}:20"
+      onboot: True
+      unprivileged: True
+      validate_certs: False
+      description: "{{ hostvars['log-ct-08']['host_name'] }}"
+      state: present
+      features:
+        - nesting=1
+    port_forwards:
+      - from_port: "{{ hostvars['log-ct-08']['ansible_port'] }}"
+        to_host: "{{ hostvars['log-ct-08']['container_ip'] }}:{{ ssh_port }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['log-ct-08']['zabbix_ext_port'] }}"
+        to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
+        protocol: "tcp"

@@ -22,6 +22,7 @@ haproxy-bkk07
 haproxy-bkk08
 
 [misc-container]
+log-ct-08
 build-node-07
 build-node-08
 dockers
