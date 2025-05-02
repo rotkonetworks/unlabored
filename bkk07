@@ -30,7 +30,6 @@ haproxy-bkk07
 [misc-container]
 build-node-07
 dockers
-proxy-bkk07
 
 [proxmox_vms:children]
 taloswrkr
@@ -46,33 +45,6 @@ talosctl0701
 [routers]
 bkk50
 
-[nexus]
-rpc-nexus-polkadot-02
-
-[invarch]
-rpc-invarch-polkadot-02
-
-[unique]
-rpc-unique-polkadot-02
-
-[bifrost]
-rpc-bifrost-polkadot-02
-
-[ajuna]
-rpc-ajuna-polkadot-02
-
-[polimec]
-rpc-polimec-polkadot-02
-
-[hydration]
-rpc-hydration-polkadot-02
-
-[kilt]
-rpc-kilt-polkadot-02
-
-[kilt]
-rpc-kilt-polkadot-02
-
 [penumbra]
 penumbra-02
 
@@ -86,8 +58,6 @@ val-polkadot-02
 val-kusama-02
 val-paseo-01
 
-[moonbeam]
-rpc-moonbeam-polkadot-02
 
 [cumulus]
 rpc-people-polkadot-02

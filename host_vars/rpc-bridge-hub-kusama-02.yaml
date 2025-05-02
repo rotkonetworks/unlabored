@@ -13,7 +13,7 @@ default_domain: "{{ host_name }}"
 default_network: "bridge-hub-kusama"
 default_relay_rpc: "ws://{{ hostvars['rpc-kusama-01']['container_ip'] }}:{{ hostvars['rpc-kusama-01']['default_rpc_port'] }}"
 default_relay_rpc_fallback: "ws://{{ hostvars['rpc-kusama-02']['container_ip'] }}:{{ hostvars['rpc-kusama-02']['default_rpc_port'] }}"
-default_database: paritydb # to be replaced with paritydb
+default_database: rocksdb
 default_node_type: "endpoint"
 
 default_bootnode_domain: "{{ default_network }}.boot.rotko.net"

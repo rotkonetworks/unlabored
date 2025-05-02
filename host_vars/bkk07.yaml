@@ -405,12 +405,6 @@ lxc_nodes:
       - from_port: "{{ hostvars['rpc-polkadot-02']['default_p2p_port'] }}"
         to_host: "{{ hostvars['rpc-polkadot-02']['container_ip'] }}:{{ hostvars['rpc-polkadot-02']['default_p2p_port'] }}"
         protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-polkadot-02']['default_p2p_port_ws'] }}"
-        to_host: "{{ hostvars['rpc-polkadot-02']['container_ip'] }}:{{ hostvars['rpc-polkadot-02']['default_p2p_port_ws'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-polkadot-02']['default_p2p_port_wss'] }}"
-        to_host: "{{ hostvars['rpc-polkadot-02']['container_ip'] }}:{{ hostvars['rpc-polkadot-02']['default_p2p_port_wss'] }}"
-        protocol: "tcp"
   - host: "rpc-kusama-02"
     proxmox_config:
       vmid: "320002"
@@ -831,7 +825,7 @@ lxc_nodes:
         protocol: "tcp"
   - host: "rpc-asset-hub-kusama-02"
     proxmox_config:
-      vmid: "32011"
+      vmid: "32012"
       hostname: "{{ hostvars['rpc-asset-hub-kusama-02']['host_name'] }}"
       ostemplate: "local:vztmpl/{{ default_container_template }}"
       netif: "{{ hostvars['rpc-asset-hub-kusama-02']['netif'] }}"
@@ -974,64 +968,64 @@ lxc_nodes:
       - from_port: "{{ hostvars['rpc-encointer-kusama-02']['default_p2p_port'] }}"
         to_host: "{{ hostvars['rpc-encointer-kusama-02']['container_ip'] }}:{{ hostvars['rpc-encointer-kusama-02']['default_p2p_port'] }}"
         protocol: "tcp"
-  - host: "val-polkadot-02"
-    proxmox_config:
-      vmid: "31022"
-      hostname: "{{ hostvars['val-polkadot-02']['host_name'] }}"
-      ostemplate: "local:vztmpl/{{ default_container_template }}"
-      netif: "{{ hostvars['val-polkadot-02']['netif'] }}"
-      cores: 8
-      memory: 32768
-      swap: 8192
-      password: "{{ default_password }}"
-      disk: "{{ zfs_storage }}:20"
-      mounts: '{"mp0":"{{ zfs_storage }}:700,mp={{ hostvars["val-polkadot-02"]["default_database_path"] }}"}'
-      onboot: True
-      unprivileged: True
-      validate_certs: False
-      description: "{{ hostvars['val-polkadot-02']['default_network'] }} {{ hostvars['val-polkadot-02']['default_node_type'] }}: {{ hostvars['val-polkadot-02']['host_name'] }}"
-      state: present
-      features:
-        - nesting=1
-    port_forwards:
-      - from_port: "{{ hostvars['val-polkadot-02']['ansible_port'] }}"
-        to_host: "{{ hostvars['val-polkadot-02']['container_ip'] }}:{{ ssh_port }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['val-polkadot-02']['zabbix_ext_port'] }}"
-        to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['val-polkadot-02']['default_p2p_port'] }}"
-        to_host: "{{ hostvars['val-polkadot-02']['container_ip'] }}:{{ hostvars['val-polkadot-02']['default_p2p_port'] }}"
-        protocol: "tcp"
-  - host: "val-kusama-02"
-    proxmox_config:
-      vmid: "32022"
-      hostname: "{{ hostvars['val-kusama-02']['host_name'] }}"
-      ostemplate: "local:vztmpl/{{ default_container_template }}"
-      netif: "{{ hostvars['val-kusama-02']['netif'] }}"
-      cores: 8
-      memory: 32768
-      swap: 8192
-      password: "{{ default_password }}"
-      disk: "{{ zfs_storage }}:20"
-      mounts: '{"mp0":"{{ zfs_storage }}:700,mp={{ hostvars["val-kusama-02"]["default_database_path"] }}"}'
-      onboot: True
-      unprivileged: True
-      validate_certs: False
-      description: "{{ hostvars['val-kusama-02']['default_network'] }} {{ hostvars['val-kusama-02']['default_node_type'] }}: {{ hostvars['val-kusama-02']['host_name'] }}"
-      state: present
-      features:
-        - nesting=1
-    port_forwards:
-      - from_port: "{{ hostvars['val-kusama-02']['ansible_port'] }}"
-        to_host: "{{ hostvars['val-kusama-02']['container_ip'] }}:{{ ssh_port }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['val-kusama-02']['zabbix_ext_port'] }}"
-        to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['val-kusama-02']['default_p2p_port'] }}"
-        to_host: "{{ hostvars['val-kusama-02']['container_ip'] }}:{{ hostvars['val-kusama-02']['default_p2p_port'] }}"
-        protocol: "tcp"
+  # - host: "val-polkadot-02"
+  #   proxmox_config:
+  #     vmid: "31022"
+  #     hostname: "{{ hostvars['val-polkadot-02']['host_name'] }}"
+  #     ostemplate: "local:vztmpl/{{ default_container_template }}"
+  #     netif: "{{ hostvars['val-polkadot-02']['netif'] }}"
+  #     cores: 8
+  #     memory: 32768
+  #     swap: 8192
+  #     password: "{{ default_password }}"
+  #     disk: "{{ zfs_storage }}:20"
+  #     mounts: '{"mp0":"{{ zfs_storage }}:700,mp={{ hostvars["val-polkadot-02"]["default_database_path"] }}"}'
+  #     onboot: True
+  #     unprivileged: True
+  #     validate_certs: False
+  #     description: "{{ hostvars['val-polkadot-02']['default_network'] }} {{ hostvars['val-polkadot-02']['default_node_type'] }}: {{ hostvars['val-polkadot-02']['host_name'] }}"
+  #     state: present
+  #     features:
+  #       - nesting=1
+  #   port_forwards:
+  #     - from_port: "{{ hostvars['val-polkadot-02']['ansible_port'] }}"
+  #       to_host: "{{ hostvars['val-polkadot-02']['container_ip'] }}:{{ ssh_port }}"
+  #       protocol: "tcp"
+  #     - from_port: "{{ hostvars['val-polkadot-02']['zabbix_ext_port'] }}"
+  #       to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
+  #       protocol: "tcp"
+  #     - from_port: "{{ hostvars['val-polkadot-02']['default_p2p_port'] }}"
+  #       to_host: "{{ hostvars['val-polkadot-02']['container_ip'] }}:{{ hostvars['val-polkadot-02']['default_p2p_port'] }}"
+  #       protocol: "tcp"
+  # - host: "val-kusama-02"
+  #   proxmox_config:
+  #     vmid: "32022"
+  #     hostname: "{{ hostvars['val-kusama-02']['host_name'] }}"
+  #     ostemplate: "local:vztmpl/{{ default_container_template }}"
+  #     netif: "{{ hostvars['val-kusama-02']['netif'] }}"
+  #     cores: 8
+  #     memory: 32768
+  #     swap: 8192
+  #     password: "{{ default_password }}"
+  #     disk: "{{ zfs_storage }}:20"
+  #     mounts: '{"mp0":"{{ zfs_storage }}:700,mp={{ hostvars["val-kusama-02"]["default_database_path"] }}"}'
+  #     onboot: True
+  #     unprivileged: True
+  #     validate_certs: False
+  #     description: "{{ hostvars['val-kusama-02']['default_network'] }} {{ hostvars['val-kusama-02']['default_node_type'] }}: {{ hostvars['val-kusama-02']['host_name'] }}"
+  #     state: present
+  #     features:
+  #       - nesting=1
+  #   port_forwards:
+  #     - from_port: "{{ hostvars['val-kusama-02']['ansible_port'] }}"
+  #       to_host: "{{ hostvars['val-kusama-02']['container_ip'] }}:{{ ssh_port }}"
+  #       protocol: "tcp"
+  #     - from_port: "{{ hostvars['val-kusama-02']['zabbix_ext_port'] }}"
+  #       to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
+  #       protocol: "tcp"
+  #     - from_port: "{{ hostvars['val-kusama-02']['default_p2p_port'] }}"
+  #       to_host: "{{ hostvars['val-kusama-02']['container_ip'] }}:{{ hostvars['val-kusama-02']['default_p2p_port'] }}"
+  #       protocol: "tcp"
   - host: "ibp-bkk07"
     proxmox_config:
       vmid: "996"
@@ -1132,31 +1126,31 @@ lxc_nodes:
       - from_port: "{{ hostvars['dockers']['zabbix_ext_port'] }}"
         to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
         protocol: "tcp"
-  - host: "proxy-bkk07"
-    proxmox_config:
-      vmid: "993"
-      hostname: "{{ hostvars['proxy-bkk07']['host_name'] }}"
-      ostemplate: "local:vztmpl/{{ default_container_template }}"
-      netif: "{{ hostvars['proxy-bkk07']['netif'] }}"
-      cores: 1
-      memory: 4000
-      swap: 256
-      password: "{{ default_password }}"
-      disk: "{{ zfs_storage }}:15"
-      onboot: True
-      unprivileged: True
-      validate_certs: False
-      description: "{{ hostvars['proxy-bkk07']['host_name'] }}"
-      state: present
-      features:
-        - nesting=1
-    port_forwards:
-      - from_port: "{{ hostvars['proxy-bkk07']['ansible_port'] }}"
-        to_host: "{{ hostvars['proxy-bkk07']['container_ip'] }}:{{ ssh_port }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['proxy-bkk07']['zabbix_ext_port'] }}"
-        to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
-        protocol: "tcp"
+  # - host: "proxy-bkk07"
+  #   proxmox_config:
+  #     vmid: "993"
+  #     hostname: "{{ hostvars['proxy-bkk07']['host_name'] }}"
+  #     ostemplate: "local:vztmpl/{{ default_container_template }}"
+  #     netif: "{{ hostvars['proxy-bkk07']['netif'] }}"
+  #     cores: 1
+  #     memory: 4000
+  #     swap: 256
+  #     password: "{{ default_password }}"
+  #     disk: "{{ zfs_storage }}:15"
+  #     onboot: True
+  #     unprivileged: True
+  #     validate_certs: False
+  #     description: "{{ hostvars['proxy-bkk07']['host_name'] }}"
+  #     state: present
+  #     features:
+  #       - nesting=1
+  #   port_forwards:
+  #     - from_port: "{{ hostvars['proxy-bkk07']['ansible_port'] }}"
+  #       to_host: "{{ hostvars['proxy-bkk07']['container_ip'] }}:{{ ssh_port }}"
+  #       protocol: "tcp"
+  #     - from_port: "{{ hostvars['proxy-bkk07']['zabbix_ext_port'] }}"
+  #       to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
+  #       protocol: "tcp"
   - host: "penumbra-02"
     proxmox_config:
       vmid: "1102"
@@ -1183,61 +1177,61 @@ lxc_nodes:
       - from_port: "{{ hostvars['penumbra-02']['default_cometbft_p2p_port'] }}"
         to_host: "{{ hostvars['penumbra-02']['container_ip'] }}:{{ hostvars['penumbra-02']['default_cometbft_p2p_port'] }}"
         protocol: "tcp"
-  - host: "rpc-kilt-polkadot-02"
-    proxmox_config:
-      vmid: "31242"
-      hostname: "{{ hostvars['rpc-kilt-polkadot-02']['host_name'] }}"
-      ostemplate: "local:vztmpl/{{ default_container_template }}"
-      netif: "{{ hostvars['rpc-kilt-polkadot-02']['netif'] }}"
-      cores: 4
-      memory: 16384
-      swap: 8192
-      password: "{{ default_password }}"
-      disk: "{{ zfs_storage }}:20"
-      mounts: '{"mp0":"{{ zfs_storage }}:200,mp={{ hostvars["rpc-kilt-polkadot-02"]["default_database_path"] }}"}'
-      onboot: True
-      unprivileged: True
-      validate_certs: False
-      description: "{{ hostvars['rpc-kilt-polkadot-02']['default_network'] }} {{ hostvars['rpc-kilt-polkadot-02']['default_node_type'] }}: {{ hostvars['rpc-kilt-polkadot-02']['host_name'] }}"
-      state: present
-      features:
-        - nesting=1
-    port_forwards:
-      - from_port: "{{ hostvars['rpc-kilt-polkadot-02']['ansible_port'] }}"
-        to_host: "{{ hostvars['rpc-kilt-polkadot-02']['container_ip'] }}:{{ ssh_port }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-kilt-polkadot-02']['default_p2p_port'] }}"
-        to_host: "{{ hostvars['rpc-kilt-polkadot-02']['container_ip'] }}:{{ hostvars['rpc-kilt-polkadot-02']['default_p2p_port'] }}"
-        protocol: "tcp"
-  - host: "rpc-hydration-polkadot-02"
-    proxmox_config:
-      vmid: "31252"
-      hostname: "{{ hostvars['rpc-hydration-polkadot-02']['host_name'] }}"
-      ostemplate: "local:vztmpl/{{ default_container_template }}"
-      netif: "{{ hostvars['rpc-hydration-polkadot-02']['netif'] }}"
-      cores: 4
-      memory: 16384
-      swap: 8192
-      password: "{{ default_password }}"
-      disk: "{{ zfs_storage }}:20"
-      mounts: '{"mp0":"{{ zfs_storage }}:150,mp={{ hostvars["rpc-hydration-polkadot-02"]["default_database_path"] }}"}'
-      onboot: True
-      unprivileged: True
-      validate_certs: False
-      description: "{{ hostvars['rpc-hydration-polkadot-02']['default_network'] }} {{ hostvars['rpc-hydration-polkadot-02']['default_node_type'] }}: {{ hostvars['rpc-hydration-polkadot-02']['host_name'] }}"
-      state: present
-      features:
-        - nesting=1
-    port_forwards:
-      - from_port: "{{ hostvars['rpc-hydration-polkadot-02']['ansible_port'] }}"
-        to_host: "{{ hostvars['rpc-hydration-polkadot-02']['container_ip'] }}:{{ ssh_port }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-hydration-polkadot-02']['zabbix_ext_port'] }}"
-        to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-hydration-polkadot-02']['default_p2p_port'] }}"
-        to_host: "{{ hostvars['rpc-hydration-polkadot-02']['container_ip'] }}:{{ hostvars['rpc-hydration-polkadot-02']['default_p2p_port'] }}"
-        protocol: "tcp"
+  # - host: "rpc-kilt-polkadot-02"
+  #   proxmox_config:
+  #     vmid: "31242"
+  #     hostname: "{{ hostvars['rpc-kilt-polkadot-02']['host_name'] }}"
+  #     ostemplate: "local:vztmpl/{{ default_container_template }}"
+  #     netif: "{{ hostvars['rpc-kilt-polkadot-02']['netif'] }}"
+  #     cores: 4
+  #     memory: 16384
+  #     swap: 8192
+  #     password: "{{ default_password }}"
+  #     disk: "{{ zfs_storage }}:20"
+  #     mounts: '{"mp0":"{{ zfs_storage }}:200,mp={{ hostvars["rpc-kilt-polkadot-02"]["default_database_path"] }}"}'
+  #     onboot: True
+  #     unprivileged: True
+  #     validate_certs: False
+  #     description: "{{ hostvars['rpc-kilt-polkadot-02']['default_network'] }} {{ hostvars['rpc-kilt-polkadot-02']['default_node_type'] }}: {{ hostvars['rpc-kilt-polkadot-02']['host_name'] }}"
+  #     state: present
+  #     features:
+  #       - nesting=1
+  #   port_forwards:
+  #     - from_port: "{{ hostvars['rpc-kilt-polkadot-02']['ansible_port'] }}"
+  #       to_host: "{{ hostvars['rpc-kilt-polkadot-02']['container_ip'] }}:{{ ssh_port }}"
+  #       protocol: "tcp"
+  #     - from_port: "{{ hostvars['rpc-kilt-polkadot-02']['default_p2p_port'] }}"
+  #       to_host: "{{ hostvars['rpc-kilt-polkadot-02']['container_ip'] }}:{{ hostvars['rpc-kilt-polkadot-02']['default_p2p_port'] }}"
+  #       protocol: "tcp"
+  # - host: "rpc-hydration-polkadot-02"
+  #   proxmox_config:
+  #     vmid: "31252"
+  #     hostname: "{{ hostvars['rpc-hydration-polkadot-02']['host_name'] }}"
+  #     ostemplate: "local:vztmpl/{{ default_container_template }}"
+  #     netif: "{{ hostvars['rpc-hydration-polkadot-02']['netif'] }}"
+  #     cores: 4
+  #     memory: 16384
+  #     swap: 8192
+  #     password: "{{ default_password }}"
+  #     disk: "{{ zfs_storage }}:20"
+  #     mounts: '{"mp0":"{{ zfs_storage }}:150,mp={{ hostvars["rpc-hydration-polkadot-02"]["default_database_path"] }}"}'
+  #     onboot: True
+  #     unprivileged: True
+  #     validate_certs: False
+  #     description: "{{ hostvars['rpc-hydration-polkadot-02']['default_network'] }} {{ hostvars['rpc-hydration-polkadot-02']['default_node_type'] }}: {{ hostvars['rpc-hydration-polkadot-02']['host_name'] }}"
+  #     state: present
+  #     features:
+  #       - nesting=1
+  #   port_forwards:
+  #     - from_port: "{{ hostvars['rpc-hydration-polkadot-02']['ansible_port'] }}"
+  #       to_host: "{{ hostvars['rpc-hydration-polkadot-02']['container_ip'] }}:{{ ssh_port }}"
+  #       protocol: "tcp"
+  #     - from_port: "{{ hostvars['rpc-hydration-polkadot-02']['zabbix_ext_port'] }}"
+  #       to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
+  #       protocol: "tcp"
+  #     - from_port: "{{ hostvars['rpc-hydration-polkadot-02']['default_p2p_port'] }}"
+  #       to_host: "{{ hostvars['rpc-hydration-polkadot-02']['container_ip'] }}:{{ hostvars['rpc-hydration-polkadot-02']['default_p2p_port'] }}"
+  #       protocol: "tcp"
   - host: "val-paseo-01"
     proxmox_config:
       vmid: "34004"
@@ -1267,151 +1261,151 @@ lxc_nodes:
       - from_port: "{{ hostvars['val-paseo-01']['default_p2p_port'] }}"
         to_host: "{{ hostvars['val-paseo-01']['container_ip'] }}:{{ hostvars['val-paseo-01']['default_p2p_port'] }}"
         protocol: "tcp"
-  - host: "rpc-moonbeam-polkadot-02"
-    proxmox_config:
-      vmid: "31202"
-      hostname: "{{ hostvars['rpc-moonbeam-polkadot-02']['host_name'] }}"
-      ostemplate: "local:vztmpl/{{ default_container_template }}"
-      netif: "{{ hostvars['rpc-moonbeam-polkadot-02']['netif'] }}"
-      cores: 4
-      memory: 16384
-      swap: 8192
-      password: "{{ default_password }}"
-      disk: "{{ zfs_storage }}:20"
-      mounts: '{"mp0":"{{ zfs_storage }}:800,mp={{ hostvars["rpc-moonbeam-polkadot-02"]["default_database_path"] }}"}'
-      onboot: True
-      unprivileged: True
-      validate_certs: False
-      description: "{{ hostvars['rpc-moonbeam-polkadot-02']['default_network'] }} {{ hostvars['rpc-moonbeam-polkadot-02']['default_node_type'] }}: {{ hostvars['rpc-moonbeam-polkadot-02']['host_name'] }}"
-      state: present
-      features:
-        - nesting=1
-    port_forwards:
-      - from_port: "{{ hostvars['rpc-moonbeam-polkadot-02']['ansible_port'] }}"
-        to_host: "{{ hostvars['rpc-moonbeam-polkadot-02']['container_ip'] }}:{{ ssh_port }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-moonbeam-polkadot-02']['zabbix_ext_port'] }}"
-        to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-moonbeam-polkadot-02']['default_p2p_port'] }}"
-        to_host: "{{ hostvars['rpc-moonbeam-polkadot-02']['container_ip'] }}:{{ hostvars['rpc-moonbeam-polkadot-02']['default_p2p_port'] }}"
-        protocol: "tcp"
-  - host: "rpc-ajuna-polkadot-02"
-    proxmox_config:
-      vmid: "31272"
-      hostname: "{{ hostvars['rpc-ajuna-polkadot-02']['host_name'] }}"
-      ostemplate: "local:vztmpl/{{ default_container_template }}"
-      netif: "{{ hostvars['rpc-ajuna-polkadot-02']['netif'] }}"
-      cores: 4
-      memory: 16384
-      swap: 8192
-      password: "{{ default_password }}"
-      disk: "{{ zfs_storage }}:20"
-      mounts: '{"mp0":"{{ zfs_storage }}:700,mp={{ hostvars["rpc-ajuna-polkadot-02"]["default_database_path"] }}"}'
-      onboot: True
-      unprivileged: True
-      validate_certs: False
-      description: "{{ hostvars['rpc-ajuna-polkadot-02']['default_network'] }} {{ hostvars['rpc-ajuna-polkadot-02']['default_node_type'] }}: {{ hostvars['rpc-ajuna-polkadot-02']['host_name'] }}"
-      state: present
-      features:
-        - nesting=1
-    port_forwards:
-      - from_port: "{{ hostvars['rpc-ajuna-polkadot-02']['ansible_port'] }}"
-        to_host: "{{ hostvars['rpc-ajuna-polkadot-02']['container_ip'] }}:{{ ssh_port }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-ajuna-polkadot-02']['zabbix_ext_port'] }}"
-        to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-ajuna-polkadot-02']['default_p2p_port'] }}"
-        to_host: "{{ hostvars['rpc-ajuna-polkadot-02']['container_ip'] }}:{{ hostvars['rpc-ajuna-polkadot-02']['default_p2p_port'] }}"
-        protocol: "tcp"
-  - host: "rpc-polimec-polkadot-02"
-    proxmox_config:
-      vmid: "31282"
-      hostname: "{{ hostvars['rpc-polimec-polkadot-02']['host_name'] }}"
-      ostemplate: "local:vztmpl/{{ default_container_template }}"
-      netif: "{{ hostvars['rpc-polimec-polkadot-02']['netif'] }}"
-      cores: 4
-      memory: 16384
-      swap: 8192
-      password: "{{ default_password }}"
-      disk: "{{ zfs_storage }}:20"
-      mounts: '{"mp0":"{{ zfs_storage }}:320,mp={{ hostvars["rpc-polimec-polkadot-02"]["default_database_path"] }}"}'
-      onboot: True
-      unprivileged: True
-      validate_certs: False
-      description: "{{ hostvars['rpc-polimec-polkadot-02']['default_network'] }} {{ hostvars['rpc-polimec-polkadot-02']['default_node_type'] }}: {{ hostvars['rpc-polimec-polkadot-02']['host_name'] }}"
-      state: present
-      features:
-        - nesting=1
-    port_forwards:
-      - from_port: "{{ hostvars['rpc-polimec-polkadot-02']['ansible_port'] }}"
-        to_host: "{{ hostvars['rpc-polimec-polkadot-02']['container_ip'] }}:{{ ssh_port }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-polimec-polkadot-02']['zabbix_ext_port'] }}"
-        to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-polimec-polkadot-02']['default_p2p_port'] }}"
-        to_host: "{{ hostvars['rpc-polimec-polkadot-02']['container_ip'] }}:{{ hostvars['rpc-polimec-polkadot-02']['default_p2p_port'] }}"
-        protocol: "tcp"
-  - host: "rpc-unique-polkadot-02"
-    proxmox_config:
-      vmid: "31292"
-      hostname: "{{ hostvars['rpc-unique-polkadot-02']['host_name'] }}"
-      ostemplate: "local:vztmpl/{{ default_container_template }}"
-      netif: "{{ hostvars['rpc-unique-polkadot-02']['netif'] }}"
-      cores: 4
-      memory: 16384
-      swap: 8192
-      password: "{{ default_password }}"
-      disk: "{{ zfs_storage }}:20"
-      mounts: '{"mp0":"{{ zfs_storage }}:320,mp={{ hostvars["rpc-unique-polkadot-02"]["default_database_path"] }}"}'
-      onboot: True
-      unprivileged: True
-      validate_certs: False
-      description: "{{ hostvars['rpc-unique-polkadot-02']['default_network'] }} {{ hostvars['rpc-unique-polkadot-02']['default_node_type'] }}: {{ hostvars['rpc-unique-polkadot-02']['host_name'] }}"
-      state: present
-      features:
-        - nesting=1
-    port_forwards:
-      - from_port: "{{ hostvars['rpc-unique-polkadot-02']['ansible_port'] }}"
-        to_host: "{{ hostvars['rpc-unique-polkadot-02']['container_ip'] }}:{{ ssh_port }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-unique-polkadot-02']['zabbix_ext_port'] }}"
-        to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-unique-polkadot-02']['default_p2p_port'] }}"
-        to_host: "{{ hostvars['rpc-unique-polkadot-02']['container_ip'] }}:{{ hostvars['rpc-unique-polkadot-02']['default_p2p_port'] }}"
-        protocol: "tcp"
-  - host: "rpc-bifrost-polkadot-02"
-    proxmox_config:
-      vmid: "31262"
-      hostname: "{{ hostvars['rpc-bifrost-polkadot-02']['host_name'] }}"
-      ostemplate: "local:vztmpl/{{ default_container_template }}"
-      netif: "{{ hostvars['rpc-bifrost-polkadot-02']['netif'] }}"
-      cores: 4
-      memory: 16384
-      swap: 8192
-      password: "{{ default_password }}"
-      disk: "{{ zfs_storage }}:20"
-      mounts: '{"mp0":"{{ zfs_storage }}:320,mp={{ hostvars["rpc-bifrost-polkadot-02"]["default_database_path"] }}"}'
-      onboot: True
-      unprivileged: True
-      validate_certs: False
-      description: "{{ hostvars['rpc-bifrost-polkadot-02']['default_network'] }} {{ hostvars['rpc-bifrost-polkadot-02']['default_node_type'] }}: {{ hostvars['rpc-bifrost-polkadot-02']['host_name'] }}"
-      state: present
-      features:
-        - nesting=1
-    port_forwards:
-      - from_port: "{{ hostvars['rpc-bifrost-polkadot-02']['ansible_port'] }}"
-        to_host: "{{ hostvars['rpc-bifrost-polkadot-02']['container_ip'] }}:{{ ssh_port }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-bifrost-polkadot-02']['zabbix_ext_port'] }}"
-        to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-bifrost-polkadot-02']['default_p2p_port'] }}"
-        to_host: "{{ hostvars['rpc-bifrost-polkadot-02']['container_ip'] }}:{{ hostvars['rpc-bifrost-polkadot-02']['default_p2p_port'] }}"
-        protocol: "tcp"
+  # - host: "rpc-moonbeam-polkadot-02"
+  #   proxmox_config:
+  #     vmid: "31202"
+  #     hostname: "{{ hostvars['rpc-moonbeam-polkadot-02']['host_name'] }}"
+  #     ostemplate: "local:vztmpl/{{ default_container_template }}"
+  #     netif: "{{ hostvars['rpc-moonbeam-polkadot-02']['netif'] }}"
+  #     cores: 4
+  #     memory: 16384
+  #     swap: 8192
+  #     password: "{{ default_password }}"
+  #     disk: "{{ zfs_storage }}:20"
+  #     mounts: '{"mp0":"{{ zfs_storage }}:800,mp={{ hostvars["rpc-moonbeam-polkadot-02"]["default_database_path"] }}"}'
+  #     onboot: True
+  #     unprivileged: True
+  #     validate_certs: False
+  #     description: "{{ hostvars['rpc-moonbeam-polkadot-02']['default_network'] }} {{ hostvars['rpc-moonbeam-polkadot-02']['default_node_type'] }}: {{ hostvars['rpc-moonbeam-polkadot-02']['host_name'] }}"
+  #     state: present
+  #     features:
+  #       - nesting=1
+  #   port_forwards:
+  #     - from_port: "{{ hostvars['rpc-moonbeam-polkadot-02']['ansible_port'] }}"
+  #       to_host: "{{ hostvars['rpc-moonbeam-polkadot-02']['container_ip'] }}:{{ ssh_port }}"
+  #       protocol: "tcp"
+  #     - from_port: "{{ hostvars['rpc-moonbeam-polkadot-02']['zabbix_ext_port'] }}"
+  #       to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
+  #       protocol: "tcp"
+  #     - from_port: "{{ hostvars['rpc-moonbeam-polkadot-02']['default_p2p_port'] }}"
+  #       to_host: "{{ hostvars['rpc-moonbeam-polkadot-02']['container_ip'] }}:{{ hostvars['rpc-moonbeam-polkadot-02']['default_p2p_port'] }}"
+  #       protocol: "tcp"
+  # - host: "rpc-ajuna-polkadot-02"
+  #   proxmox_config:
+  #     vmid: "31272"
+  #     hostname: "{{ hostvars['rpc-ajuna-polkadot-02']['host_name'] }}"
+  #     ostemplate: "local:vztmpl/{{ default_container_template }}"
+  #     netif: "{{ hostvars['rpc-ajuna-polkadot-02']['netif'] }}"
+  #     cores: 4
+  #     memory: 16384
+  #     swap: 8192
+  #     password: "{{ default_password }}"
+  #     disk: "{{ zfs_storage }}:20"
+  #     mounts: '{"mp0":"{{ zfs_storage }}:700,mp={{ hostvars["rpc-ajuna-polkadot-02"]["default_database_path"] }}"}'
+  #     onboot: True
+  #     unprivileged: True
+  #     validate_certs: False
+  #     description: "{{ hostvars['rpc-ajuna-polkadot-02']['default_network'] }} {{ hostvars['rpc-ajuna-polkadot-02']['default_node_type'] }}: {{ hostvars['rpc-ajuna-polkadot-02']['host_name'] }}"
+  #     state: present
+  #     features:
+  #       - nesting=1
+  #   port_forwards:
+  #     - from_port: "{{ hostvars['rpc-ajuna-polkadot-02']['ansible_port'] }}"
+  #       to_host: "{{ hostvars['rpc-ajuna-polkadot-02']['container_ip'] }}:{{ ssh_port }}"
+  #       protocol: "tcp"
+  #     - from_port: "{{ hostvars['rpc-ajuna-polkadot-02']['zabbix_ext_port'] }}"
+  #       to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
+  #       protocol: "tcp"
+  #     - from_port: "{{ hostvars['rpc-ajuna-polkadot-02']['default_p2p_port'] }}"
+  #       to_host: "{{ hostvars['rpc-ajuna-polkadot-02']['container_ip'] }}:{{ hostvars['rpc-ajuna-polkadot-02']['default_p2p_port'] }}"
+  #       protocol: "tcp"
+  # - host: "rpc-polimec-polkadot-02"
+  #   proxmox_config:
+  #     vmid: "31282"
+  #     hostname: "{{ hostvars['rpc-polimec-polkadot-02']['host_name'] }}"
+  #     ostemplate: "local:vztmpl/{{ default_container_template }}"
+  #     netif: "{{ hostvars['rpc-polimec-polkadot-02']['netif'] }}"
+  #     cores: 4
+  #     memory: 16384
+  #     swap: 8192
+  #     password: "{{ default_password }}"
+  #     disk: "{{ zfs_storage }}:20"
+  #     mounts: '{"mp0":"{{ zfs_storage }}:320,mp={{ hostvars["rpc-polimec-polkadot-02"]["default_database_path"] }}"}'
+  #     onboot: True
+  #     unprivileged: True
+  #     validate_certs: False
+  #     description: "{{ hostvars['rpc-polimec-polkadot-02']['default_network'] }} {{ hostvars['rpc-polimec-polkadot-02']['default_node_type'] }}: {{ hostvars['rpc-polimec-polkadot-02']['host_name'] }}"
+  #     state: present
+  #     features:
+  #       - nesting=1
+  #   port_forwards:
+  #     - from_port: "{{ hostvars['rpc-polimec-polkadot-02']['ansible_port'] }}"
+  #       to_host: "{{ hostvars['rpc-polimec-polkadot-02']['container_ip'] }}:{{ ssh_port }}"
+  #       protocol: "tcp"
+  #     - from_port: "{{ hostvars['rpc-polimec-polkadot-02']['zabbix_ext_port'] }}"
+  #       to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
+  #       protocol: "tcp"
+  #     - from_port: "{{ hostvars['rpc-polimec-polkadot-02']['default_p2p_port'] }}"
+  #       to_host: "{{ hostvars['rpc-polimec-polkadot-02']['container_ip'] }}:{{ hostvars['rpc-polimec-polkadot-02']['default_p2p_port'] }}"
+  #       protocol: "tcp"
+  # - host: "rpc-unique-polkadot-02"
+  #   proxmox_config:
+  #     vmid: "31292"
+  #     hostname: "{{ hostvars['rpc-unique-polkadot-02']['host_name'] }}"
+  #     ostemplate: "local:vztmpl/{{ default_container_template }}"
+  #     netif: "{{ hostvars['rpc-unique-polkadot-02']['netif'] }}"
+  #     cores: 4
+  #     memory: 16384
+  #     swap: 8192
+  #     password: "{{ default_password }}"
+  #     disk: "{{ zfs_storage }}:20"
+  #     mounts: '{"mp0":"{{ zfs_storage }}:320,mp={{ hostvars["rpc-unique-polkadot-02"]["default_database_path"] }}"}'
+  #     onboot: True
+  #     unprivileged: True
+  #     validate_certs: False
+  #     description: "{{ hostvars['rpc-unique-polkadot-02']['default_network'] }} {{ hostvars['rpc-unique-polkadot-02']['default_node_type'] }}: {{ hostvars['rpc-unique-polkadot-02']['host_name'] }}"
+  #     state: present
+  #     features:
+  #       - nesting=1
+  #   port_forwards:
+  #     - from_port: "{{ hostvars['rpc-unique-polkadot-02']['ansible_port'] }}"
+  #       to_host: "{{ hostvars['rpc-unique-polkadot-02']['container_ip'] }}:{{ ssh_port }}"
+  #       protocol: "tcp"
+  #     - from_port: "{{ hostvars['rpc-unique-polkadot-02']['zabbix_ext_port'] }}"
+  #       to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
+  #       protocol: "tcp"
+  #     - from_port: "{{ hostvars['rpc-unique-polkadot-02']['default_p2p_port'] }}"
+  #       to_host: "{{ hostvars['rpc-unique-polkadot-02']['container_ip'] }}:{{ hostvars['rpc-unique-polkadot-02']['default_p2p_port'] }}"
+  #       protocol: "tcp"
+  # - host: "rpc-bifrost-polkadot-02"
+  #   proxmox_config:
+  #     vmid: "31262"
+  #     hostname: "{{ hostvars['rpc-bifrost-polkadot-02']['host_name'] }}"
+  #     ostemplate: "local:vztmpl/{{ default_container_template }}"
+  #     netif: "{{ hostvars['rpc-bifrost-polkadot-02']['netif'] }}"
+  #     cores: 4
+  #     memory: 16384
+  #     swap: 8192
+  #     password: "{{ default_password }}"
+  #     disk: "{{ zfs_storage }}:20"
+  #     mounts: '{"mp0":"{{ zfs_storage }}:320,mp={{ hostvars["rpc-bifrost-polkadot-02"]["default_database_path"] }}"}'
+  #     onboot: True
+  #     unprivileged: True
+  #     validate_certs: False
+  #     description: "{{ hostvars['rpc-bifrost-polkadot-02']['default_network'] }} {{ hostvars['rpc-bifrost-polkadot-02']['default_node_type'] }}: {{ hostvars['rpc-bifrost-polkadot-02']['host_name'] }}"
+  #     state: present
+  #     features:
+  #       - nesting=1
+  #   port_forwards:
+  #     - from_port: "{{ hostvars['rpc-bifrost-polkadot-02']['ansible_port'] }}"
+  #       to_host: "{{ hostvars['rpc-bifrost-polkadot-02']['container_ip'] }}:{{ ssh_port }}"
+  #       protocol: "tcp"
+  #     - from_port: "{{ hostvars['rpc-bifrost-polkadot-02']['zabbix_ext_port'] }}"
+  #       to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
+  #       protocol: "tcp"
+  #     - from_port: "{{ hostvars['rpc-bifrost-polkadot-02']['default_p2p_port'] }}"
+  #       to_host: "{{ hostvars['rpc-bifrost-polkadot-02']['container_ip'] }}:{{ hostvars['rpc-bifrost-polkadot-02']['default_p2p_port'] }}"
+  #       protocol: "tcp"
   # - host: "peering-node-07"
   #   proxmox_config:
   #     vmid: "967"
@@ -1438,61 +1432,61 @@ lxc_nodes:
   #     - from_port: "{{ hostvars['peering-node-07']['zabbix_ext_port'] }}"
   #       to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
   #       protocol: "tcp"
-  - host: "rpc-nexus-polkadot-02"
-    proxmox_config:
-      vmid: "31212"
-      hostname: "{{ hostvars['rpc-nexus-polkadot-02']['host_name'] }}"
-      ostemplate: "local:vztmpl/{{ default_container_template }}"
-      netif: "{{ hostvars['rpc-nexus-polkadot-02']['netif'] }}"
-      cores: 4
-      memory: 16384
-      swap: 8192
-      password: "{{ default_password }}"
-      disk: "{{ zfs_storage }}:20"
-      mounts: '{"mp0":"{{ zfs_storage }}:320,mp={{ hostvars["rpc-nexus-polkadot-02"]["default_database_path"] }}"}'
-      onboot: True
-      unprivileged: True
-      validate_certs: False
-      description: "{{ hostvars['rpc-nexus-polkadot-02']['default_network'] }} {{ hostvars['rpc-nexus-polkadot-02']['default_node_type'] }}: {{ hostvars['rpc-nexus-polkadot-02']['host_name'] }}"
-      state: present
-      features:
-        - nesting=1
-    port_forwards:
-      - from_port: "{{ hostvars['rpc-nexus-polkadot-02']['ansible_port'] }}"
-        to_host: "{{ hostvars['rpc-nexus-polkadot-02']['container_ip'] }}:{{ ssh_port }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-nexus-polkadot-02']['zabbix_ext_port'] }}"
-        to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-nexus-polkadot-02']['default_p2p_port'] }}"
-        to_host: "{{ hostvars['rpc-nexus-polkadot-02']['container_ip'] }}:{{ hostvars['rpc-nexus-polkadot-02']['default_p2p_port'] }}"
-        protocol: "tcp"
-  - host: "rpc-invarch-polkadot-02"
-    proxmox_config:
-      vmid: "31302"
-      hostname: "{{ hostvars['rpc-invarch-polkadot-02']['host_name'] }}"
-      ostemplate: "local:vztmpl/{{ default_container_template }}"
-      netif: "{{ hostvars['rpc-invarch-polkadot-02']['netif'] }}"
-      cores: 4
-      memory: 16384
-      swap: 8192
-      password: "{{ default_password }}"
-      disk: "{{ zfs_storage }}:20"
-      mounts: '{"mp0":"{{ zfs_storage }}:320,mp={{ hostvars["rpc-invarch-polkadot-02"]["default_database_path"] }}"}'
-      onboot: True
-      unprivileged: True
-      validate_certs: False
-      description: "{{ hostvars['rpc-invarch-polkadot-02']['default_network'] }} {{ hostvars['rpc-invarch-polkadot-02']['default_node_type'] }}: {{ hostvars['rpc-invarch-polkadot-02']['host_name'] }}"
-      state: present
-      features:
-        - nesting=1
-    port_forwards:
-      - from_port: "{{ hostvars['rpc-invarch-polkadot-02']['ansible_port'] }}"
-        to_host: "{{ hostvars['rpc-invarch-polkadot-02']['container_ip'] }}:{{ ssh_port }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-invarch-polkadot-02']['zabbix_ext_port'] }}"
-        to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-invarch-polkadot-02']['default_p2p_port'] }}"
-        to_host: "{{ hostvars['rpc-invarch-polkadot-02']['container_ip'] }}:{{ hostvars['rpc-invarch-polkadot-02']['default_p2p_port'] }}"
-        protocol: "tcp"
+  # - host: "rpc-nexus-polkadot-02"
+  #   proxmox_config:
+  #     vmid: "31212"
+  #     hostname: "{{ hostvars['rpc-nexus-polkadot-02']['host_name'] }}"
+  #     ostemplate: "local:vztmpl/{{ default_container_template }}"
+  #     netif: "{{ hostvars['rpc-nexus-polkadot-02']['netif'] }}"
+  #     cores: 4
+  #     memory: 16384
+  #     swap: 8192
+  #     password: "{{ default_password }}"
+  #     disk: "{{ zfs_storage }}:20"
+  #     mounts: '{"mp0":"{{ zfs_storage }}:320,mp={{ hostvars["rpc-nexus-polkadot-02"]["default_database_path"] }}"}'
+  #     onboot: True
+  #     unprivileged: True
+  #     validate_certs: False
+  #     description: "{{ hostvars['rpc-nexus-polkadot-02']['default_network'] }} {{ hostvars['rpc-nexus-polkadot-02']['default_node_type'] }}: {{ hostvars['rpc-nexus-polkadot-02']['host_name'] }}"
+  #     state: present
+  #     features:
+  #       - nesting=1
+  #   port_forwards:
+  #     - from_port: "{{ hostvars['rpc-nexus-polkadot-02']['ansible_port'] }}"
+  #       to_host: "{{ hostvars['rpc-nexus-polkadot-02']['container_ip'] }}:{{ ssh_port }}"
+  #       protocol: "tcp"
+  #     - from_port: "{{ hostvars['rpc-nexus-polkadot-02']['zabbix_ext_port'] }}"
+  #       to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
+  #       protocol: "tcp"
+  #     - from_port: "{{ hostvars['rpc-nexus-polkadot-02']['default_p2p_port'] }}"
+  #       to_host: "{{ hostvars['rpc-nexus-polkadot-02']['container_ip'] }}:{{ hostvars['rpc-nexus-polkadot-02']['default_p2p_port'] }}"
+  #       protocol: "tcp"
+  # - host: "rpc-invarch-polkadot-02"
+  #   proxmox_config:
+  #     vmid: "31302"
+  #     hostname: "{{ hostvars['rpc-invarch-polkadot-02']['host_name'] }}"
+  #     ostemplate: "local:vztmpl/{{ default_container_template }}"
+  #     netif: "{{ hostvars['rpc-invarch-polkadot-02']['netif'] }}"
+  #     cores: 4
+  #     memory: 16384
+  #     swap: 8192
+  #     password: "{{ default_password }}"
+  #     disk: "{{ zfs_storage }}:20"
+  #     mounts: '{"mp0":"{{ zfs_storage }}:320,mp={{ hostvars["rpc-invarch-polkadot-02"]["default_database_path"] }}"}'
+  #     onboot: True
+  #     unprivileged: True
+  #     validate_certs: False
+  #     description: "{{ hostvars['rpc-invarch-polkadot-02']['default_network'] }} {{ hostvars['rpc-invarch-polkadot-02']['default_node_type'] }}: {{ hostvars['rpc-invarch-polkadot-02']['host_name'] }}"
+  #     state: present
+  #     features:
+  #       - nesting=1
+  #   port_forwards:
+  #     - from_port: "{{ hostvars['rpc-invarch-polkadot-02']['ansible_port'] }}"
+  #       to_host: "{{ hostvars['rpc-invarch-polkadot-02']['container_ip'] }}:{{ ssh_port }}"
+  #       protocol: "tcp"
+  #     - from_port: "{{ hostvars['rpc-invarch-polkadot-02']['zabbix_ext_port'] }}"
+  #       to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
+  #       protocol: "tcp"
+  #     - from_port: "{{ hostvars['rpc-invarch-polkadot-02']['default_p2p_port'] }}"
+  #       to_host: "{{ hostvars['rpc-invarch-polkadot-02']['container_ip'] }}:{{ hostvars['rpc-invarch-polkadot-02']['default_p2p_port'] }}"
+  #       protocol: "tcp"

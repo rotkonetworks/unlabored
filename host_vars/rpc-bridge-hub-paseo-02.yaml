@@ -13,7 +13,7 @@ default_domain: "{{ host_name }}"
 default_network: "bridge-hub-paseo"
 default_chain_spec: "{{ default_base_path }}/bridge-hub-paseo.raw.json"
 #make sure the chain-spec dl url is working
-default_chain_spec_dl_url: "https://github.com/paseo-network/paseo-chain-specs/raw/refs/heads/main/paseo-bridge-hub.raw.json"
+default_chain_spec_dl_url: "https://paseo-r2.zondax.ch/chain-specs/paseo-bridge-hub.raw.json"
 default_relay_rpc: "ws://{{ hostvars['rpc-paseo-01']['container_ip'] }}:{{ hostvars['rpc-paseo-01']['default_rpc_port'] }}"
 default_relay_rpc_fallback: "ws://{{ hostvars['rpc-paseo-02']['container_ip'] }}:{{ hostvars['rpc-paseo-02']['default_rpc_port'] }}"
 default_database: "rocksdb"
