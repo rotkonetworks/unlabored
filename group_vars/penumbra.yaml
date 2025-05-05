@@ -1,9 +1,9 @@
 ---
 # penumbra version
-penumbra_version: "1.5.0"
+penumbra_version: "1.5.1"
 penumbra_chain_id: ""
 cometbft_version: "0.37.15"
-polkachu_height: "4369466"
+polkachu_height: "4782844"
 
 # dl locations
 default_git_repo: "https://github.com/penumbra-zone/penumbra"

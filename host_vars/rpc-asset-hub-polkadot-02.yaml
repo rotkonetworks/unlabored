@@ -13,7 +13,7 @@ default_domain: "{{ host_name }}"
 default_network: asset-hub-polkadot
 default_relay_rpc: "ws://{{ hostvars['rpc-polkadot-01']['container_ip'] }}:{{ hostvars['rpc-polkadot-01']['default_rpc_port'] }}"
 default_relay_rpc_fallback: "ws://{{ hostvars['rpc-polkadot-02']['container_ip'] }}:{{ hostvars['rpc-polkadot-02']['default_rpc_port'] }}"
-default_database: paritydb
+default_database: rocksdb
 default_node_type: "endpoint"
 zabbix_ext_port: 10612
 
