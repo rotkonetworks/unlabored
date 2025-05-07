@@ -941,7 +941,7 @@ lxc_nodes:
         protocol: "tcp"
   - host: "rpc-encointer-kusama-02"
     proxmox_config:
-      vmid: "32061"
+      vmid: "32062"
       hostname: "{{ hostvars['rpc-encointer-kusama-02']['host_name'] }}"
       ostemplate: "local:vztmpl/{{ default_container_template }}"
       netif: "{{ hostvars['rpc-encointer-kusama-02']['netif'] }}"
