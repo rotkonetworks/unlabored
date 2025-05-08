@@ -32,17 +32,19 @@
     - setup_user_management
     - setup_log_rotation
 
-# - name: Install Haproxy
-#   hosts: haproxy
-#   gather_facts: True
-#   roles:
-#     - setup_install_haproxy
-#
-# - name: Install Prometheus
-#   hosts: prometheus
-#   gather_facts: True
-#   roles:
-#     - setup_install_prometheus
+  # NOTE: better to comment, for long term
+- name: Install Haproxy
+  hosts: haproxy
+  gather_facts: True
+  roles:
+    - setup_install_haproxy
+
+  #NOTE: better to comment, for long term
+- name: Install Prometheus
+  hosts: prometheus
+  gather_facts: True
+  roles:
+    - setup_install_prometheus
 
 - name: Install Penumbra services
   hosts: penumbra
@@ -148,10 +150,18 @@
   roles:
     - setup_install_optimism
 
+- name: Install Xcavate services
+  hosts: xcavate
+  gather_facts: True
+  roles:
+    - setup_install_xcavate
+    - setup_install_nginx
+
 - name: Install Polkadot services
   hosts: polkadot
   gather_facts: True
   roles:
+    - setup_install_promtail
     - setup_install_polkadot
     - setup_install_nginx
 
@@ -159,6 +169,7 @@
   hosts: cumulus
   gather_facts: True
   roles:
+    - setup_install_promtail
     - setup_install_cumulus
     - setup_install_nginx
 
