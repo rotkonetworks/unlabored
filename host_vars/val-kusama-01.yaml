@@ -1,6 +1,8 @@
 ---
+# bkk04 
 ansible_host: "160.22.181.181"
-container_ip: "192.168.69.125"
+#container_ip: "192.168.69.125"
+container_ip: "192.168.69.104" # at host now
 ansible_port: 2125
 host_name: "val-kusama-01.rotko.net"
 host_timezone: "Asia/Bangkok"
@@ -8,7 +10,7 @@ netif: '{"net0":"name=eth0,gw={{ default_nat_network_forward_cidr.split("/")[0] 
 role: "polkadot"
 pinned_service: True
 
-default_telemetry_name: "rotko-net-ksm02"
+default_telemetry_name: "rotko-net-ksm02" #bkk04
 default_network: "kusama"
 default_chains_name: "ksmcc3"
 default_node_type: "validator"
