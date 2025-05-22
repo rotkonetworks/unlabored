@@ -1,6 +1,6 @@
 ---
 # penumbra version
-penumbra_version: "1.5.1"
+penumbra_version: "1.5.2"
 penumbra_chain_id: ""
 cometbft_version: "0.37.15"
 polkachu_height: "4782844"
