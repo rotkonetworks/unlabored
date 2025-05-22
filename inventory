@@ -14,14 +14,19 @@ polkadot
 
 [prometheus]
 ibp-bkk07
+ibp-bkk08
 
 [haproxy]
 haproxy-bkk06
 haproxy-bkk07
+haproxy-bkk08
 
 [misc-container]
+log-ct-08
 build-node-07
+build-node-08
 dockers
+dockers-08
 proxy-bkk07
 peering-node-07
 
@@ -40,9 +45,13 @@ bkk50
 rpc-kilt-polkadot-01
 rpc-kilt-polkadot-02
 
+[xcavate]
+rpc-xcavate-polkadot-01
+
 [penumbra]
 penumbra-01
 penumbra-02
+penumbra-03
 
 [cumulus]
 mint14

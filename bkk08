@@ -10,8 +10,15 @@ routers
 [proxmox_nodes:children]
 polkadot
 misc-container
-penumbra
+xcavate
 polkadot
+haproxy
+
+[prometheus]
+ibp-bkk08
+
+[haproxy]
+haproxy-bkk08
 
 [polkadot]
 rpc-polkadot-03
@@ -20,7 +27,12 @@ val-paseo-02
 [penumbra]
 penumbra-03
 
+[xcavate]
+rpc-xcavate-polkadot-01
+
 [misc-container]
+log-ct-08
+dockers-08
 build-node-08
 
 [routers]
@@ -44,3 +56,13 @@ bkk08
 hardware
 proxmox_nodes
 unmanaged
+
+[referrence_nodes]
+rpc-kusama-02
+rpc-paseo-02
+rpc-polkadot-02
+rpc-westend-02
+rpc-kusama-01
+rpc-paseo-01
+rpc-polkadot-01
+rpc-westend-01
