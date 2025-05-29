@@ -32,6 +32,78 @@
 - name: Gather facts
   ansible.builtin.setup:
 
+  #NOTE: kilt need glibc-2.39
+- name: Check if glibc 2.39 is already installed
+  ansible.builtin.stat:
+    path: /opt/glibc-2.39/lib/ld-linux-x86-64.so.2
+  register: glibc_installed
+
+- name: Ensure required packages for glibc build are present
+  ansible.builtin.apt:
+    name:
+      - build-essential
+      - manpages-dev
+      - gawk
+      - bison
+      - python3
+      - wget
+    state: present
+    update_cache: true
+  when: not glibc_installed.stat.exists
+
+- name: Create directories for glibc source and install
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: "0755"
+  loop:
+    - /usr/src/glibc-2.39
+    - /opt/glibc-2.39
+  when: not glibc_installed.stat.exists
+
+- name: Download glibc 2.39 source
+  ansible.builtin.get_url:
+    url: http://ftp.gnu.org/gnu/libc/glibc-2.39.tar.gz
+    dest: /usr/src/glibc-2.39.tar.gz
+    mode: "0644"
+  when: not glibc_installed.stat.exists
+
+- name: Extract glibc 2.39 source
+  ansible.builtin.unarchive:
+    src: /usr/src/glibc-2.39.tar.gz
+    dest: /usr/src/
+    remote_src: yes
+  when: not glibc_installed.stat.exists
+
+- name: Create glibc build directory
+  ansible.builtin.file:
+    path: /usr/src/glibc-2.39/build
+    state: directory
+    mode: "0755"
+  when: not glibc_installed.stat.exists
+
+- name: Configure glibc 2.39 build
+  ansible.builtin.command:
+    cmd: ../configure --prefix=/opt/glibc-2.39
+    chdir: /usr/src/glibc-2.39/build
+  args:
+    creates: /usr/src/glibc-2.39/build/Makefile
+  when: not glibc_installed.stat.exists
+
+- name: Build glibc 2.39
+  ansible.builtin.command:
+    cmd: make -j{{ ansible_facts.processor_vcpus | default(2) }}
+    chdir: /usr/src/glibc-2.39/build
+  when: not glibc_installed.stat.exists
+
+- name: Install glibc 2.39
+  ansible.builtin.command:
+    cmd: make install
+    chdir: /usr/src/glibc-2.39/build
+  args:
+    creates: /opt/glibc-2.39/lib/libc.so.6
+  when: not glibc_installed.stat.exists
+
 - name: Copy Invarch systemd service for specific node type
   ansible.builtin.template:
     src: "{{ default_node_type + '.service.j2' }}"

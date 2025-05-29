@@ -33,25 +33,25 @@
     - setup_log_rotation
 
   # NOTE: better to comment, for long term
-- name: Install Haproxy
-  hosts: haproxy
-  gather_facts: True
-  roles:
-    - setup_install_haproxy
+# - name: Install Haproxy
+#   hosts: haproxy
+#   gather_facts: True
+#   roles:
+#     - setup_install_haproxy
 
-  #NOTE: better to comment, for long term
-- name: Install Prometheus
-  hosts: prometheus
-  gather_facts: True
-  roles:
-    - setup_install_prometheus
+#NOTE: better to comment, for long term
+# - name: Install Prometheus
+#   hosts: prometheus
+#   gather_facts: True
+#   roles:
+#     - setup_install_prometheus
 
-- name: Install Penumbra services
-  hosts: penumbra
-  gather_facts: True
-  roles:
-    - setup_install_penumbra
-    - setup_install_nginx
+# - name: Install Penumbra services
+#   hosts: penumbra
+#   gather_facts: True
+#   roles:
+#     - setup_install_penumbra
+#     - setup_install_nginx
 
 - name: Install Arbitrum services
   hosts: arbitrum
@@ -89,11 +89,11 @@
   roles:
     - setup_install_evmos
 
-- name: Install Invarch services
-  hosts: invarch
+- name: Install Acala services
+  hosts: acala
   gather_facts: True
   roles:
-    - setup_install_invarch
+    - setup_install_acala
     - setup_install_nginx
 
 - name: Install Nexus services

@@ -9,8 +9,8 @@ routers
 
 [proxmox_nodes:children]
 polkadot
-xcavate
 polkadot
+xcavate
 kilt
 moonbeam
 ajuna
@@ -18,8 +18,8 @@ polimec
 unique
 bifrost
 nexus
-invarch
 hydration
+acala
 
 [prometheus]
 ibp-bkk08
@@ -33,6 +33,9 @@ val-paseo-02
 
 [penumbra]
 penumbra-03
+
+[acala]
+rpc-acala-polkadot-02
 
 [xcavate]
 rpc-xcavate-polkadot-01
@@ -60,9 +63,6 @@ rpc-bifrost-polkadot-02
 
 [nexus]
 rpc-nexus-polkadot-02
-
-[invarch]
-rpc-invarch-polkadot-02
 
 [misc-container]
 log-ct-08
