@@ -9,16 +9,7 @@ routers
 
 [proxmox_nodes:children]
 polkadot
-hydration
 cumulus
-kilt
-moonbeam
-ajuna
-polimec
-unique
-bifrost
-nexus
-invarch
 penumbra
 encointer
 misc-container

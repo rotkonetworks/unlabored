@@ -13,6 +13,15 @@ misc-container
 xcavate
 polkadot
 haproxy
+kilt
+moonbeam
+ajuna
+polimec
+unique
+bifrost
+nexus
+invarch
+hydration
 
 [prometheus]
 ibp-bkk08
@@ -29,6 +38,33 @@ penumbra-03
 
 [xcavate]
 rpc-xcavate-polkadot-01
+
+[hydration]
+rpc-hydration-polkadot-02
+
+[kilt]
+rpc-kilt-polkadot-02
+
+[moonbeam]
+rpc-moonbeam-polkadot-02
+
+[ajuna]
+rpc-ajuna-polkadot-02
+
+[polimec]
+rpc-polimec-polkadot-02
+
+[unique]
+rpc-unique-polkadot-02
+
+[bifrost]
+rpc-bifrost-polkadot-02
+
+[nexus]
+rpc-nexus-polkadot-02
+
+[invarch]
+rpc-invarch-polkadot-02
 
 [misc-container]
 log-ct-08
