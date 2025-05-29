@@ -1,6 +1,6 @@
 ---
 default_base_path: /opt/unique
-default_client_version: v10030070
+default_client_version: v10170080
 default_database: rocksdb
 default_database_path: "{{ default_base_path }}/chains"
 default_download_base_url: https://github.com/UniqueNetwork/unique-chain/releases/download
