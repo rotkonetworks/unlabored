@@ -9,10 +9,8 @@ routers
 
 [proxmox_nodes:children]
 polkadot
-misc-container
 xcavate
 polkadot
-haproxy
 kilt
 moonbeam
 ajuna
