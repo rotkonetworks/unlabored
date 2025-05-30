@@ -48,7 +48,7 @@
       - python3
       - wget
     state: present
-    update_cache: true
+    update_cache: True
   when: not glibc_installed.stat.exists
 
 - name: Create directories for glibc source and install

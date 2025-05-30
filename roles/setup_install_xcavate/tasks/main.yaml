@@ -49,7 +49,7 @@
     state: link
     owner: "{{ default_user }}"
     group: "{{ default_user }}"
-    force: true
+    force: True
 
 - name: Copy Xcavate systemd service for specific node type
   ansible.builtin.template:
@@ -81,7 +81,7 @@
     version: "main"
     update: yes
     force: yes
-  become: true
+  become: True
   become_user: "{{ default_user }}"
   when:
     - ansible_local['noderole']['node']['pinned'] != "True"
@@ -114,7 +114,7 @@
 - name: Add wasm32-unknown-unknown target
   ansible.builtin.command:
     cmd: rustup target add wasm32-unknown-unknown
-  become: true
+  become: True
   become_user: root
   environment:
     PATH: "{{ ansible_env.PATH }}:/usr/local/cargo/bin"
@@ -128,7 +128,7 @@
 - name: Add rust-src component
   ansible.builtin.command:
     cmd: rustup component add rust-src
-  become: true
+  become: True
   become_user: root
   environment:
     PATH: "{{ ansible_env.PATH }}:/usr/local/cargo/bin"

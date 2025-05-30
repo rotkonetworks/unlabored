@@ -133,7 +133,7 @@
 - name: Add wasm32-unknown-unknown target
   ansible.builtin.command:
     cmd: rustup target add wasm32-unknown-unknown
-  become: true
+  become: True
   become_user: root
   environment:
     PATH: "{{ ansible_env.PATH }}:/usr/local/cargo/bin"
@@ -147,7 +147,7 @@
 - name: Add rust-src component for WASM builds
   ansible.builtin.command:
     cmd: rustup component add rust-src
-  become: true
+  become: True
   become_user: root
   environment:
     PATH: "{{ ansible_env.PATH }}:/usr/local/cargo/bin"

@@ -52,7 +52,7 @@
   ansible.builtin.template:
     src: "{{ haproxy_template }}"
     dest: /etc/haproxy/haproxy.cfg
-    mode: 0644
+    mode: "0644"
   register: haproxy_config
 
 - name: Validate HAProxy configuration
