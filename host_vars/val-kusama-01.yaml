@@ -1,5 +1,5 @@
 ---
-# bkk04 
+# bkk04
 ansible_host: "160.22.181.181"
 #container_ip: "192.168.69.125"
 container_ip: "192.168.69.104" # at host now

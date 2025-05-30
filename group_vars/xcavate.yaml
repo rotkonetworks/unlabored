@@ -1,0 +1,27 @@
+---
+default_base_path: /opt/xcavate
+default_src_path: "{{ default_base_path }}/github"
+# xcavate version
+default_client_version: 1.0.0
+# database
+default_database: rocksdb
+default_database_path: "{{ default_base_path }}/chains"
+#TODO: we need to compile xcavate ourselves
+default_download_base_url: https://github.com/XcavateBlockchain/xcavate-node-paseo
+default_branch: main
+default_group: "{{ service_users['xcavate'] }}"
+default_log_level: info
+default_network: xcavate
+default_node_type: endpoint
+default_service: xcavate
+default_storage: "{{ default_base_path }}/chains"
+default_telemetry_url: wss://telemetry-backend.w3f.community/submit/ 1
+default_user: "{{ service_users['xcavate'] }}"
+default_p2p_port_ws: 30434
+default_p2p_port_wss: 30435
+default_bootnode_p2p_port_ws: 30434
+default_bootnode_p2p_port_wss: 30435
+default_prom_port: 7400
+default_rpc_port: 9400
+default_secure_rpc_port: 42400
+zabbix_ext_port: 10400

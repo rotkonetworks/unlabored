@@ -13,7 +13,9 @@ SyslogFacility=local7
 KillSignal=SIGHUP
 User={{ default_user }}
 Group={{ default_group }}
-ExecStart={{ default_base_path }}/unique \
+ExecStart=/opt/glibc-2.39/lib/ld-linux-x86-64.so.2 \
+  --library-path /opt/glibc-2.39/lib:/usr/lib/x86_64-linux-gnu:/lib/x86_64-linux-gnu \
+  {{ default_base_path }}/unique \
   --name "{{ default_telemetry_name }}" \
   --chain {{ default_chain_spec }} \
   --base-path {{ default_base_path }} \
