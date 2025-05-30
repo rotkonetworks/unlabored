@@ -1,6 +1,6 @@
 ---
 default_base_path: /opt/mythos
-default_client_version: 1.15.5
+default_client_version: 1.17.3
 default_database: paritydb
 default_database_path: "{{ default_base_path }}/chains"
 default_download_base_url: https://github.com/paritytech/project-mythical/archive/refs/tags

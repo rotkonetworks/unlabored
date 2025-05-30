@@ -19,6 +19,8 @@ unique
 bifrost
 penumbra
 nexus
+acala
+xcavate
 
 [routers]
 bkk50
@@ -28,6 +30,12 @@ haproxy-bkk06
 
 [ajuna]
 rpc-ajuna-polkadot-01
+
+[xcavate]
+rpc-xcavate-polkadot-02
+
+[acala]
+rpc-acala-polkadot-01
 
 [penumbra]
 penumbra-01

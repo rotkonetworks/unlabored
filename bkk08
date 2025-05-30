@@ -20,6 +20,7 @@ bifrost
 nexus
 hydration
 acala
+mythos
 
 [prometheus]
 ibp-bkk08
@@ -48,6 +49,9 @@ rpc-kilt-polkadot-02
 
 [moonbeam]
 rpc-moonbeam-polkadot-02
+
+[mythos]
+rpc-mythos-polkadot-02
 
 [ajuna]
 rpc-ajuna-polkadot-02
