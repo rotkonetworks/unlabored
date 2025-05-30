@@ -140,18 +140,18 @@
     - not xcavate_binary.stat.exists
 
 #NOTE: take look at it -al
-# - name: Build client from source as root
-#   ansible.builtin.command:
-#     cmd: cargo build --release
-#     chdir: "{{ default_src_path }}/xcavate-{{ default_client_version }}"
-#   become: True # Build as root
-#   become_user: root
-#   environment:
-#     PATH: "{{ ansible_env.PATH }}:/usr/local/cargo/bin"
-#   when:
-#     - ansible_local['noderole']['node']['pinned'] != "True"
-#     - ansible_local['noderole']['node']['version'] != default_client_version
-#     - not xcavate_binary.stat.exists
+- name: Build client from source as root
+  ansible.builtin.command:
+    cmd: cargo build --release
+    chdir: "{{ default_src_path }}/xcavate-{{ default_client_version }}"
+  become: True # Build as root
+  become_user: root
+  environment:
+    PATH: "{{ ansible_env.PATH }}:/usr/local/cargo/bin"
+  when:
+    - ansible_local['noderole']['node']['pinned'] != "True"
+    - ansible_local['noderole']['node']['version'] != default_client_version
+    - not xcavate_binary.stat.exists
 
 - name: Change ownership of built binary to {{ default_user }}
   ansible.builtin.file:

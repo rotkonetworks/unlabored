@@ -89,6 +89,13 @@
   roles:
     - setup_install_evmos
 
+- name: Install Mythos services
+  hosts: mythos
+  gather_facts: True
+  roles:
+    - setup_install_mythos
+    - setup_install_nginx
+
 - name: Install Acala services
   hosts: acala
   gather_facts: True
