@@ -21,12 +21,16 @@ penumbra
 nexus
 acala
 xcavate
+mythos
 
 [routers]
 bkk50
 
 [haproxy]
 haproxy-bkk06
+
+[mythos]
+rpc-mythos-polkadot-01
 
 [ajuna]
 rpc-ajuna-polkadot-01

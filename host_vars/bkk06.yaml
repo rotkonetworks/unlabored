@@ -2297,3 +2297,32 @@ lxc_nodes:
       - from_port: "{{ hostvars['rpc-xcavate-polkadot-02']['default_p2p_port'] }}"
         to_host: "{{ hostvars['rpc-xcavate-polkadot-02']['container_ip'] }}:{{ hostvars['rpc-xcavate-polkadot-02']['default_p2p_port'] }}"
         protocol: "tcp"
+  - host: "rpc-mythos-polkadot-01"
+    proxmox_config:
+      vmid: "31321"
+      hostname: "{{ hostvars['rpc-mythos-polkadot-01']['host_name'] }}"
+      ostemplate: "local:vztmpl/{{ default_container_template }}"
+      netif: "{{ hostvars['rpc-mythos-polkadot-01']['netif'] }}"
+      cores: 4
+      memory: 16384
+      swap: 8192
+      password: "{{ default_password }}"
+      disk: "{{ zfs_storage }}:20"
+      mounts: '{"mp0":"{{ zfs_storage }}:1200,mp={{ hostvars["rpc-mythos-polkadot-01"]["default_database_path"] }}"}'
+      onboot: True
+      unprivileged: True
+      validate_certs: False
+      description: "{{ hostvars['rpc-mythos-polkadot-01']['default_network'] }} {{ hostvars['rpc-mythos-polkadot-01']['default_node_type'] }}: {{ hostvars['rpc-mythos-polkadot-01']['host_name'] }}"
+      state: present
+      features:
+        - nesting=1
+    port_forwards:
+      - from_port: "{{ hostvars['rpc-mythos-polkadot-01']['ansible_port'] }}"
+        to_host: "{{ hostvars['rpc-mythos-polkadot-01']['container_ip'] }}:{{ ssh_port }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['rpc-mythos-polkadot-01']['zabbix_ext_port'] }}"
+        to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['rpc-mythos-polkadot-01']['default_p2p_port'] }}"
+        to_host: "{{ hostvars['rpc-mythos-polkadot-01']['container_ip'] }}:{{ hostvars['rpc-mythos-polkadot-01']['default_p2p_port'] }}"
+        protocol: "tcp"

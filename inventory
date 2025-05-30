@@ -41,17 +41,54 @@ bkk10
 bkk20
 bkk50
 
+[penumbra]
+penumbra-01
+penumbra-02
+penumbra-03
+
 [kilt]
 rpc-kilt-polkadot-01
 rpc-kilt-polkadot-02
 
 [xcavate]
 rpc-xcavate-polkadot-01
+rpc-xcavate-polkadot-02
 
-[penumbra]
-penumbra-01
-penumbra-02
-penumbra-03
+[moonbeam]
+rpc-moonbeam-polkadot-01
+rpc-moonbeam-polkadot-02
+
+[ajuna]
+rpc-ajuna-polkadot-01
+rpc-ajuna-polkadot-02
+
+[polimec]
+rpc-polimec-polkadot-01
+rpc-polimec-polkadot-02
+
+[unique]
+rpc-unique-polkadot-01
+rpc-unique-polkadot-02
+
+[bifrost]
+rpc-bifrost-polkadot-01
+rpc-bifrost-polkadot-02
+
+[hydration]
+rpc-hydration-polkadot-01
+rpc-hydration-polkadot-02
+
+[mythos]
+rpc-mythos-polkadot-01
+rpc-mythos-polkadot-02
+
+[acala]
+rpc-acala-polkadot-01
+rpc-acala-polkadot-02
+
+[nexus]
+rpc-nexus-polkadot-01
+rpc-nexus-polkadot-02
 
 [cumulus]
 mint14
@@ -130,11 +167,6 @@ enc14
 enc24
 enc26
 
-[hydration]
-rpc-hydration-polkadot-01
-rpc-hydration-polkadot-02
-hdx26
-hdx27
 
 [polkadot]
 rpc-polkadot-01
@@ -175,25 +207,6 @@ wnd26
 pso24
 pso26
 
-[moonbeam]
-rpc-moonbeam-polkadot-01
-rpc-moonbeam-polkadot-02
-
-[ajuna]
-rpc-ajuna-polkadot-01
-rpc-ajuna-polkadot-02
-
-[polimec]
-rpc-polimec-polkadot-01
-rpc-polimec-polkadot-02
-
-[unique]
-rpc-unique-polkadot-01
-rpc-unique-polkadot-02
-
-[bifrost]
-rpc-bifrost-polkadot-01
-rpc-bifrost-polkadot-02
 
 [services]
 monitor
