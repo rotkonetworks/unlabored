@@ -9,7 +9,7 @@ routers
 
 [proxmox_nodes:children]
 polkadot
-polkadot
+cumulus
 xcavate
 kilt
 moonbeam
@@ -31,6 +31,9 @@ haproxy-bkk08
 [polkadot]
 rpc-polkadot-03
 val-paseo-02
+
+[cumulus]
+rpc-passet-hub-paseo-02
 
 [penumbra]
 penumbra-03
