@@ -1,0 +1,68 @@
+---
+- name: Symlink xcavate release
+  ansible.builtin.file:
+    src: "{{ default_base_path }}/xcavate-{{ default_client_version }}"
+    dest: "{{ default_base_path }}/xcavate"
+    force: True
+    state: link
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+
+- name: Symlink binary executable
+  ansible.builtin.file:
+    src: "{{ default_base_path }}/xcavate-{{ default_client_version }}"
+    dest: "/usr/local/bin/xcavate"
+    force: True
+    state: link
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+
+- name: Symlink Xcavate service to systemd
+  ansible.builtin.file:
+    src: "{{ default_base_path }}/xcavate.service"
+    dest: "/etc/systemd/system/xcavate.service"
+    state: link
+    force: True
+    owner: "root"
+    group: "root"
+    mode: '0644'
+
+- name: Stop Xcavate
+  ansible.builtin.systemd:
+    name: xcavate
+    state: stopped
+    enabled: True
+
+- name: Systemd daemon-reload
+  ansible.builtin.systemd:
+    daemon_reload: True
+
+- name: Start Xcavate
+  ansible.builtin.systemd:
+    name: xcavate
+    state: started
+    enabled: True
+
+- name: Add type of service fact
+  ansible.builtin.lineinfile:
+    path: /etc/ansible/facts.d/noderole.fact
+    regexp: '^type='
+    line: 'type={{ default_node_type }}'
+    create: True
+    mode: '0644'
+
+- name: Add Xcavate service version
+  ansible.builtin.lineinfile:
+    path: /etc/ansible/facts.d/noderole.fact
+    regexp: '^version='
+    line: 'version={{ default_client_version }}'
+    create: True
+    mode: '0644'
+
+- name: Add Service Pinned Status
+  ansible.builtin.lineinfile:
+    path: /etc/ansible/facts.d/noderole.fact
+    regexp: '^pinned='
+    line: 'pinned=False'
+    create: True
+    mode: '0644'

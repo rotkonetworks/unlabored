@@ -25,7 +25,7 @@
     force: True
     owner: "root"
     group: "root"
-    mode: '0644'
+    mode: "0644"
 
 - name: Stop Acala
   ansible.builtin.systemd:
@@ -46,23 +46,23 @@
 - name: Add type of service fact
   ansible.builtin.lineinfile:
     path: /etc/ansible/facts.d/noderole.fact
-    regexp: '^type='
-    line: 'type={{ default_node_type }}'
+    regexp: "^type="
+    line: "type={{ default_node_type }}"
     create: True
-    mode: '0644'
+    mode: "0644"
 
 - name: Add Acala service version
   ansible.builtin.lineinfile:
     path: /etc/ansible/facts.d/noderole.fact
-    regexp: '^version='
-    line: 'version={{ default_client_version }}'
+    regexp: "^version="
+    line: "version={{ default_client_version }}"
     create: True
-    mode: '0644'
+    mode: "0644"
 
 - name: Add Service Pinned Status
   ansible.builtin.lineinfile:
     path: /etc/ansible/facts.d/noderole.fact
-    regexp: '^pinned='
-    line: 'pinned=False'
+    regexp: "^pinned="
+    line: "pinned=False"
     create: True
-    mode: '0644'
+    mode: "0644"
