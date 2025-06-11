@@ -242,7 +242,7 @@
     owner: "{{ default_user }}"
     group: "{{ default_user }}"
     mode: "0640"
-  when: default_node_type in ["validator", "bootnode", "endpoint"]
+  when: default_node_type in ["penumbra", "validator", "endpoint"]
   loop:
     - validator
     - cometbft
