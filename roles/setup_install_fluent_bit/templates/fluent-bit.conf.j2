@@ -8,7 +8,7 @@
 
 [INPUT]
     Name tail
-    Path {{ log_dir }}
+    Path {{ default_base_path }}/{{ role }}.log
     Tag {{ host_name }}
     Skip_Long_Lines On
     Multiline.Parser cri
