@@ -11,4 +11,4 @@ galaxy_info:
         - bookworm
 dependencies:
   - setup_add_node_role
-  - setup_install_rust
+  #- setup_install_rust
