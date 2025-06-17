@@ -235,7 +235,7 @@
     - cometbft
     - pd
 
-- name: Copy Cometbft & validator service templates
+- name: Copy Cometbft & Penumbra service templates
   ansible.builtin.template:
     src: "{{ item }}.service.j2"
     dest: "{{ default_home_path }}/{{ item }}.service"
@@ -244,17 +244,17 @@
     mode: "0640"
   when: default_node_type in ["penumbra", "validator", "endpoint"]
   loop:
-    - validator
+    - penumbra
     - cometbft
   notify:
     - Stop Cometbft
     - Stop Penumbra
-    - Symlink cometbft & validator service to systemd
+    - Symlink cometbft & penumbra service to systemd
     - Systemd daemon-reload
     - Start Cometbft
     - Start Penumbra
 
-# - name: Symlink cometbft & validator service to systemd
+# - name: Symlink cometbft & Penumbra service to systemd
 #   ansible.builtin.file:
 #     src: "{{ default_home_path }}/{{ item }}.service"
 #     dest: "/etc/systemd/system/{{ item }}.service"
@@ -264,7 +264,7 @@
 #     group: "root"
 #     mode: "0644"
 #   loop:
-#     - validator
+#     - penumbra
 #     - cometbft
 
 - name: Flush handlers to execute pending handler tasks
@@ -276,8 +276,8 @@
     state: started
     enabled: True
 
-- name: Ensure validator service is running
+- name: Ensure penumbra service is running
   ansible.builtin.systemd:
-    name: validator
+    name: penumbra
     state: started
     enabled: True

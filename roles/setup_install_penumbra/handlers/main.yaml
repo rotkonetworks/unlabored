@@ -1,5 +1,5 @@
 ---
-- name: Symlink cometbft & validator service to systemd
+- name: Symlink cometbft & penumbra service to systemd
   ansible.builtin.file:
     src: "{{ default_home_path }}/{{ item }}.service"
     dest: "/etc/systemd/system/{{ item }}.service"
@@ -9,12 +9,12 @@
     group: "root"
     mode: "0644"
   loop:
-    - validator
+    - penumbra
     - cometbft
 
 - name: Stop Penumbra
   ansible.builtin.systemd:
-    name: validator
+    name: penumbra
     state: stopped
     enabled: True
 
@@ -42,7 +42,7 @@
   args:
     executable: /bin/bash
     #NOTE: linting give this error
-  #when: "{{ ansible_local['noderole']['node']['version'] != penumbra_version }}"
+  # when: "{{ ansible_local['noderole']['node']['version'] != penumbra_version }}"
 
 - name: Systemd daemon-reload
   ansible.builtin.systemd:
@@ -56,7 +56,7 @@
 
 - name: Start Penumbra
   ansible.builtin.systemd:
-    name: validator
+    name: penumbra
     state: started
     enabled: True
 
