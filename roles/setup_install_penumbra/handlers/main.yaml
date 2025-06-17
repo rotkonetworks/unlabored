@@ -84,6 +84,14 @@
     create: True
     mode: "0644"
 
+- name: Add penumbra migrate pin fact
+  ansible.builtin.lineinfile:
+    path: /etc/ansible/facts.d/noderole.fact
+    regexp: "^penumbra_migrate_pin="
+    line: "penumbra_migrate_pin=False"
+    create: True
+    mode: "0644"
+
 - name: Add Service Pinned Status
   ansible.builtin.lineinfile:
     path: /etc/ansible/facts.d/noderole.fact

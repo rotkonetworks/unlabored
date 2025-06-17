@@ -235,6 +235,14 @@
     - cometbft
     - pd
 
+- name: Export Penumbra Database
+  ansible.builtin.command:
+    cmd: "pd migrate --home {{ default_database_path }} --comet-home {{ default_database_path }}/node0/cometbft"
+    executable: /bin/bash
+  args:
+    executable: /bin/bash
+  when: "{{ ansible_local['noderole']['node']['penumbra_migrate_pin'] == True }}"
+
 - name: Copy Cometbft & Penumbra service templates
   ansible.builtin.template:
     src: "{{ item }}.service.j2"
