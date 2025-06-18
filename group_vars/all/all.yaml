@@ -164,6 +164,7 @@ proxmox_defaults:
 # Service users named after clients
 service_users:
   ajuna: "ajuna"
+  acala: "acala"
   arbitrum: "arbitrum"
   avalanche: "avalanche"
   binance: "binance"
@@ -187,3 +188,4 @@ service_users:
   polimec: "polimec"
   penumbra: "penumbra"
   invarch: "invarch"
+  xcavate: "xcavate"

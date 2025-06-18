@@ -1,0 +1,27 @@
+[SERVICE]
+    Flush 1
+    Log_Level info
+    Daemon off
+    HTTP_Server on
+    HTTP_Listen 0.0.0.0
+    HTTP_Port 2020
+
+[INPUT]
+    Name tail
+    Path {{ default_base_path }}/{{ role }}.log
+    Tag {{ host_name }}
+    Skip_Long_Lines On
+    Multiline.Parser cri
+
+[OUTPUT]
+    Name loki
+    Match *
+    Host {{ loki_address }}
+    Port {{ loki_port }}
+    Tls On
+    Tenant_ID {{ paseo_tenant_id }}
+    Bearer_Token {{ paseo_bearer_token }}
+    Labels node_provider={{ paseo_node_provider }},node_name=$TAG,$stream
+    Net.connect_timeout 5
+    Net.keepalive On
+    Net.keepalive_idle_timeout 30

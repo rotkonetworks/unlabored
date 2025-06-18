@@ -3,7 +3,7 @@ Description={{ host_name.split('.')[0] }} - cometbft service
 
 [Service]
 ExecStart={{ default_home_path }}/cometbft start \
-          --moniker "{{ host_name }}" \
+          --moniker "{{ default_domain | default(host_name) }}" \
           --home {{ default_database_path }}/node0/cometbft \
           --p2p.laddr "tcp://0.0.0.0:{{ default_cometbft_p2p_port }}" \
           --p2p.external-address "{{ ansible_host }}:{{ default_cometbft_p2p_port }}" \

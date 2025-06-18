@@ -1,0 +1,78 @@
+---
+- name: Gather facts
+  ansible.builtin.setup:
+
+- name: Ensure required directories exist
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: "0755"
+  loop:
+    - "{{ default_promtail_path }}"
+
+- name: Ensure unzip is installed
+  ansible.builtin.package:
+    name: unzip
+    state: present
+
+- name: Check if Promtail binary already exists
+  ansible.builtin.stat:
+    path: "{{ default_promtail_path }}/promtail-linux-amd64"
+  register: promtail_binary
+
+- name: Download Promtail zip
+  ansible.builtin.get_url:
+    url: "{{ default_promtail_download_url }}"
+    dest: /opt/promtail/promtail.zip
+    mode: "0644"
+  when: not promtail_binary.stat.exists
+
+- name: Unzip Promtail binary
+  ansible.builtin.unarchive:
+    src: /opt/promtail/promtail.zip
+    dest: /opt/promtail
+    remote_src: True
+  register: unzip_result
+  when: not promtail_binary.stat.exists
+
+- name: Ensure Promtail is executable
+  ansible.builtin.file:
+    path: /opt/promtail/promtail-linux-amd64
+    mode: "0755"
+    state: file
+
+- name: Create symlink to /usr/local/bin/promtail
+  ansible.builtin.file:
+    src: "{{ default_promtail_path }}/promtail-linux-amd64"
+    dest: "{{ default_promtail_path }}/promtail"
+    state: link
+    force: True # changed from `true` to `yes`
+
+- name: Deploy Promtail config
+  ansible.builtin.template:
+    src: promtail-config.yaml.j2
+    dest: /opt/promtail/promtail-config.yaml
+    mode: "0644"
+
+- name: Deploy Promtail systemd unit
+  ansible.builtin.template:
+    src: promtail.service.j2
+    dest: "{{ default_promtail_path }}/promtail.service"
+    mode: "0644"
+
+- name: Create promtail.service symlink
+  ansible.builtin.file:
+    src: "{{ default_promtail_path }}/promtail.service"
+    dest: /etc/systemd/system/promtail.service
+    state: link
+    force: True # changed from `true` to `yes`
+
+- name: Reload systemd
+  ansible.builtin.systemd:
+    daemon_reload: True # replaces the shell command
+
+- name: Enable and start promtail
+  ansible.builtin.systemd:
+    name: promtail
+    enabled: True # consistent boolean
+    state: started

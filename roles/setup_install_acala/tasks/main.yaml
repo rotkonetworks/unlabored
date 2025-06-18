@@ -129,7 +129,7 @@
 - name: Change ownership of built binary to {{ default_user }}
   ansible.builtin.file:
     #WARN: chdir folder need to be checked again
-    path: "{{ default_base_path }}/acala-node-{{ default_client_version }}/target/release/acala-parachain"
+    path: "{{ default_base_path }}/acala-node-{{ default_client_version }}/target/release/acala"
     owner: "{{ default_user }}"
     group: "{{ default_user }}"
     mode: "0755"
@@ -158,7 +158,7 @@
 
 - name: Install acala {{ default_client_version }}
   ansible.builtin.copy:
-    src: "{{ default_base_path }}/acala-node-{{ default_client_version }}/target/release/acala-parachain"
+    src: "{{ default_base_path }}/acala-node-{{ default_client_version }}/target/release/acala"
     dest: "{{ default_base_path }}/acala-{{ default_client_version }}"
     remote_src: True
     mode: "0744"

@@ -1,0 +1,6 @@
+---
+- name: Setup sysctl
+  hosts: proxmox_hosts
+  become: True
+  roles:
+    - setup_sysctl_limits

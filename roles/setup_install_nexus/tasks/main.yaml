@@ -47,9 +47,6 @@
     - Add type of service fact
     - Symlink Nexus release
 
-- name: Flush handlers after Nexus service copy
-  ansible.builtin.meta: flush_handlers
-
 - name: Download Nexus v{{ default_client_version }}
   ansible.builtin.get_url:
     url: "{{ default_download_url }}"

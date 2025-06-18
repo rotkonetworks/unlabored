@@ -14,14 +14,19 @@ polkadot
 
 [prometheus]
 ibp-bkk07
+ibp-bkk08
 
 [haproxy]
 haproxy-bkk06
 haproxy-bkk07
+haproxy-bkk08
 
 [misc-container]
+log-ct-08
 build-node-07
+build-node-08
 dockers
+dockers-08
 proxy-bkk07
 peering-node-07
 
@@ -36,6 +41,11 @@ bkk10
 bkk20
 bkk50
 
+[penumbra]
+penumbra-01
+penumbra-02
+penumbra-03
+
 [kilt]
 rpc-kilt-polkadot-01
 rpc-kilt-polkadot-02
@@ -44,6 +54,46 @@ rpc-kilt-polkadot-02
 penumbra-01
 penumbra-02
 penumbra-03
+
+[xcavate]
+rpc-xcavate-polkadot-01
+rpc-xcavate-polkadot-02
+
+[moonbeam]
+rpc-moonbeam-polkadot-01
+rpc-moonbeam-polkadot-02
+
+[ajuna]
+rpc-ajuna-polkadot-01
+rpc-ajuna-polkadot-02
+
+[polimec]
+rpc-polimec-polkadot-01
+rpc-polimec-polkadot-02
+
+[unique]
+rpc-unique-polkadot-01
+rpc-unique-polkadot-02
+
+[bifrost]
+rpc-bifrost-polkadot-01
+rpc-bifrost-polkadot-02
+
+[hydration]
+rpc-hydration-polkadot-01
+rpc-hydration-polkadot-02
+
+[mythos]
+rpc-mythos-polkadot-01
+rpc-mythos-polkadot-02
+
+[acala]
+rpc-acala-polkadot-01
+rpc-acala-polkadot-02
+
+[nexus]
+rpc-nexus-polkadot-01
+rpc-nexus-polkadot-02
 
 [cumulus]
 mint14
@@ -86,6 +136,8 @@ rpc-asset-hub-kusama-01
 rpc-asset-hub-kusama-02
 rpc-asset-hub-paseo-01
 rpc-asset-hub-paseo-02
+rpc-passet-hub-paseo-01
+rpc-passet-hub-paseo-02
 rpc-bridge-hub-paseo-01
 rpc-bridge-hub-paseo-02
 rpc-bridge-hub-polkadot-01
@@ -122,11 +174,6 @@ enc14
 enc24
 enc26
 
-[hydration]
-rpc-hydration-polkadot-01
-rpc-hydration-polkadot-02
-hdx26
-hdx27
 
 [polkadot]
 rpc-polkadot-01
@@ -167,25 +214,6 @@ wnd26
 pso24
 pso26
 
-[moonbeam]
-rpc-moonbeam-polkadot-01
-rpc-moonbeam-polkadot-02
-
-[ajuna]
-rpc-ajuna-polkadot-01
-rpc-ajuna-polkadot-02
-
-[polimec]
-rpc-polimec-polkadot-01
-rpc-polimec-polkadot-02
-
-[unique]
-rpc-unique-polkadot-01
-rpc-unique-polkadot-02
-
-[bifrost]
-rpc-bifrost-polkadot-01
-rpc-bifrost-polkadot-02
 
 [services]
 monitor

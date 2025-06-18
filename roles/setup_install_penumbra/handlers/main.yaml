@@ -1,5 +1,5 @@
 ---
-- name: Symlink cometbft & validator service to systemd
+- name: Symlink cometbft & penumbra service to systemd
   ansible.builtin.file:
     src: "{{ default_home_path }}/{{ item }}.service"
     dest: "/etc/systemd/system/{{ item }}.service"
@@ -9,12 +9,12 @@
     group: "root"
     mode: "0644"
   loop:
-    - validator
+    - penumbra
     - cometbft
 
 - name: Stop Penumbra
   ansible.builtin.systemd:
-    name: validator
+    name: penumbra
     state: stopped
     enabled: True
 
@@ -23,6 +23,26 @@
     name: cometbft
     state: stopped
     enabled: True
+
+- name: Set sysctl parameters for cometbft
+  ansible.posix.sysctl:
+    name: "{{ item.key }}"
+    value: "{{ item.value }}"
+    state: present # ensures it persists in /etc/sysctl.conf or a drop-in
+    reload: yes # apply immediately
+  loop:
+    - { key: "fs.inotify.max_user_instances", value: "{{ inotify_max_user_instances }}", }
+    - { key: "fs.inotify.max_user_watches", value: "{{ inotify_max_user_watches }}", }
+    - { key: "fs.inotify.max_queued_events", value: "{{ inotify_max_queued_events }}", }
+
+- name: Export Penumbra Database
+  ansible.builtin.command:
+    cmd: "pd migrate --home {{ default_database_path }} --comet-home {{ default_database_path }}/node0/cometbft"
+    executable: /bin/bash
+  args:
+    executable: /bin/bash
+    #NOTE: linting give this error
+  # when: "{{ ansible_local['noderole']['node']['version'] != penumbra_version }}"
 
 - name: Systemd daemon-reload
   ansible.builtin.systemd:
@@ -36,7 +56,7 @@
 
 - name: Start Penumbra
   ansible.builtin.systemd:
-    name: validator
+    name: penumbra
     state: started
     enabled: True
 
@@ -61,6 +81,14 @@
     path: /etc/ansible/facts.d/noderole.fact
     regexp: "^cometbft_version="
     line: "cometbft_version={{ cometbft_version }}"
+    create: True
+    mode: "0644"
+
+- name: Add penumbra migrate pin fact
+  ansible.builtin.lineinfile:
+    path: /etc/ansible/facts.d/noderole.fact
+    regexp: "^penumbra_migrate_pin="
+    line: "penumbra_migrate_pin=False"
     create: True
     mode: "0644"
 

@@ -32,12 +32,14 @@
     - setup_user_management
     - setup_log_rotation
 
+# NOTE: better to comment, for long term
 # - name: Install Haproxy
 #   hosts: haproxy
 #   gather_facts: True
 #   roles:
 #     - setup_install_haproxy
-#
+
+#NOTE: better to comment, for long term
 # - name: Install Prometheus
 #   hosts: prometheus
 #   gather_facts: True
@@ -87,11 +89,41 @@
   roles:
     - setup_install_evmos
 
-- name: Install Invarch services
-  hosts: invarch
+- name: Install Polkadot services
+  hosts: polkadot
   gather_facts: True
   roles:
-    - setup_install_invarch
+    - setup_install_promtail
+    - setup_install_polkadot
+    - setup_install_nginx
+
+- name: Install Cumulus services
+  hosts: cumulus
+  gather_facts: True
+  roles:
+    - setup_install_promtail
+    - setup_install_cumulus
+    - setup_install_nginx
+
+- name: Install Encointer services
+  hosts: encointer
+  gather_facts: True
+  roles:
+    - setup_install_encointer
+    - setup_install_nginx
+
+- name: Install Mythos services
+  hosts: mythos
+  gather_facts: True
+  roles:
+    - setup_install_mythos
+    - setup_install_nginx
+
+- name: Install Acala services
+  hosts: acala
+  gather_facts: True
+  roles:
+    - setup_install_acala
     - setup_install_nginx
 
 - name: Install Nexus services
@@ -148,25 +180,11 @@
   roles:
     - setup_install_optimism
 
-- name: Install Polkadot services
-  hosts: polkadot
+- name: Install Xcavate services
+  hosts: xcavate
   gather_facts: True
   roles:
-    - setup_install_polkadot
-    - setup_install_nginx
-
-- name: Install Cumulus services
-  hosts: cumulus
-  gather_facts: True
-  roles:
-    - setup_install_cumulus
-    - setup_install_nginx
-
-- name: Install Encointer services
-  hosts: encointer
-  gather_facts: True
-  roles:
-    - setup_install_encointer
+    - setup_install_xcavate
     - setup_install_nginx
 
 - name: Install Hydration services

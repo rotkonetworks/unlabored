@@ -3,7 +3,7 @@
 penumbra_version: "2.0.0"
 penumbra_chain_id: ""
 cometbft_version: "0.37.15"
-polkachu_height: "4369466"
+polkachu_height: "5480920"
 
 # dl locations
 default_git_repo: "https://github.com/penumbra-zone/penumbra"
@@ -37,3 +37,7 @@ default_rpc_port: 9691
 default_secure_rpc_port: 42691
 default_prom_port: 7691
 zabbix_ext_port: 10691
+
+inotify_max_user_instances: 131072
+inotify_max_user_watches: 4194304
+inotify_max_queued_events: 8388608
