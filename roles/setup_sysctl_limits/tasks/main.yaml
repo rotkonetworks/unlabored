@@ -1,0 +1,11 @@
+---
+- name: Set sysctl parameters persistently
+  ansible.posix.sysctl:
+    name: "{{ item.key }}"
+    value: "{{ item.value }}"
+    state: present      # ensures it persists in /etc/sysctl.conf or a drop-in
+    reload: yes         # apply immediately
+  loop:
+    - { key: 'fs.inotify.max_user_instances', value: '10485760' }
+    - { key: 'fs.inotify.max_user_watches', value: '524288' }
+    - { key: 'fs.inotify.max_queued_events', value: '16384' }

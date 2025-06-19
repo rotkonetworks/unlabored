@@ -1,0 +1,15 @@
+[Unit]
+Description=Promtail Log Collector
+After=network.target
+
+[Service]
+ExecStart={{ default_promtail_path }}/promtail -config.file={{ default_promtail_path }}/promtail-config.yaml
+Restart=always
+User=root
+Group=root
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
+

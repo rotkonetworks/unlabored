@@ -1,7 +1,7 @@
 ---
 default_base_path: /opt/acala
 default_src_path: "{{ default_base_path }}/src"
-default_client_version: 3.0.1
+default_client_version: 3.1.0
 default_database: rocksdb
 default_database_path: "{{ default_base_path }}/chains"
 #TODO: we need to compile acala ourselves

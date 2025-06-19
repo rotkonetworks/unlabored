@@ -4,6 +4,10 @@ After=network.target
 StartLimitIntervalSec=0
 
 [Service]
+{% if default_network == 'paseo' %}
+#StandardOutput=append:{{ default_base_path }}/{{ role }}.log
+#StandardError=append:{{ default_base_path }}/{{ role }}.log
+{% endif %}
 Type=simple
 Restart=on-failure
 RestartSec=10
@@ -39,6 +43,9 @@ ExecStart={{ default_base_path }}/polkadot \
 {% if default_network == 'kusama' %}
      --network-backend litep2p \
 {% endif %}
+{% if default_network == 'paseo' %}
+     --log parachain=debug \
+{% else %}
      --in-peers 64 \
      --workers-path {{ default_auxiliary_binary_path }} \
      --db-cache {{ ansible_memtotal_mb // 2 }} \

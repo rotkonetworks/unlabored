@@ -32,23 +32,23 @@
 - name: Gather facts
   ansible.builtin.setup:
 
-- name: Check if the local chain spec file exists
-  ansible.builtin.stat:
-    path: "{{ default_chain_spec }}"
-  register: local_chain_spec
-  when: needs_custom_chain_spec
-  delegate_to: "{{ inventory_hostname }}"
+# - name: Check if the local chain spec file exists
+#   ansible.builtin.stat:
+#     path: "{{ default_chain_spec }}"
+#   register: local_chain_spec
+#   when: needs_custom_chain_spec
+#   delegate_to: "{{ inventory_hostname }}"
 
-- name: Download chain spec if not present
-  ansible.builtin.get_url:
-    url: "{{ default_chain_spec_dl_url }}"
-    dest: "{{ default_chain_spec }}"
-    mode: "0644"
-    timeout: 60
-  when:
-    - needs_custom_chain_spec
-    - not local_chain_spec.stat.exists
-  delegate_to: "{{ inventory_hostname }}"
+# - name: Download chain spec if not present
+#   ansible.builtin.get_url:
+#     url: "{{ default_chain_spec_dl_url }}"
+#     dest: "{{ default_chain_spec }}"
+#     mode: "0644"
+#     timeout: 60
+#   when:
+#     - needs_custom_chain_spec
+#     - not local_chain_spec.stat.exists
+#   delegate_to: "{{ inventory_hostname }}"
 
 - name: Copy Mythos systemd service for specific node type
   ansible.builtin.template:
@@ -79,6 +79,15 @@
       ansible_local['noderole']['node']['pinned'] != 'True' and
       ansible_local['noderole']['node']['version'] != default_client_version }}"
 
+- name: Ensure default_src_path exists
+  ansible.builtin.file:
+    path: "{{ default_src_path }}"
+    state: directory
+    mode: "0755"
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+  when: needs_build
+
 - name: Acquire Mythos source
   ansible.builtin.get_url:
     url: "{{ default_download_url }}"
@@ -97,6 +106,58 @@
     group: "{{ default_user }}"
   when: needs_build
 
+- name: Install protobuf compiler and dependencies
+  ansible.builtin.package:
+    name:
+      - protobuf-compiler
+      - libprotobuf-dev
+    state: present
+  become: True
+  become_user: root
+  when:
+    - ansible_local['noderole']['node']['pinned'] != "True"
+    - ansible_local['noderole']['node']['version'] != default_client_version
+    - needs_build
+
+- name: Install libclang and related dependencies
+  ansible.builtin.package:
+    name:
+      - libclang-dev
+      - clang
+      - llvm-dev
+    state: present
+  become: True
+  become_user: root
+  when: needs_build
+
+- name: Add wasm32-unknown-unknown target
+  ansible.builtin.command:
+    cmd: rustup target add wasm32-unknown-unknown
+  become: True
+  become_user: root
+  environment:
+    PATH: "{{ ansible_env.PATH }}:/usr/local/cargo/bin"
+  register: rustup_target
+  changed_when: "'installed' in rustup_target.stdout or 'unchanged' not in rustup_target.stdout"
+  when:
+    - ansible_local['noderole']['node']['pinned'] != "True"
+    - ansible_local['noderole']['node']['version'] != default_client_version
+    - needs_build
+
+- name: Add rust-src component for WASM builds
+  ansible.builtin.command:
+    cmd: rustup component add rust-src
+  become: True
+  become_user: root
+  environment:
+    PATH: "{{ ansible_env.PATH }}:/usr/local/cargo/bin"
+  register: rustup_rustsrc
+  changed_when: "'installed' in rustup_rustsrc.stdout or 'unchanged' not in rustup_rustsrc.stdout"
+  when:
+    - ansible_local['noderole']['node']['pinned'] != "True"
+    - ansible_local['noderole']['node']['version'] != default_client_version
+    - needs_build
+
 - name: Build client from source as root
   ansible.builtin.command:
     cmd: cargo build --release
@@ -107,13 +168,12 @@
     PATH: "{{ ansible_env.PATH }}:/usr/local/cargo/bin"
   register: build_result
   when: needs_build
-  failed_when:
-    build_result.rc != 0
+  failed_when: build_result.rc != 0
 
-    #NOTE: need to be checked
+#NOTE: need to be checked
 - name: Change ownership of built binary to {{ default_user }}
   ansible.builtin.file:
-    path: "{{ default_src_path }}/project-mythical-{{ default_client_version }}/target/release/mythos"
+    path: "{{ default_src_path }}/project-mythical-{{ default_client_version }}/target/release/mythos-node"
     owner: "{{ default_user }}"
     group: "{{ default_user }}"
     mode: "0755"
@@ -124,7 +184,7 @@
 
 - name: Install Mythos {{ default_client_version }}
   ansible.builtin.copy:
-    src: "{{ default_src_path }}/project-mythical-{{ default_client_version }}/target/release/mythos"
+    src: "{{ default_src_path }}/project-mythical-{{ default_client_version }}/target/release/mythos-node"
     dest: "{{ default_base_path }}/mythos-{{ default_client_version }}"
     remote_src: True
     mode: "0755"
