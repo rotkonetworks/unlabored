@@ -54,7 +54,7 @@
 - name: Install latest Fluent Bit package
   ansible.builtin.apt:
     name: fluent-bit
-    state: latest
+    state: present
 
 # - name: Create symlink to /usr/local/bin/fluent-bit
 #   ansible.builtin.file:
