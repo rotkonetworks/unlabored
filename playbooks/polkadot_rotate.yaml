@@ -10,7 +10,7 @@
       register: cargo_installed
       failed_when: cargo_installed.rc != 0 and ('cargo' not in cargo_installed.stderr)
       changed_when: False
-      ignore_errors: True
+      #ignore_errors: True  # This is redundant, as failed_when will handle the failure.
 
     - name: Setup and install Rust
       ansible.builtin.include_role:

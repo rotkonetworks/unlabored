@@ -35,7 +35,7 @@
           ansible.builtin.command:
             cmd: "{{ temp_dir.path }}/{{ binary_name }}.sh"
             chdir: "{{ temp_dir.path }}"
-          #  ignore_errors: True
+          #  failed_when: False
           register: script_output
 
         - name: Check installation success

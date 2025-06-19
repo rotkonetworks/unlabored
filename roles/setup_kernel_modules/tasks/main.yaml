@@ -3,7 +3,7 @@
 - name: Check if zfs module is available
   ansible.builtin.command: modprobe -n -v zfs
   register: zfs_module_check
-  ignore_errors: True
+  failed_when: False
   changed_when: False
 
 - name: Ensure /etc/apt/sources.list.d directory exists
