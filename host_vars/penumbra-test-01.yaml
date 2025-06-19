@@ -1,0 +1,28 @@
+---
+ansible_host: "160.22.181.181"
+container_ip: "192.168.77.181"
+ansible_port: 32481
+host_name: "penumbra-test-01.ct.rotko.net"
+host_timezone: "Asia/Bangkok"
+netif: '{"net0":"name=eth0,gw={{ default_nat_network_forward_cidr.split("/")[0] }},ip={{ default_host_ip }}/8,bridge={{ default_nat_device }}"}'
+role: "penumbra"
+pinned_service: True
+
+default_network: "penumbra"
+default_node_type: "penumbra"
+#need to be uniqued
+default_cometbft_p2p_port: 26681
+
+default_penumbra_metric_port: 9600
+default_cometbft_rpc_port: 26657
+default_acbi_port: 26658
+default_grpc_port: 8080
+default_cometbft_database: "goleveldb"
+default_domain: "antumbra.net"
+# default_p2p_port: 33691
+# default_p2p_port_ws: 34691
+# default_p2p_port_wss: 35691
+# default_rpc_port: 9691
+# default_secure_rpc_port: 42691
+# default_prom_port: 7691
+# zabbix_ext_port: 10691
