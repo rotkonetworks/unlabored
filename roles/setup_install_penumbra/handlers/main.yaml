@@ -42,7 +42,7 @@
   args:
     executable: /bin/bash
     #NOTE: linting give this error
-  # when: "{{ ansible_local['noderole']['node']['version'] != penumbra_version }}"
+    #when: ansible_local['noderole']['node']['version'] != penumbra_version
 
 - name: Systemd daemon-reload
   ansible.builtin.systemd:
