@@ -90,6 +90,11 @@ rpc-acala-polkadot-02
 rpc-nexus-polkadot-01
 rpc-nexus-polkadot-02
 
+[penumbra]
+penumbra-01
+penumbra-02
+penumbra-03
+
 [cumulus]
 mint14
 pbr13
