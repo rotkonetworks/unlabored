@@ -1,0 +1,177 @@
+---
+- name: Ensure group {{ default_user }} exists
+  ansible.builtin.group:
+    name: "{{ default_user }}"
+    state: present
+    system: True
+
+- name: Ensure user {{ default_user }} exists without unnecessary privileges
+  ansible.builtin.user:
+    append: True
+    comment: nexus service user
+    create_home: False
+    group: "{{ default_user }}"
+    groups: []
+    home: "{{ default_base_path }}"
+    name: "{{ default_user }}"
+    shell: "/sbin/nologin"
+    state: present
+    system: True
+
+- name: Ensure user {{ default_user }} owns directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+    mode: "0750"
+    state: directory
+  loop:
+    - "{{ default_base_path }}"
+    - "{{ default_database_path }}"
+
+- name: Gather facts
+  ansible.builtin.setup:
+
+- name: Download Nexus v{{ default_client_version }}
+  ansible.builtin.get_url:
+    url: "{{ default_source_url }}"
+    dest: "{{ default_base_path }}/nexus-v{{ default_client_version }}.tar.gz"
+    mode: "0640"
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+  register: download_result
+  when:
+    - ansible_local['noderole']['node']['pinned'] != "True"
+    - ansible_local['noderole']['node']['version'] != default_client_version
+
+- name: Create version-specific source directory
+  ansible.builtin.file:
+    path: "{{ default_base_path }}/source/{{ default_client_version }}"
+    state: directory
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+    mode: "0750"
+  when:
+    - ansible_local['noderole']['node']['pinned'] != "True"
+    - ansible_local['noderole']['node']['version'] != default_client_version
+
+- name: Extract Nexus archive
+  ansible.builtin.unarchive:
+    src: "{{ default_base_path }}/nexus-v{{ default_client_version }}.tar.gz"
+    dest: "{{ default_base_path }}/source/{{ default_client_version }}"
+    remote_src: True
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+    mode: "0750"
+  register: extract_result
+  when:
+    - ansible_local['noderole']['node']['pinned'] != "True"
+    - ansible_local['noderole']['node']['version'] != default_client_version
+  notify:
+    - Add Service Pinned Status
+    - Add Nexus service version
+    - Symlink Nexus service to systemd
+    #- Symlink Nexus release
+    - Symlink binary executable
+    - Stop Nexus
+    - Systemd daemon-reload
+    - Start Nexus
+
+- name: Install dependencies
+  ansible.builtin.package:
+    name:
+      - pkg-config
+      - git
+      - clang
+      - curl
+      - libssl-dev
+      - llvm
+      - libudev-dev
+      - make
+      - protobuf-compiler
+    state: present
+
+- name: Check if hyperbridge is already built
+  ansible.builtin.stat:
+    path: "{{ default_base_path }}/source/{{ default_client_version }}/hyperbridge-hyperbridge-v{{ default_client_version }}/target/release/hyperbridge"
+  # TODO: Add condition if it need to rebuild
+  register: hyperbridge_built_already
+
+- name: Start building Hyberbridge binary
+  ansible.builtin.shell:
+    cmd: |
+      set -e
+      rustup target add wasm32-unknown-unknown --toolchain stable-x86_64-unknown-linux-gnu
+      rustup component add rust-src --toolchain stable-x86_64-unknown-linux-gnu
+      cargo build --release -p hyperbridge 2>&1 > build.log
+  when: not hyperbridge_built_already.stat.exists
+  register: build_status
+  args:
+    chdir: "{{ default_base_path }}/source/{{ default_client_version }}/hyperbridge-hyperbridge-v{{ default_client_version }}"
+  async: 3600
+  poll: 0
+  #notify:
+  #  #- Symlink Nexus release
+  #  - Symlink binary executable
+
+- name: Wait for build to complete
+  ansible.builtin.async_status:
+    jid: "{{ build_status.ansible_job_id }}"
+  register: build_result
+  until: build_result.finished
+  when: not hyperbridge_built_already.stat.exists
+  retries: 3600
+  delay: 10
+  notify:
+    #- Symlink Nexus release
+    - Symlink binary executable
+    - Stop Nexus
+    - Systemd daemon-reload
+    - Start Nexus
+
+#- name: Debug build result
+#  ansible.builtin.debug:
+#    msg: "Build log:\n{{ build_result.stdout }}"
+#  when: build_result is failed
+
+- name: Abort on failed build
+  ansible.builtin.fail:
+    msg: "Build log:\n{{ build_result.stdout }}"
+  when: build_result is failed
+
+- name: Copy Nexus systemd service for specific node type
+  ansible.builtin.template:
+    src: "{{ default_node_type + '.service.j2' }}"
+    dest: "{{ default_base_path }}/nexus.service"
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+    mode: "0640"
+  notify:
+    - Symlink Nexus service to systemd
+    - Stop Nexus
+    - Systemd daemon-reload
+    - Start Nexus
+    - Add type of service fact
+    #- Symlink Nexus release
+
+#- name: Clean up downloaded archive
+#  ansible.builtin.file:
+#    path: "{{ default_base_path }}/nexus-v{{ default_client_version }}.tar.gz"
+#    state: absent
+#  when:
+#    - ansible_local['noderole']['node']['pinned'] != "True"
+#    - ansible_local['noderole']['node']['version'] != default_client_version
+
+- name: Flush handlers after Nexus install
+  ansible.builtin.meta: flush_handlers
+
+- name: Verify Nexus version
+  ansible.builtin.command: "{{ default_base_path }}/nexus --version"
+  register: default_client_version_result
+  changed_when: False
+  failed_when: "default_client_version not in default_client_version_result.stdout"
+
+- name: Ensure Nexus service is running
+  ansible.builtin.systemd:
+    name: nexus
+    state: started
