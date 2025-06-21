@@ -3,8 +3,10 @@ default_base_path: /opt/nexus
 default_client_version: 1.3.0
 default_database: rocksdb
 default_database_path: "{{ default_base_path }}/chains"
-default_download_base_url: https://github.com/polytope-labs/hyperbridge/releases/download
+default_repo_url: https://github.com/polytope-labs/hyperbridge
+default_download_base_url: "{{ default_repo_url }}/releases/download/"
 default_download_url: "{{ default_download_base_url }}/hyperbridge-v{{ default_client_version }}/hyperbridge-x86_64-unknown-linux-gnu.tar.gz"
+default_source: "{{ default_repo_url }}/archive/refs/tags/hyperbridge-v{{ default_client_version }}.tar.gz"
 default_user: "{{ service_users['nexus'] }}"
 default_group: "{{ service_users['nexus'] }}"
 default_log_level: info
