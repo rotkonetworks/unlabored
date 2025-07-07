@@ -2,7 +2,7 @@
 default_base_path: /opt/kilt
 default_src_path: "{{ default_base_path }}/src"
 # kilt version
-default_client_version: 1.15.4
+default_client_version: 1.16.2
 # database
 default_database: rocksdb
 default_database_path: "{{ default_base_path }}/chains"
