@@ -241,7 +241,7 @@
     executable: /bin/bash
   args:
     executable: /bin/bash
-  when: "{{ ansible_local['noderole']['node']['penumbra_migrate_pin'] == True }}"
+  when: ansible_local['noderole']['node']['penumbra_migrate_pin']
 
 - name: Copy Cometbft & Penumbra service templates
   ansible.builtin.template:

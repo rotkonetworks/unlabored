@@ -30,7 +30,7 @@
   ansible.builtin.command:
     cmd: "gpg --with-fingerprint /tmp/fluentbit.key"
   register: key_check
-  changed_when: false
+  changed_when: False
   failed_when: >
     key_check.stdout.find(fluentbit_key_fingerprint) == -1
 
@@ -54,7 +54,8 @@
 - name: Install latest Fluent Bit package
   ansible.builtin.apt:
     name: fluent-bit
-    state: latest
+    state: present
+    update_cache: yes
 
 # - name: Create symlink to /usr/local/bin/fluent-bit
 #   ansible.builtin.file:
