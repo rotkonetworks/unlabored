@@ -11,6 +11,8 @@ default_download_url: "{{ default_download_base_url }}{{ default_client_version 
 default_group: "{{ service_users['cumulus'] }}"
 revive_rpc_version: 1.0.0
 default_revive_rpc_url: https://github.com/hitchhooker/revive-rpc/releases/download/v{{ revive_rpc_version }}/eth-rpc-linux-x64
+revive_rpc_prometheus_port: 4400
+revive_rpc_port: 9450
 default_in_peers: 32
 default_log_level: info
 default_network: asset-hub-polkadot
