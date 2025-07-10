@@ -1,0 +1,21 @@
+[Unit]
+Description=revive-rpc Log Collector
+After=network.target
+
+[Service]
+ExecStart={{ default_base_path }}/revive-rpc \
+  --node-rpc-url ws://127.0.0.1:{{ default_rpc_port }} \
+	--rpc-external \
+  --rpc-cors all \
+	--rpc-port {{ revive_rpc_port }} \
+	--prometheus-external \
+	--prometheus-port {{ revive_rpc_prometheus_port }}
+
+Restart=always
+User=root
+Group=root
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
