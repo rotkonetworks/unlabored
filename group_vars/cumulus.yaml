@@ -1,11 +1,10 @@
----
 default_base_path: /opt/cumulus
 default_chain_spec_dl_url:
   https://raw.githubusercontent.com/paritytech/polkadot-sdk/master/cumulus/parachains/chain-specs/{{
   default_network }}.json
-default_client_version: polkadot-stable2503-5
+default_client_version: polkadot-stable2503-7
 default_database: paritydb
-default_database_path: "{{ default_base_path }}/chains"
+default_database_path: '{{ default_base_path }}/chains'
 default_download_base_url: https://github.com/paritytech/polkadot-sdk/releases/download/
 default_download_url: "{{ default_download_base_url }}{{ default_client_version }}/polkadot-parachain"
 default_group: "{{ service_users['cumulus'] }}"
@@ -22,10 +21,15 @@ default_p2p_port: 30433
 default_p2p_port_ws: 30434
 default_p2p_port_wss: 30435
 default_prom_port: 7400
+default_revive_rpc_url: https://github.com/hitchhooker/revive-rpc/releases/download/v{{
+  revive_rpc_version }}/eth-rpc-linux-x64
 default_rpc_port: 9400
 default_secure_rpc_port: 42400
 default_service: cumulus
-default_storage: "{{ default_base_path }}/chains"
+default_storage: '{{ default_base_path }}/chains'
 default_telemetry_url: wss://telemetry-backend.w3f.community/submit/ 1
-default_user: "{{ service_users['cumulus'] }}"
+default_user: '{{ service_users[''cumulus''] }}'
+revive_rpc_port: 9450
+revive_rpc_prometheus_port: 4400
+revive_rpc_version: 1.0.0
 zabbix_ext_port: 10400
