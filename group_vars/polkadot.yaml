@@ -1,18 +1,20 @@
----
 default_auxiliary_binary_path: /usr/libexec
 default_base_path: /opt/polkadot
 default_chain_spec: '{{ default_base_path }}/{{ default_network }}.json'
 default_chain_spec_dl_url: https://raw.githubusercontent.com/paritytech/polkadot-sdk/master/polkadot/node/service/chain-specs/{{
   default_network }}.json
-default_client_version: polkadot-stable2503-5
+default_client_version: polkadot-stable2503-7
 default_database: paritydb
 default_database_path: /opt/polkadot/chains
 default_download_base_url: https://github.com/paritytech/polkadot-sdk/releases/download/
-default_download_polkadotSHA256: https://github.com/paritytech/polkadot-sdk/releases/download/{{ default_client_version }}/polkadot.sha256
-default_download_url: "{{ default_download_base_url }}{{ default_client_version }}/polkadot"
-default_download_url_execute: "{{ default_download_base_url }}{{ default_client_version }}/polkadot-execute-worker"
-default_download_url_prepare: "{{ default_download_base_url }}{{ default_client_version }}/polkadot-prepare-worker"
-default_group: "{{ service_users['polkadot'] }}"
+default_download_polkadotSHA256: https://github.com/paritytech/polkadot-sdk/releases/download/{{
+  default_client_version }}/polkadot.sha256
+default_download_url: '{{ default_download_base_url }}{{ default_client_version }}/polkadot'
+default_download_url_execute: '{{ default_download_base_url }}{{ default_client_version
+  }}/polkadot-execute-worker'
+default_download_url_prepare: '{{ default_download_base_url }}{{ default_client_version
+  }}/polkadot-prepare-worker'
+default_group: '{{ service_users[''polkadot''] }}'
 default_in_peers: 32
 default_inet_p2p_port: 30333
 default_inet_p2p_port_ws: 30334
@@ -28,7 +30,7 @@ default_rpc_para_port: 9955
 default_secure_rpc_port: 42100
 default_service: polkadot
 default_telemetry_url: wss://telemetry-backend.w3f.community/submit/ 1
-default_user: "{{ service_users['polkadot'] }}"
+default_user: '{{ service_users[''polkadot''] }}'
 inet_p2p_port: 30333
 inet_p2p_port_ws: 30334
 inet_rpc_port: 9944
