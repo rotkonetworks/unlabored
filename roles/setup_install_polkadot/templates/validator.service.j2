@@ -45,7 +45,7 @@ ExecStart={{ default_base_path }}/polkadot \
 {% endif %}
 {% if default_network == 'paseo' %}
      --log parachain=debug \
-{% else %}
+{% endif %}
      --in-peers 64 \
      --workers-path {{ default_auxiliary_binary_path }} \
      --db-cache {{ ansible_memtotal_mb // 2 }} \
