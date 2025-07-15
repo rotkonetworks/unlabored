@@ -154,9 +154,15 @@ table inet filter {
         type filter hook output priority filter; policy accept;
         
 {% if default_need_nftables_port_forwarding %}
+{% for range in bgp_peers_v4 %}
+        oifname $WAN ip daddr {{ range }} accept
+{% endfor %}
+{% for range in bgp_peers_v6 %}
+        oifname $WAN ip6 daddr {{ range }} accept
+{% endfor %}
         # Block RFC1918 on WAN interface
 {% for range in internal_ip_ranges %}
-        oifname $WAN ip daddr {{ range }} reject
+        oifname $WAN ip daddr {{ range }} drop
 {% endfor %}
 {% endif %}
     }
