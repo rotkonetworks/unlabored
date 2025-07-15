@@ -12,7 +12,7 @@
   ansible.builtin.set_fact:
     any_node_requires_firewall: true
   loop: "{{ lxc_nodes | default([]) }}"
-  when: 
+  when:
     - lxc_nodes is defined
     - item.host is defined
     - hostvars[item.host].hetzner_firewall | default(default_hetzner_firewall) | bool
@@ -42,13 +42,12 @@
     dest: "{{ nftables_config_path }}"
     owner: root
     group: root
-    mode: '0600'
+    mode: "0600"
     backup: true
-    validate: 'nft -c -f %s'
+    validate: "nft -c -f %s"
   notify:
     - validate nftables
     - reload nftables
-
 - name: stop conflicting firewall services
   ansible.builtin.systemd:
     name: "{{ item }}"

@@ -1,0 +1,7 @@
+# Standards: 0.2
+---
+- name: Install Nftables
+  hosts: proxmox_hosts
+  gather_facts: True
+  roles:
+    - setup_networking_nftables

@@ -23,6 +23,12 @@ define BGP_PEERS_V4 = { {{ bgp_peers_v4 | join(', ') }} }
 {% if bgp_peers_v6 | length > 0 %}
 define BGP_PEERS_V6 = { {{ bgp_peers_v6 | join(', ') }} }
 {% endif %}
+{% if ssh_allowed_v4 | length > 0 %}
+define ssh_allowed_v4 = { {{ ssh_allowed_v4 | join(', ') }} }
+{% endif %}
+{% if ssh_allowed_v6 | length > 0 %}
+define ssh_allowed_v6 = { {{ ssh_allowed_v6 | join(', ') }} }
+{% endif %}
 
 # Main filter table - IPv6 and IPv4 combined
 table inet filter {
@@ -72,18 +78,18 @@ table inet filter {
 
 {% if bgp_peers_v4 is defined and bgp_peers_v4 | length > 0 %}
         # BGP
-        tcp dport {{ bgp_port }} ip saddr @BGP_PEERS_V4 accept
+        tcp dport {{ bgp_port }} ip saddr $BGP_PEERS_V4 accept
 {% endif %}
 {% if bgp_peers_v6 is defined and bgp_peers_v6 | length > 0 %}
-        tcp dport {{ bgp_port }} ip6 saddr @BGP_PEERS_V6 accept
+        tcp dport {{ bgp_port }} ip6 saddr $BGP_PEERS_V6 accept
 {% endif %}
 
 {% if bgp_peers_v4 is defined and bgp_peers_v4 | length > 0 %}
         # BFD
-        udp dport { {{ bfd_ports | join(', ') }} } ip saddr @BGP_PEERS_V4 accept
+        udp dport { {{ bfd_ports | join(', ') }} } ip saddr $BGP_PEERS_V4 accept
 {% endif %}
 {% if bgp_peers_v6 is defined and bgp_peers_v6 | length > 0 %}
-        udp dport { {{ bfd_ports | join(', ') }} } ip6 saddr @BGP_PEERS_V6 accept
+        udp dport { {{ bfd_ports | join(', ') }} } ip6 saddr $BGP_PEERS_V6 accept
 {% endif %}
 
         # OSPF
@@ -91,8 +97,8 @@ table inet filter {
         ip6 nexthdr ospf accept
 
         # SSH rate limited
-        tcp dport 22 ip6 saddr @allowed_ssh_v6 accept
-        tcp dport 22 ip saddr @allowed_ssh accept
+        tcp dport 22 ip6 saddr $ssh_allowed_v6 accept
+        tcp dport 22 ip saddr $ssh_allowed_v4 accept
 
         # Proxmox services from management
         iifname $MGMT tcp dport { {{ proxmox_tcp_ports | join(', ') }} } accept

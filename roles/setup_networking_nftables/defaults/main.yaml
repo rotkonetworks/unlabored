@@ -17,12 +17,12 @@ default_nat_network_forward_gateway: "10.{{ site_number }}.0.1"
 
 # bgp peers (override in host_vars if different)
 bgp_peers_v4:
-  - "10.155.1{{ '%02d' | format(site_number|int) }}.0"
-  - "10.155.2{{ '%02d' | format(site_number|int) }}.0"
+  - "10.155.1{{ '%02d' | format(site_number|int) }}.0/31"
+  - "10.155.2{{ '%02d' | format(site_number|int) }}.0/31"
 
 bgp_peers_v6:
-  - "fd00:155:1{{ '%02d' | format(site_number|int) }}::0"
-  - "fd00:155:2{{ '%02d' | format(site_number|int) }}::0"
+  - "fd00:155:1{{ '%02d' | format(site_number|int) }}::0/127"
+  - "fd00:155:2{{ '%02d' | format(site_number|int) }}::0/127"
 
 # interfaces
 wan_interface: vmbr2
