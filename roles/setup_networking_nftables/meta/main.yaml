@@ -1,0 +1,11 @@
+---
+galaxy_info:
+  author: Rotko Networks <hq@rotko.net>
+  description: nftables configuration matching mikrotik deployment
+  min_ansible_version: 3.0
+  platforms:
+    - name: Debian
+      versions:
+        - bullseye
+        - bookworm
+dependencies: []

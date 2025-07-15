@@ -1,0 +1,25 @@
+---
+# Override auto-detected values
+public_ipv4: "160.22.181.8"
+public_ipv6: "2401:a860:1008::"
+internal_v4: "10.8.0.0/16"
+internal_v6: "2401:a860:1008::/48"
+
+bgp_peers_v4:
+  - "10.155.108.0"
+  - "10.155.208.0"
+
+bgp_peers_v6:
+  - "fd00:155:108::0"
+  - "fd00:155:208::0"
+
+# Web services
+web_services:
+  target: "10.8.10.80"
+  ports: [80, 443, 8080]
+
+# SSH containers
+ssh_containers:
+  2201: "10.8.10.1:22"
+  2202: "10.8.10.2:22"
+  2203: "10.8.10.3:22"

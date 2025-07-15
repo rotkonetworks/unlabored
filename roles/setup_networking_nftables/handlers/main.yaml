@@ -1,0 +1,15 @@
+---
+- name: reload nftables
+  ansible.builtin.systemd:
+    name: nftables
+    state: reloaded
+
+- name: restart nftables
+  ansible.builtin.systemd:
+    name: nftables
+    state: restarted
+
+- name: validate nftables
+  ansible.builtin.command:
+    cmd: nft -c -f {{ nftables_config_path }}
+  changed_when: false

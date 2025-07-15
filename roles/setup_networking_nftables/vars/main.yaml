@@ -1,0 +1,41 @@
+---
+# ssh allowed networks
+ssh_allowed_v4:
+  - "10.0.0.0/8"
+  - "172.16.0.0/12" 
+  - "192.168.0.0/16"
+
+ssh_allowed_v6:
+  - "fd00::/8"
+  - "2401:a860::/32"
+
+# rfc1918 and private ranges
+internal_ip_ranges:
+  - "10.0.0.0/8"
+  - "100.64.0.0/10"
+  - "127.16.0.0/12"
+  - "169.254.0.0/16"
+  - "172.16.0.0/12"
+  - "192.0.0.0/24"
+  - "192.0.2.0/24"
+  - "192.88.99.0/24"
+  - "192.168.0.0/16"
+  - "198.18.0.0/15"
+  - "198.51.100.0/24"
+  - "203.0.113.0/24"
+  - "224.0.0.0/4"
+  - "240.0.0.0/4"
+  - "255.255.255.255/32"
+
+# proxmox services
+proxmox_tcp_ports: [8006, 3128, 111, 2049]
+proxmox_udp_ports: [111]
+proxmox_udp_ranges: "5405-5412"
+
+# ceph ports
+ceph_tcp_ports: [3300, 6789]
+ceph_tcp_range: "6800-7300"
+
+# routing protocol ports
+bgp_port: 179
+bfd_ports: [3784, 4784]

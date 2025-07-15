@@ -1,0 +1,69 @@
+---
+- name: install nftables
+  ansible.builtin.package:
+    name: nftables
+    state: present
+
+- name: set default for any_node_requires_firewall
+  ansible.builtin.set_fact:
+    any_node_requires_firewall: false
+
+- name: check if any node requires container level firewall
+  ansible.builtin.set_fact:
+    any_node_requires_firewall: true
+  loop: "{{ lxc_nodes | default([]) }}"
+  when: 
+    - lxc_nodes is defined
+    - item.host is defined
+    - hostvars[item.host].hetzner_firewall | default(default_hetzner_firewall) | bool
+  run_once: true
+
+- name: gather lxc port forwards if defined
+  ansible.builtin.set_fact:
+    all_port_forwards: []
+
+- name: collect port forwards from lxc_nodes
+  ansible.builtin.set_fact:
+    all_port_forwards: "{{ all_port_forwards + item.port_forwards | default([]) }}"
+  loop: "{{ lxc_nodes | default([]) }}"
+  when: item.port_forwards is defined
+
+- name: backup existing nftables if present
+  ansible.builtin.copy:
+    src: "{{ nftables_config_path }}"
+    dest: "{{ nftables_config_path }}.backup-{{ ansible_date_time.epoch }}"
+    remote_src: true
+  failed_when: false
+  changed_when: false
+
+- name: deploy nftables configuration
+  ansible.builtin.template:
+    src: nftables.conf.j2
+    dest: "{{ nftables_config_path }}"
+    owner: root
+    group: root
+    mode: '0600'
+    backup: true
+    validate: 'nft -c -f %s'
+  notify:
+    - validate nftables
+    - reload nftables
+
+- name: stop conflicting firewall services
+  ansible.builtin.systemd:
+    name: "{{ item }}"
+    state: stopped
+    enabled: false
+  loop:
+    - iptables
+    - ip6tables
+    - iptables-persistent
+    - netfilter-persistent
+  failed_when: false
+
+- name: enable and start nftables
+  ansible.builtin.systemd:
+    name: nftables
+    enabled: true
+    state: started
+    daemon_reload: true

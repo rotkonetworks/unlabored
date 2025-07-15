@@ -1,0 +1,11 @@
+auto {{ default_nat_device }}
+iface {{ default_nat_device }} inet static
+    address {{ default_nat_network_forward_cidr | default(default_nat_network | ansible.utils.ipaddr('1')) }}
+{% if default_nat_network_forward_gateway is defined %}
+    gateway {{ default_nat_network_forward_gateway }}
+{% endif %}
+    bridge-ports {{ default_gw_device }}
+    bridge-stp off
+    bridge-fd 0
+    bridge-maxwait 0
+    dns-nameservers 1.1.1.1 1.0.0.1

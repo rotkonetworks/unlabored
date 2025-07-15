@@ -1,0 +1,52 @@
+---
+# site detection - more specific pattern
+site_number: "{{ inventory_hostname | regex_search('bkk([0-9]+)', '\\1') | first | default('1') }}"
+site_name: "{{ inventory_hostname.split('.')[0] | default('bkk01') }}"
+
+# network configuration
+public_ipv4: "160.22.181.{{ site_number }}"
+public_ipv6: "2401:a860:10{{ '%02d' | format(site_number|int) }}::"
+internal_v4: "10.{{ site_number }}.0.0/16"
+internal_v6: "2401:a860:10{{ '%02d' | format(site_number|int) }}::/48"
+management_net: "192.168.0.0/16"
+
+# additional networks for forwarding (from iptables role)
+default_nat_network: "{{ internal_v4 }}"
+default_nat_network_forward_cidr: "{{ internal_v4 }}"
+default_nat_network_forward_gateway: "10.{{ site_number }}.0.1"
+
+# bgp peers (override in host_vars if different)
+bgp_peers_v4:
+  - "10.155.1{{ '%02d' | format(site_number|int) }}.0"
+  - "10.155.2{{ '%02d' | format(site_number|int) }}.0"
+
+bgp_peers_v6:
+  - "fd00:155:1{{ '%02d' | format(site_number|int) }}::0"
+  - "fd00:155:2{{ '%02d' | format(site_number|int) }}::0"
+
+# interfaces
+wan_interface: vmbr2
+internal_interface: vmbr1
+mgmt_interface: vmbr0
+storage_interface: vprivate
+
+# service mappings (web)
+web_services:
+  target: "10.{{ site_number }}.10.80"
+  ports: [80, 443, 8080]
+
+# ssh containers (override in host_vars)
+ssh_containers:
+  2201: "10.{{ site_number }}.10.1:22"
+  2202: "10.{{ site_number }}.10.2:22"
+  2203: "10.{{ site_number }}.10.3:22"
+
+# nftables settings
+nftables_config_path: /etc/nftables.conf
+nftables_enable_logging: true
+nftables_log_rate: "5/minute"
+
+# compatibility mode
+default_need_iptables_port_forwarding: true
+default_hetzner_firewall: false
+any_node_requires_firewall: false
