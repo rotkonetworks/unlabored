@@ -47,6 +47,6 @@ nftables_enable_logging: true
 nftables_log_rate: "5/minute"
 
 # compatibility mode
-default_need_iptables_port_forwarding: true
+default_need_nftables_port_forwarding: true
 default_hetzner_firewall: false
 any_node_requires_firewall: false

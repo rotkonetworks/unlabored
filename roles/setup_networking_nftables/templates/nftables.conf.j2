@@ -153,7 +153,7 @@ table inet filter {
     chain output {
         type filter hook output priority filter; policy accept;
         
-{% if default_need_iptables_port_forwarding %}
+{% if default_need_nftables_port_forwarding %}
         # Block RFC1918 on WAN interface
 {% for range in internal_ip_ranges %}
         oifname $WAN ip daddr {{ range }} reject
@@ -162,7 +162,7 @@ table inet filter {
     }
 }
 
-{% if default_need_iptables_port_forwarding %}
+{% if default_need_nftables_port_forwarding %}
 # NAT table - IPv4 only (IPv6 doesn't need NAT)
 table ip nat {
     chain prerouting {

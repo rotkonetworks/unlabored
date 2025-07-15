@@ -1,11 +1,18 @@
 # Standards: 0.2
 ---
-- name: Proxmox node setup
+- name: Proxmox node setup (iptables)
   hosts: proxmox_hosts
   gather_facts: True
   roles:
     - role: setup_networking_iptables
       when: default_need_iptables_port_forwarding
+
+- name: Proxmox node setup (nftables)
+  hosts: proxmox_hosts
+  gather_facts: True
+  roles:
+    - role: setup_networking_nftables
+      when: default_need_nftables_port_forwarding
 
 - name: RouterOS setup
   hosts: proxmox_hosts
