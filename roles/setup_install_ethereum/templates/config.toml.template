@@ -65,11 +65,11 @@ IgnorePrice = 2
 [Node]
 DataDir = "{{ ethereum_storage_path }}"
 IPCPath = "geth.ipc"
-HTTPHost = "{{ default_host_ip }}"
+HTTPHost = "{{ default_mgmt_host_ip }}"
 HTTPPort = {{ ethereum_http_port }}
 HTTPVirtualHosts = ["localhost", "{{ host_name }}"]
 HTTPModules = ["net", "web3", "eth"]
-WSHost = "{{ default_host_ip }}"
+WSHost = "{{ default_mgmt_host_ip }}"
 WSPort = {{ ethereum_ws_port }}
 WSModules = ["net", "web3", "eth"]
 GraphQLVirtualHosts = ["localhost", "{{ host_name }}"]

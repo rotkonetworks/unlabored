@@ -4,7 +4,7 @@ container_ip: "192.168.77.81"
 ansible_port: 2481
 host_name: "penumbra-01.ct.rotko.net"
 host_timezone: "Asia/Bangkok"
-netif: '{"net0":"name=eth0,gw={{ default_nat_network_forward_cidr.split("/")[0] }},ip={{ default_host_ip }}/8,bridge={{ default_nat_device }}"}'
+netif: '{"net0":"name=eth0,gw={{ default_nat_network_forward_cidr.split("/")[0] }},ip={{ default_mgmt_host_ip }}/8,bridge={{ default_nat_device }}"}'
 role: "penumbra"
 pinned_service: True
 

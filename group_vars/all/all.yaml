@@ -39,8 +39,10 @@ default_iptables_v6_file: "/etc/iptables/rules.v6"
 default_nat_network: "192.168.0.0/16"
 default_nat_network_forward_cidr: "192.168.69.1/16"
 default_nat_device: "vmbr0"
+default_host_internal_bridge: "vmbr1"
 default_gw_device: "eth0"
-default_host_ip: "{{ container_ip | default(ansible_host) }}"
+default_mgmt_host_ip: "{{ container_ip | default(ansible_host) }}"
+default_internal_host_ip: "{{ container_internal_ip | default(ansible_host) }}"
 default_netif: '{"net0":"name=eth0,gw={{ default_nat_network_forward_cidr.split("/")[0] }},ip={{ container_ip }}/24,bridge={{ default_nat_device }}"}'
 
 # Misc
