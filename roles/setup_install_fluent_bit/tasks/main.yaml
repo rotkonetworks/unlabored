@@ -2,6 +2,10 @@
 - name: Gather facts
   ansible.builtin.setup:
 
+- name: Check if needs fluentbit
+  ansible.builtin.set_fact:
+    needs_fluentbit: "{{ default_network in ['paseo'] and default_node_type == 'validator' }}"
+
 - name: Ensure required directories exist
   ansible.builtin.file:
     path: "{{ item }}"
@@ -9,6 +13,7 @@
     mode: "0755"
   loop:
     - "{{ default_fluentbit_path }}"
+  when: needs_fluentbit
 
 # - name: Ensure unzip is installed
 #   ansible.builtin.package:
@@ -25,37 +30,43 @@
     url: "{{ fluentbit_key_url }}"
     dest: "/tmp/fluentbit.key"
     mode: "0644"
+  when: needs_fluentbit
 
 - name: Check GPG key fingerprint
-  ansible.builtin.command:
-    cmd: "gpg --with-fingerprint /tmp/fluentbit.key"
+  ansible.builtin.shell:
+    cmd: "gpg --dry-run --import --import-options import-show /tmp/fluentbit.key 2>&1 | grep -E '^ '"
   register: key_check
   changed_when: False
   failed_when: >
     key_check.stdout.find(fluentbit_key_fingerprint) == -1
+  when: needs_fluentbit
 
 - name: Install GPG key into keyring
-  ansible.builtin.command:
-    cmd: "gpg --dearmor /tmp/fluentbit.key -o {{ fluentbit_key_path }}"
+  ansible.builtin.shell:
+    cmd: "gpg --dearmor < /tmp/fluentbit.key > {{ fluentbit_key_path }}"
   args:
     creates: "{{ fluentbit_key_path }}"
+  when: needs_fluentbit
 
 - name: Add Fluent Bit APT repository
   ansible.builtin.apt_repository:
     repo: "deb [signed-by={{ fluentbit_key_path }}] https://packages.fluentbit.io/debian/{{ ansible_distribution_release }} {{ ansible_distribution_release }} main"
     state: present
     filename: fluentbit
+  when: needs_fluentbit
 
 - name: Update APT cache
   ansible.builtin.apt:
     update_cache: yes
     cache_valid_time: 3600
+  when: needs_fluentbit
 
 - name: Install latest Fluent Bit package
   ansible.builtin.apt:
     name: fluent-bit
     state: present
     update_cache: yes
+  when: needs_fluentbit
 
 # - name: Create symlink to /usr/local/bin/fluent-bit
 #   ansible.builtin.file:
@@ -69,12 +80,14 @@
     src: fluent-bit.conf.j2
     dest: "{{ default_fluentbit_path }}/fluent-bit.conf"
     mode: "0644"
+  when: needs_fluentbit
 
 - name: Deploy Fluent-Bit systemd unit
   ansible.builtin.template:
     src: fluent-bit.service.j2
     dest: "{{ default_fluentbit_path }}/fluent-bit.service"
     mode: "0644"
+  when: needs_fluentbit
 
 - name: Create fluent-bit.service symlink
   ansible.builtin.file:
@@ -82,13 +95,16 @@
     dest: /etc/systemd/system/fluent-bit.service
     state: link
     force: True
+  when: needs_fluentbit
 
 - name: Reload systemd
   ansible.builtin.systemd:
     daemon_reload: True
+  when: needs_fluentbit
 
 - name: Enable and start fluent-bit
   ansible.builtin.systemd:
     name: fluent-bit
     enabled: True
     state: started
+  when: needs_fluentbit

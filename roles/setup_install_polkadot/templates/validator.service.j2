@@ -5,8 +5,8 @@ StartLimitIntervalSec=0
 
 [Service]
 {% if default_network == 'paseo' %}
-#StandardOutput=append:{{ default_base_path }}/{{ role }}.log
-#StandardError=append:{{ default_base_path }}/{{ role }}.log
+StandardOutput=append:{{ default_base_path }}/{{ role }}.log
+StandardError=append:{{ default_base_path }}/{{ role }}.log
 {% endif %}
 Type=simple
 Restart=on-failure
