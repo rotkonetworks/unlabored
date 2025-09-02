@@ -104,3 +104,18 @@
     owner: root
     group: root
     mode: "0644"
+
+    #for pubkey rotating
+- name: Ensure authorized SSH keys are correct
+  ansible.posix.authorized_key:
+    user: root
+    key: "{{ item }}"
+    state: present
+  loop: "{{ root_pubkeys }}"
+
+- name: Remove old keys not in defaults
+  ansible.posix.authorized_key:
+    user: root
+    key: "{{ item }}"
+    state: absent
+  loop: "{{ deprecated_pubkeys }}"
