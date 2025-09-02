@@ -235,12 +235,40 @@
     - cometbft
     - pd
 
+- name: Stop Penumbra
+  ansible.builtin.systemd:
+    name: validator
+    state: stopped
+    enabled: True
+  when: ansible_local['noderole']['node']['penumbra_migrate_pin']
+
+- name: Stop Cometbft
+  ansible.builtin.systemd:
+    name: cometbft
+    state: stopped
+    enabled: True
+  when: ansible_local['noderole']['node']['penumbra_migrate_pin']
+
 - name: Export Penumbra Database
   ansible.builtin.command:
     cmd: "pd migrate --home {{ default_database_path }} --comet-home {{ default_database_path }}/node0/cometbft"
     executable: /bin/bash
   args:
     executable: /bin/bash
+  when: ansible_local['noderole']['node']['penumbra_migrate_pin']
+
+- name: Start Cometbft
+  ansible.builtin.systemd:
+    name: cometbft
+    state: started
+    enabled: True
+  when: ansible_local['noderole']['node']['penumbra_migrate_pin']
+
+- name: Start Penumbra
+  ansible.builtin.systemd:
+    name: validator
+    state: started
+    enabled: True
   when: ansible_local['noderole']['node']['penumbra_migrate_pin']
 
 - name: Copy Cometbft & Penumbra service templates

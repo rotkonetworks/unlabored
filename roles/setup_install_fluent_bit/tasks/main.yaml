@@ -2,9 +2,14 @@
 - name: Gather facts
   ansible.builtin.setup:
 
+- name: Check if Fluent Bit binary exists in expected path
+  ansible.builtin.stat:
+    path: "{{ default_fluentbit_path }}/bin/fluent-bit"
+  register: fluentbit_binary
+
 - name: Check if needs fluentbit
   ansible.builtin.set_fact:
-    needs_fluentbit: "{{ default_network in ['paseo'] and default_node_type == 'validator' }}"
+    needs_fluentbit: "{{ default_network in ['paseo'] and default_node_type == 'validator' and not fluentbit_binary.stat.exists }}"
 
 - name: Ensure required directories exist
   ansible.builtin.file:
