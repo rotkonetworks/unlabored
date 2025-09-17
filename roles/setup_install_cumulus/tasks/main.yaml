@@ -120,7 +120,6 @@
     timeout: 60
   when:
     - needs_revive_rpc
-    - not revive_rpc_local.stat.exists
   delegate_to: "{{ inventory_hostname }}"
 
 - name: Copy revive-rpc systemd service
