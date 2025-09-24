@@ -9,8 +9,21 @@ routers
 [proxmox_nodes:children]
 cumulus
 encointer
-hydration
 polkadot
+
+[lv6:children]
+xcavate
+kilt
+moonbeam
+ajuna
+polimec
+unique
+bifrost
+hydration
+acala
+mythos
+acala
+nexus
 
 [prometheus]
 ibp-bkk07
