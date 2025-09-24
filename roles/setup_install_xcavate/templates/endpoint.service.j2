@@ -15,7 +15,7 @@ User={{ default_user }}
 Group={{ default_group }}
 ExecStart={{ default_base_path }}/xcavate \
   --name "{{ default_telemetry_name }}" \
-  #--chain {{ default_network }} \
+  --chain {{ default_chain_spec }} \
   --base-path {{ default_base_path }} \
   --blocks-pruning archive \
   --state-pruning archive \
