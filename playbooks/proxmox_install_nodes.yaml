@@ -46,48 +46,48 @@
 #   roles:
 #     - setup_install_prometheus
 
-- name: Install Penumbra services
-  hosts: penumbra
-  gather_facts: True
-  roles:
-    - setup_install_penumbra
-    - setup_install_nginx
-
-- name: Install Arbitrum services
-  hosts: arbitrum
-  gather_facts: True
-  roles:
-    - setup_install_arbitrum
-
-- name: Install Avalanche services
-  hosts: avalanche
-  gather_facts: True
-  roles:
-    - setup_install_avalanche
-
-- name: Install Binance services
-  hosts: binance
-  gather_facts: True
-  roles:
-    - setup_install_binance
-
-- name: Install Erigon services
-  hosts: erigon
-  gather_facts: True
-  roles:
-    - setup_install_erigon
-
-- name: Install Ethereum services
-  hosts: ethereum
-  gather_facts: True
-  roles:
-    - setup_install_ethereum
-
-- name: Install Evmos services
-  hosts: evmos
-  gather_facts: True
-  roles:
-    - setup_install_evmos
+# - name: Install Penumbra services
+#   hosts: penumbra
+#   gather_facts: True
+#   roles:
+#     - setup_install_penumbra
+#     - setup_install_nginx
+#
+# - name: Install Arbitrum services
+#   hosts: arbitrum
+#   gather_facts: True
+#   roles:
+#     - setup_install_arbitrum
+#
+# - name: Install Avalanche services
+#   hosts: avalanche
+#   gather_facts: True
+#   roles:
+#     - setup_install_avalanche
+#
+# - name: Install Binance services
+#   hosts: binance
+#   gather_facts: True
+#   roles:
+#     - setup_install_binance
+#
+# - name: Install Erigon services
+#   hosts: erigon
+#   gather_facts: True
+#   roles:
+#     - setup_install_erigon
+#
+# - name: Install Ethereum services
+#   hosts: ethereum
+#   gather_facts: True
+#   roles:
+#     - setup_install_ethereum
+#
+# - name: Install Evmos services
+#   hosts: evmos
+#   gather_facts: True
+#   roles:
+#     - setup_install_evmos
 
 - name: Install Polkadot services
   hosts: polkadot
@@ -104,99 +104,98 @@
     - setup_install_promtail
     - setup_install_cumulus
     - setup_install_nginx
-
-- name: Install Encointer services
-  hosts: encointer
-  gather_facts: True
-  roles:
-    - setup_install_encointer
-    - setup_install_nginx
-
-- name: Install Mythos services
-  hosts: mythos
-  gather_facts: True
-  roles:
-    - setup_install_mythos
-    - setup_install_nginx
-
-- name: Install Acala services
-  hosts: acala
-  gather_facts: True
-  roles:
-    - setup_install_acala
-    - setup_install_nginx
-
-- name: Install Nexus services
-  hosts: nexus
-  gather_facts: True
-  roles:
-    - setup_install_nexus
-    - setup_install_nginx
-
-- name: Install Bifrost services
-  hosts: bifrost
-  gather_facts: True
-  roles:
-    - setup_install_bifrost
-    - setup_install_nginx
-
-- name: Install Unique services
-  hosts: unique
-  gather_facts: True
-  roles:
-    - setup_install_unique
-    - setup_install_nginx
-
-- name: Install Polimec services
-  hosts: polimec
-  gather_facts: True
-  roles:
-    - setup_install_polimec
-    - setup_install_nginx
-
-- name: Install Ajuna services
-  hosts: ajuna
-  gather_facts: True
-  roles:
-    - setup_install_ajuna
-    - setup_install_nginx
-
-- name: Install Moonbeam services
-  hosts: moonbeam
-  gather_facts: True
-  roles:
-    - setup_install_moonbeam
-    - setup_install_nginx
-
-- name: Install Kava services
-  hosts: kava
-  gather_facts: True
-  roles:
-    - setup_install_kava
-
-- name: Install Optimism services
-  hosts: optimism
-  gather_facts: True
-  roles:
-    - setup_install_optimism
-
-- name: Install Xcavate services
-  hosts: xcavate
-  gather_facts: True
-  roles:
-    - setup_install_xcavate
-    - setup_install_nginx
-
-- name: Install Hydration services
-  hosts: hydration
-  gather_facts: True
-  roles:
-    - setup_install_hydration
-    - setup_install_nginx
-
-- name: Install KILT services
-  hosts: kilt
-  gather_facts: True
-  roles:
-    - setup_install_kilt
-    - setup_install_nginx
+# - name: Install Encointer services
+#   hosts: encointer
+#   gather_facts: True
+#   roles:
+#     - setup_install_encointer
+#     - setup_install_nginx
+#
+# - name: Install Mythos services
+#   hosts: mythos
+#   gather_facts: True
+#   roles:
+#     - setup_install_mythos
+#     - setup_install_nginx
+#
+# - name: Install Acala services
+#   hosts: acala
+#   gather_facts: True
+#   roles:
+#     - setup_install_acala
+#     - setup_install_nginx
+#
+# - name: Install Nexus services
+#   hosts: nexus
+#   gather_facts: True
+#   roles:
+#     - setup_install_nexus
+#     - setup_install_nginx
+#
+# - name: Install Bifrost services
+#   hosts: bifrost
+#   gather_facts: True
+#   roles:
+#     - setup_install_bifrost
+#     - setup_install_nginx
+#
+# - name: Install Unique services
+#   hosts: unique
+#   gather_facts: True
+#   roles:
+#     - setup_install_unique
+#     - setup_install_nginx
+#
+# - name: Install Polimec services
+#   hosts: polimec
+#   gather_facts: True
+#   roles:
+#     - setup_install_polimec
+#     - setup_install_nginx
+#
+# - name: Install Ajuna services
+#   hosts: ajuna
+#   gather_facts: True
+#   roles:
+#     - setup_install_ajuna
+#     - setup_install_nginx
+#
+# - name: Install Moonbeam services
+#   hosts: moonbeam
+#   gather_facts: True
+#   roles:
+#     - setup_install_moonbeam
+#     - setup_install_nginx
+#
+# - name: Install Kava services
+#   hosts: kava
+#   gather_facts: True
+#   roles:
+#     - setup_install_kava
+#
+# - name: Install Optimism services
+#   hosts: optimism
+#   gather_facts: True
+#   roles:
+#     - setup_install_optimism
+#
+# - name: Install Xcavate services
+#   hosts: xcavate
+#   gather_facts: True
+#   roles:
+#     - setup_install_xcavate
+#     - setup_install_nginx
+#
+# - name: Install Hydration services
+#   hosts: hydration
+#   gather_facts: True
+#   roles:
+#     - setup_install_hydration
+#     - setup_install_nginx
+#
+# - name: Install KILT services
+#   hosts: kilt
+#   gather_facts: True
+#   roles:
+#     - setup_install_kilt
+#     - setup_install_nginx
