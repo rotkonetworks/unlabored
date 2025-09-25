@@ -1,7 +1,7 @@
 ---
 ansible_host: "160.22.181.181"
 container_ip: "192.168.141.13"
-ansible_port: 3313
+ansible_port: 3513
 host_name: "rpc-collectives-paseo-01.ct.rotko.net"
 host_timezone: "Asia/Bangkok"
 netif: '{"net0":"name=eth0,gw={{ default_nat_network_forward_cidr.split("/")[0] }},ip={{ default_mgmt_host_ip }}/16,bridge={{ default_nat_device }}"}'
@@ -16,9 +16,9 @@ default_chain_spec: "{{ default_base_path }}/collectives-paseo.raw.json"
 default_chain_spec_dl_url: "https://paseo-r2.zondax.ch/chain-specs/paseo-collectives.raw.json"
 default_relay_rpc: "ws://{{ hostvars['rpc-paseo-01']['container_ip'] }}:{{ hostvars['rpc-paseo-01']['default_rpc_port'] }}"
 default_relay_rpc_fallback: "ws://{{ hostvars['rpc-paseo-02']['container_ip'] }}:{{ hostvars['rpc-paseo-02']['default_rpc_port'] }}"
-default_database: "rocksdb"
+default_database: "paritydb"
 default_node_type: "endpoint"
-zabbix_ext_port: 13313
+zabbix_ext_port: 13513
 
 default_bootnode_domain: "{{ default_network }}.boot.rotko.net"
 

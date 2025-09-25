@@ -76,6 +76,7 @@ rpc-bridge-hub-kusama-02
 
 rpc-collectives-polkadot-02
 rpc-collectives-westend-02
+rpc-collectives-paseo-01
 
 [encointer]
 rpc-encointer-kusama-02
