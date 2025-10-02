@@ -4,7 +4,10 @@ container_ip: "192.168.112.33"
 ansible_port: 3833
 host_name: "rpc-acala-polkadot-02.ct.rotko.net"
 host_timezone: "Asia/Bangkok"
-netif: '{"net0":"name=eth0,gw={{ default_nat_network_forward_cidr.split("/")[0] }},ip={{ default_mgmt_host_ip }}/16,bridge={{ default_nat_device }}"}'
+# netif: '{"net0":"name=eth0,gw={{ default_nat_network_forward_cidr.split("/")[0] }},ip={{ default_mgmt_host_ip }}/16,bridge={{ default_nat_device }}"}'
+netif:
+  net0: "name=eth0,gw={{ default_nat_network_forward_cidr.split('/')[0] }},ip={{ default_mgmt_host_ip }}/16,bridge={{ default_nat_device }}"
+  net1: "name=eth1,gw={{ default_host_internal_ip }},ip=10.8.112.33/16,bridge={{ default_host_internal_bridge }}"
 role: "acala"
 pinned_service: True
 

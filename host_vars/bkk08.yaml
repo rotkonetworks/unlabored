@@ -185,7 +185,7 @@ lxc_nodes:
     proxmox_config:
       vmid: "31311"
       hostname: "{{ hostvars['rpc-xcavate-polkadot-01']['host_name'] }}"
-      ostemplate: "local:vztmpl/{{ default_container_template }}"
+      # ostemplate: "local:vztmpl/{{ default_container_template }}"
       netif: "{{ hostvars['rpc-xcavate-polkadot-01']['netif'] }}"
       cores: 4
       memory: 16384
@@ -195,6 +195,7 @@ lxc_nodes:
       mounts: '{"mp0":"{{ zfs_storage }}:200,mp={{ hostvars["rpc-xcavate-polkadot-01"]["default_database_path"] }}"}'
       onboot: True
       unprivileged: True
+      update: False
       validate_certs: False
       description: "{{ hostvars['rpc-xcavate-polkadot-01']['default_network'] }} {{ hostvars['rpc-xcavate-polkadot-01']['default_node_type'] }}: {{ hostvars['rpc-xcavate-polkadot-01']['host_name'] }}"
       state: present
@@ -313,7 +314,7 @@ lxc_nodes:
     proxmox_config:
       vmid: "31252"
       hostname: "{{ hostvars['rpc-hydration-polkadot-02']['host_name'] }}"
-      ostemplate: "local:vztmpl/{{ default_container_template }}"
+      # ostemplate: "local:vztmpl/{{ default_container_template }}"
       netif: "{{ hostvars['rpc-hydration-polkadot-02']['netif'] }}"
       cores: 4
       memory: 16384
@@ -323,6 +324,7 @@ lxc_nodes:
       mounts: '{"mp0":"{{ zfs_storage }}:150,mp={{ hostvars["rpc-hydration-polkadot-02"]["default_database_path"] }}"}'
       onboot: True
       unprivileged: True
+      update: False
       validate_certs: False
       description: "{{ hostvars['rpc-hydration-polkadot-02']['default_network'] }} {{ hostvars['rpc-hydration-polkadot-02']['default_node_type'] }}: {{ hostvars['rpc-hydration-polkadot-02']['host_name'] }}"
       state: present
@@ -342,7 +344,7 @@ lxc_nodes:
     proxmox_config:
       vmid: "31202"
       hostname: "{{ hostvars['rpc-moonbeam-polkadot-02']['host_name'] }}"
-      ostemplate: "local:vztmpl/{{ default_container_template }}"
+      # ostemplate: "local:vztmpl/{{ default_container_template }}"
       netif: "{{ hostvars['rpc-moonbeam-polkadot-02']['netif'] }}"
       cores: 4
       memory: 16384
@@ -352,6 +354,7 @@ lxc_nodes:
       mounts: '{"mp0":"{{ zfs_storage }}:2200,mp={{ hostvars["rpc-moonbeam-polkadot-02"]["default_database_path"] }}"}'
       onboot: True
       unprivileged: True
+      update: False
       validate_certs: False
       description: "{{ hostvars['rpc-moonbeam-polkadot-02']['default_network'] }} {{ hostvars['rpc-moonbeam-polkadot-02']['default_node_type'] }}: {{ hostvars['rpc-moonbeam-polkadot-02']['host_name'] }}"
       state: present
@@ -371,7 +374,8 @@ lxc_nodes:
     proxmox_config:
       vmid: "31272"
       hostname: "{{ hostvars['rpc-ajuna-polkadot-02']['host_name'] }}"
-      ostemplate: "local:vztmpl/{{ default_container_template }}"
+      # NOTE: must commented out if update =true
+      # ostemplate: "local:vztmpl/{{ default_container_template }}"
       netif: "{{ hostvars['rpc-ajuna-polkadot-02']['netif'] }}"
       cores: 4
       memory: 16384
@@ -381,6 +385,8 @@ lxc_nodes:
       mounts: '{"mp0":"{{ zfs_storage }}:700,mp={{ hostvars["rpc-ajuna-polkadot-02"]["default_database_path"] }}"}'
       onboot: True
       unprivileged: True
+      #NOTE: update = true to update ip
+      update: False
       validate_certs: False
       description: "{{ hostvars['rpc-ajuna-polkadot-02']['default_network'] }} {{ hostvars['rpc-ajuna-polkadot-02']['default_node_type'] }}: {{ hostvars['rpc-ajuna-polkadot-02']['host_name'] }}"
       state: present
@@ -400,7 +406,7 @@ lxc_nodes:
     proxmox_config:
       vmid: "31282"
       hostname: "{{ hostvars['rpc-polimec-polkadot-02']['host_name'] }}"
-      ostemplate: "local:vztmpl/{{ default_container_template }}"
+      # ostemplate: "local:vztmpl/{{ default_container_template }}"
       netif: "{{ hostvars['rpc-polimec-polkadot-02']['netif'] }}"
       cores: 4
       memory: 16384
@@ -410,6 +416,7 @@ lxc_nodes:
       mounts: '{"mp0":"{{ zfs_storage }}:320,mp={{ hostvars["rpc-polimec-polkadot-02"]["default_database_path"] }}"}'
       onboot: True
       unprivileged: True
+      update: False
       validate_certs: False
       description: "{{ hostvars['rpc-polimec-polkadot-02']['default_network'] }} {{ hostvars['rpc-polimec-polkadot-02']['default_node_type'] }}: {{ hostvars['rpc-polimec-polkadot-02']['host_name'] }}"
       state: present
@@ -429,7 +436,7 @@ lxc_nodes:
     proxmox_config:
       vmid: "31292"
       hostname: "{{ hostvars['rpc-unique-polkadot-02']['host_name'] }}"
-      ostemplate: "local:vztmpl/{{ default_container_template }}"
+      # ostemplate: "local:vztmpl/{{ default_container_template }}"
       netif: "{{ hostvars['rpc-unique-polkadot-02']['netif'] }}"
       cores: 4
       memory: 16384
@@ -439,6 +446,7 @@ lxc_nodes:
       mounts: '{"mp0":"{{ zfs_storage }}:320,mp={{ hostvars["rpc-unique-polkadot-02"]["default_database_path"] }}"}'
       onboot: True
       unprivileged: True
+      update: False
       validate_certs: False
       description: "{{ hostvars['rpc-unique-polkadot-02']['default_network'] }} {{ hostvars['rpc-unique-polkadot-02']['default_node_type'] }}: {{ hostvars['rpc-unique-polkadot-02']['host_name'] }}"
       state: present
@@ -513,7 +521,7 @@ lxc_nodes:
     proxmox_config:
       vmid: "31212"
       hostname: "{{ hostvars['rpc-nexus-polkadot-02']['host_name'] }}"
-      ostemplate: "local:vztmpl/{{ default_container_template }}"
+      # ostemplate: "local:vztmpl/{{ default_container_template }}"
       netif: "{{ hostvars['rpc-nexus-polkadot-02']['netif'] }}"
       cores: 4
       memory: 16384
@@ -524,6 +532,7 @@ lxc_nodes:
       onboot: True
       unprivileged: True
       validate_certs: False
+      update: False
       description: "{{ hostvars['rpc-nexus-polkadot-02']['default_network'] }} {{ hostvars['rpc-nexus-polkadot-02']['default_node_type'] }}: {{ hostvars['rpc-nexus-polkadot-02']['host_name'] }}"
       state: present
       features:
@@ -571,7 +580,8 @@ lxc_nodes:
     proxmox_config:
       vmid: "31232"
       hostname: "{{ hostvars['rpc-acala-polkadot-02']['host_name'] }}"
-      ostemplate: "local:vztmpl/{{ default_container_template }}"
+      # NOTE: must commented out if update =true
+      # ostemplate: "local:vztmpl/{{ default_container_template }}"
       netif: "{{ hostvars['rpc-acala-polkadot-02']['netif'] }}"
       cores: 4
       memory: 16384
@@ -582,6 +592,7 @@ lxc_nodes:
       onboot: True
       unprivileged: True
       validate_certs: False
+      update: False
       description: "{{ hostvars['rpc-acala-polkadot-02']['default_network'] }} {{ hostvars['rpc-acala-polkadot-02']['default_node_type'] }}: {{ hostvars['rpc-acala-polkadot-02']['host_name'] }}"
       state: present
       features:
@@ -600,7 +611,7 @@ lxc_nodes:
     proxmox_config:
       vmid: "31322"
       hostname: "{{ hostvars['rpc-mythos-polkadot-02']['host_name'] }}"
-      ostemplate: "local:vztmpl/{{ default_container_template }}"
+      # ostemplate: "local:vztmpl/{{ default_container_template }}"
       netif: "{{ hostvars['rpc-mythos-polkadot-02']['netif'] }}"
       cores: 4
       memory: 16384
@@ -610,6 +621,7 @@ lxc_nodes:
       mounts: '{"mp0":"{{ zfs_storage }}:1200,mp={{ hostvars["rpc-mythos-polkadot-02"]["default_database_path"] }}"}'
       onboot: True
       unprivileged: True
+      update: False
       validate_certs: False
       description: "{{ hostvars['rpc-mythos-polkadot-02']['default_network'] }} {{ hostvars['rpc-mythos-polkadot-02']['default_node_type'] }}: {{ hostvars['rpc-mythos-polkadot-02']['host_name'] }}"
       state: present
