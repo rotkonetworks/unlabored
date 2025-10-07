@@ -1,6 +1,7 @@
 ---
 ansible_host: "160.22.181.181"
 container_ip: "192.168.112.30"
+container_internal_ip: "10.8.112.30"
 ansible_port: 2132
 host_name: "rpc-moonbeam-polkadot-02.ct.rotko.net"
 host_timezone: "Asia/Bangkok"

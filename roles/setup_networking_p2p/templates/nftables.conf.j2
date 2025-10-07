@@ -1,0 +1,32 @@
+# roles/setup_networking_p2p/templates/nftables.conf.j2
+#!/usr/sbin/nft -f
+
+flush ruleset
+
+# Basic mangle table for connection marking
+table ip mangle {
+    chain prerouting {
+        type filter hook prerouting priority mangle; policy accept;
+        # Mark connections coming from eth1
+        iif "eth1" ct mark set 0x1
+    }
+    
+    chain output {
+        type filter hook output priority mangle; policy accept;
+        # Apply packet mark based on connection mark
+        ct mark 0x1 meta mark set 0x1
+    }
+}
+
+# Optional: Add any existing firewall rules here
+# table inet filter {
+#     chain input {
+#         type filter hook input priority filter; policy accept;
+#     }
+#     chain forward {
+#         type filter hook forward priority filter; policy accept;
+#     }
+#     chain output {
+#         type filter hook output priority filter; policy accept;
+#     }
+# }

@@ -1,0 +1,6 @@
+# Standards: 0.2
+---
+# Default values - override in group_vars or host_vars
+eth1_table_id: 100
+eth1_table_name: eth1_table
+connection_mark: 1

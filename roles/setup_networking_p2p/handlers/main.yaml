@@ -1,0 +1,30 @@
+# roles/setup_networking_p2p/handlers/main.yaml
+# Standards: 0.2
+---
+- name: Apply P2P routing rules
+  ansible.builtin.debug:
+    msg: "P2P routing rules have been applied"
+
+- name: Restart nftables service
+  ansible.builtin.systemd:
+    name: nftables
+    state: restarted
+    daemon_reload: true
+
+- name: Save routing rules persistently
+  ansible.builtin.shell: |
+    # Save current routing rules to be persistent across reboots
+    ip route save table eth1_table > /etc/sysconfig/network-scripts/route-eth1_table
+    ip rule save > /etc/sysconfig/network-scripts/rule-eth1
+  when: ansible_os_family == "RedHat"
+
+- name: Save routing rules persistently (Debian)
+  ansible.builtin.blockinfile:
+    path: /etc/network/interfaces
+    block: |
+      # P2P networking rules for eth1
+      post-up ip route add default via {{ eth1_gateway | default('10.0.0.1') }} dev eth1 table eth1_table
+      post-up ip rule add from {{ container_internal_ip }} table eth1_table
+      post-up ip rule add fwmark 1 table eth1_table
+    marker: "# {mark} ANSIBLE MANAGED BLOCK - P2P NETWORKING"
+  when: ansible_os_family == "Debian"
