@@ -47,7 +47,7 @@ proxmox_vms:
         ipconfig0: "ip={{ hostvars['ibp-th-collective-runner-01']['container_ip'] }}/24,gw=10.7.0.1"
       nameserver: "1.1.1.1"
       ciuser: "admin"
-      sshkeys: "{{ lookup('file', '~/.ssh/id_rsa.pub') | default('') }}"
+      sshkeys: "{{ lookup('file', '~/.ssh/unlabored/ansible_ssh_key.pub') | default('') }}"
       onboot: True
       state: present
       description: "GitHub Runner: {{ hostvars['ibp-th-collective-runner-01']['host_name'] }}"
