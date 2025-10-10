@@ -1,5 +1,5 @@
 ---
-default_client_version: 0.45.0
+default_client_version: 0.47.2
 default_download_url: https://github.com/moonbeam-foundation/moonbeam/releases/download/v{{ default_client_version }}/moonbeam
 
 default_service: moonbeam

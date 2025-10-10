@@ -6,6 +6,7 @@ ansible_port: 3834
 host_name: "rpc-kilt-polkadot-02.ct.rotko.net"
 host_timezone: "Asia/Bangkok"
 # netif: '{"net0":"name=eth0,gw={{ default_nat_network_forward_cidr.split("/")[0] }},ip={{ default_mgmt_host_ip }}/16,bridge={{ default_nat_device }}"}'
+container_internal_ip: "10.8.112.34"
 netif:
   net0: "name=eth0,gw={{ default_nat_network_forward_cidr.split('/')[0] }},ip={{ default_mgmt_host_ip }}/16,bridge={{ default_nat_device }}"
   #define local ip in here
