@@ -1,0 +1,8 @@
+# Standards: 0.2
+---
+- name: Deploy GitHub Runner VM
+  hosts: github_runner
+  gather_facts: True
+  roles:
+    - role: github_runner_ephemeral
+      when: role == 'github_runner'

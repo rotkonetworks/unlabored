@@ -1,4 +1,4 @@
-# tasks/main.yaml
+# Standards: 0.2
 ---
 - name: Create predefined VMs
   community.general.proxmox_kvm:
@@ -7,18 +7,35 @@
     api_token_secret: "{{ proxmox_defaults.api_token_secret }}"
     api_host: "{{ proxmox_defaults.api_host }}"
     vmid: "{{ item.proxmox_config.vmid }}"
-    name: "{{ item.proxmox_config.name }}"
-    cores: "{{ item.proxmox_config.cores }}"
-    memory: "{{ item.proxmox_config.memory }}"
-    disks:
-      - size: "{{ item.proxmox_config.disk_size }}"
-        storage: "{{ item.proxmox_config.storage }}"
-    net:
-      - bridge: "{{ item.proxmox_config.net_bridge }}"
-        model: virtio
-    onboot: "{{ item.proxmox_config.onboot }}"
+    name: "{{ item.proxmox_config.name | default(item.host) }}"
+    node: "{{ item.proxmox_config.node | default(inventory_hostname) }}"
+    clone: "{{ item.proxmox_config.clone | default(omit) }}"
+    full: "{{ item.proxmox_config.full | default(omit) }}"
+    cores: "{{ item.proxmox_config.cores | default(default_vm_config.cores) }}"
+    memory: "{{ item.proxmox_config.memory | default(default_vm_config.memory) }}"
+    sockets: "{{ item.proxmox_config.sockets | default(1) }}"
+    cpu: "{{ item.proxmox_config.cpu | default('host') }}"
+    ostype: "{{ item.proxmox_config.ostype | default(default_vm_config.ostype) }}"
+    scsihw: "{{ item.proxmox_config.scsihw | default('virtio-scsi-pci') }}"
+    bootdisk: "{{ item.proxmox_config.bootdisk | default('scsi0') }}"
+    boot: "{{ item.proxmox_config.boot | default('order=scsi0;net0') }}"
+    agent: "{{ item.proxmox_config.agent | default(default_vm_config.agent) }}"
+    vga: "{{ item.proxmox_config.vga | default('serial0') }}"
+    serial:
+      serial0: socket
+    scsi: "{{ item.proxmox_config.scsi | default({}) }}"
+    net: "{{ item.proxmox_config.net | default({'net0': 'virtio,bridge=' + default_vm_config.net_bridge}) }}"
+    ciuser: "{{ item.proxmox_config.ciuser | default(omit) }}"
+    cipassword: "{{ item.proxmox_config.cipassword | default(omit) }}"
+    sshkeys: "{{ item.proxmox_config.sshkeys | default(omit) }}"
+    ipconfig: "{{ item.proxmox_config.ipconfig | default(omit) }}"
+    nameserver: "{{ item.proxmox_config.nameserver | default(omit) }}"
+    searchdomain: "{{ item.proxmox_config.searchdomain | default(omit) }}"
+    description: "{{ item.proxmox_config.description | default(omit) }}"
+    onboot: "{{ item.proxmox_config.onboot | default(default_vm_config.onboot) }}"
+    protection: "{{ item.proxmox_config.protection | default(omit) }}"
     validate_certs: "{{ proxmox_defaults.validate_certs }}"
-    state: "{{ item.proxmox_config.state }}"
+    state: "{{ item.proxmox_config.state | default(default_vm_config.state) }}"
   loop: "{{ proxmox_vms }}"
   when: proxmox_vms is defined
   register: vm_creation_result

@@ -1,0 +1,8 @@
+---
+ubuntu_cloud_image_url: "https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64.img"
+ubuntu_template_id: 9000
+ubuntu_template_name: "ubuntu-22.04-cloudimg"
+ubuntu_template_memory: 2048
+ubuntu_template_cores: 2
+ubuntu_template_storage: "{{ default_storage }}"
+cloud_image_download_path: "/tmp"
