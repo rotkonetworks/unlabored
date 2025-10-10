@@ -1,46 +1,83 @@
 # Standards: 0.2
 ---
-- name: Create predefined VMs
+- name: Check if VM exists
+  ansible.builtin.command:
+    cmd: "qm status {{ item.proxmox_config.vmid }}"
+  loop: "{{ proxmox_vms }}"
+  register: vm_check
+  failed_when: false
+  changed_when: false
+
+- name: Clone VMs that don't exist
+  ansible.builtin.shell: |
+    qm clone {{ item.item.proxmox_config.clone }} {{ item.item.proxmox_config.vmid }} \
+      --name {{ item.item.proxmox_config.name }} \
+      --full
+  loop: "{{ vm_check.results }}"
+  when:
+    - item.rc != 0
+    - item.item.proxmox_config.clone is defined
+
+- name: Update VM configuration
   community.general.proxmox_kvm:
     api_user: "{{ proxmox_defaults.api_user }}"
     api_token_id: "{{ proxmox_defaults.api_token_id }}"
     api_token_secret: "{{ proxmox_defaults.api_token_secret }}"
     api_host: "{{ proxmox_defaults.api_host }}"
     vmid: "{{ item.proxmox_config.vmid }}"
-    name: "{{ item.proxmox_config.name | default(item.host) }}"
-    node: "{{ item.proxmox_config.node | default(inventory_hostname) }}"
-    clone: "{{ item.proxmox_config.clone | default(omit) }}"
-    full: "{{ item.proxmox_config.full | default(omit) }}"
-    cores: "{{ item.proxmox_config.cores | default(default_vm_config.cores) }}"
-    memory: "{{ item.proxmox_config.memory | default(default_vm_config.memory) }}"
-    sockets: "{{ item.proxmox_config.sockets | default(1) }}"
-    cpu: "{{ item.proxmox_config.cpu | default('host') }}"
-    ostype: "{{ item.proxmox_config.ostype | default(default_vm_config.ostype) }}"
-    scsihw: "{{ item.proxmox_config.scsihw | default('virtio-scsi-pci') }}"
-    bootdisk: "{{ item.proxmox_config.bootdisk | default('scsi0') }}"
-    boot: "{{ item.proxmox_config.boot | default('order=scsi0;net0') }}"
-    agent: "{{ item.proxmox_config.agent | default(default_vm_config.agent) }}"
-    vga: "{{ item.proxmox_config.vga | default('serial0') }}"
-    serial:
-      serial0: socket
-    scsi: "{{ item.proxmox_config.scsi | default({}) }}"
-    net: "{{ item.proxmox_config.net | default({'net0': 'virtio,bridge=' + default_vm_config.net_bridge}) }}"
-    ciuser: "{{ item.proxmox_config.ciuser | default(omit) }}"
-    cipassword: "{{ item.proxmox_config.cipassword | default(omit) }}"
-    sshkeys: "{{ item.proxmox_config.sshkeys | default(omit) }}"
-    ipconfig: "{{ item.proxmox_config.ipconfig | default(omit) }}"
-    nameserver: "{{ item.proxmox_config.nameserver | default(omit) }}"
-    searchdomain: "{{ item.proxmox_config.searchdomain | default(omit) }}"
-    description: "{{ item.proxmox_config.description | default(omit) }}"
-    onboot: "{{ item.proxmox_config.onboot | default(default_vm_config.onboot) }}"
-    protection: "{{ item.proxmox_config.protection | default(omit) }}"
+    node: "{{ inventory_hostname }}"
+    cores: "{{ item.proxmox_config.cores }}"
+    memory: "{{ item.proxmox_config.memory }}"
+    update: yes
+    state: present
     validate_certs: "{{ proxmox_defaults.validate_certs }}"
-    state: "{{ item.proxmox_config.state | default(default_vm_config.state) }}"
   loop: "{{ proxmox_vms }}"
   when: proxmox_vms is defined
-  register: vm_creation_result
 
-- name: Start predefined VMs
+- name: Update disk configuration
+  ansible.builtin.shell: |
+    # First, check current disk size
+    current_size=$(qm config {{ item.proxmox_config.vmid }} | grep -E "^scsi0:" | grep -oP 'size=\K[0-9]+G')
+    # Resize if needed (extract size from scsi config)
+    new_size=$(echo "{{ item.proxmox_config.scsi.scsi0 }}" | grep -oP ':\K[0-9]+' || echo "256")
+    if [ "${current_size%G}" -lt "$new_size" ]; then
+      qm resize {{ item.proxmox_config.vmid }} scsi0 "${new_size}G"
+    fi
+  loop: "{{ proxmox_vms }}"
+  when:
+    - proxmox_vms is defined
+    - item.proxmox_config.scsi is defined
+  ignore_errors: yes
+
+- name: Update cloud-init configuration
+  ansible.builtin.shell: |
+    # Create temporary file for SSH key
+    TMPFILE=$(mktemp)
+    echo "{{ item.proxmox_config.sshkeys }}" > "$TMPFILE"
+
+    # Set cloud-init configuration
+    qm set {{ item.proxmox_config.vmid }} \
+      --ipconfig0 "{{ item.proxmox_config.ipconfig.ipconfig0 }}" \
+      --nameserver "{{ item.proxmox_config.nameserver }}" \
+      --ciuser "{{ item.proxmox_config.ciuser }}" \
+      --sshkeys "$TMPFILE"
+
+    # Clean up
+    rm -f "$TMPFILE"
+  loop: "{{ proxmox_vms }}"
+  when:
+    - proxmox_vms is defined
+    - item.proxmox_config.ipconfig is defined
+
+- name: Set additional VM options
+  ansible.builtin.shell: |
+    qm set {{ item.proxmox_config.vmid }} \
+      --onboot {{ item.proxmox_config.onboot | lower }} \
+      --description "{{ item.proxmox_config.description }}"
+  loop: "{{ proxmox_vms }}"
+  when: proxmox_vms is defined
+
+- name: Start VMs
   community.general.proxmox_kvm:
     api_user: "{{ proxmox_defaults.api_user }}"
     api_token_id: "{{ proxmox_defaults.api_token_id }}"
@@ -48,8 +85,8 @@
     api_host: "{{ proxmox_defaults.api_host }}"
     vmid: "{{ item.proxmox_config.vmid }}"
     state: started
+    validate_certs: "{{ proxmox_defaults.validate_certs }}"
   loop: "{{ proxmox_vms }}"
   when:
     - proxmox_vms is defined
     - item.proxmox_config.state == 'present'
-  register: vm_start_result
