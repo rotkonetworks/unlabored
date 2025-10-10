@@ -1,26 +1,26 @@
 # Standards: 0.2
 ---
-- name: Check if Ubuntu cloud image template already exists
+- name: Check if Debian cloud image template already exists
   ansible.builtin.command:
-    cmd: "qm status {{ ubuntu_template_id }}"
+    cmd: "qm status {{ debian_template_id }}"
   register: template_check
   failed_when: False
   changed_when: False
 
-- name: Download Ubuntu cloud image
+- name: Download Debian cloud image
   ansible.builtin.get_url:
-    url: "{{ ubuntu_cloud_image_url }}"
-    dest: "{{ cloud_image_download_path }}/jammy-server-cloudimg-amd64.img"
+    url: "{{ debian_cloud_image_url }}"
+    dest: "{{ cloud_image_download_path }}/debian-12-bookworm-cloudimg.qcow2"
     mode: '0644'
   when: template_check.rc != 0
 
 - name: Create VM for template
   ansible.builtin.command:
     cmd: >
-      qm create {{ ubuntu_template_id }}
-      --name {{ ubuntu_template_name }}
-      --memory {{ ubuntu_template_memory }}
-      --cores {{ ubuntu_template_cores }}
+      qm create {{ debian_template_id }}
+      --name {{ debian_template_name }}
+      --memory {{ debian_template_memory }}
+      --cores {{ debian_template_cores }}
       --net0 virtio,bridge=vmbr0
   when: template_check.rc != 0
   register: vm_create
@@ -28,47 +28,47 @@
 - name: Import disk to storage
   ansible.builtin.command:
     cmd: >
-      qm importdisk {{ ubuntu_template_id }}
-      {{ cloud_image_download_path }}/jammy-server-cloudimg-amd64.img
-      {{ ubuntu_template_storage }}
+      qm importdisk {{ debian_template_id }}
+      {{ cloud_image_download_path }}/debian-12-bookworm-cloudimg.qcow2
+      {{ debian_template_storage }}
   when: template_check.rc != 0
   register: disk_import
 
 - name: Attach disk to VM
   ansible.builtin.command:
     cmd: >
-      qm set {{ ubuntu_template_id }}
+      qm set {{ debian_template_id }}
       --scsihw virtio-scsi-pci
-      --scsi0 {{ ubuntu_template_storage }}:vm-{{ ubuntu_template_id }}-disk-0
+      --scsi0 {{ debian_template_storage }}:vm-{{ debian_template_id }}-disk-0
   when: template_check.rc != 0
 
 - name: Add cloud-init drive
   ansible.builtin.command:
-    cmd: "qm set {{ ubuntu_template_id }} --ide2 {{ ubuntu_template_storage }}:cloudinit"
+    cmd: "qm set {{ debian_template_id }} --ide2 {{ debian_template_storage }}:cloudinit"
   when: template_check.rc != 0
 
 - name: Set boot disk
   ansible.builtin.command:
-    cmd: "qm set {{ ubuntu_template_id }} --boot c --bootdisk scsi0"
+    cmd: "qm set {{ debian_template_id }} --boot c --bootdisk scsi0"
   when: template_check.rc != 0
 
 - name: Add serial console
   ansible.builtin.command:
-    cmd: "qm set {{ ubuntu_template_id }} --serial0 socket --vga serial0"
+    cmd: "qm set {{ debian_template_id }} --serial0 socket --vga serial0"
   when: template_check.rc != 0
 
 - name: Enable QEMU guest agent
   ansible.builtin.command:
-    cmd: "qm set {{ ubuntu_template_id }} --agent enabled=1"
+    cmd: "qm set {{ debian_template_id }} --agent enabled=1"
   when: template_check.rc != 0
 
 - name: Convert VM to template
   ansible.builtin.command:
-    cmd: "qm template {{ ubuntu_template_id }}"
+    cmd: "qm template {{ debian_template_id }}"
   when: template_check.rc != 0
 
 - name: Clean up downloaded image
   ansible.builtin.file:
-    path: "{{ cloud_image_download_path }}/jammy-server-cloudimg-amd64.img"
+    path: "{{ cloud_image_download_path }}/debian-12-bookworm-cloudimg.qcow2"
     state: absent
   when: template_check.rc != 0
