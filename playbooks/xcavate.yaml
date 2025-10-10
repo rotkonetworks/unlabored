@@ -6,5 +6,6 @@
   roles:
     - setup_add_node_role
     - setup_install_rust
+    - setup_networking_p2p
     - setup_install_xcavate
     - setup_install_nginx

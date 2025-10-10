@@ -51,6 +51,22 @@
     group: "{{ default_user }}"
     force: True
 
+- name: Check if the local chain spec file exists
+  ansible.builtin.stat:
+    path: "{{ default_chain_spec }}"
+  register: local_chain_spec
+  delegate_to: "{{ inventory_hostname }}"
+
+- name: Download chain spec if not present
+  ansible.builtin.get_url:
+    url: "{{ default_chain_spec_dl_url }}"
+    dest: "{{ default_chain_spec }}"
+    mode: "0644"
+    timeout: 60
+  when:
+    - not local_chain_spec.stat.exists
+  delegate_to: "{{ inventory_hostname }}"
+
 - name: Copy Xcavate systemd service for specific node type
   ansible.builtin.template:
     src: "{{ default_node_type }}.service.j2"

@@ -32,6 +32,7 @@ ExecStart={{ default_base_path }}/cumulus \
   --telemetry-url "wss://telemetry.rotko.net/submit/ 1" \
   --telemetry-url 'wss://telemetry.polkadot.io/submit 0' \
   --wasm-execution Compiled \
+  --pool-type=fork-aware \
   --no-hardware-benchmarks \
   --max-runtime-instances 32 \
   --rpc-max-request-size 16 \

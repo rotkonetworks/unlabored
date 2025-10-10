@@ -14,7 +14,7 @@
 
 - name: Stop Penumbra
   ansible.builtin.systemd:
-    name: penumbra
+    name: validator
     state: stopped
     enabled: True
 
@@ -31,9 +31,18 @@
     state: present # ensures it persists in /etc/sysctl.conf or a drop-in
     reload: yes # apply immediately
   loop:
-    - { key: "fs.inotify.max_user_instances", value: "{{ inotify_max_user_instances }}", }
-    - { key: "fs.inotify.max_user_watches", value: "{{ inotify_max_user_watches }}", }
-    - { key: "fs.inotify.max_queued_events", value: "{{ inotify_max_queued_events }}", }
+    - {
+        key: "fs.inotify.max_user_instances",
+        value: "{{ inotify_max_user_instances }}",
+      }
+    - {
+        key: "fs.inotify.max_user_watches",
+        value: "{{ inotify_max_user_watches }}",
+      }
+    - {
+        key: "fs.inotify.max_queued_events",
+        value: "{{ inotify_max_queued_events }}",
+      }
 
 - name: Export Penumbra Database
   ansible.builtin.command:
@@ -56,7 +65,7 @@
 
 - name: Start Penumbra
   ansible.builtin.systemd:
-    name: penumbra
+    name: validator
     state: started
     enabled: True
 

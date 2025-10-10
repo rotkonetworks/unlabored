@@ -63,7 +63,7 @@ LogFileSize=0
 # Mandatory: no
 # Default:
 # SourceIP=
-SourceIP={{ default_host_ip }}
+SourceIP={{ default_mgmt_host_ip }}
 
 ### Option: AllowKey
 #	Allow execution of item keys matching pattern.
@@ -130,7 +130,7 @@ Server={{ zabbix_master }}
 #
 # Mandatory: no
 # Default:
-ListenIP={{ default_host_ip }}
+ListenIP={{ default_mgmt_host_ip }}
 
 ### Option: StartAgents
 #	Number of pre-forked instances of zabbix_agentd that process passive checks.

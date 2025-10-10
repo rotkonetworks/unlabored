@@ -8,6 +8,8 @@ default_database: rocksdb
 default_database_path: "{{ default_base_path }}/chains"
 #TODO: we need to compile xcavate ourselves
 default_download_base_url: https://github.com/XcavateBlockchain/xcavate-node-paseo
+default_chain_spec: "{{ default_base_path }}/xcavate-polkadot-chainspec.json"
+default_chain_spec_dl_url: "https://raw.githubusercontent.com/XcavateBlockchain/xcavate-node-paseo/refs/heads/main/chainspec/polkadot/raw-parachain-chainspec.json"
 default_branch: main
 default_group: "{{ service_users['xcavate'] }}"
 default_log_level: info

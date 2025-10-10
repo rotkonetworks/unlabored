@@ -1,6 +1,6 @@
 ---
 default_base_path: /opt/hydration
-default_client_version: v38.1.2
+default_client_version: v41.0.0
 default_database: paritydb
 default_database_path: "{{ default_base_path }}/chains"
 default_download_base_url: https://github.com/galacticcouncil/Hydration-node/releases/download/

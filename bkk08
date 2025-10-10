@@ -33,6 +33,7 @@ rpc-polkadot-03
 val-paseo-02
 
 [cumulus]
+rpc-collectives-paseo-02
 rpc-passet-hub-paseo-02
 
 [penumbra]

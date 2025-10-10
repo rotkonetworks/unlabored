@@ -4,7 +4,10 @@ container_ip: "192.168.111.41"
 ansible_port: 3141
 host_name: "rpc-xcavate-polkadot-01.ct.rotko.net"
 host_timezone: "Asia/Bangkok"
-netif: '{"net0":"name=eth0,gw={{ default_nat_network_forward_cidr.split("/")[0] }},ip={{ default_host_ip }}/16,bridge={{ default_nat_device }}"}'
+# netif: '{"net0":"name=eth0,gw={{ default_nat_network_forward_cidr.split("/")[0] }},ip={{ default_mgmt_host_ip }}/16,bridge={{ default_nat_device }}"}'
+netif:
+  net0: "name=eth0,gw={{ default_nat_network_forward_cidr.split('/')[0] }},ip={{ default_mgmt_host_ip }}/16,bridge={{ default_nat_device }}"
+  net1: "name=eth1,gw={{ default_host_internal_ip }},ip=10.8.111.41/16,bridge={{ default_host_internal_bridge }}"
 role: "xcavate"
 pinned_service: True
 

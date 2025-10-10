@@ -1,0 +1,42 @@
+---
+name: Deploy & Install Unlabored
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Add remote host to known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -p ${{ secrets.REMOTE_PORT }} -H ${{ secrets.REMOTE_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Rsync repository to remote host
+        run: |
+          rsync -avz --delete -e "ssh -p ${{ secrets.REMOTE_PORT }}" ./ ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }}:${{ secrets.REMOTE_PATH }}
+
+      - name: Run unlabored installer on remote
+        run: |
+          ssh -p ${{ secrets.REMOTE_PORT }} ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} << 'EOF'
+            set -e
+
+            sudo apt update
+            sudo apt install -y python3 python3-venv python3-pip
+
+            echo '${{ secrets.NEW_VAULT_PASS }}' > "${{ secrets.REMOTE_PATH }}/.vault_pass"
+
+            cd "${{ secrets.REMOTE_PATH }}"
+            ./install_unlabored install \
+              -a "${{ secrets.REMOTE_USER }}" \
+              -k "${{ secrets.SSH_PRIVATE_KEY_PATH }}"
+          EOF

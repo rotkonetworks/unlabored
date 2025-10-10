@@ -34,7 +34,7 @@
 
 - name: Check if needs custom chain spec
   ansible.builtin.set_fact:
-    needs_custom_chain_spec: "{{ default_network in ['asset-hub-paseo', 'bridge-hub-paseo', 'coretime-paseo', 'people-paseo', 'passet-hub-paseo'] }}"
+    needs_custom_chain_spec: "{{ default_network in ['asset-hub-paseo', 'bridge-hub-paseo', 'coretime-paseo', 'people-paseo', 'passet-hub-paseo','collectives-paseo'] }}"
 
 - name: Check if the local chain spec file exists
   ansible.builtin.stat:
@@ -100,3 +100,63 @@
   ansible.builtin.systemd:
     name: cumulus
     state: started
+
+- name: Check if needs revive-rpc
+  ansible.builtin.set_fact:
+    needs_revive_rpc: "{{ default_network in ['asset-hub-kusama','asset-hub-paseo','asset-hub-westend','asset-hub-polkadot','passet-hub-paseo'] }}"
+
+- name: Check if the local revive-rpc exists
+  ansible.builtin.stat:
+    path: "{{ default_base_path }}/revive-rpc"
+  register: revive_rpc_local
+  when: needs_revive_rpc
+  delegate_to: "{{ inventory_hostname }}"
+
+- name: Download revive-rpc if not present
+  ansible.builtin.get_url:
+    url: "{{ default_revive_rpc_url }}"
+    dest: "{{ default_base_path }}/revive-rpc"
+    mode: "u+r+x"
+    timeout: 60
+  when:
+    - needs_revive_rpc
+  delegate_to: "{{ inventory_hostname }}"
+
+- name: Copy revive-rpc systemd service
+  ansible.builtin.template:
+    src: "revive-rpc.service.j2"
+    dest: "{{ default_base_path }}/revive-rpc.service"
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+    mode: "0640"
+  when: needs_revive_rpc
+
+- name: Symlink revive-rpc service to systemd
+  ansible.builtin.file:
+    src: "{{ default_base_path }}/revive-rpc.service"
+    dest: "/etc/systemd/system/revive-rpc.service"
+    state: link
+    force: True
+    owner: "root"
+    group: "root"
+    mode: "0644"
+  when: needs_revive_rpc
+
+- name: Stop revive-rpc
+  ansible.builtin.systemd:
+    name: revive-rpc
+    state: stopped
+    enabled: True
+  when: needs_revive_rpc
+
+- name: Systemd daemon-reload
+  ansible.builtin.systemd:
+    daemon_reload: True
+  when: needs_revive_rpc
+
+- name: Start revive-rpc
+  ansible.builtin.systemd:
+    name: revive-rpc
+    state: started
+    enabled: True
+  when: needs_revive_rpc
