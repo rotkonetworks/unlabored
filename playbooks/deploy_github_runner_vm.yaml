@@ -8,7 +8,7 @@
     - role: proxmox_setup_vms
 
 - name: Configure GitHub Runner
-  hosts: ibp-th-collective-runner-01
+  hosts: ibp-th-collective-runner-02
   gather_facts: True
   roles:
     - role: setup_set_default_locale

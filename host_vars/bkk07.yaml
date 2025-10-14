@@ -55,6 +55,31 @@ proxmox_vms:
       - from_port: "{{ hostvars['ibp-th-collective-runner-01']['ansible_port'] }}"
         to_host: "{{ hostvars['ibp-th-collective-runner-01']['container_ip'] }}:22"
         protocol: "tcp"
+  - host: "ibp-th-collective-runner-02"
+    proxmox_config:
+      vmid: 500002
+      name: "{{ hostvars['ibp-th-collective-runner-02']['host_name'].split('.')[0] }}"
+      clone: 9001
+      full: True
+      cores: 8
+      memory: 32768
+      scsihw: "virtio-scsi-pci"
+      scsi:
+        scsi0: "{{ zfs_storage }}:256,discard=on"
+      net:
+        net0: "virtio,bridge=vmbr0"
+      ipconfig:
+        ipconfig0: "ip={{ hostvars['ibp-th-collective-runner-02']['container_ip'] }}/24,gw=192.168.69.1"
+      nameserver: "1.1.1.1"
+      ciuser: "admin"
+      sshkeys: "{{ lookup('file', '~/.ssh/unlabored/ansible_ssh_key.pub') | default('') }}"
+      onboot: True
+      state: present
+      description: "GitHub Runner: {{ hostvars['ibp-th-collective-runner-02']['host_name'] }}"
+    port_forwards:
+      - from_port: "{{ hostvars['ibp-th-collective-runner-02']['ansible_port'] }}"
+        to_host: "{{ hostvars['ibp-th-collective-runner-02']['container_ip'] }}:22"
+        protocol: "tcp"
 
 lxc_nodes:
   - host: "rpc-asset-hub-paseo-02"

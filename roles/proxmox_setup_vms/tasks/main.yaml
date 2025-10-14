@@ -34,20 +34,19 @@
   loop: "{{ proxmox_vms }}"
   when: proxmox_vms is defined
 
-- name: Update disk configuration
+- name: Resize VM disks to target size
   ansible.builtin.shell: |
-    # First, check current disk size
-    current_size=$(qm config {{ item.proxmox_config.vmid }} | grep -E "^scsi0:" | grep -oP 'size=\K[0-9]+G')
-    # Resize if needed (extract size from scsi config)
-    new_size=$(echo "{{ item.proxmox_config.scsi.scsi0 }}" | grep -oP ':\K[0-9]+' || echo "256")
-    if [ "${current_size%G}" -lt "$new_size" ]; then
-      qm resize {{ item.proxmox_config.vmid }} scsi0 "${new_size}G"
-    fi
+    qm resize {{ item.proxmox_config.vmid }} scsi0 {{ item.proxmox_config.scsi.scsi0 | regex_search(':\d+') | regex_replace(':', '') }}G
   loop: "{{ proxmox_vms }}"
   when:
     - proxmox_vms is defined
     - item.proxmox_config.scsi is defined
-  ignore_errors: yes
+    - item.proxmox_config.scsi.scsi0 is defined
+  register: resize_result
+  failed_when:
+    - resize_result.rc != 0
+    - '"unable to shrink disk size" not in resize_result.stderr'
+  changed_when: resize_result.rc == 0
 
 - name: Update cloud-init configuration
   ansible.builtin.shell: |
