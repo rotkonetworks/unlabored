@@ -2,13 +2,13 @@
 host_name: "ibp-th-collective-runner-02.rotko.net"
 ansible_host: "160.22.181.181"
 ansible_port: 25002
-container_ip: "192.168.45.252"
+container_ip: "100.64.0.2"
 role: "github_runner"
 
 host_timezone: "Asia/Bangkok"
 
 # GitHub Runner Configuration
-runner_name: "ibp-th-collective-runner-02"
+runner_name: "ibp-th-collective-runner-01"
 runner_org: "{{ vault_github_runner_org }}"
 runner_scope: "org"
 runner_labels: "self-hosted,ephemeral,ubuntu,rotko"
