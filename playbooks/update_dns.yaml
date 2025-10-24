@@ -1,0 +1,8 @@
+# Standards: 0.2
+---
+- name: Update DNS configuration to Quad9
+  hosts: cumulus:polkadot:encointer:lv6
+  gather_facts: True
+  become: true
+  roles:
+    - setup_set_dns
