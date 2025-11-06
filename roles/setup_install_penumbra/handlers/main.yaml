@@ -31,27 +31,20 @@
     state: present # ensures it persists in /etc/sysctl.conf or a drop-in
     reload: yes # apply immediately
   loop:
-    - {
-        key: "fs.inotify.max_user_instances",
-        value: "{{ inotify_max_user_instances }}",
-      }
-    - {
-        key: "fs.inotify.max_user_watches",
-        value: "{{ inotify_max_user_watches }}",
-      }
-    - {
-        key: "fs.inotify.max_queued_events",
-        value: "{{ inotify_max_queued_events }}",
-      }
+    - key: "fs.inotify.max_user_instances"
+      value: "{{ inotify_max_user_instances }}"
+    - key: "fs.inotify.max_user_watches"
+      value: "{{ inotify_max_user_watches }}"
+    - key: "fs.inotify.max_queued_events"
+      value: "{{ inotify_max_queued_events }}"
 
 - name: Export Penumbra Database
   ansible.builtin.command:
     cmd: "pd migrate --home {{ default_database_path }} --comet-home {{ default_database_path }}/node0/cometbft"
-    executable: /bin/bash
   args:
     executable: /bin/bash
-    #NOTE: linting give this error
-  # when: "{{ ansible_local['noderole']['node']['version'] != penumbra_version }}"
+    # NOTE: linting give this error
+    # when: "{{ ansible_local['noderole']['node']['version'] != penumbra_version }}"
 
 - name: Systemd daemon-reload
   ansible.builtin.systemd:

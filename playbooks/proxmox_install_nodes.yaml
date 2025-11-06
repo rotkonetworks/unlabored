@@ -87,7 +87,7 @@
   hosts: evmos
   gather_facts: True
   roles:
-#     - setup_install_evmos
+    - setup_install_evmos
 
 - name: Install Polkadot services
   hosts: polkadot

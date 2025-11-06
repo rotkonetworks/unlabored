@@ -11,7 +11,7 @@
     path: /etc/iproute2/rt_tables
     line: "100 eth1_table"
     state: present
-    backup: true
+    backup: True
   notify:
     - Apply P2P routing rules
 
@@ -28,8 +28,8 @@
   ansible.builtin.command:
     cmd: ip route show table eth1_table
   register: route_check
-  changed_when: false
-  failed_when: false
+  changed_when: False
+  failed_when: False
 
 - name: Add default route for eth1 table
   ansible.builtin.command:
@@ -42,7 +42,7 @@
   ansible.builtin.command:
     cmd: ip rule show
   register: rules_check
-  changed_when: false
+  changed_when: False
 
 - name: Add IP rule for return traffic from node internal IP
   ansible.builtin.command:
@@ -63,14 +63,14 @@
   ansible.builtin.template:
     src: nftables.conf.j2
     dest: /etc/nftables.conf
-    backup: true
+    mode: "0644"
+    backup: True
   notify:
     - Restart nftables service
 
 - name: Enable and start nftables service
   ansible.builtin.systemd:
     name: nftables
-    enabled: true
+    enabled: True
     state: started
-    daemon_reload: true
-
+    daemon_reload: True
