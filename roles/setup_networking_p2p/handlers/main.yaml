@@ -9,7 +9,7 @@
   ansible.builtin.systemd:
     name: nftables
     state: restarted
-    daemon_reload: true
+    daemon_reload: True
 
 - name: Save routing rules persistently
   ansible.builtin.shell: |

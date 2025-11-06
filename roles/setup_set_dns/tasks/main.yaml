@@ -3,7 +3,7 @@
   ansible.builtin.copy:
     src: /etc/resolv.conf
     dest: /etc/resolv.conf.backup.{{ ansible_date_time.epoch }}
-    remote_src: true
+    remote_src: True
     mode: "0644"
 
 - name: Update resolv.conf with Quad9 DNS
@@ -19,15 +19,17 @@
   ansible.builtin.file:
     path: /etc/resolv.conf
     attributes: "-i"
-  ignore_errors: true
+  failed_when: false
+  register: immutable_result
 
 - name: Disable systemd-resolved if present (Ubuntu/Debian)
   ansible.builtin.systemd:
     name: systemd-resolved
     state: stopped
-    enabled: false
+    enabled: False
   when: ansible_os_family == "Debian"
-  ignore_errors: true
+  failed_when: false
+  register: systemd_resolved_result
 
 - name: Remove systemd-resolved symlink if exists
   ansible.builtin.file:
@@ -37,7 +39,8 @@
     - ansible_os_family == "Debian"
     - ansible_facts['stat']['exists'] is defined
     - ansible_facts['stat']['islnk'] is defined
-  ignore_errors: true
+  failed_when: false
+  register: symlink_removal_result
 
 # - name: Create new resolv.conf with Quad9 DNS
 #   ansible.builtin.copy:
@@ -56,11 +59,10 @@
 - name: Verify DNS resolution
   ansible.builtin.command: nslookup google.com 9.9.9.9
   register: dns_test
-  changed_when: false
-  failed_when: false
+  changed_when: False
+  failed_when: False
 
 - name: Display DNS test result
   ansible.builtin.debug:
     msg: "DNS test result: {{ dns_test.stdout_lines | default(['Test failed']) }}"
   when: dns_test is defined
-

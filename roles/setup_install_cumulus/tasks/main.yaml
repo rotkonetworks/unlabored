@@ -34,7 +34,7 @@
 
 - name: Check if needs custom chain spec
   ansible.builtin.set_fact:
-    needs_custom_chain_spec: "{{ default_network in ['asset-hub-paseo', 'bridge-hub-paseo', 'coretime-paseo', 'people-paseo', 'passet-hub-paseo','collectives-paseo'] }}"
+    needs_custom_chain_spec: "{{ default_network in ['asset-hub-paseo', 'bridge-hub-paseo', 'coretime-paseo', 'people-paseo', 'passet-hub-paseo', 'collectives-paseo'] }}"
 
 - name: Check if the local chain spec file exists
   ansible.builtin.stat:
@@ -103,7 +103,7 @@
 
 - name: Check if needs revive-rpc
   ansible.builtin.set_fact:
-    needs_revive_rpc: "{{ default_network in ['asset-hub-kusama','asset-hub-paseo','asset-hub-westend','asset-hub-polkadot','passet-hub-paseo'] }}"
+    needs_revive_rpc: "{{ default_network in ['asset-hub-kusama', 'asset-hub-paseo', 'asset-hub-westend', 'asset-hub-polkadot', 'passet-hub-paseo'] }}"
 
 - name: Check if the local revive-rpc exists
   ansible.builtin.stat:
