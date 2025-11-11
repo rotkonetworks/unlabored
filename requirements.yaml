@@ -7,3 +7,5 @@ collections:
 
 roles:
   - src: geerlingguy.postfix
+  - src: https://github.com/ibp-network/ansible-role-github-runner-ephemeral
+    name: github_runner_ephemeral
