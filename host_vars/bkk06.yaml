@@ -32,7 +32,8 @@ lxc_nodes:
     proxmox_config:
       vmid: "310601"
       hostname: "{{ hostvars['rpc-people-polkadot-01']['host_name'] }}"
-      ostemplate: "local:vztmpl/{{ default_container_template }}"
+      # ostemplate: "local:vztmpl/{{ default_container_template }}"
+      update: True
       netif: "{{ hostvars['rpc-people-polkadot-01']['netif'] }}"
       cores: 4
       memory: 16384
@@ -168,14 +169,15 @@ lxc_nodes:
     proxmox_config:
       vmid: "31011"
       hostname: "{{ hostvars['rpc-asset-hub-polkadot-01']['host_name'] }}"
-      ostemplate: "local:vztmpl/{{ default_container_template }}"
+      # ostemplate: "local:vztmpl/{{ default_container_template }}"
+      update: True
       netif: "{{ hostvars['rpc-asset-hub-polkadot-01']['netif'] }}"
       cores: 4
       memory: 16384
       swap: 8192
       password: "{{ default_password }}"
       disk: "{{ zfs_storage }}:20"
-      mounts: '{"mp0":"{{ zfs_storage }}:200,mp={{ hostvars["rpc-asset-hub-polkadot-01"]["default_database_path"] }}"}'
+      mounts: '{"mp0":"{{ zfs_storage }}:350,mp={{ hostvars["rpc-asset-hub-polkadot-01"]["default_database_path"] }}"}'
       onboot: True
       unprivileged: True
       validate_certs: False
@@ -344,14 +346,15 @@ lxc_nodes:
     proxmox_config:
       vmid: "31001"
       hostname: "{{ hostvars['rpc-polkadot-01']['host_name'] }}"
-      ostemplate: "local:vztmpl/{{ default_container_template }}"
+      # ostemplate: "local:vztmpl/{{ default_container_template }}"
+      update: True
       netif: "{{ hostvars['rpc-polkadot-01']['netif'] }}"
       cores: 4
       memory: 16384
       swap: 8192
       password: "{{ default_password }}"
       disk: "{{ zfs_storage }}:20"
-      mounts: '{"mp0":"{{ zfs_storage }}:2000,mp={{ hostvars["rpc-polkadot-01"]["default_database_path"] }}"}'
+      mounts: '{"mp0":"{{ zfs_storage }}:3500,mp={{ hostvars["rpc-polkadot-01"]["default_database_path"] }}"}'
       onboot: True
       unprivileged: True
       validate_certs: False
@@ -579,14 +582,15 @@ lxc_nodes:
     proxmox_config:
       vmid: "34001"
       hostname: "{{ hostvars['rpc-paseo-01']['host_name'] }}"
-      ostemplate: "local:vztmpl/{{ default_container_template }}"
+      # ostemplate: "local:vztmpl/{{ default_container_template }}"
+      update: True
       netif: "{{ hostvars['rpc-paseo-01']['netif'] }}"
       cores: 4
       memory: 16384
       swap: 8192
       password: "{{ default_password }}"
       disk: "{{ zfs_storage }}:20"
-      mounts: '{"mp0":"{{ zfs_storage }}:300,mp={{ hostvars["rpc-paseo-01"]["default_database_path"] }}"}'
+      mounts: '{"mp0":"{{ zfs_storage }}:1500,mp={{ hostvars["rpc-paseo-01"]["default_database_path"] }}"}'
       onboot: True
       unprivileged: True
       validate_certs: False
@@ -617,14 +621,15 @@ lxc_nodes:
     proxmox_config:
       vmid: "32001"
       hostname: "{{ hostvars['rpc-kusama-01']['host_name'] }}"
-      ostemplate: "local:vztmpl/{{ default_container_template }}"
+      # ostemplate: "local:vztmpl/{{ default_container_template }}"
+      update: True
       netif: "{{ hostvars['rpc-kusama-01']['netif'] }}"
       cores: 4
       memory: 16384
       swap: 8192
       password: "{{ default_password }}"
       disk: "{{ zfs_storage }}:20"
-      mounts: '{"mp0":"{{ zfs_storage }}:4000,mp={{ hostvars["rpc-kusama-01"]["default_database_path"] }}"}'
+      mounts: '{"mp0":"{{ zfs_storage }}:4500,mp={{ hostvars["rpc-kusama-01"]["default_database_path"] }}"}'
       onboot: True
       unprivileged: True
       validate_certs: False

@@ -129,7 +129,8 @@ lxc_nodes:
     proxmox_config:
       vmid: "3313"
       hostname: "{{ hostvars['rpc-polkadot-03']['host_name'] }}"
-      ostemplate: "local:vztmpl/{{ default_container_template }}"
+      # ostemplate: "local:vztmpl/{{ default_container_template }}"
+      update: True
       netif: "{{ hostvars['rpc-polkadot-03']['netif'] }}"
       cores: 4
       memory: 16384
