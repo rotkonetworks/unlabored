@@ -49,11 +49,7 @@ penumbra-02
 [polkadot]
 rpc-polkadot-02
 rpc-kusama-02
-rpc-westend-02
 rpc-paseo-02
-pso07
-val-polkadot-02
-val-kusama-02
 val-paseo-01
 
 

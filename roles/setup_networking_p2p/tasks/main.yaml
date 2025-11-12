@@ -1,76 +1,84 @@
 # roles/setup_networking_p2p/tasks/main.yaml
 # Standards: 0.2
 ---
-- name: Install nftables package
-  ansible.builtin.package:
-    name: nftables
-    state: present
+- name: Setup P2P networking
+  when: container_internal_ip is defined
+  block:
+    - name: Install nftables package
+      ansible.builtin.package:
+        name: nftables
+        state: present
 
-- name: Add eth1_table to routing tables
-  ansible.builtin.lineinfile:
-    path: /etc/iproute2/rt_tables
-    line: "100 eth1_table"
-    state: present
-    backup: True
-  notify:
-    - Apply P2P routing rules
+    - name: Add eth1_table to routing tables
+      ansible.builtin.lineinfile:
+        path: /etc/iproute2/rt_tables
+        line: "100 eth1_table"
+        state: present
+        backup: True
+      notify:
+        - Apply P2P routing rules
 
-- name: Get eth1 network gateway
-  ansible.builtin.set_fact:
-    eth1_gateway: "{{ ansible_eth1.ipv4.network | regex_replace('\\.\\d+$', '.1') }}"
-  when: ansible_eth1 is defined
+    - name: Get eth1 network gateway
+      ansible.builtin.set_fact:
+        eth1_gateway: "{{ ansible_eth1.ipv4.network | regex_replace('\\.\\d+$', '.1') }}"
+      when: ansible_eth1 is defined
 
-# Note: Unfortunately, there's no built-in Ansible module for advanced ip route/rule management
-# The community.general.ip_route module doesn't support routing tables
-# So we still need to use commands for these
+    # Note: Unfortunately, there's no built-in Ansible module for advanced ip route/rule management
+    # The community.general.ip_route module doesn't support routing tables
+    # So we still need to use commands for these
 
-- name: Check if default route exists in eth1_table
-  ansible.builtin.command:
-    cmd: ip route show table eth1_table
-  register: route_check
-  changed_when: False
-  failed_when: False
+    - name: Check if default route exists in eth1_table
+      ansible.builtin.command:
+        cmd: ip route show table eth1_table
+      register: route_check
+      changed_when: False
+      failed_when: False
 
-- name: Add default route for eth1 table
-  ansible.builtin.command:
-    cmd: "ip route add default via {{ eth1_gateway }} dev eth1 table eth1_table"
-  when: "'default' not in route_check.stdout"
-  notify:
-    - Apply P2P routing rules
+    - name: Add default route for eth1 table
+      ansible.builtin.command:
+        cmd: "ip route add default via {{ eth1_gateway }} dev eth1 table eth1_table"
+      when: "'default' not in route_check.stdout"
+      notify:
+        - Apply P2P routing rules
 
-- name: Check existing IP rules
-  ansible.builtin.command:
-    cmd: ip rule show
-  register: rules_check
-  changed_when: False
+    - name: Check existing IP rules
+      ansible.builtin.command:
+        cmd: ip rule show
+      register: rules_check
+      changed_when: False
 
-- name: Add IP rule for return traffic from node internal IP
-  ansible.builtin.command:
-    cmd: "ip rule add from {{ container_internal_ip }} table eth1_table"
-  when: "container_internal_ip not in rules_check.stdout"
-  notify:
-    - Apply P2P routing rules
+    - name: Add IP rule for return traffic from node internal IP
+      ansible.builtin.command:
+        cmd: "ip rule add from {{ container_internal_ip }} table eth1_table"
+      when: "container_internal_ip not in rules_check.stdout"
+      notify:
+        - Apply P2P routing rules
 
-- name: Add IP rule for fwmark traffic
-  ansible.builtin.command:
-    cmd: ip rule add fwmark 1 table eth1_table
-  when: "'fwmark 0x1' not in rules_check.stdout"
-  notify:
-    - Apply P2P routing rules
+    - name: Add IP rule for fwmark traffic
+      ansible.builtin.command:
+        cmd: ip rule add fwmark 1 table eth1_table
+      when: "'fwmark 0x1' not in rules_check.stdout"
+      notify:
+        - Apply P2P routing rules
 
-# For nftables, we can use a template or define rules in a more structured way
-- name: Configure nftables rules
-  ansible.builtin.template:
-    src: nftables.conf.j2
-    dest: /etc/nftables.conf
-    mode: "0644"
-    backup: True
-  notify:
-    - Restart nftables service
+    # For nftables, we can use a template or define rules in a more structured way
+    - name: Configure nftables rules
+      ansible.builtin.template:
+        src: nftables.conf.j2
+        dest: /etc/nftables.conf
+        mode: "0644"
+        backup: True
+      notify:
+        - Restart nftables service
 
-- name: Enable and start nftables service
-  ansible.builtin.systemd:
-    name: nftables
-    enabled: True
-    state: started
-    daemon_reload: True
+    - name: Enable and start nftables service
+      ansible.builtin.systemd:
+        name: nftables
+        enabled: True
+        state: started
+        daemon_reload: True
+
+    - name: Reload nftables to ensure all rules are applied
+      ansible.builtin.systemd:
+        name: nftables
+        state: reloaded

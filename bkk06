@@ -64,7 +64,6 @@ rpc-hydration-polkadot-01
 
 [polkadot]
 rpc-polkadot-01
-rpc-westend-01
 rpc-paseo-01
 rpc-kusama-01
 

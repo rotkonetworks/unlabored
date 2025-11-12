@@ -1,6 +1,7 @@
 ---
 ansible_host: "160.22.181.181"
 container_ip: "192.168.111.10"
+container_internal_ip: "10.6.111.10"
 ansible_port: 2311
 host_name: "rpc-polkadot-01.ct.rotko.net"
 host_timezone: "Asia/Bangkok"
