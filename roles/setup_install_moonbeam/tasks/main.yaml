@@ -59,6 +59,22 @@
 - name: Refresh facts
   ansible.builtin.setup:
 
+- name: Check if the local chain spec file exists
+  ansible.builtin.stat:
+    path: "{{ default_chain_spec }}"
+  register: local_chain_spec
+  delegate_to: "{{ inventory_hostname }}"
+
+- name: Download chain spec if not present
+  ansible.builtin.get_url:
+    url: "{{ default_chain_spec_dl_url }}"
+    dest: "{{ default_chain_spec }}"
+    mode: "0644"
+    timeout: 60
+  when:
+    - not local_chain_spec.stat.exists
+  delegate_to: "{{ inventory_hostname }}"
+
 - name: Install Moonbeam v{{ default_client_version }}
   ansible.builtin.get_url:
     url: "{{ default_download_url }}"

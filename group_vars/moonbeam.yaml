@@ -1,12 +1,16 @@
 ---
-default_client_version: 0.47.2
-default_download_url: https://github.com/moonbeam-foundation/moonbeam/releases/download/v{{ default_client_version }}/moonbeam
+# default_client_version: 0.47.2
+# default_download_url: https://github.com/moonbeam-foundation/moonbeam/releases/download/v{{ default_client_version }}/moonbeam
+default_client_version: polkadot-stable2509-1
+default_download_url: https://github.com/paritytech/polkadot-sdk/releases/download/{{ default_client_version }}/polkadot-omni-node
+default_chain_spec_dl_url: https://raw.githubusercontent.com/moonbeam-foundation/moonbeam/refs/heads/master/specs/moonbeam/parachain-embedded-specs.json
 
 default_service: moonbeam
 default_user: "{{ service_users['moonbeam'] }}"
 default_group: "{{ service_users['moonbeam'] }}"
 default_base_path: /opt/moonbeam
-default_database_path: /opt/moonbeam/chains
+default_database_path: "{{ default_base_path }}/chains"
+default_chain_spec: "{{ default_base_path }}/moonbeam.json"
 default_log_level: info
 default_base_port: 30333
 default_base_rpc_port: 9400
