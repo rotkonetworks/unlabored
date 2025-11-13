@@ -5,8 +5,8 @@
   gather_facts: True
   roles:
     - setup_add_node_role
-    # - setup_install_rust
-    # - setup_install_promtail
+    - setup_install_rust
+    - setup_install_promtail
     - setup_networking_p2p
     - setup_install_cumulus
     - setup_install_nginx
