@@ -63,6 +63,9 @@ penumbra-01
 penumbra-02
 penumbra-03
 
+[zebra]
+rpc-zcash-01
+
 [kilt]
 rpc-kilt-polkadot-01
 rpc-kilt-polkadot-02

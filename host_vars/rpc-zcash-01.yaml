@@ -1,0 +1,14 @@
+---
+ansible_host: "160.22.181.181"
+container_ip: "10.7.0.200"
+ansible_port: 22901
+host_name: "rpc-zcash-01.rotko.net"
+role: "zebra"
+default_network: "Mainnet"
+default_node_type: "endpoint"
+default_database_path: /opt/zebra/state
+default_p2p_port: 8233
+default_rpc_port: 8232
+default_prom_port: 9999
+zabbix_ext_port: 10901
+netif: '{"net0":"name=eth0,gw=10.7.0.1,ip={{ container_ip }}/24,bridge=vmbr1"}'

@@ -992,3 +992,32 @@ lxc_nodes:
       - from_port: "{{ hostvars['rpc-collectives-paseo-01']['default_p2p_port'] }}"
         to_host: "{{ hostvars['rpc-collectives-paseo-01']['container_ip'] }}:{{ hostvars['rpc-collectives-paseo-01']['default_p2p_port'] }}"
         protocol: "tcp"
+  - host: "rpc-zcash-01"
+    proxmox_config:
+      vmid: "350001"
+      hostname: "{{ hostvars['rpc-zcash-01']['host_name'] }}"
+      ostemplate: "local:vztmpl/{{ default_container_template }}"
+      netif: "{{ hostvars['rpc-zcash-01']['netif'] }}"
+      cores: 2
+      memory: 8192
+      swap: 4096
+      password: "{{ default_password }}"
+      disk: "{{ zfs_storage }}:20"
+      mounts: '{"mp0":"{{ zfs_storage }}:0,mp={{ hostvars["rpc-zcash-01"]["default_database_path"] }}"}'
+      onboot: True
+      unprivileged: True
+      validate_certs: False
+      description: "Zcash {{ hostvars['rpc-zcash-01']['default_node_type'] }}: {{ hostvars['rpc-zcash-01']['host_name'] }}"
+      state: present
+      features:
+        - nesting=1
+    port_forwards:
+      - from_port: "{{ hostvars['rpc-zcash-01']['ansible_port'] }}"
+        to_host: "{{ hostvars['rpc-zcash-01']['container_ip'] }}:{{ ssh_port }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['rpc-zcash-01']['zabbix_ext_port'] }}"
+        to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['rpc-zcash-01']['default_p2p_port'] }}"
+        to_host: "{{ hostvars['rpc-zcash-01']['container_ip'] }}:{{ hostvars['rpc-zcash-01']['default_p2p_port'] }}"
+        protocol: "tcp"
