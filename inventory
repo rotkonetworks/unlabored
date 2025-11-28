@@ -10,6 +10,7 @@ routers
 cumulus
 encointer
 polkadot
+github_runner
 
 [lv6:children]
 xcavate
@@ -42,6 +43,10 @@ dockers-08
 proxy-bkk07
 peering-node-07
 
+[github_runner]
+ibp-th-collective-runner-01
+ibp-th-collective-runner-02
+
 [proxmox_nodes]
 ansible
 matrix
@@ -57,6 +62,9 @@ bkk50
 penumbra-01
 penumbra-02
 penumbra-03
+
+[zebra]
+rpc-zcash-01
 
 [kilt]
 rpc-kilt-polkadot-01

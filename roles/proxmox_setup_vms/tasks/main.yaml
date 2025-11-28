@@ -1,29 +1,82 @@
-# tasks/main.yaml
+# Standards: 0.2
 ---
-- name: Create predefined VMs
+- name: Check if VM exists
+  ansible.builtin.command:
+    cmd: "qm status {{ item.proxmox_config.vmid }}"
+  loop: "{{ proxmox_vms }}"
+  register: vm_check
+  failed_when: false
+  changed_when: false
+
+- name: Clone VMs that don't exist
+  ansible.builtin.shell: |
+    qm clone {{ item.item.proxmox_config.clone }} {{ item.item.proxmox_config.vmid }} \
+      --name {{ item.item.proxmox_config.name }} \
+      --full
+  loop: "{{ vm_check.results }}"
+  when:
+    - item.rc != 0
+    - item.item.proxmox_config.clone is defined
+
+- name: Update VM configuration
   community.general.proxmox_kvm:
     api_user: "{{ proxmox_defaults.api_user }}"
     api_token_id: "{{ proxmox_defaults.api_token_id }}"
     api_token_secret: "{{ proxmox_defaults.api_token_secret }}"
     api_host: "{{ proxmox_defaults.api_host }}"
     vmid: "{{ item.proxmox_config.vmid }}"
-    name: "{{ item.proxmox_config.name }}"
+    node: "{{ inventory_hostname }}"
     cores: "{{ item.proxmox_config.cores }}"
     memory: "{{ item.proxmox_config.memory }}"
-    disks:
-      - size: "{{ item.proxmox_config.disk_size }}"
-        storage: "{{ item.proxmox_config.storage }}"
-    net:
-      - bridge: "{{ item.proxmox_config.net_bridge }}"
-        model: virtio
-    onboot: "{{ item.proxmox_config.onboot }}"
+    update: yes
+    state: present
     validate_certs: "{{ proxmox_defaults.validate_certs }}"
-    state: "{{ item.proxmox_config.state }}"
   loop: "{{ proxmox_vms }}"
   when: proxmox_vms is defined
-  register: vm_creation_result
 
-- name: Start predefined VMs
+- name: Resize VM disks to target size
+  ansible.builtin.shell: |
+    qm resize {{ item.proxmox_config.vmid }} scsi0 {{ item.proxmox_config.scsi.scsi0 | regex_search(':\d+') | regex_replace(':', '') }}G
+  loop: "{{ proxmox_vms }}"
+  when:
+    - proxmox_vms is defined
+    - item.proxmox_config.scsi is defined
+    - item.proxmox_config.scsi.scsi0 is defined
+  register: resize_result
+  failed_when:
+    - resize_result.rc != 0
+    - '"unable to shrink disk size" not in resize_result.stderr'
+  changed_when: resize_result.rc == 0
+
+- name: Update cloud-init configuration
+  ansible.builtin.shell: |
+    # Create temporary file for SSH key
+    TMPFILE=$(mktemp)
+    echo "{{ item.proxmox_config.sshkeys }}" > "$TMPFILE"
+
+    # Set cloud-init configuration
+    qm set {{ item.proxmox_config.vmid }} \
+      --ipconfig0 "{{ item.proxmox_config.ipconfig.ipconfig0 }}" \
+      --nameserver "{{ item.proxmox_config.nameserver }}" \
+      --ciuser "{{ item.proxmox_config.ciuser }}" \
+      --sshkeys "$TMPFILE"
+
+    # Clean up
+    rm -f "$TMPFILE"
+  loop: "{{ proxmox_vms }}"
+  when:
+    - proxmox_vms is defined
+    - item.proxmox_config.ipconfig is defined
+
+- name: Set additional VM options
+  ansible.builtin.shell: |
+    qm set {{ item.proxmox_config.vmid }} \
+      --onboot {{ item.proxmox_config.onboot | lower }} \
+      --description "{{ item.proxmox_config.description }}"
+  loop: "{{ proxmox_vms }}"
+  when: proxmox_vms is defined
+
+- name: Start VMs
   community.general.proxmox_kvm:
     api_user: "{{ proxmox_defaults.api_user }}"
     api_token_id: "{{ proxmox_defaults.api_token_id }}"
@@ -31,8 +84,8 @@
     api_host: "{{ proxmox_defaults.api_host }}"
     vmid: "{{ item.proxmox_config.vmid }}"
     state: started
+    validate_certs: "{{ proxmox_defaults.validate_certs }}"
   loop: "{{ proxmox_vms }}"
   when:
     - proxmox_vms is defined
     - item.proxmox_config.state == 'present'
-  register: vm_start_result
