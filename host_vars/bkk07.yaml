@@ -1022,7 +1022,7 @@ lxc_nodes:
       swap: 4096
       password: "{{ default_password }}"
       disk: "{{ zfs_storage }}:20"
-      mounts: '{"mp0":"{{ zfs_storage }}:0,mp={{ hostvars["rpc-zcash-01"]["default_database_path"] }}"}'
+      mounts: '{"mp0":"{{ zfs_storage }}:200,mp={{ hostvars["rpc-zcash-01"]["default_database_path"] }}"}'
       onboot: True
       unprivileged: True
       validate_certs: False

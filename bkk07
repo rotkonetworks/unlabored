@@ -14,6 +14,7 @@ penumbra
 encointer
 github_runner
 misc-container
+zebra
 
 [github_runner]
 ibp-th-collective-runner-01
@@ -42,6 +43,9 @@ talosctl0701
 
 [routers]
 bkk50
+
+[zebra]
+rpc-zcash-01
 
 [penumbra]
 penumbra-02

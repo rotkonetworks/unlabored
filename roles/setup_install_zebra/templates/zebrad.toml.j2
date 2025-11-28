@@ -25,6 +25,7 @@ initial_testnet_peers = [
     "testnet.is.yolo.money:18233"
 ]
 listen_addr = "0.0.0.0:{{ default_p2p_port }}"
+external_addr = "{{ default_ansible_host }}:{{ default_p2p_port }}"
 max_connections_per_ip = 1
 network = "{{ default_network }}"
 peerset_initial_target_size = 25

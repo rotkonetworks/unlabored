@@ -1,12 +1,26 @@
 [all:children]
-proxmox_hosts
-zebra
+rotko
 
-[proxmox_hosts]
-bkk07
+[rotko:children]
+proxmox_hosts
+proxmox_nodes
+routers
 
 [proxmox_nodes:children]
 zebra
 
 [zebra]
 rpc-zcash-01
+
+[routers]
+bkk50
+
+[proxmox_hosts]
+bkk07
+
+[hardware]
+bkk07
+
+[access_management:children]
+hardware
+proxmox_nodes
