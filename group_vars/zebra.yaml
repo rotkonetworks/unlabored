@@ -1,7 +1,7 @@
 ---
 default_base_path: /opt/zebra
 default_database_path: /opt/zebra/state
-default_client_version: "2.2.0"
+default_client_version: "3.0.0"
 default_user: "{{ service_users['zebra'] }}"
 default_group: "{{ service_users['zebra'] }}"
 default_network: "Mainnet"
