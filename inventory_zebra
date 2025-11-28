@@ -1,0 +1,12 @@
+[all:children]
+proxmox_hosts
+zebra
+
+[proxmox_hosts]
+bkk07
+
+[proxmox_nodes:children]
+zebra
+
+[zebra]
+rpc-zcash-01

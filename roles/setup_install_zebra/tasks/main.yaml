@@ -1,0 +1,134 @@
+---
+- name: Gather facts
+  ansible.builtin.setup:
+
+- name: Ensure group {{ default_user }} exists
+  ansible.builtin.group:
+    name: "{{ default_user }}"
+    state: present
+    system: True
+
+- name: Ensure user {{ default_user }} exists without unnecessary privileges
+  ansible.builtin.user:
+    append: True
+    comment: zebra service user
+    create_home: False
+    group: "{{ default_user }}"
+    groups: []
+    home: "{{ default_base_path }}"
+    name: "{{ default_user }}"
+    shell: "/sbin/nologin"
+    state: present
+    system: True
+
+- name: Ensure user {{ default_user }} owns directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+    mode: "0750"
+    state: directory
+  loop:
+    - "{{ default_base_path }}"
+    - "{{ default_database_path }}"
+    - "{{ default_base_path }}/bin"
+    - "{{ default_base_path }}/.config"
+
+- name: Install required packages
+  ansible.builtin.apt:
+    name:
+      - build-essential
+      - clang
+      - libclang-dev
+      - protobuf-compiler
+      - curl
+    state: present
+    update_cache: True
+
+- name: Check if Rust is installed for {{ default_user }}
+  ansible.builtin.stat:
+    path: "{{ default_base_path }}/.cargo/bin/rustup"
+  register: rustup_binary
+
+- name: Install Rust for {{ default_user }}
+  ansible.builtin.shell:
+    cmd: "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path"
+  become: True
+  become_user: "{{ default_user }}"
+  environment:
+    CARGO_HOME: "{{ default_base_path }}/.cargo"
+    RUSTUP_HOME: "{{ default_base_path }}/.rustup"
+  when: not rustup_binary.stat.exists
+  args:
+    executable: /bin/bash
+
+- name: Check if zebrad is already installed
+  ansible.builtin.stat:
+    path: "{{ default_base_path }}/.cargo/bin/zebrad"
+  register: zebrad_binary
+
+- name: Set force_update flag
+  ansible.builtin.set_fact:
+    force_update: "{{ force_update | default(false) }}"
+
+- name: Install zebrad v{{ default_client_version }}
+  ansible.builtin.shell:
+    cmd: "{{ default_base_path }}/.cargo/bin/cargo install --locked zebrad --version {{ default_client_version }}"
+  become: True
+  become_user: "{{ default_user }}"
+  environment:
+    CARGO_HOME: "{{ default_base_path }}/.cargo"
+    RUSTUP_HOME: "{{ default_base_path }}/.rustup"
+    PATH: "{{ default_base_path }}/.cargo/bin:{{ ansible_env.PATH }}"
+    RUSTFLAGS: "-C target-cpu=native"
+  when: not zebrad_binary.stat.exists or force_update or ansible_local['noderole']['node']['version'] is not defined or ansible_local['noderole']['node']['version'] != default_client_version
+  register: zebrad_install
+  notify:
+    - Add Zebra service version
+    - Add Service Pinned Status
+    - Symlink Zebra service to systemd
+    - Stop Zebra
+    - Systemd daemon-reload
+    - Start Zebra
+
+- name: Create soft link for zebrad binary
+  ansible.builtin.file:
+    src: "{{ default_base_path }}/.cargo/bin/zebrad"
+    dest: "{{ default_base_path }}/zebrad"
+    state: link
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+
+- name: Copy Zebra configuration file
+  ansible.builtin.template:
+    src: "zebrad.toml.j2"
+    dest: "{{ default_base_path }}/.config/zebrad.toml"
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+    mode: "0640"
+  notify:
+    - Stop Zebra
+    - Start Zebra
+
+- name: Copy Zebra systemd service
+  ansible.builtin.template:
+    src: "zebra.service.j2"
+    dest: "{{ default_base_path }}/zebra.service"
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+    mode: "0640"
+  notify:
+    - Symlink Zebra service to systemd
+    - Stop Zebra
+    - Systemd daemon-reload
+    - Start Zebra
+    - Add type of service fact
+
+- name: Flush handlers after service copy
+  ansible.builtin.meta: flush_handlers
+
+- name: Ensure Zebra service is running
+  ansible.builtin.systemd:
+    name: zebra
+    state: started
+    enabled: True
