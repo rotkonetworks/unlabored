@@ -12,6 +12,7 @@ container_internal_ip: "10.7.142.11"
 role: "cumulus"
 pinned_service: True
 need_revive_rpc: True
+revive_rpc_version: polkadot-unstable2507-revive
 
 default_telemetry_name: "Rotko Networks - {{ host_name.split('.')[0] }} {{ default_node_type | capitalize }}"
 default_domain: "{{ host_name }}"
