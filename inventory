@@ -4,6 +4,7 @@ rotko
 [rotko:children]
 proxmox_hosts
 proxmox_nodes
+proxmox_vms
 routers
 
 [proxmox_nodes:children]
@@ -46,6 +47,9 @@ peering-node-07
 [github_runner]
 ibp-th-collective-runner-01
 ibp-th-collective-runner-02
+
+[proxmox_vms]
+ibp-geodns-01
 
 [proxmox_nodes]
 ansible

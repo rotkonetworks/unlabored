@@ -15,11 +15,11 @@
       when: default_need_routeros_port_forwarding
 
 # WARN: vm workflow need to be improved
-# - name: Proxmox install VM templates
-#   hosts: proxmox_hosts
-#   gather_facts: True
-#   roles:
-#     - role: proxmox_install_vm_templates
+- name: Proxmox install VM templates
+  hosts: proxmox_hosts
+  gather_facts: True
+  roles:
+    - role: proxmox_install_vm_templates
 
 - name: Proxmox setup nodes
   hosts: proxmox_hosts
@@ -28,11 +28,11 @@
     - role: proxmox_setup_nodes
 
 # WARN: vm workflow need to be improved
-# - name: Proxmox setup VMs
-#   hosts: proxmox_hosts
-#   gather_facts: True
-#   roles:
-#     - role: proxmox_setup_vms
+- name: Proxmox setup VMs
+  hosts: proxmox_hosts
+  gather_facts: True
+  roles:
+    - role: proxmox_setup_vms
 
 - name: Default tools and configurations
   hosts: proxmox_nodes
