@@ -1,8 +1,9 @@
 ---
 # penumbra version
-penumbra_version: "2.0.5"
+penumbra_version: "2.0.6"
 penumbra_chain_id: ""
-cometbft_version: "0.37.15"
+cometbft_version: "0.37.18"
+go_version: "1.23.5"
 polkachu_height: "5480920"
 
 # dl locations
@@ -10,7 +11,7 @@ default_git_repo: "https://github.com/penumbra-zone/penumbra"
 penumbra_download_pcli_url: "https://github.com/penumbra-zone/penumbra/releases/download/v{{ penumbra_version }}/pcli-installer.sh"
 penumbra_download_pd_url: "https://github.com/penumbra-zone/penumbra/releases/download/v{{ penumbra_version }}/pd-installer.sh"
 penumbra_download_pclientd_url: "https://github.com/penumbra-zone/penumbra/releases/download/v{{ penumbra_version }}/pclientd-installer.sh"
-cometbft_download_url: "https://github.com/cometbft/cometbft/releases/download/v{{ cometbft_version }}/cometbft_{{ cometbft_version }}_linux_amd64.tar.gz"
+cometbft_download_url: "https://github.com/cometbft/cometbft/archive/refs/tags/v{{ cometbft_version }}.tar.gz"
 #polkachu_download_cmd: "wget -O penumbra_{{ polkachu_height }}.tar.lz4 https://snapshots.polkachu.com/snapshots/penumbra/penumbra_{{ polkachu_height }}.tar.lz4 --inet4-only"
 
 # service/user
