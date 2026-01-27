@@ -32,6 +32,19 @@ ibp-bkk08
 [haproxy]
 haproxy-bkk08
 
+[lv6:children]
+xcavate
+kilt
+moonbeam
+ajuna
+polimec
+unique
+bifrost
+nexus
+hydration
+acala
+mythos
+
 [polkadot]
 rpc-polkadot-03
 val-paseo-02

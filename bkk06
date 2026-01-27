@@ -26,6 +26,19 @@ mythos
 [routers]
 bkk50
 
+[lv6:children]
+xcavate
+kilt
+moonbeam
+ajuna
+polimec
+unique
+bifrost
+nexus
+hydration
+acala
+mythos
+
 [haproxy]
 haproxy-bkk06
 
