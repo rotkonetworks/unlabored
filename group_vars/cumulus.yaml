@@ -16,8 +16,8 @@ default_p2p_port: 30433
 default_p2p_port_ws: 30434
 default_p2p_port_wss: 30435
 default_prom_port: 7400
-default_revive_rpc_url: https://github.com/rotkonetworks/revive-rpc/releases/download/{{
-  revive_rpc_version }}/eth-rpc-linux-x64
+# default_revive_rpc_url: https://github.com/rotkonetworks/revive-rpc/releases/download/{{ revive_rpc_version }}/eth-rpc-linux-x64
+default_revive_rpc_url: "https://github.com/paritytech/polkadot-sdk/releases/download/{{ default_client_version }}/eth-rpc"
 default_rpc_port: 9400
 default_secure_rpc_port: 42400
 default_service: cumulus
@@ -26,5 +26,5 @@ default_telemetry_url: wss://telemetry-backend.w3f.community/submit/ 1
 default_user: '{{ service_users[''cumulus''] }}'
 revive_rpc_port: 9450
 revive_rpc_prometheus_port: 4400
-revive_rpc_version: polkadot-stable2509-3
+revive_rpc_version: '{{ default_client_version }}'
 zabbix_ext_port: 10400

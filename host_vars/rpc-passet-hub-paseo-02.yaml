@@ -12,6 +12,7 @@ container_internal_ip: "10.8.142.17"
 role: "cumulus"
 pinned_service: True
 need_revive_rpc: True
+default_revive_rpc_url: https://github.com/rotkonetworks/revive-rpc/releases/download/{{ revive_rpc_version }}/eth-rpc-linux-x64
 revive_rpc_version: polkadot-unstable2507-revive
 
 default_telemetry_name: "Rotko Networks - {{ host_name.split('.')[0] }}"
