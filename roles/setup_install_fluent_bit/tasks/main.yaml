@@ -7,9 +7,13 @@
     path: "{{ default_fluentbit_path }}/bin/fluent-bit"
   register: fluentbit_binary
 
+- name: Check if host is a Paseo validator
+  ansible.builtin.set_fact:
+    is_paseo_validator: "{{ default_network in ['paseo'] and default_node_type == 'validator' }}"
+
 - name: Check if needs fluentbit
   ansible.builtin.set_fact:
-    needs_fluentbit: "{{ default_network in ['paseo'] and default_node_type == 'validator' and not fluentbit_binary.stat.exists }}"
+    needs_fluentbit: "{{ is_paseo_validator and not fluentbit_binary.stat.exists }}"
 
 - name: Ensure required directories exist
   ansible.builtin.file:
@@ -83,20 +87,26 @@
 #     dest: "/usr/local/bin/fluent-bit"
 #     state: link
 #     force: True
+- name: Deploy parsers config
+  ansible.builtin.template:
+    src: parsers.conf.j2
+    dest: "{{ default_fluentbit_path }}/parsers.conf"
+    mode: "0644"
+  when: is_paseo_validator
 
 - name: Deploy Fluent-Bit config
   ansible.builtin.template:
     src: fluent-bit.conf.j2
     dest: "{{ default_fluentbit_path }}/fluent-bit.conf"
     mode: "0644"
-  when: needs_fluentbit
+  when: is_paseo_validator
 
 - name: Deploy Fluent-Bit systemd unit
   ansible.builtin.template:
     src: fluent-bit.service.j2
     dest: "{{ default_fluentbit_path }}/fluent-bit.service"
     mode: "0644"
-  when: needs_fluentbit
+  when: is_paseo_validator
 
 - name: Create fluent-bit.service symlink
   ansible.builtin.file:
@@ -104,16 +114,16 @@
     dest: /etc/systemd/system/fluent-bit.service
     state: link
     force: True
-  when: needs_fluentbit
+  when: is_paseo_validator
 
 - name: Reload systemd
   ansible.builtin.systemd:
     daemon_reload: True
-  when: needs_fluentbit
+  when: is_paseo_validator
 
-- name: Enable and start fluent-bit
+- name: Enable and restart fluent-bit
   ansible.builtin.systemd:
     name: fluent-bit
     enabled: True
-    state: started
-  when: needs_fluentbit
+    state: restarted
+  when: is_paseo_validator

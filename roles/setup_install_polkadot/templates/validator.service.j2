@@ -22,6 +22,7 @@ ExecStart={{ default_base_path }}/polkadot \
      --base-path {{ default_base_path }} \
 {% if default_network == 'paseo' %}
      --chain {{ default_chain_spec }} \
+     --detailed-log-output \
 {% else %}
      --chain {{ default_network }} \
 {% endif %}
