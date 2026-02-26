@@ -12,7 +12,13 @@ polkadot
 cumulus
 penumbra
 encointer
+github_runner
 misc-container
+zebra
+
+[github_runner]
+ibp-th-collective-runner-01
+ibp-th-collective-runner-02
 
 [prometheus]
 ibp-bkk07
@@ -38,17 +44,16 @@ talosctl0701
 [routers]
 bkk50
 
+[zebra]
+rpc-zcash-01
+
 [penumbra]
 penumbra-02
 
 [polkadot]
 rpc-polkadot-02
 rpc-kusama-02
-rpc-westend-02
 rpc-paseo-02
-pso07
-val-polkadot-02
-val-kusama-02
 val-paseo-01
 
 

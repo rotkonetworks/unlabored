@@ -8,5 +8,6 @@
     - setup_install_rust
     - setup_install_promtail
     - setup_install_fluent_bit
+    - setup_networking_p2p
     - setup_install_polkadot
     - setup_install_nginx

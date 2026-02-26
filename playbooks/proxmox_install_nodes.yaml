@@ -14,11 +14,25 @@
     - role: setup_networking_routeros
       when: default_need_routeros_port_forwarding
 
+# WARN: vm workflow need to be improved
+- name: Proxmox install VM templates
+  hosts: proxmox_hosts
+  gather_facts: True
+  roles:
+    - role: proxmox_install_vm_templates
+
 - name: Proxmox setup nodes
   hosts: proxmox_hosts
   gather_facts: True
   roles:
     - role: proxmox_setup_nodes
+
+# WARN: vm workflow need to be improved
+- name: Proxmox setup VMs
+  hosts: proxmox_hosts
+  gather_facts: True
+  roles:
+    - role: proxmox_setup_vms
 
 - name: Default tools and configurations
   hosts: proxmox_nodes
@@ -87,7 +101,7 @@
   hosts: evmos
   gather_facts: True
   roles:
-#     - setup_install_evmos
+    - setup_install_evmos
 
 - name: Install Polkadot services
   hosts: polkadot
@@ -103,6 +117,13 @@
   roles:
     - setup_install_promtail
     - setup_install_cumulus
+    - setup_install_nginx
+
+- name: Install Zcash services
+  hosts: zebra
+  gather_facts: True
+  roles:
+    - setup_install_zebra
     - setup_install_nginx
 
 - name: Install Encointer services

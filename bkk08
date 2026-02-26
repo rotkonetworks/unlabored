@@ -7,6 +7,9 @@ proxmox_nodes
 proxmox_vms
 routers
 
+[proxmox_vms]
+ibp-geodns-01
+
 [proxmox_nodes:children]
 polkadot
 cumulus
@@ -21,12 +24,26 @@ nexus
 hydration
 acala
 mythos
+proxmox_vms
 
 [prometheus]
 ibp-bkk08
 
 [haproxy]
 haproxy-bkk08
+
+[lv6:children]
+xcavate
+kilt
+moonbeam
+ajuna
+polimec
+unique
+bifrost
+nexus
+hydration
+acala
+mythos
 
 [polkadot]
 rpc-polkadot-03

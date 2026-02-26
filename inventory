@@ -4,12 +4,14 @@ rotko
 [rotko:children]
 proxmox_hosts
 proxmox_nodes
+proxmox_vms
 routers
 
 [proxmox_nodes:children]
 cumulus
 encointer
 polkadot
+github_runner
 
 [lv6:children]
 xcavate
@@ -42,6 +44,13 @@ dockers-08
 proxy-bkk07
 peering-node-07
 
+[github_runner]
+ibp-th-collective-runner-01
+ibp-th-collective-runner-02
+
+[proxmox_vms]
+ibp-geodns-01
+
 [proxmox_nodes]
 ansible
 matrix
@@ -57,6 +66,9 @@ bkk50
 penumbra-01
 penumbra-02
 penumbra-03
+
+[zebra]
+rpc-zcash-01
 
 [kilt]
 rpc-kilt-polkadot-01
@@ -142,8 +154,6 @@ wppl27
 mint27
 rpc-asset-hub-polkadot-01
 rpc-asset-hub-polkadot-02
-rpc-asset-hub-westend-01
-rpc-asset-hub-westend-02
 rpc-asset-hub-kusama-01
 rpc-asset-hub-kusama-02
 rpc-asset-hub-paseo-01
@@ -154,28 +164,22 @@ rpc-bridge-hub-paseo-01
 rpc-bridge-hub-paseo-02
 rpc-bridge-hub-polkadot-01
 rpc-bridge-hub-polkadot-02
-rpc-bridge-hub-westend-01
-rpc-bridge-hub-westend-02
 rpc-bridge-hub-kusama-01
 rpc-bridge-hub-kusama-02
 rpc-coretime-paseo-01
 rpc-coretime-paseo-02
 rpc-coretime-polkadot-01
 rpc-coretime-polkadot-02
-rpc-coretime-westend-02
-rpc-coretime-westend-01
 rpc-coretime-kusama-01
 rpc-coretime-kusama-02
 rpc-collectives-polkadot-01
 rpc-collectives-polkadot-02
-rpc-collectives-westend-01
-rpc-collectives-westend-02
+rpc-collectives-paseo-01
+rpc-collectives-paseo-02
 rpc-people-paseo-01
 rpc-people-paseo-02
 rpc-people-polkadot-01
 rpc-people-polkadot-02
-rpc-people-westend-01
-rpc-people-westend-02
 rpc-people-kusama-01
 rpc-people-kusama-02
 
@@ -193,8 +197,6 @@ rpc-polkadot-02
 rpc-polkadot-03
 rpc-kusama-01
 rpc-kusama-02
-rpc-westend-01
-rpc-westend-02
 rpc-paseo-01
 rpc-paseo-02
 val-polkadot-02
@@ -217,12 +219,10 @@ pso06
 pso07
 dot14
 ksm14
-wnd14
 pso16
 dot26
 ksm24
 ksm26
-wnd26
 pso24
 pso26
 

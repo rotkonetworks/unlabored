@@ -26,6 +26,19 @@ mythos
 [routers]
 bkk50
 
+[lv6:children]
+xcavate
+kilt
+moonbeam
+ajuna
+polimec
+unique
+bifrost
+nexus
+hydration
+acala
+mythos
+
 [haproxy]
 haproxy-bkk06
 
@@ -64,7 +77,6 @@ rpc-hydration-polkadot-01
 
 [polkadot]
 rpc-polkadot-01
-rpc-westend-01
 rpc-paseo-01
 rpc-kusama-01
 
