@@ -12,7 +12,12 @@ polkadot
 cumulus
 penumbra
 encointer
+github_runner
 misc-container
+
+[github_runner]
+ibp-th-collective-runner-01
+ibp-th-collective-runner-02
 
 [prometheus]
 ibp-bkk07

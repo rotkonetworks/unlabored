@@ -1,0 +1,14 @@
+---
+# debian_cloud_image_url: "https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-generic-amd64.qcow2"
+# debian_template_id: 9000
+# debian_template_name: "debian-12-bookworm-cloudimg"
+# debian_template_memory: 2048
+# debian_template_cores: 2
+# debian_template_storage: "{{ default_storage }}"
+ubuntu_cloud_image_url: "https://cloud-images.ubuntu.com/noble/current/noble-server-cloudimg-amd64.img"
+ubuntu_template_id: 9001
+ubuntu_template_name: "ubuntu-24.04-cloudimg"
+ubuntu_template_memory: 2048
+ubuntu_template_cores: 2
+ubuntu_template_storage: "{{ default_storage }}"
+cloud_image_download_path: "/tmp"
