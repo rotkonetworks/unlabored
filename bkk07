@@ -60,27 +60,21 @@ val-paseo-01
 [cumulus]
 rpc-people-polkadot-02
 rpc-people-paseo-02
-rpc-people-westend-02
 rpc-people-kusama-02
 
 rpc-coretime-paseo-02
 rpc-coretime-polkadot-02
-rpc-coretime-westend-02
 rpc-coretime-kusama-02
 
 rpc-asset-hub-paseo-02
 rpc-asset-hub-polkadot-02
-rpc-asset-hub-westend-02
 rpc-asset-hub-kusama-02
-rpc-passet-hub-paseo-01
 
 rpc-bridge-hub-paseo-02
 rpc-bridge-hub-polkadot-02
-rpc-bridge-hub-westend-02
 rpc-bridge-hub-kusama-02
 
 rpc-collectives-polkadot-02
-rpc-collectives-westend-02
 rpc-collectives-paseo-01
 
 [encointer]
@@ -101,11 +95,9 @@ bkk07
 rpc-kusama-02
 rpc-paseo-02
 rpc-polkadot-02
-rpc-westend-02
 rpc-kusama-01
 rpc-paseo-01
 rpc-polkadot-01
-rpc-westend-01
 dot14
 ksm14
 wnd14
