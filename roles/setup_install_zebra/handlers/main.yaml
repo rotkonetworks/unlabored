@@ -1,0 +1,50 @@
+---
+- name: Add Zebra service version
+  community.general.ini_file:
+    path: "{{ noderole_file }}"
+    section: node
+    option: version
+    value: "{{ default_client_version }}"
+    mode: "0644"
+
+- name: Add type of service fact
+  community.general.ini_file:
+    path: "{{ noderole_file }}"
+    section: node
+    option: role
+    value: "{{ role }}"
+    mode: "0644"
+
+- name: Add Service Pinned Status
+  community.general.ini_file:
+    path: "{{ noderole_file }}"
+    section: node
+    option: pinned
+    value: "{{ pinned_service }}"
+    mode: "0644"
+
+- name: Symlink Zebra service to systemd
+  ansible.builtin.file:
+    src: "{{ default_base_path }}/zebra.service"
+    dest: "/etc/systemd/system/zebra.service"
+    state: link
+    force: True
+    owner: "root"
+    group: "root"
+    mode: "0644"
+
+- name: Stop Zebra
+  ansible.builtin.systemd:
+    name: zebra
+    state: stopped
+  ignore_errors: True
+
+- name: Systemd daemon-reload
+  ansible.builtin.systemd:
+    daemon_reload: True
+
+- name: Start Zebra
+  ansible.builtin.systemd:
+    name: zebra
+    state: started
+    enabled: True

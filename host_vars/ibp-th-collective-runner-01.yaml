@@ -1,0 +1,21 @@
+---
+host_name: "ibp-th-collective-runner-01.rotko.net"
+ansible_host: "160.22.181.181"
+ansible_port: 25001
+container_ip: "10.7.0.100"
+role: "github_runner"
+
+# GitHub Runner Configuration
+runner_name: "ibp-th-collective-runner-02"
+runner_org: "{{ vault_github_runner_org }}"
+runner_scope: "org"
+runner_labels: "self-hosted,ephemeral,debian,rotko"
+runner_build: "myoung34/github-runner:debian-bookworm"
+runner_app_id: "{{ vault_github_runner_app_id }}"
+runner_app_login: "{{ vault_github_runner_app_login }}"
+runner_app_private_key: "{{ vault_github_runner_app_private_key }}"
+
+# VM Resources
+vm_cores: 8
+vm_memory: 32768
+vm_disk_size: 256G

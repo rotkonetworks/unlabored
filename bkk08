@@ -7,6 +7,9 @@ proxmox_nodes
 proxmox_vms
 routers
 
+[proxmox_vms]
+ibp-geodns-01
+
 [proxmox_nodes:children]
 polkadot
 cumulus
@@ -21,6 +24,7 @@ nexus
 hydration
 acala
 mythos
+proxmox_vms
 
 [prometheus]
 ibp-bkk08
@@ -28,13 +32,25 @@ ibp-bkk08
 [haproxy]
 haproxy-bkk08
 
+[lv6:children]
+xcavate
+kilt
+moonbeam
+ajuna
+polimec
+unique
+bifrost
+nexus
+hydration
+acala
+mythos
+
 [polkadot]
 rpc-polkadot-03
 val-paseo-02
 
 [cumulus]
 rpc-collectives-paseo-02
-rpc-passet-hub-paseo-02
 
 [penumbra]
 penumbra-03
@@ -103,8 +119,6 @@ unmanaged
 rpc-kusama-02
 rpc-paseo-02
 rpc-polkadot-02
-rpc-westend-02
 rpc-kusama-01
 rpc-paseo-01
 rpc-polkadot-01
-rpc-westend-01

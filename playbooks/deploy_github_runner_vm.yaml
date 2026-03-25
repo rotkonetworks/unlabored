@@ -1,0 +1,17 @@
+# Standards: 0.2
+---
+- name: Deploy GitHub Runner VM on bkk07
+  hosts: bkk07
+  gather_facts: True
+  roles:
+    - role: proxmox_install_vm_templates
+    - role: proxmox_setup_vms
+
+- name: Configure GitHub Runner
+  hosts: ibp-th-collective-runner-02
+  gather_facts: True
+  roles:
+    - role: setup_set_default_locale
+    - role: setup_set_timezone
+    - role: setup_install_basic_tools
+    - role: github_runner_ephemeral

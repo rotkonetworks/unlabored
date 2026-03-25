@@ -1,0 +1,74 @@
+# Standards: 0.2
+---
+- name: Check if Ubuntu cloud image template already exists
+  ansible.builtin.command:
+    cmd: "qm status {{ ubuntu_template_id }}"
+  register: template_check
+  failed_when: False
+  changed_when: False
+
+- name: Download Ubuntu cloud image
+  ansible.builtin.get_url:
+    url: "{{ ubuntu_cloud_image_url }}"
+    dest: "{{ cloud_image_download_path }}/noble-server-cloudimg-amd64.img"
+    mode: "0644"
+  when: template_check.rc != 0
+
+- name: Create VM for template
+  ansible.builtin.command:
+    cmd: >
+      qm create {{ ubuntu_template_id }}
+      --name {{ ubuntu_template_name }}
+      --memory {{ ubuntu_template_memory }}
+      --cores {{ ubuntu_template_cores }}
+      --net0 virtio,bridge=vmbr0
+  when: template_check.rc != 0
+  register: vm_create
+
+- name: Import disk to storage
+  ansible.builtin.command:
+    cmd: >
+      qm importdisk {{ ubuntu_template_id }}
+      {{ cloud_image_download_path }}/noble-server-cloudimg-amd64.img
+      {{ ubuntu_template_storage }}
+  when: template_check.rc != 0
+  register: disk_import
+
+- name: Attach disk to VM
+  ansible.builtin.command:
+    cmd: >
+      qm set {{ ubuntu_template_id }}
+      --scsihw virtio-scsi-pci
+      --scsi0 {{ ubuntu_template_storage }}:vm-{{ ubuntu_template_id }}-disk-0
+  when: template_check.rc != 0
+
+- name: Add cloud-init drive
+  ansible.builtin.command:
+    cmd: "qm set {{ ubuntu_template_id }} --ide2 {{ ubuntu_template_storage }}:cloudinit"
+  when: template_check.rc != 0
+
+- name: Set boot disk
+  ansible.builtin.command:
+    cmd: "qm set {{ ubuntu_template_id }} --boot c --bootdisk scsi0"
+  when: template_check.rc != 0
+
+- name: Add serial console
+  ansible.builtin.command:
+    cmd: "qm set {{ ubuntu_template_id }} --serial0 socket --vga serial0"
+  when: template_check.rc != 0
+
+- name: Enable QEMU guest agent
+  ansible.builtin.command:
+    cmd: "qm set {{ ubuntu_template_id }} --agent enabled=1"
+  when: template_check.rc != 0
+
+- name: Convert VM to template
+  ansible.builtin.command:
+    cmd: "qm template {{ ubuntu_template_id }}"
+  when: template_check.rc != 0
+
+- name: Clean up downloaded image
+  ansible.builtin.file:
+    path: "{{ cloud_image_download_path }}/noble-server-cloudimg-amd64.img"
+    state: absent
+  when: template_check.rc != 0

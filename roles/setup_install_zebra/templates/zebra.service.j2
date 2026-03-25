@@ -1,0 +1,15 @@
+[Unit]
+Description="{{ host_name.split('.')[0] }} - Zcash Zebra node"
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User={{ default_user }}
+Group={{ default_group }}
+ExecStart={{ default_base_path }}/zebrad -c {{ default_base_path }}/.config/zebrad.toml start
+Restart=always
+RestartSec=120
+LimitNOFILE={{ default_max_open_files_in_service }}
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,7 @@
+# Standards: 0.2
+---
+- name: Setup P2P networking with nftables and routing
+  hosts: lv6:cumulus:polkadot
+  gather_facts: True
+  roles:
+    - setup_networking_p2p
