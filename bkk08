@@ -24,7 +24,6 @@ nexus
 hydration
 acala
 mythos
-proxmox_vms
 
 [prometheus]
 ibp-bkk08
@@ -54,6 +53,7 @@ rpc-collectives-paseo-02
 
 [penumbra]
 penumbra-03
+penumbra-web
 
 [acala]
 rpc-acala-polkadot-02
