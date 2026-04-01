@@ -1,0 +1,52 @@
+[consensus]
+checkpoint_sync = true
+
+[mempool]
+eviction_memory_time = "1h"
+tx_cost_limit = 80000000
+
+[metrics]
+endpoint_addr = "0.0.0.0:{{ default_prom_port }}"
+
+[mining]
+miner_address = "{{ default_miner_address | default('') }}"
+
+[network]
+crawl_new_peer_interval = "1m 1s"
+initial_mainnet_peers = [
+    "dnsseed.z.cash:8233",
+    "dnsseed.str4d.xyz:8233",
+    "mainnet.seeder.zfnd.org:8233",
+    "mainnet.is.yolo.money:8233"
+]
+initial_testnet_peers = [
+    "dnsseed.testnet.z.cash:18233",
+    "testnet.seeder.zfnd.org:18233",
+    "testnet.is.yolo.money:18233"
+]
+listen_addr = "0.0.0.0:{{ default_p2p_port }}"
+external_addr = "{{ default_ansible_host }}:{{ default_p2p_port }}"
+max_connections_per_ip = 1
+network = "{{ default_network }}"
+peerset_initial_target_size = 25
+
+[rpc]
+listen_addr = "0.0.0.0:{{ default_rpc_port }}"
+parallel_cpu_threads = 0
+
+[state]
+cache_dir = "{{ default_database_path }}"
+delete_old_database = true
+ephemeral = false
+
+[sync]
+checkpoint_verify_concurrency_limit = 1000
+download_concurrency_limit = 50
+full_verify_concurrency_limit = 20
+parallel_cpu_threads = 0
+
+[tracing]
+buffer_limit = 128000
+force_use_color = false
+use_color = true
+use_journald = false
