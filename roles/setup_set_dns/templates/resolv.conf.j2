@@ -1,0 +1,18 @@
+# Managed by Ansible - Do not edit manually
+# Quad9 DNS servers - Security and Privacy focused
+# Primary IPv4 DNS servers
+nameserver 9.9.9.9
+nameserver 1.1.1.1
+nameserver 8.8.8.8
+nameserver 149.112.112.112
+
+{% if ansible_default_ipv6.address is defined %}
+# IPv6 DNS servers
+nameserver 2620:fe::fe
+nameserver 2620:fe::9
+{% endif %}
+
+# Options
+options edns0 trust-ad
+options timeout:2
+options attempts:3

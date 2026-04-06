@@ -26,52 +26,53 @@ port_forwards:
     protocol: "tcp"
 
 lxc_nodes:
-  - host: "val-polkadot-03"
-    # 192.168.213.10:31006
-    proxmox_config:
-      vmid: "31006"
-      hostname: "{{ hostvars['val-polkadot-03']['host_name'] }}"
-      ostemplate: 'local:vztmpl/{{ default_container_template }}'
-      netif: "{{ hostvars['val-polkadot-03']['netif'] }}"
-      cores: 8
-      memory: 16384
-      swap: 16384
-      password: "{{ default_password }}"
-      disk: "bkk03data:20"
-      mounts: '{"mp0":"bkk03data:1000,mp={{ hostvars["val-polkadot-03"]["default_base_path"] }}"}'
-      onboot: True
-      unprivileged: True
-      validate_certs: False
-      description: "Polkadot validator node: {{ hostvars['val-polkadot-03']['host_name'] }}"
-      state: present
-      features:
-        - nesting=1
-    port_forwards:
-      - from_port: "{{ hostvars['val-polkadot-03']['ansible_port'] }}"
-        to_host: "{{ hostvars['val-polkadot-03']['container_ip'] }}:22"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['val-polkadot-03']['zabbix_ext_port'] }}"
-        to_host: "{{ hostvars['monitor']['container_ip'] }}:10050"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['val-polkadot-03']['default_p2p_port'] }}"
-        to_host: "{{ hostvars['val-polkadot-03']['container_ip'] }}:{{ hostvars['val-polkadot-03']['default_p2p_port'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['val-polkadot-03']['default_p2p_port_ws'] }}"
-        to_host: "{{ hostvars['val-polkadot-03']['container_ip'] }}:{{ hostvars['val-polkadot-03']['default_p2p_port_ws'] }}"
-        protocol: "tcp"
+  # - host: "val-polkadot-03"
+  #   # 192.168.213.10:31006
+  #   proxmox_config:
+  #     vmid: "31006"
+  #     hostname: "{{ hostvars['val-polkadot-03']['host_name'] }}"
+  #     ostemplate: 'local:vztmpl/{{ default_container_template }}'
+  #     netif: "{{ hostvars['val-polkadot-03']['netif'] }}"
+  #     cores: 8
+  #     memory: 16384
+  #     swap: 16384
+  #     password: "{{ default_password }}"
+  #     disk: "bkk03data:20"
+  #     mounts: '{"mp0":"bkk03data:1000,mp={{ hostvars["val-polkadot-03"]["default_base_path"] }}"}'
+  #     onboot: True
+  #     unprivileged: True
+  #     validate_certs: False
+  #     description: "Polkadot validator node: {{ hostvars['val-polkadot-03']['host_name'] }}"
+  #     state: present
+  #     features:
+  #       - nesting=1
+  #   port_forwards:
+  #     - from_port: "{{ hostvars['val-polkadot-03']['ansible_port'] }}"
+  #       to_host: "{{ hostvars['val-polkadot-03']['container_ip'] }}:22"
+  #       protocol: "tcp"
+  #     - from_port: "{{ hostvars['val-polkadot-03']['zabbix_ext_port'] }}"
+  #       to_host: "{{ hostvars['monitor']['container_ip'] }}:10050"
+  #       protocol: "tcp"
+  #     - from_port: "{{ hostvars['val-polkadot-03']['default_p2p_port'] }}"
+  #       to_host: "{{ hostvars['val-polkadot-03']['container_ip'] }}:{{ hostvars['val-polkadot-03']['default_p2p_port'] }}"
+  #       protocol: "tcp"
+  #     - from_port: "{{ hostvars['val-polkadot-03']['default_p2p_port_ws'] }}"
+  #       to_host: "{{ hostvars['val-polkadot-03']['container_ip'] }}:{{ hostvars['val-polkadot-03']['default_p2p_port_ws'] }}"
+  #       protocol: "tcp"
   - host: "val-kusama-03"
     # 192.168.223.10:32006
     proxmox_config:
       vmid: "32006"
       hostname: "{{ hostvars['val-kusama-03']['host_name'] }}"
-      ostemplate: 'local:vztmpl/{{ default_container_template }}'
+      # ostemplate: "local:vztmpl/{{ default_container_template }}"
+      update: False
       netif: "{{ hostvars['val-kusama-03']['netif'] }}"
-      cores: 8
-      memory: 16384
+      cores: 12
+      memory: 32768
       swap: 16384
       password: "{{ default_password }}"
       disk: "bkk03data2:20"
-      mounts: '{"mp0":"bkk03data2:1000,mp={{ hostvars["val-kusama-03"]["default_base_path"] }}"}'
+      mounts: '{"mp0":"bkk03data2:1500,mp={{ hostvars["val-kusama-03"]["default_base_path"] }}"}'
       onboot: True
       unprivileged: True
       validate_certs: False
