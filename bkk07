@@ -13,6 +13,7 @@ cumulus
 penumbra
 encointer
 github_runner
+hydration
 misc-container
 zebra
 
@@ -76,6 +77,9 @@ rpc-bridge-hub-kusama-02
 
 rpc-collectives-polkadot-02
 rpc-collectives-paseo-01
+
+[hydration]
+rpc-hydration-polkadot-01
 
 [encointer]
 rpc-encointer-kusama-02

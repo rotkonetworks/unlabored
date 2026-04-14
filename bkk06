@@ -9,7 +9,6 @@ routers
 [proxmox_nodes:children]
 cumulus
 encointer
-hydration
 kilt
 polkadot
 moonbeam
@@ -35,7 +34,6 @@ polimec
 unique
 bifrost
 nexus
-hydration
 acala
 mythos
 
@@ -71,9 +69,6 @@ rpc-moonbeam-polkadot-01
 
 [nexus]
 rpc-nexus-polkadot-01
-
-[hydration]
-rpc-hydration-polkadot-01
 
 [polkadot]
 rpc-polkadot-01
