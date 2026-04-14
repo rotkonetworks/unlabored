@@ -21,6 +21,9 @@ zebra
 ibp-th-collective-runner-01
 ibp-th-collective-runner-02
 
+[lv6:children]
+hydration
+
 [prometheus]
 ibp-bkk07
 

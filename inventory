@@ -14,17 +14,7 @@ polkadot
 github_runner
 
 [lv6:children]
-xcavate
-kilt
-moonbeam
-ajuna
-polimec
-unique
-bifrost
 hydration
-acala
-mythos
-nexus
 
 [prometheus]
 ibp-bkk07
@@ -71,49 +61,9 @@ penumbra-web
 [zebra]
 rpc-zcash-01
 
-[kilt]
-rpc-kilt-polkadot-01
-rpc-kilt-polkadot-02
-
-[xcavate]
-rpc-xcavate-polkadot-01
-rpc-xcavate-polkadot-02
-
-[moonbeam]
-rpc-moonbeam-polkadot-01
-rpc-moonbeam-polkadot-02
-
-[ajuna]
-rpc-ajuna-polkadot-01
-rpc-ajuna-polkadot-02
-
-[polimec]
-rpc-polimec-polkadot-01
-rpc-polimec-polkadot-02
-
-[unique]
-rpc-unique-polkadot-01
-rpc-unique-polkadot-02
-
-[bifrost]
-rpc-bifrost-polkadot-01
-rpc-bifrost-polkadot-02
-
 [hydration]
 rpc-hydration-polkadot-01
 rpc-hydration-polkadot-02
-
-[mythos]
-rpc-mythos-polkadot-01
-rpc-mythos-polkadot-02
-
-[acala]
-rpc-acala-polkadot-01
-rpc-acala-polkadot-02
-
-[nexus]
-rpc-nexus-polkadot-01
-rpc-nexus-polkadot-02
 
 [penumbra]
 penumbra-01
