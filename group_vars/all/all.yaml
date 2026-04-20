@@ -41,9 +41,12 @@ default_nat_network_forward_cidr: "192.168.69.1/16"
 default_bkk50_ip6_network: "2401:a860:1181:50::1"
 default_nat_device: "vmbr0"
 default_host_internal_bridge: "vmbr1"
+default_host_public_bridge: "vmbr2"
 default_gw_device: "eth0"
 default_mgmt_host_ip: "{{ container_ip | default(ansible_host) }}"
 default_internal_host_ip: "{{ container_internal_ip | default(ansible_host) }}"
+default_public_host_ip: "{{ container_public_ip | default(ansible_host) }}"
+default_public_host_ip6: "{{ container_public_ip6 | default(ansible_host) }}"
 default_netif: '{"net0":"name=eth0,gw={{ default_nat_network_forward_cidr.split("/")[0] }},ip={{ container_ip }}/24,bridge={{ default_nat_device }}"}'
 
 # Misc
