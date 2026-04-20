@@ -30,6 +30,22 @@
         ttl: 300
         state: present
       when: container_public_ip6 is defined
+  rescue:
+    - name: Cloudflare DNS task failed — manual cleanup required
+      ansible.builtin.fail:
+        msg: |-
+          Cloudflare DNS upsert failed for {{ default_bootnode_domain }}.
+
+          This is usually the community.general.cloudflare_dns bug where
+          'solo: True' chokes while trying to delete a pre-existing record
+          with unusual metadata (KeyError: 'zone_id').
+
+          Workaround: open Cloudflare web UI, find records for
+          {{ default_bootnode_domain }}, delete any A/AAAA/CNAME/TXT
+          pointing there, then re-run this playbook.
+
+          Direct link:
+          https://dash.cloudflare.com/?search={{ default_bootnode_domain }}
 
 - name: Ensure required packages are installed
   ansible.builtin.apt:
