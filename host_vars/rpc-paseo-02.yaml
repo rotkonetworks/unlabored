@@ -2,13 +2,16 @@
 ansible_host: "160.22.181.181"
 container_ip: "192.168.77.42"
 container_internal_ip: "10.7.142.10"
+container_public_ip: "160.22.181.146"
+container_public_ip6: "2401:a860:1146::11"
 ansible_port: 2342
 host_name: "rpc-paseo-02.rotko.net"
 host_timezone: "Asia/Bangkok"
 # netif: '{"net0":"name=eth0,gw={{ default_nat_network_forward_cidr.split("/")[0] }},ip={{ default_mgmt_host_ip }}/16,bridge={{ default_nat_device }}"}'
 netif:
   net0: "name=eth0,gw={{ default_nat_network_forward_cidr.split('/')[0] }},ip={{ default_mgmt_host_ip }}/16,bridge={{ default_nat_device }}"
-  net1: "name=eth1,gw={{ default_host_internal_ip }},ip=10.7.142.10/16,bridge={{ default_host_internal_bridge }}"
+  net1: "name=eth1,ip=10.7.142.10/16,bridge={{ default_host_internal_bridge }}"
+  net2: "name=eth2,ip={{ hostvars['rpc-paseo-02']['container_public_ip'] }}/32,ip6={{ hostvars['rpc-paseo-02']['container_public_ip6'] }}/128,bridge={{ default_host_public_bridge }}"
 role: "polkadot"
 pinned_service: True
 
@@ -32,8 +35,12 @@ default_secure_rpc_port: 42342
 default_prom_port: 7342
 zabbix_ext_port: 10342
 
-# default_bootnode_domain: "boot-{{ default_network }}.rotko.net"
-default_bootnode_domain: "pso16.rotko.net"
-default_bootnode_p2p_port: "{{ default_p2p_port + 10500 }}"
-default_bootnode_p2p_port_ws: "{{ default_p2p_port_ws + 10500 }}"
-default_bootnode_p2p_port_wss: "{{ default_p2p_port_wss + 10500 }}"
+default_bootnode_domain: "{{ host_name }}"
+default_bootnode_p2p_port: 33342
+default_bootnode_p2p_port_ws: 34342
+default_bootnode_p2p_port_wss: 35342
+
+transition_bootnode_domain: "pso16.rotko.net"
+transition_bootnode_p2p_port: "{{ default_p2p_port + 10500 }}"
+transition_bootnode_p2p_port_ws: "{{ default_p2p_port_ws + 10500 }}"
+transition_bootnode_p2p_port_wss: "{{ default_p2p_port_wss + 10500 }}"

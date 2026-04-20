@@ -9,9 +9,9 @@ flush ruleset
 table inet mangle {
     chain prerouting {
         type filter hook prerouting priority mangle; policy accept;
-        iif "eth1" ct mark set 0x1
+        iifname "eth1" ct mark set 0x1
 {% if container_public_ip is defined %}
-        iif "eth2" ct mark set 0x2
+        iifname "eth2" ct mark set 0x2
 {% endif %}
     }
 
@@ -38,18 +38,18 @@ table inet filter {
 
         # Established/related and loopback always pass
         ct state established,related accept
-        iif lo accept
+        iifname "lo" accept
 
         # ICMP/ICMPv6 needed for ping and IPv6 NDP
-        iif "eth2" meta l4proto { icmp, ipv6-icmp } accept
+        iifname "eth2" meta l4proto { icmp, ipv6-icmp } accept
 
 {% if allowed_ports %}
         # Allowed public P2P ports
-        iif "eth2" tcp dport { {{ allowed_ports | join(', ') }} } accept
+        iifname "eth2" tcp dport { {{ allowed_ports | join(', ') }} } accept
 {% endif %}
 
         # Drop everything else arriving on eth2
-        iif "eth2" drop
+        iifname "eth2" drop
     }
 }
 {% endif %}
