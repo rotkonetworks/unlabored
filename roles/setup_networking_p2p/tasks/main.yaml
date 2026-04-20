@@ -15,53 +15,44 @@
         line: "100 eth1_table"
         state: present
         backup: True
-      notify:
-        - Apply P2P routing rules
 
-    - name: Get eth1 network gateway
+    - name: Derive eth1 gateway from facts
       ansible.builtin.set_fact:
         eth1_gateway: "{{ ansible_eth1.ipv4.network | regex_replace('\\.\\d+$', '.1') }}"
       when: ansible_eth1 is defined
 
-    # Note: Unfortunately, there's no built-in Ansible module for advanced ip route/rule management
-    # The community.general.ip_route module doesn't support routing tables
-    # So we still need to use commands for these
+    - name: Setup eth2 prerequisites
+      when: container_public_ip is defined
+      block:
+        - name: Add eth2_table to routing tables
+          ansible.builtin.lineinfile:
+            path: /etc/iproute2/rt_tables
+            line: "200 eth2_table"
+            state: present
+            backup: True
 
-    - name: Check if default route exists in eth1_table
-      ansible.builtin.command:
-        cmd: ip route show table eth1_table
-      register: route_check
-      changed_when: False
-      failed_when: False
+        - name: Find proxmox host for this container
+          ansible.builtin.set_fact:
+            host_proxmox: "{{ item }}"
+          loop: "{{ groups['proxmox_hosts'] | default([]) }}"
+          when:
+            - hostvars[item]['lxc_nodes'] is defined
+            - (hostvars[item]['lxc_nodes'] | selectattr('host', 'equalto', inventory_hostname) | list | length) > 0
 
-    - name: Add default route for eth1 table
-      ansible.builtin.command:
-        cmd: "ip route add default via {{ eth1_gateway }} dev eth1 table eth1_table"
-      when: "'default' not in route_check.stdout"
-      notify:
-        - Apply P2P routing rules
+        - name: Derive eth2 gateways from proxmox host
+          ansible.builtin.set_fact:
+            eth2_gateway: "{{ hostvars[host_proxmox]['default_host_public_gw'] }}"
+            eth2_gateway6: "{{ hostvars[host_proxmox]['default_host_public_gw6'] }}"
+          when: host_proxmox is defined
 
-    - name: Check existing IP rules
-      ansible.builtin.command:
-        cmd: ip rule show
-      register: rules_check
-      changed_when: False
+    - name: Deploy P2P if-up.d script
+      ansible.builtin.template:
+        src: p2p-routing.sh.j2
+        dest: /etc/network/if-up.d/p2p-routing
+        mode: "0755"
+        owner: root
+        group: root
 
-    - name: Add IP rule for return traffic from node internal IP
-      ansible.builtin.command:
-        cmd: "ip rule add from {{ container_internal_ip }} table eth1_table"
-      when: "container_internal_ip not in rules_check.stdout"
-      notify:
-        - Apply P2P routing rules
-
-    - name: Add IP rule for fwmark traffic
-      ansible.builtin.command:
-        cmd: ip rule add fwmark 1 table eth1_table
-      when: "'fwmark 0x1' not in rules_check.stdout"
-      notify:
-        - Apply P2P routing rules
-
-    # For nftables, we can use a template or define rules in a more structured way
     - name: Configure nftables rules
       ansible.builtin.template:
         src: nftables.conf.j2
@@ -78,7 +69,17 @@
         state: started
         daemon_reload: True
 
-    - name: Reload nftables to ensure all rules are applied
-      ansible.builtin.systemd:
-        name: nftables
-        state: reloaded
+    - name: Apply P2P routing immediately (eth1)
+      ansible.builtin.command:
+        cmd: /etc/network/if-up.d/p2p-routing
+      environment:
+        IFACE: eth1
+      changed_when: False
+
+    - name: Apply P2P routing immediately (eth2)
+      ansible.builtin.command:
+        cmd: /etc/network/if-up.d/p2p-routing
+      environment:
+        IFACE: eth2
+      changed_when: False
+      when: container_public_ip is defined
