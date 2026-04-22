@@ -45,7 +45,9 @@ ExecStart={{ default_base_path }}/cumulus \
   --rpc-external \
   --rpc-methods safe \
   --rpc-cors all \
-  --in-peers {{ default_in_peers }} \
+  {% if default_network.startswith('people-') %}
+  --enable-statement-store \
+  {% endif %}--in-peers {{ default_in_peers }} \
   --out-peers {{ default_out_peers }} \
   --no-mdns 
 
