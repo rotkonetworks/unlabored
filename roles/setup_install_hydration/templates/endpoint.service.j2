@@ -16,7 +16,8 @@ Group={{ default_group }}
 ExecStart={{ default_base_path }}/hydration \
   --name "{{ default_telemetry_name }}" \
   --chain {{ default_network }} \
-  --base-path {{ default_base_path }} \
+  {% if inventory_hostname == 'rpc-hydration-polkadot-01' %}--validator \
+  {% endif %}--base-path {{ default_base_path }} \
   --blocks-pruning archive \
   --state-pruning archive \
   --database {{ default_database }} \
@@ -34,7 +35,7 @@ ExecStart={{ default_base_path }}/hydration \
   --wasm-execution Compiled \
   --no-hardware-benchmarks \
   --rpc-external \
-  --rpc-methods safe \
+  --rpc-methods {% if inventory_hostname == 'rpc-hydration-polkadot-01' %}unsafe{% else %}safe{% endif %} \
   --rpc-cors all \
   --max-runtime-instances 32 \
   --rpc-max-request-size 16 \
