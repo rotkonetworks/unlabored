@@ -188,6 +188,7 @@ service_users:
   ethereum: "ethereum"
   encointer: "encointer"
   evmos: "evmos"
+  flare: "flare"
   kava: "kava"
   polygon: "polygon"
   polkadot: "polkadot"

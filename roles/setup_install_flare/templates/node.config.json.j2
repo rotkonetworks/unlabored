@@ -1,0 +1,23 @@
+{
+  "snowman-api-enabled": false,
+  "coreth-admin-api-enabled": false,
+  "eth-apis": [
+    "eth",
+    "eth-filter",
+    "net",
+    "web3",
+    "internal-eth",
+    "internal-blockchain",
+    "internal-transaction"
+  ],
+  "rpc-gas-cap": 50000000,
+  "rpc-tx-fee-cap": 100,
+  "pruning-enabled": {{ flare_pruning_enabled | tojson }},
+  "local-txs-enabled": false,
+  "api-max-duration": 0,
+  "api-max-blocks-per-request": 0,
+  "allow-unfinalized-queries": false,
+  "allow-unprotected-txs": false,
+  "remote-tx-gossip-only-enabled": false,
+  "log-level": "{{ flare_log_level }}"
+}

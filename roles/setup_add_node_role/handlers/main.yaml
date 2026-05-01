@@ -96,7 +96,7 @@
     owner: root
     group: root
     mode: "0644"
-  when: role in ["arbitrum", "avalanche", "defikingdom", "ethereum", "erigon", "evmos", "kava", "klaytn", "optimism", "polygon"]
+  when: role in ["arbitrum", "avalanche", "defikingdom", "ethereum", "erigon", "evmos", "flare", "kava", "klaytn", "optimism", "polygon"]
 
 - name: Add Ethereum service version
   community.general.ini_file:
@@ -195,6 +195,20 @@
     group: root
     mode: "0644"
   when: role == "evmos"
+
+- name: Add Flare service version
+  community.general.ini_file:
+    create: True
+    no_extra_spaces: True
+    option: "version"
+    section: "node"
+    state: present
+    value: "{{ flare_version }}"
+    path: "{{ noderole_file }}"
+    owner: root
+    group: root
+    mode: "0644"
+  when: role == "flare"
 
 - name: Add Kava service version
   community.general.ini_file:

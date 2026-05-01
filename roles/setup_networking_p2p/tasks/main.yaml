@@ -83,3 +83,8 @@
         IFACE: eth2
       changed_when: False
       when: container_public_ip is defined
+
+    - name: Apply nftables ruleset
+      ansible.builtin.command:
+        cmd: nft -f /etc/nftables.conf
+      changed_when: False

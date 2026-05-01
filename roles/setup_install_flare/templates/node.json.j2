@@ -1,0 +1,15 @@
+{
+  "log-level": "{{ flare_log_level }}",
+  "log-display-highlight": "plain",
+  "log-display-level": "{{ flare_log_level }}",
+  "network-id": "{{ flare_network }}",
+  "public-ip": "{{ container_public_ip | default(ansible_host) }}",
+  "db-dir": "{{ flare_storage_path }}/db",
+  "log-dir": "{{ flare_storage_path }}/logs",
+  "chain-config-dir": "{{ flare_chain_config_path }}",
+  "profile-dir": "{{ flare_storage_path }}/profiles",
+  "http-host": "{{ container_public_ip | default(ansible_host) }}",
+  "http-port": "{{ flare_http_port }}",
+  "staking-port": "{{ flare_staking_port }}",
+  "fd-limit": {{ flare_fd_limit }}
+}

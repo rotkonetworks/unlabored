@@ -1,0 +1,8 @@
+# Standards: 0.2
+---
+- name: Restart Flare
+  ansible.builtin.systemd:
+    name: flare
+    daemon_reload: True
+    state: restarted
+    enabled: True

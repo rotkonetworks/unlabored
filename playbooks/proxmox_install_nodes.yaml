@@ -79,6 +79,12 @@
   roles:
     - setup_install_avalanche
 
+- name: Install Flare services
+  hosts: flare
+  gather_facts: True
+  roles:
+    - setup_install_flare
+
 - name: Install Binance services
   hosts: binance
   gather_facts: True
