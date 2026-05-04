@@ -190,6 +190,7 @@ service_users:
   evmos: "evmos"
   flare: "flare"
   kava: "kava"
+  reth: "reth"
   polygon: "polygon"
   polkadot: "polkadot"
   optimism: "optimism"

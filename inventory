@@ -12,6 +12,7 @@ cumulus
 encointer
 flare
 polkadot
+reth
 github_runner
 
 [lv6:children]
@@ -44,6 +45,9 @@ ibp-geodns-01
 
 [flare]
 val-flare-01
+
+[reth]
+eth-fdc-01
 
 [proxmox_nodes]
 ansible

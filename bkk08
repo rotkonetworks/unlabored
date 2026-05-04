@@ -15,9 +15,13 @@ polkadot
 cumulus
 hydration
 flare
+reth
 
 [flare]
 val-flare-01
+
+[reth]
+eth-fdc-01
 
 [prometheus]
 ibp-bkk08

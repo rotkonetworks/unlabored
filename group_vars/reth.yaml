@@ -1,38 +1,42 @@
 ---
 default_block_output_to_private_ip: True
 
-# Ligthhouse
-ethereum_lighthouse_version: "4.6.0"
-ethereum_lighthouse_download_url: "https://github.com/sigp/lighthouse/releases/download/v{{ ethereum_lighthouse_version }}/lighthouse-v{{ ethereum_lighthouse_version }}-x86_64-unknown-linux-gnu-portable.tar.gz"
+# Lighthouse (Ethereum consensus client) — paired with reth via JWT-authenticated engine API
+ethereum_lighthouse_version: "8.1.3"
+ethereum_lighthouse_download_url: "https://github.com/sigp/lighthouse/releases/download/v{{ ethereum_lighthouse_version }}/lighthouse-v{{ ethereum_lighthouse_version }}-x86_64-unknown-linux-gnu.tar.gz"
 ethereum_lighthouse_nodetype: "beacon_node"
-ethereum_lighthouse_host: "0.0.0.0"
-ethereum_lighthouse_port: 8551
-ethereum_lighthouse_beacon_port: 9000
+ethereum_lighthouse_port: 8551          # auth-RPC port reth listens on, lighthouse connects here
+ethereum_lighthouse_http_port: 5052     # beacon HTTP API (localhost only)
+ethereum_lighthouse_beacon_port: 9000   # consensus P2P (must be reachable for healthy peer set)
+# Public checkpoint sync provider. Alternatives if this 404s:
+#   https://sync.invis.tools
+#   https://mainnet-checkpoint-sync.attestant.io
+#   https://beaconstate-mainnet.chainsafe.io
 ethereum_lighthouse_checkpoint_url: "https://beaconstate.info"
 
-reth_version: "0.1.0-alpha.19"
-reth_download_url: "https://github.com/paradigmxyz/reth/releases/download/v{{ reth_version }}/reth-v{{ reth_version }}-x86_64-unknown-linux-gnu.tar.gz"
-reth_github_url: "https://github.com/paragidmxyz/reth/"
+# Reth (execution client) — built from source because release binaries dynamic-link
+# against newer glibc (2.39) than Debian 12 LXC base ships (2.36).
+reth_version: "2.2.0"
+reth_git_repo: "https://github.com/paradigmxyz/reth.git"
 reth_service: "reth"
+
 ethereum_user: "{{ service_users['reth'] }}"
 ethereum_base: "/opt/reth"
-reth_build_path: "{{ ethereum_base }}/reth-{{ reth_version }}"
-reth_bin_path: "{{ reth_build_path }}/build/bin"
+ethereum_src_path: "{{ ethereum_base }}/src"
 ethereum_storage_path: "{{ ethereum_base }}/storage"
 ethereum_jwtsecret_file: "{{ ethereum_storage_path }}/jwt.hex"
 reth_config_path: "{{ ethereum_base }}/config"
-reth_private_api_addr: "localhost:9090"
-reth_addr: "0.0.0.0"
-reth_corsdomain: "*"
-reth_pruned_flags: "--prune hrtc"
-ethereum_syncmode: "archive"
 
-reth_eth: False
+# default_node_type drives reth's storage mode (set per-host in host_vars):
+#   "archive"  -> default, full historical state, ~3.5 TB
+#   "full"     -> latest state + last ~10k blocks of historical state, ~1.2 TB (recommended for FDC)
+#   "minimal"  -> aggressive prune, ~500 GB (loses tx/receipt lookups)
+# Mode CANNOT be changed after first sync — picks once, requires resync to switch.
+
+# RPC / metrics ports
 reth_eth_p2p_port: 30303
-reth_eth_p2p2_port: 30304
 reth_eth_http_port: 8545
 reth_eth_ws_port: 8546
-reth_eth_bt_port: 42069
-reth_eth_sentry_port: 4000
-reth_eth_sentry2_port: 4001
-reth_eth_http_api: "engine,eth,reth,ots,web3,net,debug,trace,txpool,shh"
+reth_metrics_port: 9001
+# eth-apis exposed on HTTP/WS — drop deprecated 'shh', drop 'engine' (engine API is auth-only via authrpc)
+reth_eth_http_api: "eth,net,web3,reth,ots,debug,trace,txpool"

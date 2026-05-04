@@ -250,7 +250,7 @@
     owner: root
     group: root
     mode: "0644"
-  when: role == "ethereum"
+  when: role in ["ethereum", "reth"]
 
 - name: Add Moonbeam service version
   community.general.ini_file:
