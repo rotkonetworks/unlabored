@@ -1,0 +1,25 @@
+---
+# btc-fdc-01 — Bitcoin Core full archive node for Flare FDC verifier-utxo-indexer
+ansible_host: "160.22.181.181" # bkk08 NAT
+container_ip: "192.168.78.203"
+container_internal_ip: "10.8.0.203"
+container_public_ip: "160.22.181.203"
+container_public_ip6: "2401:a860:1110::13"
+ansible_port: 32803
+host_name: "btc-fdc-01.rotko.net"
+host_timezone: "Asia/Bangkok"
+netif:
+  net0: "name=eth0,gw={{ default_nat_network_forward_cidr.split('/')[0] }},ip={{ default_mgmt_host_ip }}/16,bridge={{ default_nat_device }}"
+  net1: "name=eth1,ip={{ container_internal_ip }}/16,bridge={{ default_host_internal_bridge }}"
+  net2: "name=eth2,ip={{ container_public_ip }}/32,ip6={{ container_public_ip6 }}/128,bridge={{ default_host_public_bridge }}"
+
+role: "bitcoind"
+ansible_python_interpreter: /usr/bin/python3
+# pinned_service: True   # flip to True after first successful sync (~24-48h)
+
+default_node_type: "node"
+default_network: "mainnet"
+default_database_path: "/opt/bitcoin/storage"
+default_p2p_port: 8333
+
+zabbix_ext_port: 10803

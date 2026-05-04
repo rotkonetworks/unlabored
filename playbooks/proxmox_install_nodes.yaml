@@ -85,6 +85,20 @@
   roles:
     - setup_install_flare
 
+- name: Install Reth services
+  hosts: reth
+  gather_facts: True
+  roles:
+    - setup_networking_p2p
+    - setup_install_reth
+
+- name: Install Bitcoind services
+  hosts: bitcoind
+  gather_facts: True
+  roles:
+    - setup_networking_p2p
+    - setup_install_bitcoind
+
 - name: Install Binance services
   hosts: binance
   gather_facts: True

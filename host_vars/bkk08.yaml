@@ -113,6 +113,32 @@ lxc_nodes:
       - from_port: "{{ hostvars['eth-fdc-01']['zabbix_ext_port'] }}"
         to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
         protocol: "tcp"
+  - host: "btc-fdc-01"
+    proxmox_config:
+      vmid: "60803"
+      hostname: "{{ hostvars['btc-fdc-01']['host_name'] }}"
+      ostemplate: "local:vztmpl/{{ default_container_template }}"
+      netif: "{{ hostvars['btc-fdc-01']['netif'] }}"
+      cores: 4
+      memory: 8192
+      swap: 4096
+      password: "{{ default_password }}"
+      disk: "{{ zfs_storage }}:20"
+      mounts: '{"mp0":"{{ zfs_storage }}:1200,mp={{ hostvars["btc-fdc-01"]["default_database_path"] }}"}'
+      onboot: True
+      unprivileged: True
+      validate_certs: False
+      description: "{{ hostvars['btc-fdc-01']['default_network'] }} {{ hostvars['btc-fdc-01']['default_node_type'] }}: {{ hostvars['btc-fdc-01']['host_name'] }}"
+      state: present
+      features:
+        - nesting=1
+    port_forwards:
+      - from_port: "{{ hostvars['btc-fdc-01']['ansible_port'] }}"
+        to_host: "{{ hostvars['btc-fdc-01']['container_ip'] }}:{{ ssh_port }}"
+        protocol: "tcp"
+      - from_port: "{{ hostvars['btc-fdc-01']['zabbix_ext_port'] }}"
+        to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
+        protocol: "tcp"
   - host: "build-node-08"
     proxmox_config:
       vmid: "978"
@@ -208,32 +234,32 @@ lxc_nodes:
       - from_port: "{{ hostvars['penumbra-03']['default_cometbft_p2p_port'] }}"
         to_host: "{{ hostvars['penumbra-03']['container_ip'] }}:{{ hostvars['penumbra-03']['default_cometbft_p2p_port'] }}"
         protocol: "tcp"
-  - host: "penumbra-web"
-    proxmox_config:
-      vmid: "1104"
-      hostname: "{{ hostvars['penumbra-web']['host_name'] }}"
-      ostemplate: "local:vztmpl/{{ default_container_template }}"
-      netif: "{{ hostvars['penumbra-web']['netif'] }}"
-      cores: 4
-      memory: 8192
-      swap: 8192
-      password: "{{ default_password }}"
-      disk: "{{ zfs_storage }}:50"
-      mounts: '{"mp0":"{{ zfs_storage }}:700,mp={{ hostvars["penumbra-web"]["default_database_path"] }}"}'
-      onboot: True
-      unprivileged: True
-      validate_certs: False
-      description: "{{ hostvars['penumbra-web']['default_network'] }} {{ hostvars['penumbra-web']['default_node_type'] }}: {{ hostvars['penumbra-web']['host_name'] }}"
-      state: present
-      features:
-        - nesting=1
-    port_forwards:
-      - from_port: "{{ hostvars['penumbra-web']['ansible_port'] }}"
-        to_host: "{{ hostvars['penumbra-web']['container_ip'] }}:{{ ssh_port }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['penumbra-web']['default_cometbft_p2p_port'] }}"
-        to_host: "{{ hostvars['penumbra-web']['container_ip'] }}:{{ hostvars['penumbra-web']['default_cometbft_p2p_port'] }}"
-        protocol: "tcp"
+  # - host: "penumbra-web"
+  #   proxmox_config:
+  #     vmid: "1104"
+  #     hostname: "{{ hostvars['penumbra-web']['host_name'] }}"
+  #     ostemplate: "local:vztmpl/{{ default_container_template }}"
+  #     netif: "{{ hostvars['penumbra-web']['netif'] }}"
+  #     cores: 4
+  #     memory: 8192
+  #     swap: 8192
+  #     password: "{{ default_password }}"
+  #     disk: "{{ zfs_storage }}:50"
+  #     mounts: '{"mp0":"{{ zfs_storage }}:700,mp={{ hostvars["penumbra-web"]["default_database_path"] }}"}'
+  #     onboot: True
+  #     unprivileged: True
+  #     validate_certs: False
+  #     description: "{{ hostvars['penumbra-web']['default_network'] }} {{ hostvars['penumbra-web']['default_node_type'] }}: {{ hostvars['penumbra-web']['host_name'] }}"
+  #     state: present
+  #     features:
+  #       - nesting=1
+  #   port_forwards:
+  #     - from_port: "{{ hostvars['penumbra-web']['ansible_port'] }}"
+  #       to_host: "{{ hostvars['penumbra-web']['container_ip'] }}:{{ ssh_port }}"
+  #       protocol: "tcp"
+  #     - from_port: "{{ hostvars['penumbra-web']['default_cometbft_p2p_port'] }}"
+  #       to_host: "{{ hostvars['penumbra-web']['container_ip'] }}:{{ hostvars['penumbra-web']['default_cometbft_p2p_port'] }}"
+  #       protocol: "tcp"
   - host: "rpc-polkadot-03"
     proxmox_config:
       vmid: "3313"

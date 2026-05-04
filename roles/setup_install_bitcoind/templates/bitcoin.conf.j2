@@ -1,0 +1,44 @@
+# bitcoin.conf — managed by ansible (roles/setup_install_bitcoind)
+
+# Run as a daemon-style server (we manage it via systemd, but `server=1` enables RPC)
+server=1
+{% if bitcoind_network == "main" %}
+# mainnet (no chain= line needed)
+{% elif bitcoind_network == "test" %}
+chain=test
+{% elif bitcoind_network == "signet" %}
+chain=signet
+{% elif bitcoind_network == "regtest" %}
+chain=regtest
+{% endif %}
+
+# Storage — full node, no txindex (FDC indexer maintains its own postgres index)
+datadir={{ bitcoind_storage_path }}
+
+# P2P — public on eth2
+listen=1
+bind=0.0.0.0:{{ bitcoind_p2p_port }}
+port={{ bitcoind_p2p_port }}
+
+# RPC — mgmt + internal mesh + localhost only (NOT public)
+rpcbind={{ container_ip }}
+rpcbind=127.0.0.1
+rpcport={{ bitcoind_rpc_port }}
+rpctimeout={{ bitcoind_rpc_timeout }}
+rpcallowip=127.0.0.1
+rpcallowip=192.168.0.0/16
+rpcallowip=10.8.0.0/16
+
+# RPC auth — see {{ bitcoind_rpcauth_file }} for the user:salt$hmac line.
+# Format: rpcauth=user:salt$hash (HMAC-SHA256)
+{% if rpcauth_line is defined %}
+rpcauth={{ rpcauth_line }}
+{% endif %}
+
+# ZMQ — pub-sub notifications for indexers (localhost only)
+zmqpubrawblock=tcp://127.0.0.1:{{ bitcoind_zmq_block_port }}
+zmqpubrawtx=tcp://127.0.0.1:{{ bitcoind_zmq_tx_port }}
+
+# Logging
+debug=0
+printtoconsole=1

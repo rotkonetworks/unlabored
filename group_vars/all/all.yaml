@@ -182,6 +182,7 @@ service_users:
   arbitrum: "arbitrum"
   avalanche: "avalanche"
   binance: "binance"
+  bitcoind: "bitcoind"
   bifrost: "bifrost"
   cumulus: "cumulus"
   erigon: "erigon"

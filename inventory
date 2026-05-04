@@ -8,6 +8,7 @@ proxmox_vms
 routers
 
 [proxmox_nodes:children]
+bitcoind
 cumulus
 encointer
 flare
@@ -48,6 +49,9 @@ val-flare-01
 
 [reth]
 eth-fdc-01
+
+[bitcoind]
+btc-fdc-01
 
 [proxmox_nodes]
 ansible

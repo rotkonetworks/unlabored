@@ -16,12 +16,16 @@ cumulus
 hydration
 flare
 reth
+bitcoind
 
 [flare]
 val-flare-01
 
 [reth]
 eth-fdc-01
+
+[bitcoind]
+btc-fdc-01
 
 [prometheus]
 ibp-bkk08
@@ -41,7 +45,6 @@ rpc-collectives-paseo-02
 
 [penumbra]
 penumbra-03
-penumbra-web
 
 [hydration]
 rpc-hydration-polkadot-02

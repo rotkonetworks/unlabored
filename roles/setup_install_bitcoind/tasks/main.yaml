@@ -1,0 +1,160 @@
+# Standards: 0.2
+---
+- name: Ensure group {{ bitcoind_user }} exists
+  ansible.builtin.group:
+    name: "{{ bitcoind_user }}"
+    state: present
+    system: True
+
+- name: Ensure user {{ bitcoind_user }} exists
+  ansible.builtin.user:
+    append: True
+    comment: Bitcoin Core service user
+    create_home: True
+    group: "{{ bitcoind_user }}"
+    groups: sudo
+    home: "{{ bitcoind_base }}"
+    name: "{{ bitcoind_user }}"
+    shell: "{{ default_shell }}"
+    state: present
+    system: True
+
+- name: Ensure required directories exist
+  ansible.builtin.file:
+    path: "{{ item }}"
+    owner: "{{ bitcoind_user }}"
+    group: "{{ bitcoind_user }}"
+    mode: "0775"
+    state: directory
+  with_items:
+    - "{{ bitcoind_base }}"
+    - "{{ bitcoind_storage_path }}"
+    - "{{ bitcoind_config_path }}"
+    - "{{ bitcoind_base }}/bitcoin-{{ bitcoind_version }}"
+
+- name: Ensure rpcauth file has restricted perms
+  ansible.builtin.file:
+    path: "{{ bitcoind_rpcauth_file }}"
+    owner: "{{ bitcoind_user }}"
+    group: "{{ bitcoind_user }}"
+    mode: "0600"
+    state: touch
+    modification_time: preserve
+    access_time: preserve
+
+- name: Refresh facts
+  ansible.builtin.setup:
+
+- name: Generate rpcauth credentials (first run only)
+  become: True
+  become_user: "{{ bitcoind_user }}"
+  ansible.builtin.shell:
+    cmd: |
+      set -o pipefail
+      PASS=$(openssl rand -hex 24)
+      SALT=$(openssl rand -hex 16)
+      HMAC=$(echo -n "$PASS" | openssl dgst -sha256 -hmac "$SALT" | awk '{print $2}')
+      echo "rpcauth={{ bitcoind_rpc_user }}:${SALT}\$${HMAC}" > {{ bitcoind_rpcauth_file }}
+      echo "rpcpassword=${PASS}" >> {{ bitcoind_rpcauth_file }}
+    creates: "{{ bitcoind_rpcauth_file }}.generated"
+    executable: /bin/bash
+
+- name: Mark rpcauth as generated (sentinel file)
+  ansible.builtin.file:
+    path: "{{ bitcoind_rpcauth_file }}.generated"
+    owner: "{{ bitcoind_user }}"
+    group: "{{ bitcoind_user }}"
+    mode: "0600"
+    state: touch
+    modification_time: preserve
+    access_time: preserve
+
+- name: Read rpcauth line for bitcoin.conf
+  ansible.builtin.shell:
+    cmd: "grep '^rpcauth=' {{ bitcoind_rpcauth_file }} | head -1 | sed 's/^rpcauth=//'"
+  register: rpcauth_result
+  changed_when: False
+
+- name: Set rpcauth_line fact
+  ansible.builtin.set_fact:
+    rpcauth_line: "{{ rpcauth_result.stdout }}"
+
+- name: Render bitcoin.conf
+  ansible.builtin.template:
+    src: bitcoin.conf.j2
+    dest: "{{ bitcoind_config_path }}/bitcoin.conf"
+    owner: "{{ bitcoind_user }}"
+    group: "{{ bitcoind_user }}"
+    mode: "0640"
+  notify:
+    - Restart Bitcoind
+
+- name: Render Bitcoind systemd unit file
+  ansible.builtin.template:
+    src: bitcoind.service.j2
+    dest: "{{ bitcoind_base }}/bitcoind.service"
+    owner: "{{ bitcoind_user }}"
+    group: "{{ bitcoind_user }}"
+    mode: "0644"
+  register: bitcoind_unit
+
+- name: Symlink Bitcoind service to systemd
+  ansible.builtin.file:
+    src: "{{ bitcoind_base }}/bitcoind.service"
+    dest: /etc/systemd/system/bitcoind.service
+    state: link
+    force: True
+    owner: root
+    group: root
+    mode: "0644"
+  register: bitcoind_unit_link
+
+- name: Systemd daemon-reload (unit changed)
+  ansible.builtin.systemd:
+    daemon_reload: True
+  when: bitcoind_unit.changed or bitcoind_unit_link.changed
+
+- name: Download and extract Bitcoin Core v{{ bitcoind_version }}
+  ansible.builtin.unarchive:
+    src: "{{ bitcoind_download_url }}"
+    dest: "{{ bitcoind_base }}/bitcoin-{{ bitcoind_version }}"
+    remote_src: True
+    extra_opts:
+      - "--strip-components=1"
+    owner: "{{ bitcoind_user }}"
+    group: "{{ bitcoind_user }}"
+    creates: "{{ bitcoind_base }}/bitcoin-{{ bitcoind_version }}/bin/bitcoind"
+  when:
+    - ansible_local['noderole']['node']['pinned'] != "True"
+    - ansible_local['noderole']['node']['version'] != bitcoind_version
+  notify:
+    - Add Service Pinned Status
+    - Add Bitcoind service version
+    - Restart Bitcoind
+
+- name: Symlink Bitcoind binary
+  ansible.builtin.file:
+    src: "{{ bitcoind_base }}/bitcoin-{{ bitcoind_version }}/bin/bitcoind"
+    dest: "{{ bitcoind_base }}/bitcoind"
+    state: link
+    force: True
+    owner: "{{ bitcoind_user }}"
+    group: "{{ bitcoind_user }}"
+
+- name: Symlink bitcoin-cli to /usr/local/bin (operator convenience)
+  ansible.builtin.file:
+    src: "{{ bitcoind_base }}/bitcoin-{{ bitcoind_version }}/bin/bitcoin-cli"
+    dest: /usr/local/bin/bitcoin-cli
+    state: link
+    force: True
+    owner: root
+    group: root
+
+- name: Flush handlers
+  ansible.builtin.meta: flush_handlers
+
+- name: Ensure Bitcoind service is running
+  ansible.builtin.systemd:
+    name: bitcoind
+    state: started
+    enabled: True
