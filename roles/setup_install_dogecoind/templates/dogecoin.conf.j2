@@ -1,0 +1,39 @@
+# dogecoin.conf — managed by ansible (roles/setup_install_dogecoind)
+
+# Run as a daemon-style server (we manage it via systemd, but `server=1` enables RPC)
+server=1
+{% if dogecoind_network == "testnet" %}
+testnet=1
+{% elif dogecoind_network == "regtest" %}
+regtest=1
+{% endif %}
+
+# Storage — full node, no txindex (FDC indexer maintains its own postgres index)
+datadir={{ dogecoind_storage_path }}
+
+# P2P — public on eth2
+listen=1
+bind=0.0.0.0:{{ dogecoind_p2p_port }}
+port={{ dogecoind_p2p_port }}
+
+# RPC — mgmt + internal mesh + localhost only (NOT public)
+rpcbind={{ container_ip }}
+rpcbind=127.0.0.1
+rpcport={{ dogecoind_rpc_port }}
+rpctimeout={{ dogecoind_rpc_timeout }}
+rpcallowip=127.0.0.1
+rpcallowip=192.168.0.0/16
+rpcallowip=10.8.0.0/16
+
+# RPC auth — see {{ dogecoind_rpcauth_file }} for the user:salt$hmac line.
+{% if rpcauth_line is defined %}
+rpcauth={{ rpcauth_line }}
+{% endif %}
+
+# ZMQ — pub-sub notifications for indexers (localhost only)
+zmqpubrawblock=tcp://127.0.0.1:{{ dogecoind_zmq_block_port }}
+zmqpubrawtx=tcp://127.0.0.1:{{ dogecoind_zmq_tx_port }}
+
+# Logging
+debug=0
+printtoconsole=1

@@ -99,6 +99,20 @@
     - setup_networking_p2p
     - setup_install_bitcoind
 
+- name: Install Dogecoind services
+  hosts: dogecoind
+  gather_facts: True
+  roles:
+    - setup_networking_p2p
+    - setup_install_dogecoind
+
+- name: Install Rippled services
+  hosts: rippled
+  gather_facts: True
+  roles:
+    - setup_networking_p2p
+    - setup_install_rippled
+
 - name: Install Binance services
   hosts: binance
   gather_facts: True

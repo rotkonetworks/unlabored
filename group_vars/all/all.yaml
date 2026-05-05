@@ -183,6 +183,8 @@ service_users:
   avalanche: "avalanche"
   binance: "binance"
   bitcoind: "bitcoind"
+  dogecoind: "dogecoind"
+  rippled: "rippled"
   bifrost: "bifrost"
   cumulus: "cumulus"
   erigon: "erigon"

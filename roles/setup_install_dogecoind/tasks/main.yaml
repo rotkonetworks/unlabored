@@ -1,0 +1,160 @@
+# Standards: 0.2
+---
+- name: Ensure group {{ dogecoind_user }} exists
+  ansible.builtin.group:
+    name: "{{ dogecoind_user }}"
+    state: present
+    system: True
+
+- name: Ensure user {{ dogecoind_user }} exists
+  ansible.builtin.user:
+    append: True
+    comment: Dogecoin Core service user
+    create_home: True
+    group: "{{ dogecoind_user }}"
+    groups: sudo
+    home: "{{ dogecoind_base }}"
+    name: "{{ dogecoind_user }}"
+    shell: "{{ default_shell }}"
+    state: present
+    system: True
+
+- name: Ensure required directories exist
+  ansible.builtin.file:
+    path: "{{ item }}"
+    owner: "{{ dogecoind_user }}"
+    group: "{{ dogecoind_user }}"
+    mode: "0775"
+    state: directory
+  with_items:
+    - "{{ dogecoind_base }}"
+    - "{{ dogecoind_storage_path }}"
+    - "{{ dogecoind_config_path }}"
+    - "{{ dogecoind_base }}/dogecoin-{{ dogecoind_version }}"
+
+- name: Ensure rpcauth file has restricted perms
+  ansible.builtin.file:
+    path: "{{ dogecoind_rpcauth_file }}"
+    owner: "{{ dogecoind_user }}"
+    group: "{{ dogecoind_user }}"
+    mode: "0600"
+    state: touch
+    modification_time: preserve
+    access_time: preserve
+
+- name: Refresh facts
+  ansible.builtin.setup:
+
+- name: Generate rpcauth credentials (first run only)
+  become: True
+  become_user: "{{ dogecoind_user }}"
+  ansible.builtin.shell:
+    cmd: |
+      set -o pipefail
+      PASS=$(openssl rand -hex 24)
+      SALT=$(openssl rand -hex 16)
+      HMAC=$(echo -n "$PASS" | openssl dgst -sha256 -hmac "$SALT" | awk '{print $2}')
+      echo "rpcauth={{ dogecoind_rpc_user }}:${SALT}\$${HMAC}" > {{ dogecoind_rpcauth_file }}
+      echo "rpcpassword=${PASS}" >> {{ dogecoind_rpcauth_file }}
+    creates: "{{ dogecoind_rpcauth_file }}.generated"
+    executable: /bin/bash
+
+- name: Mark rpcauth as generated (sentinel file)
+  ansible.builtin.file:
+    path: "{{ dogecoind_rpcauth_file }}.generated"
+    owner: "{{ dogecoind_user }}"
+    group: "{{ dogecoind_user }}"
+    mode: "0600"
+    state: touch
+    modification_time: preserve
+    access_time: preserve
+
+- name: Read rpcauth line for dogecoin.conf
+  ansible.builtin.shell:
+    cmd: "grep '^rpcauth=' {{ dogecoind_rpcauth_file }} | head -1 | sed 's/^rpcauth=//'"
+  register: rpcauth_result
+  changed_when: False
+
+- name: Set rpcauth_line fact
+  ansible.builtin.set_fact:
+    rpcauth_line: "{{ rpcauth_result.stdout }}"
+
+- name: Render dogecoin.conf
+  ansible.builtin.template:
+    src: dogecoin.conf.j2
+    dest: "{{ dogecoind_config_path }}/dogecoin.conf"
+    owner: "{{ dogecoind_user }}"
+    group: "{{ dogecoind_user }}"
+    mode: "0640"
+  notify:
+    - Restart Dogecoind
+
+- name: Render Dogecoind systemd unit file
+  ansible.builtin.template:
+    src: dogecoind.service.j2
+    dest: "{{ dogecoind_base }}/dogecoind.service"
+    owner: "{{ dogecoind_user }}"
+    group: "{{ dogecoind_user }}"
+    mode: "0644"
+  register: dogecoind_unit
+
+- name: Symlink Dogecoind service to systemd
+  ansible.builtin.file:
+    src: "{{ dogecoind_base }}/dogecoind.service"
+    dest: /etc/systemd/system/dogecoind.service
+    state: link
+    force: True
+    owner: root
+    group: root
+    mode: "0644"
+  register: dogecoind_unit_link
+
+- name: Systemd daemon-reload (unit changed)
+  ansible.builtin.systemd:
+    daemon_reload: True
+  when: dogecoind_unit.changed or dogecoind_unit_link.changed
+
+- name: Download and extract Dogecoin Core v{{ dogecoind_version }}
+  ansible.builtin.unarchive:
+    src: "{{ dogecoind_download_url }}"
+    dest: "{{ dogecoind_base }}/dogecoin-{{ dogecoind_version }}"
+    remote_src: True
+    extra_opts:
+      - "--strip-components=1"
+    owner: "{{ dogecoind_user }}"
+    group: "{{ dogecoind_user }}"
+    creates: "{{ dogecoind_base }}/dogecoin-{{ dogecoind_version }}/bin/dogecoind"
+  when:
+    - ansible_local['noderole']['node']['pinned'] != "True"
+    - ansible_local['noderole']['node']['version'] != dogecoind_version
+  notify:
+    - Add Service Pinned Status
+    - Add Dogecoind service version
+    - Restart Dogecoind
+
+- name: Symlink Dogecoind binary
+  ansible.builtin.file:
+    src: "{{ dogecoind_base }}/dogecoin-{{ dogecoind_version }}/bin/dogecoind"
+    dest: "{{ dogecoind_base }}/dogecoind"
+    state: link
+    force: True
+    owner: "{{ dogecoind_user }}"
+    group: "{{ dogecoind_user }}"
+
+- name: Symlink dogecoin-cli to /usr/local/bin (operator convenience)
+  ansible.builtin.file:
+    src: "{{ dogecoind_base }}/dogecoin-{{ dogecoind_version }}/bin/dogecoin-cli"
+    dest: /usr/local/bin/dogecoin-cli
+    state: link
+    force: True
+    owner: root
+    group: root
+
+- name: Flush handlers
+  ansible.builtin.meta: flush_handlers
+
+- name: Ensure Dogecoind service is running
+  ansible.builtin.systemd:
+    name: dogecoind
+    state: started
+    enabled: True

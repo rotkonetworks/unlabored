@@ -1,0 +1,11 @@
+# Trusted validator publishers — managed by ansible
+# References XRPLF + Ripple's published UNLs (Unique Node Lists) for mainnet.
+
+[validator_list_sites]
+{% for v in rippled_validators -%}
+{{ v.url }}
+{% endfor %}
+[validator_list_keys]
+{% for v in rippled_validators -%}
+{{ v.key }}
+{% endfor %}

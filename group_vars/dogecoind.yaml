@@ -1,0 +1,26 @@
+---
+# Dogecoin Core (dogecoind) — full node, structurally a Bitcoin Core fork.
+# Pre-built static-linked binaries from github.com/dogecoin/dogecoin/releases.
+dogecoind_version: "1.14.9"
+dogecoind_arch: "x86_64-linux-gnu"
+dogecoind_download_url: "https://github.com/dogecoin/dogecoin/releases/download/v{{ dogecoind_version }}/dogecoin-{{ dogecoind_version }}-{{ dogecoind_arch }}.tar.gz"
+
+dogecoind_user: "{{ service_users['dogecoind'] }}"
+dogecoind_base: "/opt/dogecoin"
+dogecoind_storage_path: "{{ dogecoind_base }}/storage"
+dogecoind_config_path: "{{ dogecoind_base }}/config"
+dogecoind_rpcauth_file: "{{ dogecoind_config_path }}/rpcauth"
+
+# Network: "main" | "testnet" | "regtest"
+dogecoind_network: "main"
+
+# Ports (Dogecoin mainnet defaults — different from Bitcoin)
+dogecoind_p2p_port: 22556          # public, on eth2
+dogecoind_rpc_port: 22555          # mgmt-only, bound to container_ip
+dogecoind_rpc_timeout: 30          # seconds — indexer-friendly long requests
+dogecoind_zmq_block_port: 28332    # localhost — push notifications for indexer
+dogecoind_zmq_tx_port: 28333
+
+# RPC auth — generated on first deploy, stored at {{ dogecoind_rpcauth_file }}.
+# Single user "rotko" with random password.
+dogecoind_rpc_user: "rotko"

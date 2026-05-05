@@ -17,6 +17,8 @@ hydration
 flare
 reth
 bitcoind
+dogecoind
+rippled
 
 [flare]
 val-flare-01
@@ -26,6 +28,12 @@ eth-fdc-01
 
 [bitcoind]
 btc-fdc-01
+
+[dogecoind]
+doge-fdc-01
+
+[rippled]
+xrp-fdc-01
 
 [prometheus]
 ibp-bkk08
