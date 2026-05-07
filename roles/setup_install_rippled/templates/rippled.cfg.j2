@@ -64,6 +64,11 @@ fetch_depth={{ rippled_fetch_depth }}
 [ledger_history]
 {{ rippled_ledger_history }}
 
+# Ledger replay: download ledger headers + transactions and reapply locally
+# (faster than pulling whole ledgers, helps fresh nodes acquire state).
+[ledger_replay]
+{{ rippled_ledger_replay }}
+
 # No [debug_logfile] — rippled writes to stderr, systemd captures to journal.
 # Use `journalctl -u rippled` to view logs. journald rotates automatically.
 

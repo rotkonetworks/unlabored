@@ -14,26 +14,36 @@ rippled_db_path: "{{ rippled_storage_path }}/db"
 # Logs go to systemd journal via stderr; no on-disk log file.
 # rippled looks for /opt/ripple/etc/rippled.cfg by default — keep it there
 rippled_config_path: "/opt/ripple/etc"
-# Two publishers for redundancy (matches default rippled ships)
 rippled_validators:
   - url: "https://vl.ripple.com"
     key: "ED2677ABFFD1B33AC6FBC3062B71F1E8397C1505E1C42C64D11AD1B28FF73F4734"
-  - url: "https://vl.xrplf.org"
-    key: "ED45D1840EE724BE327ABE9146503D5848EFD5F38B6D5FEDE71E80ACCE5E6E738B"
+  - url: "https://unl.xrplf.org"
+    key: "ED42AEC58B701EEBB77356FFFEC26F83C1F0407263530F068C7C73D392C7E06FD1"
+
+# Threshold 0 disables the publisher-quorum check. FDC sets this to 0; without it,
+# rippled's default threshold logic with multiple publishers can stall consensus
+# if any single publisher's list is unavailable or stale.
+rippled_validator_list_threshold: 0
 
 # Ports — match FDC reference
-rippled_port_peer: 51235          # public, P2P
-rippled_port_rpc_public: 51234    # mgmt-only (FDC binds public, we tighten)
-rippled_port_ws_public: 51233     # mgmt-only
-rippled_port_rpc_admin: 5005      # localhost only
-rippled_port_ws_admin: 6006       # localhost only
-rippled_port_grpc: 50051          # localhost only
+rippled_port_peer: 51235 # public, P2P
+rippled_port_rpc_public: 51234 # mgmt-only (FDC binds public, we tighten)
+rippled_port_ws_public: 51233 # mgmt-only
+rippled_port_rpc_admin: 5005 # localhost only
+rippled_port_ws_admin: 6006 # localhost only
+rippled_port_grpc: 50051 # localhost only
 
-# Storage tuning — FDC reference values
-# online_delete=380000 keeps ~15 days of ledgers at ~3.5s/ledger (matches FDC's 14-day attestation window)
+# Storage tuning
+# online_delete=380000 keeps ~15 days of ledgers at ~3.5s/ledger (matches FDC's 14-day window).
+# ledger_history=360000 actively backfills/maintains ~14 days of history so the FDC indexer can
+# attest to ledgers up to 14 days old from day one (otherwise you wait 2 weeks for online_delete
+# to fill the window naturally from live ledgers).
+# ledger_replay=1 makes acquisition faster: downloads header+txns and replays locally instead
+# of pulling the whole ledger.
 rippled_online_delete: 380000
 rippled_ledger_history: 360000
 rippled_fetch_depth: 380000
+rippled_ledger_replay: 1
 # node_size: tiny | small | medium | large | huge
 # large needs 8-32 GB RAM (CT is 16 GB) — matches FDC reference
 rippled_node_size: "large"

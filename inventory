@@ -10,10 +10,12 @@ routers
 [proxmox_nodes:children]
 bitcoind
 cumulus
+dogecoind
 encointer
 flare
 polkadot
 reth
+rippled
 github_runner
 
 [lv6:children]
@@ -52,6 +54,12 @@ eth-fdc-01
 
 [bitcoind]
 btc-fdc-01
+
+[dogecoind]
+doge-fdc-01
+
+[rippled]
+xrp-fdc-01
 
 [proxmox_nodes]
 ansible
