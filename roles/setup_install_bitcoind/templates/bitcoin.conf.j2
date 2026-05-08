@@ -12,8 +12,9 @@ chain=signet
 chain=regtest
 {% endif %}
 
-# Storage — full node, no txindex (FDC indexer maintains its own postgres index)
+# Storage — full node with txindex (FDC verifier-utxo-indexer needs getrawtransaction
 datadir={{ bitcoind_storage_path }}
+txindex=1
 
 # P2P — public on eth2
 listen=1
@@ -28,6 +29,9 @@ rpctimeout={{ bitcoind_rpc_timeout }}
 rpcallowip=127.0.0.1
 rpcallowip=192.168.0.0/16
 rpcallowip=10.8.0.0/16
+# Docker bridge networks (FDC verifier-utxo-indexer queries us from inside docker).
+rpcallowip=172.17.0.0/16
+rpcallowip=172.18.0.0/16
 
 # RPC auth — see {{ bitcoind_rpcauth_file }} for the user:salt$hmac line.
 # Format: rpcauth=user:salt$hash (HMAC-SHA256)

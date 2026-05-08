@@ -1,0 +1,25 @@
+[db]
+username = "db"
+password = "{{ fdc_xrp_db_password }}"
+db_name = "db"
+host = "database"
+port = 5432
+drop_table_at_start = false
+history_drop = 1296000
+history_drop_frequency = 86400
+
+[indexer]
+confirmations = 1
+max_block_range = 100
+max_concurrency = 10
+start_block_number = {{ fdc_xrp_start_ledger }}
+
+[blockchain]
+url = "{{ fdc_xrp_node_url }}"
+
+[timeout]
+timeout_millis = 3000
+
+[logger]
+level = "INFO"
+console = true

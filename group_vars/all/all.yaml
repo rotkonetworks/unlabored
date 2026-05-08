@@ -209,3 +209,4 @@ service_users:
   invarch: "invarch"
   xcavate: "xcavate"
   zebra: "zebra"
+  docker: "docker_user"

@@ -1,0 +1,99 @@
+# Standards: 0.2
+---
+- name: Install apt prerequisites
+  ansible.builtin.package:
+    name:
+      - ca-certificates
+      - curl
+      - gnupg
+      - apt-transport-https
+    state: present
+
+- name: Ensure /etc/apt/keyrings exists
+  ansible.builtin.file:
+    path: /etc/apt/keyrings
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Add Docker apt repo signing key
+  ansible.builtin.get_url:
+    url: "{{ docker_apt_repo_key }}"
+    dest: "{{ docker_apt_keyring }}"
+    mode: "0644"
+    force: False
+
+- name: Add Docker apt repo
+  ansible.builtin.apt_repository:
+    repo: "deb [signed-by={{ docker_apt_keyring }}] {{ docker_apt_repo_url }} {{ ansible_distribution_release }} stable"
+    filename: docker
+    state: present
+    update_cache: True
+
+- name: Install Docker CE + compose plugin
+  ansible.builtin.apt:
+    name: "{{ docker_packages }}"
+    state: present
+    update_cache: True
+
+- name: Ensure /etc/docker exists
+  ansible.builtin.file:
+    path: /etc/docker
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Ensure docker data-root directory exists ({{ docker_data_root }})
+  ansible.builtin.file:
+    path: "{{ docker_data_root }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0710"
+
+- name: Ensure group {{ docker_user }} exists
+  ansible.builtin.group:
+    name: "{{ docker_user }}"
+    state: present
+    system: True
+
+- name: Ensure user {{ docker_user }} exists
+  ansible.builtin.user:
+    name: "{{ docker_user }}"
+    comment: Docker container runner (non-root)
+    create_home: True
+    home: "{{ docker_user_home }}"
+    group: "{{ docker_user }}"
+    groups:
+      - docker
+    append: True
+    shell: "{{ default_shell }}"
+    system: True
+    state: present
+
+- name: Render /etc/docker/daemon.json
+  ansible.builtin.template:
+    src: daemon.json.j2
+    dest: /etc/docker/daemon.json
+    owner: root
+    group: root
+    mode: "0644"
+  notify:
+    - Restart Docker
+
+- name: Ensure Docker service is enabled and running
+  ansible.builtin.systemd:
+    name: docker
+    enabled: True
+    state: started
+
+- name: Ensure containerd service is enabled and running
+  ansible.builtin.systemd:
+    name: containerd
+    enabled: True
+    state: started
+
+- name: Flush handlers
+  ansible.builtin.meta: flush_handlers

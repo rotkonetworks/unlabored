@@ -22,4 +22,9 @@ default_network: "mainnet"
 default_database_path: "/opt/bitcoin/storage"
 default_p2p_port: 8333
 
+# FDC UTXO indexer starting block (~14 days back from current tip).
+# Bitcoin: ~144 blocks/day, so 14 days = ~2016 blocks.
+# Bumped down further for buffer; indexer walks forward from here into Postgres.
+fdc_start_block: 946400
+
 zabbix_ext_port: 10803

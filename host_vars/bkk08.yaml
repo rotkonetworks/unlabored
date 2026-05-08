@@ -106,6 +106,8 @@ lxc_nodes:
       state: present
       features:
         - nesting=1
+        - keyctl=1
+        - fuse=1
     port_forwards:
       - from_port: "{{ hostvars['eth-fdc-01']['ansible_port'] }}"
         to_host: "{{ hostvars['eth-fdc-01']['container_ip'] }}:{{ ssh_port }}"
@@ -132,6 +134,8 @@ lxc_nodes:
       state: present
       features:
         - nesting=1
+        - keyctl=1
+        - fuse=1
     port_forwards:
       - from_port: "{{ hostvars['btc-fdc-01']['ansible_port'] }}"
         to_host: "{{ hostvars['btc-fdc-01']['container_ip'] }}:{{ ssh_port }}"
@@ -158,6 +162,8 @@ lxc_nodes:
       state: present
       features:
         - nesting=1
+        - keyctl=1
+        - fuse=1
     port_forwards:
       - from_port: "{{ hostvars['doge-fdc-01']['ansible_port'] }}"
         to_host: "{{ hostvars['doge-fdc-01']['container_ip'] }}:{{ ssh_port }}"
@@ -184,6 +190,8 @@ lxc_nodes:
       state: present
       features:
         - nesting=1
+        - keyctl=1
+        - fuse=1
     port_forwards:
       - from_port: "{{ hostvars['xrp-fdc-01']['ansible_port'] }}"
         to_host: "{{ hostvars['xrp-fdc-01']['container_ip'] }}:{{ ssh_port }}"

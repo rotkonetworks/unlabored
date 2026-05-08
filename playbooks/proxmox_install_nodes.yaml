@@ -90,28 +90,36 @@
   gather_facts: True
   roles:
     - setup_networking_p2p
+    - setup_install_docker
     - setup_install_reth
+    - setup_install_fdc_evm_verifier
 
 - name: Install Bitcoind services
   hosts: bitcoind
   gather_facts: True
   roles:
     - setup_networking_p2p
+    - setup_install_docker
     - setup_install_bitcoind
+    - setup_install_fdc_utxo_verifier
 
 - name: Install Dogecoind services
   hosts: dogecoind
   gather_facts: True
   roles:
     - setup_networking_p2p
+    - setup_install_docker
     - setup_install_dogecoind
+    - setup_install_fdc_utxo_verifier
 
 - name: Install Rippled services
   hosts: rippled
   gather_facts: True
   roles:
     - setup_networking_p2p
+    - setup_install_docker
     - setup_install_rippled
+    - setup_install_fdc_xrp_verifier
 
 - name: Install Binance services
   hosts: binance

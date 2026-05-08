@@ -1,0 +1,10 @@
+# Standards: 0.2
+---
+- name: Reload systemd
+  ansible.builtin.systemd:
+    daemon_reload: True
+
+- name: Restart FDC EVM verifier
+  ansible.builtin.systemd:
+    name: fdc-evm-verifier
+    state: restarted

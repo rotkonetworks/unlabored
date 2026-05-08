@@ -22,4 +22,9 @@ default_network: "mainnet"
 default_database_path: "/opt/dogecoin/storage"
 default_p2p_port: 22556
 
+# FDC UTXO indexer starting block (~14 days back from current tip).
+# Dogecoin: ~1440 blocks/day (1 min target), so 14 days = ~20160 blocks.
+# Bumped down further for buffer; indexer walks forward from here into Postgres.
+fdc_start_block: 6177600
+
 zabbix_ext_port: 10804

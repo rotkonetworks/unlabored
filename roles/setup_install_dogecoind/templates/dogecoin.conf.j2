@@ -8,8 +8,9 @@ testnet=1
 regtest=1
 {% endif %}
 
-# Storage — full node, no txindex (FDC indexer maintains its own postgres index)
+# Storage — full node with txindex (FDC verifier-utxo-indexer needs getrawtransaction
 datadir={{ dogecoind_storage_path }}
+txindex=1
 
 # P2P — public on eth2
 listen=1
@@ -24,6 +25,9 @@ rpctimeout={{ dogecoind_rpc_timeout }}
 rpcallowip=127.0.0.1
 rpcallowip=192.168.0.0/16
 rpcallowip=10.8.0.0/16
+# Docker bridge networks (FDC verifier-utxo-indexer queries us from inside docker).
+rpcallowip=172.17.0.0/16
+rpcallowip=172.18.0.0/16
 
 # RPC auth — see {{ dogecoind_rpcauth_file }} for the user:salt$hmac line.
 {% if rpcauth_line is defined %}

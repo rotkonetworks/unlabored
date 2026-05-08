@@ -1,0 +1,78 @@
+# Standards: 0.2
+---
+# FDC UTXO verifier — handles BTC + DOGE attestations.
+# Source: https://github.com/flare-foundation/fdc-suite-deployment/tree/main/verifiers/{btc,doge}
+#
+# Variables that vary per chain (chain_var below) are sourced from the chain's
+# group_vars (bitcoind.yaml / dogecoind.yaml) and host_vars. The role resolves
+# `chain_var` automatically from the inventory group of the host.
+
+fdc_base: "/opt/fdc"
+
+# `chain_var` is computed: btc → "btc", doge → "doge"
+fdc_utxo_chain: >-
+  {%- if 'bitcoind' in group_names -%}btc
+  {%- elif 'dogecoind' in group_names -%}doge
+  {%- else -%}unknown
+  {%- endif -%}
+
+fdc_utxo_base: "{{ fdc_base }}/{{ fdc_utxo_chain }}-verifier"
+
+# Pinned image versions (match FDC reference repo).
+fdc_utxo_indexer_image: "ghcr.io/flare-foundation/verifier-utxo-indexer:v1.0.2@sha256:42b2f5b1af89cf28e437a04f7d7bbbd8dd8afc708c29f56102551eb9c717b909"
+fdc_utxo_verifier_image: "ghcr.io/flare-foundation/verifier-indexer-api:v1.2.2@sha256:e8a94dd88276c0c06f44af561d9e3f06a42c405409c1002811015993cde377ca"
+fdc_utxo_postgres_image: "postgres:18@sha256:52e6ffd11fddd081ae63880b635b2a61c14008c17fc98cdc7ce5472265516dd0"
+
+# Per-chain port assignments. Verifier API listens on container_ip; postgres
+# stays on localhost (no remote DB access). Match upstream port mappings.
+fdc_utxo_ports:
+  btc:
+    verifier_api: 9501
+    postgres: 25431
+    indexer_metrics: 8401
+  doge:
+    verifier_api: 9502
+    postgres: 25432
+    indexer_metrics: 8402
+
+# Resolved per chain
+fdc_utxo_verifier_api_port: "{{ fdc_utxo_ports[fdc_utxo_chain].verifier_api }}"
+fdc_utxo_postgres_port: "{{ fdc_utxo_ports[fdc_utxo_chain].postgres }}"
+fdc_utxo_indexer_metrics_port: "{{ fdc_utxo_ports[fdc_utxo_chain].indexer_metrics }}"
+
+# Underlying chain RPC — points at the bitcoind/dogecoind on this host.
+# Bitcoin = port 8332, Dogecoin = port 22555 (per chain group_vars).
+fdc_utxo_node_url: >-
+  {%- if fdc_utxo_chain == 'btc' -%}http://{{ container_ip }}:{{ bitcoind_rpc_port }}
+  {%- elif fdc_utxo_chain == 'doge' -%}http://{{ container_ip }}:{{ dogecoind_rpc_port }}
+  {%- endif -%}
+
+fdc_utxo_node_user: >-
+  {%- if fdc_utxo_chain == 'btc' -%}{{ bitcoind_rpc_user }}
+  {%- elif fdc_utxo_chain == 'doge' -%}{{ dogecoind_rpc_user }}
+  {%- endif -%}
+
+# RPC password — the rpcauth file contains an HMAC, but FDC indexer needs the plaintext.
+# Stored in vault per chain. See secret_vault.yaml.
+fdc_utxo_node_password: >-
+  {%- if fdc_utxo_chain == 'btc' -%}{{ vault_bitcoind_rpc_password | default('changeme-set-vault') }}
+  {%- elif fdc_utxo_chain == 'doge' -%}{{ vault_dogecoind_rpc_password | default('changeme-set-vault') }}
+  {%- endif -%}
+
+# DB password — different per chain, vault-backed.
+fdc_utxo_db_password: >-
+  {%- if fdc_utxo_chain == 'btc' -%}{{ vault_fdc_btc_db_password | default('changeme-set-vault') }}
+  {%- elif fdc_utxo_chain == 'doge' -%}{{ vault_fdc_doge_db_password | default('changeme-set-vault') }}
+  {%- endif -%}
+
+# Initial block height — set per host in host_vars/<host>.yaml.
+# Best practice: ~14 days back from the chain's current tip (see FDC docs).
+fdc_utxo_start_block: "{{ fdc_start_block | default(0) }}"
+
+# API keys (comma-separated) shared across all FDC verifiers.
+fdc_utxo_api_keys: "{{ vault_fdc_verifier_api_keys | default('changeme-set-vault') }}"
+
+# Testnet flag. We're on mainnet for production.
+fdc_utxo_testnet: "false"
+
+fdc_utxo_systemd_unit: "/etc/systemd/system/fdc-{{ fdc_utxo_chain }}-verifier.service"

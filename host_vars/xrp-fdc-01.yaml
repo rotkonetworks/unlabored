@@ -11,7 +11,8 @@ host_timezone: "Asia/Bangkok"
 netif:
   net0: "name=eth0,gw={{ default_nat_network_forward_cidr.split('/')[0] }},ip={{ default_mgmt_host_ip }}/16,bridge={{ default_nat_device }}"
   net1: "name=eth1,ip={{ container_internal_ip }}/16,bridge={{ default_host_internal_bridge }}"
-  net2: "name=eth2,ip={{ container_public_ip }}/32,ip6={{ container_public_ip6 }}/128,bridge={{ default_host_public_bridge }}"
+  # mtu=1400 — eth2 upstream tunnel encapsulates traffic; default 1500 causes
+  net2: "name=eth2,ip={{ container_public_ip }}/32,ip6={{ container_public_ip6 }}/128,bridge={{ default_host_public_bridge }},mtu=1400"
 
 role: "rippled"
 ansible_python_interpreter: /usr/bin/python3
@@ -21,5 +22,12 @@ default_node_type: "node"
 default_network: "mainnet"
 default_database_path: "/opt/rippled/storage"
 default_p2p_port: 51235
+
+# FDC XRP indexer starting ledger.
+# Set to rippled's current complete_ledgers lower bound — the indexer can't
+# index ledgers rippled doesn't have. As rippled backfills (online_delete=380000
+# fills toward 14 days over time), bump this number down and re-deploy to
+# index the newly-available history into Postgres.
+fdc_start_block: 104003200
 
 zabbix_ext_port: 10805

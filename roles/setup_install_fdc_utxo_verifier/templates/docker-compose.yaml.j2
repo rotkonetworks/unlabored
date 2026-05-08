@@ -1,0 +1,79 @@
+name: verifier-{{ fdc_utxo_chain }}
+
+x-django: &django
+  image: {{ fdc_utxo_indexer_image }}
+  env_file:
+    - indexer.env
+  environment:
+    DB_PORT: 5432
+    DB_HOST: database
+  volumes:
+    - {{ fdc_utxo_chain }}-indexer-static:/appdata/static
+    - {{ fdc_utxo_chain }}-indexer-media:/appdata/media
+  restart: unless-stopped
+  depends_on:
+    database:
+      condition: service_healthy
+
+x-django-management: &django-management
+  <<: *django
+  depends_on:
+    database:
+      condition: service_healthy
+    indexer-server:
+      condition: service_healthy
+
+
+services:
+  database:
+    container_name: verifier-{{ fdc_utxo_chain }}-database
+    image: {{ fdc_utxo_postgres_image }}
+    env_file:
+      - database.env
+    ports:
+      - 127.0.0.1:{{ fdc_utxo_postgres_port }}:5432
+    restart: unless-stopped
+    volumes:
+      - {{ fdc_utxo_chain }}-indexer-database:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      start_period: 60s
+      start_interval: 2s
+
+  verifier:
+    image: {{ fdc_utxo_verifier_image }}
+    container_name: verifier-{{ fdc_utxo_chain }}-verifier
+    env_file:
+      - verifier.env
+    depends_on:
+      database:
+        condition: service_healthy
+    restart: unless-stopped
+    ports:
+      - {{ container_ip }}:{{ fdc_utxo_verifier_api_port }}:3100
+
+  indexer-server:
+    <<: *django
+    container_name: verifier-{{ fdc_utxo_chain }}-server
+    ports:
+      - 127.0.0.1:{{ fdc_utxo_indexer_metrics_port }}:8400
+    healthcheck:
+      test: ["CMD", "curl", "-s", "--fail", "-o", "/dev/null", "http://127.0.0.1:8400/metrics"]
+      interval: 60s
+      start_period: 60s
+      start_interval: 2s
+
+  indexer-indexer:
+    <<: *django-management
+    container_name: verifier-{{ fdc_utxo_chain }}-index-blocks
+    command: django-management block_indexing
+
+  indexer-prune:
+    <<: *django-management
+    container_name: verifier-{{ fdc_utxo_chain }}-prune-blocks
+    command: django-management block_pruning
+
+volumes:
+  {{ fdc_utxo_chain }}-indexer-static:
+  {{ fdc_utxo_chain }}-indexer-database:
+  {{ fdc_utxo_chain }}-indexer-media:
