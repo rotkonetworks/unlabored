@@ -94,8 +94,8 @@ lxc_nodes:
       ostemplate: "local:vztmpl/{{ default_container_template }}"
       netif: "{{ hostvars['eth-fdc-01']['netif'] }}"
       cores: 4
-      memory: 16384
-      swap: 8192
+      memory: 65536
+      swap: 16384
       password: "{{ default_password }}"
       disk: "{{ zfs_storage }}:20"
       mounts: '{"mp0":"{{ zfs_storage }}:1500,mp={{ hostvars["eth-fdc-01"]["default_database_path"] }}"}'
