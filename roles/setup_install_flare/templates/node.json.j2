@@ -11,5 +11,8 @@
   "http-host": "{{ container_ip | default(ansible_host) }}",
   "http-port": "{{ flare_http_port }}",
   "staking-port": "{{ flare_staking_port }}",
+  "staking-tls-cert-file": "{{ flare_staking_path }}/staker.crt",
+  "staking-tls-key-file": "{{ flare_staking_path }}/staker.key",
+  "staking-signer-key-file": "{{ flare_staking_path }}/signer.key",
   "fd-limit": {{ flare_fd_limit }}
 }
