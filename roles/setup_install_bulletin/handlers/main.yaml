@@ -1,0 +1,47 @@
+# handlers/main.yaml
+---
+- name: Symlink Bulletin service to systemd
+  ansible.builtin.file:
+    src: "{{ default_base_path }}/bulletin.service"
+    dest: "/etc/systemd/system/bulletin.service"
+    state: link
+    force: True
+    owner: "root"
+    group: "root"
+    mode: "0644"
+
+- name: Symlink Bulletin binaries
+  ansible.builtin.file:
+    src: "{{ default_base_path }}/{{ item }}-{{ default_client_version }}"
+    dest: "{{ default_base_path }}/{{ item }}"
+    force: True
+    state: link
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+  loop: "{{ default_omni_node_binaries }}"
+
+- name: Symlink binary executables
+  ansible.builtin.file:
+    src: "{{ default_base_path }}/{{ item }}-{{ default_client_version }}"
+    dest: "/usr/local/bin/{{ item }}"
+    force: True
+    state: link
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+  loop: "{{ default_omni_node_binaries }}"
+
+- name: Systemd daemon-reload
+  ansible.builtin.systemd:
+    daemon_reload: True
+
+- name: Stop Bulletin
+  ansible.builtin.systemd:
+    name: bulletin
+    state: stopped
+    enabled: True
+
+- name: Start Bulletin
+  ansible.builtin.systemd:
+    name: bulletin
+    state: started
+    enabled: True

@@ -112,6 +112,20 @@
     mode: "0644"
   when: role == "cumulus"
 
+- name: Add Bulletin service version
+  community.general.ini_file:
+    create: True
+    no_extra_spaces: True
+    option: "version"
+    section: "node"
+    state: present
+    value: "{{ default_client_version }}"
+    path: "{{ noderole_file }}"
+    owner: root
+    group: root
+    mode: "0644"
+  when: role == "bulletin"
+
 - name: Add Encointer service version
   community.general.ini_file:
     create: True

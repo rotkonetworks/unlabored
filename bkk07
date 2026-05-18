@@ -12,9 +12,9 @@ polkadot
 cumulus
 penumbra
 encointer
-github_runner
 hydration
 misc-container
+bulletin
 zebra
 
 [github_runner]
@@ -60,6 +60,8 @@ rpc-kusama-02
 rpc-paseo-02
 val-paseo-01
 
+[bulletin]
+rpc-bulletin-polkadot-01
 
 [cumulus]
 rpc-people-polkadot-02

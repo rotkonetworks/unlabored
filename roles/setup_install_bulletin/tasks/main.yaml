@@ -1,0 +1,131 @@
+---
+- name: Ensure group {{ default_user }} exists
+  ansible.builtin.group:
+    name: "{{ default_user }}"
+    state: present
+    system: True
+
+- name: Ensure user {{ default_user }} exists without unnecessary privileges
+  ansible.builtin.user:
+    append: True
+    comment: bulletin service user
+    create_home: False
+    group: "{{ default_user }}"
+    groups: []
+    home: "{{ default_base_path }}"
+    name: "{{ default_user }}"
+    shell: "/sbin/nologin"
+    state: present
+    system: True
+
+- name: Ensure user {{ default_user }} owns directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+    mode: "0750"
+    state: directory
+  loop:
+    - "{{ default_base_path }}"
+    - "{{ default_database_path }}"
+
+- name: Gather facts
+  ansible.builtin.setup:
+
+- name: Check if the local chain spec file exists
+  ansible.builtin.stat:
+    path: "{{ default_chain_spec }}"
+  register: local_chain_spec
+  delegate_to: "{{ inventory_hostname }}"
+
+- name: Download Bulletin chain spec if not present
+  ansible.builtin.get_url:
+    url: "{{ default_chain_spec_dl_url }}"
+    dest: "{{ default_chain_spec }}"
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+    mode: "0644"
+    timeout: 60
+  when: not local_chain_spec.stat.exists
+  delegate_to: "{{ inventory_hostname }}"
+
+- name: Copy Bulletin systemd service for specific node type
+  ansible.builtin.template:
+    src: "{{ default_node_type + '.service.j2' }}"
+    dest: "{{ default_base_path }}/bulletin.service"
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+    mode: "0640"
+  when: default_node_type in ["collator", "bootnode", "endpoint"]
+  notify:
+    - Symlink Bulletin service to systemd
+    - Stop Bulletin
+    - Systemd daemon-reload
+    - Start Bulletin
+    - Add type of service fact
+
+- name: Flush handlers after service copy
+  ansible.builtin.meta: flush_handlers
+
+- name: Install Bulletin binaries - {{ default_client_version }}
+  ansible.builtin.get_url:
+    url: "{{ default_download_base_url }}{{ default_client_version }}/{{ item }}"
+    dest: "{{ default_base_path }}/{{ item }}-{{ default_client_version }}"
+    mode: "u+r+x"
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+  loop: "{{ default_omni_node_binaries }}"
+  register: download_result
+  notify:
+    - Add Service Pinned Status
+    - Add Bulletin service version
+    - Symlink Bulletin service to systemd
+    - Symlink Bulletin binaries
+    - Symlink binary executables
+    - Stop Bulletin
+    - Systemd daemon-reload
+    - Start Bulletin
+  when:
+    - ansible_local['noderole']['node']['pinned'] != "True"
+    - ansible_local['noderole']['node']['version'] != default_client_version
+
+- name: Flush handlers
+  ansible.builtin.meta: flush_handlers
+
+- name: Perform collator-specific tasks
+  when: default_node_type == "collator"
+  block:
+    - name: Create ParityDB folder if default_database is paritydb
+      ansible.builtin.file:
+        path: "{{ default_base_path }}/chains/{{ default_chains_name }}/paritydb/full"
+        state: directory
+        owner: "{{ default_user }}"
+        group: "{{ default_user }}"
+        mode: "0750"
+      when: default_database == "paritydb"
+
+    - name: Ensure network directory exists
+      ansible.builtin.file:
+        path: "{{ default_base_path }}/chains/{{ default_chains_name }}/network"
+        state: directory
+        owner: "{{ default_user }}"
+        group: "{{ default_user }}"
+        mode: "0750"
+
+    - name: Check if node key file exists
+      ansible.builtin.stat:
+        path: "{{ default_base_path }}/chains/{{ default_chains_name }}/network/secret_ed25519"
+      register: bulletin_node_key
+
+    - name: Generate node key
+      ansible.builtin.command:
+        cmd: "./polkadot-omni-node key generate-node-key --chain {{ default_chain_spec }} --file {{ default_base_path }}/chains/{{ default_chains_name }}/network/secret_ed25519"
+        chdir: "{{ default_base_path }}"
+      become: True
+      become_user: "{{ default_user }}"
+      when: not bulletin_node_key.stat.exists
+
+- name: Ensure Bulletin service is running
+  ansible.builtin.systemd:
+    name: bulletin
+    state: started

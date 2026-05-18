@@ -186,6 +186,7 @@ service_users:
   dogecoind: "dogecoind"
   rippled: "rippled"
   bifrost: "bifrost"
+  bulletin: "bulletin"
   cumulus: "cumulus"
   erigon: "erigon"
   ethereum: "ethereum"

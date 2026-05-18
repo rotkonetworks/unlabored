@@ -145,6 +145,14 @@
   roles:
     - setup_install_evmos
 
+- name: Install bulletin services
+  hosts: bulletin
+  gather_facts: True
+  roles:
+    - setup_networking_p2p
+    - setup_install_bulletin
+    - setup_install_nginx
+
 - name: Install Polkadot services
   hosts: polkadot
   gather_facts: True
