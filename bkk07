@@ -12,6 +12,7 @@ polkadot
 cumulus
 penumbra
 encointer
+flare
 hydration
 misc-container
 bulletin
@@ -53,6 +54,9 @@ rpc-zcash-01
 
 [penumbra]
 penumbra-02
+
+[flare]
+val-flare-02
 
 [polkadot]
 rpc-polkadot-02
