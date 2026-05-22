@@ -1,8 +1,22 @@
-# defaults/main.yml
+# defaults/main.yaml
 ---
+# Default Proxmox API configuration
+# These can be overridden in host_vars or group_vars
 proxmox_defaults:
   api_user: "root@pam"
-  api_token_id: "your_proxmox_token_id"
-  api_token_secret: "your_proxmox_token_secret"
-  api_host: "your.proxmox.host"
+  api_token_id: "{{ lookup('env', 'PROXMOX_TOKEN_ID') | default('your_proxmox_token_id') }}"
+  api_token_secret: "{{ lookup('env', 'PROXMOX_TOKEN_SECRET') | default('your_proxmox_token_secret') }}"
+  api_host: "{{ default_kvm_host | default('your.proxmox.host') }}"
   validate_certs: False
+
+# Default VM configuration values
+default_vm_config:
+  cores: 2
+  memory: 2048
+  disk_size: 32G
+  storage: "{{ default_storage | default('local-lvm') }}"
+  net_bridge: vmbr0
+  onboot: True
+  state: present
+  ostype: l26  # Linux kernel 2.6+
+  agent: enabled=1

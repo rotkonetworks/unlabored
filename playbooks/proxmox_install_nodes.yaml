@@ -14,11 +14,25 @@
     - role: setup_networking_routeros
       when: default_need_routeros_port_forwarding
 
+# WARN: vm workflow need to be improved
+# - name: Proxmox install VM templates
+#   hosts: proxmox_hosts
+#   gather_facts: True
+#   roles:
+#     - role: proxmox_install_vm_templates
+
 - name: Proxmox setup nodes
   hosts: proxmox_hosts
   gather_facts: True
   roles:
     - role: proxmox_setup_nodes
+
+# WARN: vm workflow need to be improved
+# - name: Proxmox setup VMs
+#   hosts: proxmox_hosts
+#   gather_facts: True
+#   roles:
+#     - role: proxmox_setup_vms
 
 - name: Default tools and configurations
   hosts: proxmox_nodes
@@ -65,6 +79,48 @@
   roles:
     - setup_install_avalanche
 
+- name: Install Flare services
+  hosts: flare
+  gather_facts: True
+  roles:
+    - setup_install_flare
+
+- name: Install Reth services
+  hosts: reth
+  gather_facts: True
+  roles:
+    - setup_networking_p2p
+    - setup_install_docker
+    - setup_install_reth
+    - setup_install_fdc_evm_verifier
+
+- name: Install Bitcoind services
+  hosts: bitcoind
+  gather_facts: True
+  roles:
+    - setup_networking_p2p
+    - setup_install_docker
+    - setup_install_bitcoind
+    - setup_install_fdc_utxo_verifier
+
+- name: Install Dogecoind services
+  hosts: dogecoind
+  gather_facts: True
+  roles:
+    - setup_networking_p2p
+    - setup_install_docker
+    - setup_install_dogecoind
+    - setup_install_fdc_utxo_verifier
+
+- name: Install Rippled services
+  hosts: rippled
+  gather_facts: True
+  roles:
+    - setup_networking_p2p
+    - setup_install_docker
+    - setup_install_rippled
+    - setup_install_fdc_xrp_verifier
+
 - name: Install Binance services
   hosts: binance
   gather_facts: True
@@ -87,7 +143,15 @@
   hosts: evmos
   gather_facts: True
   roles:
-#     - setup_install_evmos
+    - setup_install_evmos
+
+- name: Install bulletin services
+  hosts: bulletin
+  gather_facts: True
+  roles:
+    - setup_networking_p2p
+    - setup_install_bulletin
+    - setup_install_nginx
 
 - name: Install Polkadot services
   hosts: polkadot
@@ -103,6 +167,13 @@
   roles:
     - setup_install_promtail
     - setup_install_cumulus
+    - setup_install_nginx
+
+- name: Install Zcash services
+  hosts: zebra
+  gather_facts: True
+  roles:
+    - setup_install_zebra
     - setup_install_nginx
 
 - name: Install Encointer services

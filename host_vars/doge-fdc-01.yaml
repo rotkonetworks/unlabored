@@ -1,0 +1,30 @@
+---
+# doge-fdc-01 — Dogecoin Core full node for Flare FDC verifier-utxo-indexer
+ansible_host: "160.22.181.181" # bkk08 NAT
+container_ip: "192.168.78.204"
+container_internal_ip: "10.8.0.204"
+container_public_ip: "160.22.181.204"
+container_public_ip6: "2401:a860:1110::14"
+ansible_port: 32804
+host_name: "doge-fdc-01.rotko.net"
+host_timezone: "Asia/Bangkok"
+netif:
+  net0: "name=eth0,gw={{ default_nat_network_forward_cidr.split('/')[0] }},ip={{ default_mgmt_host_ip }}/16,bridge={{ default_nat_device }}"
+  net1: "name=eth1,ip={{ container_internal_ip }}/16,bridge={{ default_host_internal_bridge }}"
+  net2: "name=eth2,ip={{ container_public_ip }}/32,ip6={{ container_public_ip6 }}/128,bridge={{ default_host_public_bridge }}"
+
+role: "dogecoind"
+ansible_python_interpreter: /usr/bin/python3
+# pinned_service: True   # flip to True after first successful sync (~12-24h)
+
+default_node_type: "node"
+default_network: "mainnet"
+default_database_path: "/opt/dogecoin/storage"
+default_p2p_port: 22556
+
+# FDC UTXO indexer starting block (~14 days back from current tip).
+# Dogecoin: ~1440 blocks/day (1 min target), so 14 days = ~20160 blocks.
+# Bumped down further for buffer; indexer walks forward from here into Postgres.
+fdc_start_block: 6177600
+
+zabbix_ext_port: 10804

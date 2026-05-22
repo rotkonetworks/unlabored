@@ -1,0 +1,42 @@
+[Unit]
+Description="{{ host_name.split('.')[0] }} Collator - Bulletin service"
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=on-failure
+RestartSec=10
+User={{ default_user }}
+Group={{ default_group }}
+SyslogIdentifier={{ default_service }}
+LimitNOFILE={{ default_max_open_files_in_service }}
+SyslogFacility=local7
+KillSignal=SIGHUP
+ExecStart={{ default_base_path }}/polkadot-omni-node \
+     --collator \
+     --base-path {{ default_base_path }} \
+     --chain {{ default_chain_spec }} \
+     --database {{ default_database }} \
+     --sync {{ default_syncmode | default('warp') }} \
+     --name "{{ hostvars[inventory_hostname]['default_telemetry_name'] | default(host_name) }}" \
+     --telemetry-url "wss://telemetry.rotko.net/submit/ 1" \
+     --telemetry-url 'wss://telemetry.polkadot.io/submit 0' \
+     --port {{ default_p2p_port }} \
+     --rpc-port {{ default_rpc_port }} \
+     --prometheus-port {{ default_prom_port }} \
+     --prometheus-external \
+     --public-addr /ip4/{{ default_public_host_ip }}/tcp/{{ default_p2p_port }} \
+     --public-addr /ip4/{{ default_public_host_ip }}/tcp/{{ default_p2p_port_ws }}/ws \
+     {% if container_public_ip6 is defined %}--public-addr /ip6/{{ container_public_ip6 }}/tcp/{{ default_p2p_port }} \
+     --public-addr /ip6/{{ container_public_ip6 }}/tcp/{{ default_p2p_port_ws }}/ws \
+     {% endif %}--relay-chain-rpc-urls {{ default_relay_rpc }} {{ default_relay_rpc_fallback }} \
+     --wasm-execution Compiled \
+     --pruning 1000 \
+     --db-cache {{ ansible_memtotal_mb // 2 }} \
+     --no-hardware-benchmarks \
+     --in-peers {{ default_in_peers }} \
+     --out-peers {{ default_out_peers }}
+
+[Install]
+WantedBy=multi-user.target

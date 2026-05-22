@@ -1,0 +1,43 @@
+name: verifier-xrp
+
+services:
+  database:
+    container_name: verifier-xrp-database
+    image: {{ fdc_xrp_postgres_image }}
+    env_file:
+      - database.env
+    ports:
+      - 127.0.0.1:{{ fdc_xrp_postgres_port }}:5432
+    restart: unless-stopped
+    volumes:
+      - xrp-indexer-database:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      start_period: 60s
+      start_interval: 2s
+
+  indexer:
+    container_name: verifier-xrp-indexer
+    image: {{ fdc_xrp_indexer_image }}
+    depends_on:
+      database:
+        condition: service_healthy
+    restart: unless-stopped
+    volumes:
+      - ./config.toml:/app/config.toml
+
+  verifier:
+    image: {{ fdc_xrp_verifier_image }}
+    container_name: verifier-xrp-verifier
+    env_file:
+      - verifier.env
+    depends_on:
+      database:
+        condition: service_healthy
+    restart: unless-stopped
+    ports:
+      - {{ container_ip }}:{{ fdc_xrp_verifier_api_port }}:3100
+
+
+volumes:
+  xrp-indexer-database:

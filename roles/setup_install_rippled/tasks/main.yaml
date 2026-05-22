@@ -1,0 +1,119 @@
+# Standards: 0.2
+---
+- name: Install apt prerequisites
+  ansible.builtin.package:
+    name:
+      - ca-certificates
+      - curl
+      - gnupg
+      - apt-transport-https
+    state: present
+
+- name: Add XRPLF apt repo signing key
+  ansible.builtin.get_url:
+    url: "{{ rippled_apt_repo_key }}"
+    dest: /usr/share/keyrings/ripple.asc
+    mode: "0644"
+    force: False
+
+- name: Add XRPLF apt repo
+  ansible.builtin.apt_repository:
+    repo: "deb [signed-by=/usr/share/keyrings/ripple.asc] {{ rippled_apt_repo_url }} {{ ansible_distribution_release }} stable"
+    filename: ripple
+    state: present
+    update_cache: True
+
+- name: Install rippled v{{ rippled_version }}
+  ansible.builtin.apt:
+    name: "rippled={{ rippled_version }}-1"
+    state: present
+    update_cache: True
+  when:
+    - ansible_local['noderole']['node']['pinned'] != "True"
+    - ansible_local['noderole']['node']['version'] != rippled_version
+  notify:
+    - Add Service Pinned Status
+    - Add Rippled service version
+    - Restart Rippled
+
+- name: Ensure required directories exist
+  ansible.builtin.file:
+    path: "{{ item }}"
+    owner: "{{ rippled_user }}"
+    group: "{{ rippled_user }}"
+    mode: "0750"
+    state: directory
+  with_items:
+    - "{{ rippled_base }}"
+    - "{{ rippled_storage_path }}"
+    - "{{ rippled_db_path }}"
+
+- name: Ensure rippled config dir exists
+  ansible.builtin.file:
+    path: "{{ rippled_config_path }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Render rippled.cfg
+  ansible.builtin.template:
+    src: rippled.cfg.j2
+    dest: "{{ rippled_config_path }}/rippled.cfg"
+    owner: root
+    group: "{{ rippled_user }}"
+    mode: "0640"
+  notify:
+    - Restart Rippled
+
+- name: Render validators.txt
+  ansible.builtin.template:
+    src: validators.txt.j2
+    dest: "{{ rippled_config_path }}/validators.txt"
+    owner: root
+    group: "{{ rippled_user }}"
+    mode: "0640"
+  notify:
+    - Restart Rippled
+
+- name: Ensure rippled user owns storage paths
+  ansible.builtin.file:
+    path: "{{ rippled_storage_path }}"
+    owner: "{{ rippled_user }}"
+    group: "{{ rippled_user }}"
+    recurse: True
+    state: directory
+
+- name: Render Rippled systemd unit file (overrides apt-installed unit)
+  ansible.builtin.template:
+    src: rippled.service.j2
+    dest: "{{ rippled_base }}/rippled.service"
+    owner: "{{ rippled_user }}"
+    group: "{{ rippled_user }}"
+    mode: "0644"
+  register: rippled_unit
+
+- name: Symlink Rippled service to systemd (replaces vendor unit at /lib/systemd/system)
+  ansible.builtin.file:
+    src: "{{ rippled_base }}/rippled.service"
+    dest: /etc/systemd/system/rippled.service
+    state: link
+    force: True
+    owner: root
+    group: root
+    mode: "0644"
+  register: rippled_unit_link
+
+- name: Systemd daemon-reload (unit changed)
+  ansible.builtin.systemd:
+    daemon_reload: True
+  when: rippled_unit.changed or rippled_unit_link.changed
+
+- name: Flush handlers
+  ansible.builtin.meta: flush_handlers
+
+- name: Ensure Rippled service is running
+  ansible.builtin.systemd:
+    name: rippled
+    state: started
+    enabled: True

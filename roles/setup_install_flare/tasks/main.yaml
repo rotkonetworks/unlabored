@@ -1,0 +1,142 @@
+# Standards: 0.2
+---
+- name: Ensure group {{ flare_user }} exists
+  ansible.builtin.group:
+    name: "{{ flare_user }}"
+    state: present
+    system: True
+
+- name: Ensure user {{ flare_user }} exists
+  ansible.builtin.user:
+    append: True
+    comment: Flare service user
+    create_home: True
+    group: "{{ flare_user }}"
+    groups: sudo
+    home: "{{ flare_base }}"
+    name: "{{ flare_user }}"
+    shell: "{{ default_shell }}"
+    state: present
+    system: True
+
+- name: Ensure required directories exist
+  ansible.builtin.file:
+    path: "{{ item }}"
+    owner: "{{ flare_user }}"
+    group: "{{ flare_user }}"
+    mode: '0775'
+    state: directory
+  with_items:
+    - "{{ flare_base }}"
+    - "{{ flare_src_path }}"
+    - "{{ flare_storage_path }}"
+    - "{{ flare_config_path }}"
+    - "{{ flare_chain_config_path }}"
+    - "{{ flare_chain_config_path }}/C"
+    - "{{ flare_service_path }}"
+
+- name: Ensure staking key directory exists with restricted perms
+  ansible.builtin.file:
+    path: "{{ flare_staking_path }}"
+    owner: "{{ flare_user }}"
+    group: "{{ flare_user }}"
+    mode: '0700'
+    state: directory
+
+- name: Refresh facts
+  ansible.builtin.setup:
+
+- name: Render Flare systemd unit file
+  ansible.builtin.template:
+    src: flare.service.j2
+    dest: "{{ flare_service_path }}/flare.service"
+    owner: "root"
+    group: "root"
+    mode: '0644'
+  register: flare_unit
+
+- name: Symlink Flare service to systemd
+  ansible.builtin.file:
+    src: "{{ flare_service_path }}/flare.service"
+    dest: /etc/systemd/system/flare.service
+    state: link
+    force: True
+    owner: "root"
+    group: "root"
+    mode: '0644'
+  register: flare_unit_link
+
+- name: Systemd daemon-reload (unit changed)
+  ansible.builtin.systemd:
+    daemon_reload: True
+  when: flare_unit.changed or flare_unit_link.changed
+
+- name: Provide configuration file for Flare
+  ansible.builtin.template:
+    src: node.json.j2
+    dest: "{{ flare_config_path }}/node.json"
+    owner: "{{ flare_user }}"
+    group: "{{ flare_user }}"
+    mode: '0644'
+  notify:
+    - Restart Flare
+
+- name: Provide C-chain config ({{ default_node_type }})
+  ansible.builtin.template:
+    src: "{{ default_node_type }}.config.json.j2"
+    dest: "{{ flare_chain_config_path }}/C/config.json"
+    owner: "{{ flare_user }}"
+    group: "{{ flare_user }}"
+    mode: '0644'
+  notify:
+    - Restart Flare
+
+- name: Clone go-flare {{ flare_version }} from source
+  become: True
+  become_user: "{{ flare_user }}"
+  ansible.builtin.git:
+    repo: "{{ flare_git_repo }}"
+    dest: "{{ flare_src_path }}/go-flare-v{{ flare_version }}"
+    version: "v{{ flare_version }}"
+    depth: 1
+    force: True
+  when:
+    - ansible_local['noderole']['node']['pinned'] != "True"
+    - ansible_local['noderole']['node']['version'] != flare_version
+
+- name: Build go-flare v{{ flare_version }} from source
+  become: True
+  become_user: "{{ flare_user }}"
+  ansible.builtin.shell:
+    cmd: ./scripts/build.sh
+    chdir: "{{ flare_src_path }}/go-flare-v{{ flare_version }}/avalanchego"
+    creates: "{{ flare_src_path }}/go-flare-v{{ flare_version }}/avalanchego/build/avalanchego"
+  environment:
+    GOROOT: "{{ default_golang_GOROOT }}"
+    GOPATH: "{{ flare_base }}/go"
+    PATH: "{{ default_golang_GOROOT }}/bin:{{ flare_base }}/go/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+  when:
+    - ansible_local['noderole']['node']['pinned'] != "True"
+    - ansible_local['noderole']['node']['version'] != flare_version
+  notify:
+    - Add Service Pinned Status
+    - Add Flare service version
+    - Restart Flare
+
+- name: Symlink Flare binary
+  ansible.builtin.file:
+    src: "{{ flare_src_path }}/go-flare-v{{ flare_version }}/avalanchego/build/avalanchego"
+    dest: "{{ flare_binary_link }}"
+    state: link
+    force: True
+    owner: "{{ flare_user }}"
+    group: "{{ flare_user }}"
+
+- name: Flush handlers
+  ansible.builtin.meta: flush_handlers
+
+- name: Ensure Flare service is running
+  ansible.builtin.systemd:
+    name: flare
+    state: started
+    enabled: True

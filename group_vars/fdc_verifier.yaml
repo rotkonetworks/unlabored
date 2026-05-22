@@ -1,0 +1,10 @@
+# Standards: 0.2
+---
+# Vars applied to all FDC verifier hosts (eth-fdc-01, btc-fdc-01, doge-fdc-01,
+# xrp-fdc-01) — these hosts run docker for the FDC verifier stack.
+
+# Move docker's data-root onto the LXC's mp0 mount (the chain's storage volume).
+# Without this, docker volumes (especially the FDC indexer's Postgres) would
+# fill the small 20 GB rootfs disk within hours of indexing 14 days of history.
+# `default_database_path` is set per-host (e.g. /opt/bitcoin/storage on btc-fdc-01).
+docker_data_root: "{{ default_database_path }}/docker"

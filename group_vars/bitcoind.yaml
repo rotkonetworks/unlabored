@@ -1,0 +1,27 @@
+---
+# Bitcoin Core (bitcoind) — full node, config matches FDC's nodes-mainnet/btc/bitcoin.conf.
+# FDC's verifier-utxo-indexer maintains its own postgres index, so txindex is NOT required.
+# FDC docker pins to v30.x; we use the latest 30.x patch release for RPC compat.
+bitcoind_version: "30.2"
+bitcoind_arch: "x86_64-linux-gnu"
+bitcoind_download_url: "https://bitcoincore.org/bin/bitcoin-core-{{ bitcoind_version }}/bitcoin-{{ bitcoind_version }}-{{ bitcoind_arch }}.tar.gz"
+
+bitcoind_user: "{{ service_users['bitcoind'] }}"
+bitcoind_base: "/opt/bitcoin"
+bitcoind_storage_path: "{{ bitcoind_base }}/storage"
+bitcoind_config_path: "{{ bitcoind_base }}/config"
+bitcoind_rpcauth_file: "{{ bitcoind_config_path }}/rpcauth"
+
+# Network: "main" | "test" | "signet" | "regtest"
+bitcoind_network: "main"
+
+# Ports (mainnet defaults)
+bitcoind_p2p_port: 8333          # public, on eth2
+bitcoind_rpc_port: 8332           # mgmt-only, bound to container_ip
+bitcoind_rpc_timeout: 30          # seconds — indexer-friendly long requests
+bitcoind_zmq_block_port: 28332    # localhost — push notifications for indexer
+bitcoind_zmq_tx_port: 28333
+
+# RPC auth — generated on first deploy, stored at {{ bitcoind_rpcauth_file }}.
+# Single user "rotko" with random password.
+bitcoind_rpc_user: "rotko"

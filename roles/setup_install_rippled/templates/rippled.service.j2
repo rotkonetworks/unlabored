@@ -1,0 +1,24 @@
+[Unit]
+Description=XRP Ledger daemon (rippled)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User={{ rippled_user }}
+Group={{ rippled_user }}
+LimitNOFILE={{ default_max_open_files_in_service }}
+WorkingDirectory={{ rippled_base }}
+# --net = connect to the public network (default, explicit)
+# No --silent so stderr is captured by systemd journal
+ExecStart=/opt/ripple/bin/rippled --net --conf {{ rippled_config_path }}/rippled.cfg
+
+ExecStop=/bin/kill -s SIGTERM $MAINPID
+KillMode=process
+KillSignal=SIGTERM
+TimeoutStopSec=600
+Restart=always
+RestartSec=10s
+
+[Install]
+WantedBy=multi-user.target

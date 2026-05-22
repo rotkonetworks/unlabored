@@ -1,0 +1,11 @@
+---
+host_name: "ibp-geodns-01.rotko.net"
+ansible_host: "160.22.181.181"
+ansible_port: 25011
+container_ip: "100.64.1.2"
+public_ip: "160.22.181.253"
+
+# VM Resources
+vm_cores: 4
+vm_memory: 16884
+vm_disk_size: 128G

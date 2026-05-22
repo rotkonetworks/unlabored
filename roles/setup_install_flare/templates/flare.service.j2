@@ -1,0 +1,19 @@
+[Unit]
+Description=Flare (go-flare) systemd service
+StartLimitIntervalSec=0
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User={{ flare_user }}
+LimitNOFILE={{ default_max_open_files_in_service }}
+WorkingDirectory={{ flare_base }}
+ExecStart=/bin/bash -c "exec {{ flare_binary_link }} --config-file={{ flare_config_path }}/node.json --bootstrap-ips=$(curl -m 10 -sX POST -H 'content-type:application/json' --data '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"info.getNodeIP\"}' {{ flare_bootstrap_url }}/ext/info | jq -r .result.ip) --bootstrap-ids=$(curl -m 10 -sX POST -H 'content-type:application/json' --data '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"info.getNodeID\"}' {{ flare_bootstrap_url }}/ext/info | jq -r .result.nodeID)"
+ExecStop=/bin/kill -s SIGTERM $MAINPID
+TimeoutStopSec=120
+Restart=always
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target

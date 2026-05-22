@@ -5,6 +5,7 @@
     HTTP_Server on
     HTTP_Listen 0.0.0.0
     HTTP_Port 2020
+    Parsers_File parsers.conf
 
 [INPUT]
     Name tail
@@ -12,6 +13,21 @@
     Tag {{ host_name }}
     Skip_Long_Lines On
     Multiline.Parser cri
+
+[FILTER]
+    Name record_modifier
+    Match {{ host_name }}
+    Record chain {{ default_network }}
+    Record node_role {{ default_node_type }}
+
+[FILTER]
+    Name parser
+    Match *
+    Key_Name log
+    Parser substrate_detailed
+    Parser substrate_default
+    Reserve_Data On
+    Preserve_Key On
 
 [OUTPUT]
     Name loki
@@ -21,7 +37,10 @@
     Tls On
     Tenant_ID {{ paseo_tenant_id }}
     Bearer_Token {{ paseo_bearer_token }}
-    Labels node_provider={{ paseo_node_provider }},node_name=$TAG,$stream
+    Labels node_provider={{ paseo_node_provider }},node_name=$TAG,chain=$chain,node_role=$node_role,level=$level,target=$target,$stream
+    Label_Keys $component
+    Remove_Keys level,target,component,thread,time,date,chain,node_role
+    Line_Format json
     Net.connect_timeout 5
     Net.keepalive On
     Net.keepalive_idle_timeout 30

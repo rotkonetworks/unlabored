@@ -31,7 +31,8 @@
   when:
     - item.name in ( users_with_access | default(default_users))
     - default_admin_group_name in ( ansible_facts.getent_group | default([]) )
-  ignore_errors: True
+  failed_when: false
+  register: user_creation_results
 
 - name: Ensure .ssh directory exists
   ansible.builtin.file:

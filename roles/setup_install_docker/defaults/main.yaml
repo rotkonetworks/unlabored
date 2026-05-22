@@ -1,0 +1,30 @@
+# Standards: 0.2
+---
+docker_user: "{{ service_users['docker'] }}"
+docker_user_home: "/home/{{ docker_user }}"
+
+# Docker CE official apt repo (https://docs.docker.com/engine/install/debian/)
+docker_apt_repo_key: "https://download.docker.com/linux/debian/gpg"
+docker_apt_repo_url: "https://download.docker.com/linux/debian"
+docker_apt_keyring: "/etc/apt/keyrings/docker.asc"
+
+docker_packages:
+  - docker-ce
+  - docker-ce-cli
+  - containerd.io
+  - docker-buildx-plugin
+  - docker-compose-plugin
+
+# /etc/docker/daemon.json settings
+docker_log_driver: "json-file"
+docker_log_max_size: "10m"
+docker_log_max_files: 3
+docker_live_restore: True
+docker_userland_proxy: False
+docker_storage_driver: "overlay2"
+
+# Docker data-root — defaults to /var/lib/docker. Override per-host in host_vars
+# (or via group_vars) to put image/volume data on the LXC's mp0 mount instead of
+# the small rootfs disk. FDC chain LXCs set this to {{ default_database_path }}/docker
+# via group_vars/fdc_verifier.yaml so postgres volumes don't fill the 20 GB rootfs.
+docker_data_root: "/var/lib/docker"

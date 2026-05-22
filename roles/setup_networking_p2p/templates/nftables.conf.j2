@@ -1,32 +1,55 @@
-# roles/setup_networking_p2p/templates/nftables.conf.j2
 #!/usr/sbin/nft -f
+# /etc/nftables.conf
+# Managed by ansible: roles/setup_networking_p2p
 
 flush ruleset
 
-# Basic mangle table for connection marking
-table ip mangle {
+# Dual-stack mangle: mark inbound connections by ingress interface so that
+# replies exit the same interface via policy routing (fwmark -> table).
+table inet mangle {
     chain prerouting {
         type filter hook prerouting priority mangle; policy accept;
-        # Mark connections coming from eth1
-        iif "eth1" ct mark set 0x1
+        iifname "eth1" ct mark set 0x1
+{% if container_public_ip is defined %}
+        iifname "eth2" ct mark set 0x2
+{% endif %}
     }
-    
+
     chain output {
         type filter hook output priority mangle; policy accept;
-        # Apply packet mark based on connection mark
         ct mark 0x1 meta mark set 0x1
+{% if container_public_ip is defined %}
+        ct mark 0x2 meta mark set 0x2
+{% endif %}
     }
 }
+{% if container_public_ip is defined %}
+{% set allowed_ports = [
+    default_p2p_port | default(''),
+    default_bootnode_p2p_port | default(''),
+    default_bootnode_p2p_port_wss | default('')
+] | reject('equalto', '') | unique | list %}
 
-# Optional: Add any existing firewall rules here
-# table inet filter {
-#     chain input {
-#         type filter hook input priority filter; policy accept;
-#     }
-#     chain forward {
-#         type filter hook forward priority filter; policy accept;
-#     }
-#     chain output {
-#         type filter hook output priority filter; policy accept;
-#     }
-# }
+# Firewall: restrict inbound on eth2 (public) to specific P2P ports.
+# eth0 (NAT) and eth1 (internal) remain unrestricted.
+table inet filter {
+    chain input {
+        type filter hook input priority filter; policy accept;
+
+        # Established/related and loopback always pass
+        ct state established,related accept
+        iifname "lo" accept
+
+        # ICMP/ICMPv6 needed for ping and IPv6 NDP
+        iifname "eth2" meta l4proto { icmp, ipv6-icmp } accept
+
+{% if allowed_ports %}
+        # Allowed public P2P ports
+        iifname "eth2" tcp dport { {{ allowed_ports | join(', ') }} } accept
+{% endif %}
+
+        # Drop everything else arriving on eth2
+        iifname "eth2" drop
+    }
+}
+{% endif %}

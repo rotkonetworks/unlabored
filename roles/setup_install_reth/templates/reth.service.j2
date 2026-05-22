@@ -1,36 +1,46 @@
 [Unit]
-Description=Rust Ethereum client
+Description=Rust Ethereum client (reth)
+After=network-online.target
 Wants=network-online.target
-After=network.target network-online.target
 
 [Service]
+Type=simple
 User={{ ethereum_user }}
 Group={{ ethereum_user }}
 LimitNOFILE={{ default_max_open_files_in_service }}
 Environment=HOME={{ ethereum_base }}
-Type=simple
+WorkingDirectory={{ ethereum_base }}
 ExecStart={{ ethereum_base }}/reth node \
-  --chain mainnet \
-  --datadir {{ ethereum_storage_path }} \
-  --discovery.port {{ reth_eth_p2p_port }} \
-  --port {{ reth_eth_p2p_port }} \
-  --http \
-  --http.addr 0.0.0.0 \
-  --http.port {{ reth_eth_http_port }} \
-  --http.corsdomain * \
-  --ws \
-  --ws.addr 0.0.0.0 \
-  --ws.port {{ reth_eth_ws_port }} \
-  --ws.origins * \
-  --ws.api "eth,net,trace,txpool,web3,rpc,reth,ots,eth-call-bundle" \
-  --authrpc.jwtsecret {{ ethereum_jwtsecret_file }} \
-  --authrpc.addr {{ ethereum_lighthouse_host }} \
-  --authrpc.port {{ ethereum_lighthouse_port }}
+    --chain mainnet \
+    --datadir {{ ethereum_storage_path }} \
+    --port {{ default_p2p_port | default(reth_eth_p2p_port) }} \
+    --discovery.port {{ default_p2p_port | default(reth_eth_p2p_port) }} \
+    --http \
+    --http.addr {{ container_ip }} \
+    --http.port {{ reth_eth_http_port }} \
+    --http.api {{ reth_eth_http_api }} \
+    --http.corsdomain "*" \
+    --ws \
+    --ws.addr {{ container_ip }} \
+    --ws.port {{ reth_eth_ws_port }} \
+    --ws.api {{ reth_eth_http_api }} \
+    --ws.origins "*" \
+    --authrpc.addr 127.0.0.1 \
+    --authrpc.port {{ ethereum_lighthouse_port }} \
+    --authrpc.jwtsecret {{ ethereum_jwtsecret_file }} \
+    --metrics 127.0.0.1:{{ reth_metrics_port }} \
+{% if default_node_type == "full" %}
+    --full \
+{% elif default_node_type == "minimal" %}
+    --minimal \
+{% endif %}
+    --log.file.directory {{ ethereum_storage_path }}/logs
 
+ExecStop=/bin/kill -s SIGTERM $MAINPID
 KillMode=process
 KillSignal=SIGTERM
-TimeoutStopSec=90
-Restart=on-failure
+TimeoutStopSec=120
+Restart=always
 RestartSec=10s
 
 [Install]

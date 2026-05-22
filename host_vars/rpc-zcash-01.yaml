@@ -1,0 +1,19 @@
+---
+ansible_host: "160.22.181.181"
+container_ip: "192.168.77.201"
+container_internal_ip: "10.7.0.201"
+ansible_port: 22901
+host_name: "rpc-zcash-01.rotko.net"
+host_timezone: "Asia/Bangkok"
+role: "zebra"
+default_network: "Mainnet"
+default_node_type: "endpoint"
+default_database_path: /opt/zebra/state
+default_p2p_port: 8233
+default_rpc_port: 8232
+default_prom_port: 9999
+zabbix_ext_port: 10901
+# netif: '{"net0":"name=eth0,gw=10.7.0.1,ip={{ container_ip }}/24,bridge=vmbr1"}'
+netif:
+  net0: "name=eth0,gw={{ default_nat_network_forward_cidr.split('/')[0] }},ip={{ default_mgmt_host_ip }}/16,bridge={{ default_nat_device }}"
+  net1: "name=eth1,gw={{ default_host_internal_ip }},ip=10.7.0.201/16,bridge={{ default_host_internal_bridge }}"

@@ -19,19 +19,19 @@
     state: present
     system: True
 
-- name: Update .profile
+- name: Update .profile with cargo env
   ansible.builtin.blockinfile:
     path: "{{ ethereum_base }}/.profile"
     owner: "{{ ethereum_user }}"
     group: "{{ ethereum_user }}"
     create: True
-    mode: "644"
+    mode: "0644"
     block: |
-      CARGO_HOME="$HOME/.cargo"
-      RUSTUP_HOME="$HOME/.rustup"
-      PATH="$CARGO_HOME/bin:$PATH"
+      export CARGO_HOME="$HOME/.cargo"
+      export RUSTUP_HOME="$HOME/.rustup"
+      export PATH="$CARGO_HOME/bin:$PATH"
 
-- name: Ensure required directories exists
+- name: Ensure required directories exist
   ansible.builtin.file:
     path: "{{ item }}"
     owner: "{{ ethereum_user }}"
@@ -40,8 +40,49 @@
     state: directory
   with_items:
     - "{{ ethereum_base }}"
+    - "{{ ethereum_src_path }}"
     - "{{ ethereum_storage_path }}"
-    - "{{ ethereum_base }}/{{ reth_version }}"
+    - "{{ ethereum_storage_path }}/logs"
+
+- name: Install reth build dependencies
+  ansible.builtin.package:
+    name:
+      - build-essential
+      - libclang-dev
+      - pkg-config
+      - libssl-dev
+      - cmake
+      - git
+      - curl
+    state: present
+
+- name: Refresh facts
+  ansible.builtin.setup:
+
+- name: Render Reth systemd unit file
+  ansible.builtin.template:
+    src: reth.service.j2
+    dest: "{{ ethereum_base }}/reth.service"
+    owner: "{{ ethereum_user }}"
+    group: "{{ ethereum_user }}"
+    mode: "0644"
+  register: reth_unit
+
+- name: Symlink Reth service to systemd
+  ansible.builtin.file:
+    src: "{{ ethereum_base }}/reth.service"
+    dest: /etc/systemd/system/reth.service
+    state: link
+    force: True
+    owner: root
+    group: root
+    mode: "0644"
+  register: reth_unit_link
+
+- name: Systemd daemon-reload (unit changed)
+  ansible.builtin.systemd:
+    daemon_reload: True
+  when: reth_unit.changed or reth_unit_link.changed
 
 - name: Create jwtsecret file
   become: True
@@ -52,62 +93,66 @@
       echo 0x$(openssl rand -hex 32 | tr -d "\n") > {{ ethereum_jwtsecret_file }}
     creates: "{{ ethereum_jwtsecret_file }}"
     executable: /bin/bash
-  when: ansible_local['noderole']['node']['pinned'] != "True"
 
-- name: Download and extract reth binary
-  ansible.builtin.unarchive:
-    src: "{{ reth_download_url }}"
-    dest: "{{ ethereum_base }}/{{ reth_version }}"
-    remote_src: True
-    mode: '0755'
-    owner: "{{ ethereum_user }}"
-    group: "{{ ethereum_user }}"
+- name: Install rustup for {{ ethereum_user }}
+  become: True
+  become_user: "{{ ethereum_user }}"
+  ansible.builtin.shell:
+    cmd: |
+      curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain stable --no-modify-path
+    creates: "{{ ethereum_base }}/.cargo/bin/cargo"
+    executable: /bin/bash
+
+- name: Clone reth v{{ reth_version }} source
+  become: True
+  become_user: "{{ ethereum_user }}"
+  ansible.builtin.git:
+    repo: "{{ reth_git_repo }}"
+    dest: "{{ ethereum_src_path }}/reth-v{{ reth_version }}"
+    version: "v{{ reth_version }}"
+    depth: 1
+    force: True
+  when:
+    - ansible_local['noderole']['node']['pinned'] != "True"
+    - ansible_local['noderole']['node']['version'] != reth_version
+
+- name: Build reth v{{ reth_version }} from source (this takes 15-30 minutes)
+  become: True
+  become_user: "{{ ethereum_user }}"
+  ansible.builtin.shell:
+    cmd: "{{ ethereum_base }}/.cargo/bin/cargo build --release --bin reth"
+    chdir: "{{ ethereum_src_path }}/reth-v{{ reth_version }}"
+    creates: "{{ ethereum_src_path }}/reth-v{{ reth_version }}/target/release/reth"
+  environment:
+    CARGO_HOME: "{{ ethereum_base }}/.cargo"
+    RUSTUP_HOME: "{{ ethereum_base }}/.rustup"
+    PATH: "{{ ethereum_base }}/.cargo/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
   when:
     - ansible_local['noderole']['node']['pinned'] != "True"
     - ansible_local['noderole']['node']['version'] != reth_version
   notify:
-    - Symlink Reth client
     - Add Service Pinned Status
-    - Stop Reth
-    - Systemd daemon-reload
-    - Start Reth
     - Add Reth service version
+    - Restart Reth
 
-# - name: Make client reth v{{ reth_version }}
-#   ansible.builtin.shell: "source {{ ethereum_base }}/.profile && make reth"
-#   args:
-#     executable: /bin/bash
-#     chdir: "{{ reth_build_path }}"
-#   become: True
-#   become_user: "{{ ethereum_user }}"
-#   register: reth_install
-#   when:
-#     - ansible_local['noderole']['node']['pinned'] != "True"
-#     - ansible_local['noderole']['node']['version'] != reth_version
-#   notify:
-#     - Symlink Reth client
-#     - Add Service Pinned Status
-#     - Stop Reth
-#     - Systemd daemon-reload
-#     - Start Reth
-#     - Add Reth service version
-#
-
-- name: Copy reth systemd service to a host
-  ansible.builtin.template:
-    src: reth.service.j2
-    dest: "{{ ethereum_base }}/reth.service"
+- name: Symlink Reth binary
+  ansible.builtin.file:
+    src: "{{ ethereum_src_path }}/reth-v{{ reth_version }}/target/release/reth"
+    dest: "{{ ethereum_base }}/reth"
+    state: link
+    force: True
     owner: "{{ ethereum_user }}"
     group: "{{ ethereum_user }}"
-    mode: "0644"
-  register: reth_service
-  notify:
-    - Stop Reth
-    - Symlink Reth service
-    - Systemd daemon-reload
-    - Start Reth
 
-- name: Install lighthouse of node configs require it.
+- name: Install lighthouse (consensus client)
   ansible.builtin.include_role:
     name: setup_install_lighthouse
-  when: ethereum_syncmode != "light"
+
+- name: Flush handlers
+  ansible.builtin.meta: flush_handlers
+
+- name: Ensure Reth service is running
+  ansible.builtin.systemd:
+    name: reth
+    state: started
+    enabled: True

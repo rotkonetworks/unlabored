@@ -1,0 +1,30 @@
+[Unit]
+Description=Lighthouse Ethereum consensus client
+After=network-online.target reth.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User={{ ethereum_user }}
+Group={{ ethereum_user }}
+LimitNOFILE={{ default_max_open_files_in_service }}
+Environment=HOME={{ ethereum_base }}
+WorkingDirectory={{ ethereum_base }}
+ExecStart={{ ethereum_base }}/lighthouse {{ ethereum_lighthouse_nodetype }} \
+    --network mainnet \
+    --datadir {{ ethereum_storage_path }}/lighthouse \
+    --execution-endpoint http://127.0.0.1:{{ ethereum_lighthouse_port }} \
+    --execution-jwt {{ ethereum_jwtsecret_file }} \
+    --http \
+    --http-address 127.0.0.1 \
+    --http-port {{ ethereum_lighthouse_http_port }} \
+    --port {{ ethereum_lighthouse_beacon_port }} \
+    --checkpoint-sync-url {{ ethereum_lighthouse_checkpoint_url }}
+
+ExecStop=/bin/kill -s SIGTERM $MAINPID
+TimeoutStopSec=120
+Restart=always
+RestartSec=10s
+
+[Install]
+WantedBy=multi-user.target

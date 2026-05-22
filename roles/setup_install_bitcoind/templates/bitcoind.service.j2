@@ -1,0 +1,27 @@
+[Unit]
+Description=Bitcoin Core daemon (bitcoind)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User={{ bitcoind_user }}
+Group={{ bitcoind_user }}
+LimitNOFILE={{ default_max_open_files_in_service }}
+WorkingDirectory={{ bitcoind_base }}
+ExecStart={{ bitcoind_base }}/bitcoind \
+    -conf={{ bitcoind_config_path }}/bitcoin.conf \
+    -datadir={{ bitcoind_storage_path }} \
+    -pid=/run/bitcoind/bitcoind.pid
+
+ExecStop=/bin/kill -s SIGTERM $MAINPID
+RuntimeDirectory=bitcoind
+RuntimeDirectoryMode=0710
+KillMode=process
+KillSignal=SIGTERM
+TimeoutStopSec=600
+Restart=always
+RestartSec=10s
+
+[Install]
+WantedBy=multi-user.target

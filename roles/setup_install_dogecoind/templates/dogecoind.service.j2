@@ -1,0 +1,27 @@
+[Unit]
+Description=Dogecoin Core daemon (dogecoind)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User={{ dogecoind_user }}
+Group={{ dogecoind_user }}
+LimitNOFILE={{ default_max_open_files_in_service }}
+WorkingDirectory={{ dogecoind_base }}
+ExecStart={{ dogecoind_base }}/dogecoind \
+    -conf={{ dogecoind_config_path }}/dogecoin.conf \
+    -datadir={{ dogecoind_storage_path }} \
+    -pid=/run/dogecoind/dogecoind.pid
+
+ExecStop=/bin/kill -s SIGTERM $MAINPID
+RuntimeDirectory=dogecoind
+RuntimeDirectoryMode=0710
+KillMode=process
+KillSignal=SIGTERM
+TimeoutStopSec=600
+Restart=always
+RestartSec=10s
+
+[Install]
+WantedBy=multi-user.target

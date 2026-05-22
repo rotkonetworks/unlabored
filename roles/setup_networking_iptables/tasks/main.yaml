@@ -40,7 +40,7 @@
   notify:
     - Persist iptables
 
-- name: Setup Service-specific port forwards for NAT'd hosts
+- name: Setup Service-specific port forwards for NAT'd LXC hosts
   ansible.builtin.iptables:
     table: nat
     jump: DNAT
@@ -54,6 +54,25 @@
   loop: "{{ lxc_nodes | map(attribute='port_forwards') | flatten(levels=1) }}"
   when:
     - lxc_nodes is defined
+    - default_need_iptables_port_forwarding
+  notify:
+    - Persist iptables
+    - Start default_nat_device
+
+- name: Setup Service-specific port forwards for NAT'd VM hosts
+  ansible.builtin.iptables:
+    table: nat
+    jump: DNAT
+    chain: PREROUTING
+    in_interface: "{{ default_gw_device }}"
+    source: "!{{ default_nat_network }}"
+    protocol: "{{ item.protocol }}"
+    destination_port: "{{ item.from_port }}"
+    to_destination: "{{ item.to_host }}"
+    state: present
+  loop: "{{ proxmox_vms | map(attribute='port_forwards') | flatten(levels=1) }}"
+  when:
+    - proxmox_vms is defined
     - default_need_iptables_port_forwarding
   notify:
     - Persist iptables

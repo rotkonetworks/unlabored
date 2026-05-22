@@ -1,11 +1,12 @@
 ---
 ansible_host: "160.22.181.181"
 container_ip: "192.168.223.10"
+container_ip6: "2401:a860:1181:50:73::3206"
 # 192.168.213.10:32006 # kusama-03
 ansible_port: 22006
 host_name: "val-kusama-03.ct.rotko.net"
 host_timezone: "Asia/Bangkok"
-netif: '{"net0":"name=eth0,gw={{ default_nat_network_forward_cidr.split("/")[0] }},ip={{ default_mgmt_host_ip }}/16,bridge={{ default_nat_device }}"}'
+netif: '{"net0":"name=eth0,gw={{ default_nat_network_forward_cidr.split("/")[0] }},ip={{ default_mgmt_host_ip }}/16,ip6={{ container_ip6 }}/64,gw6={{ default_bkk50_ip6_network }},bridge={{ default_nat_device }}"}'
 role: "polkadot"
 pinned_service: True
 

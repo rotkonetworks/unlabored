@@ -9,6 +9,9 @@ ExecStart={{ default_base_path }}/revive-rpc \
   --rpc-cors all \
 	--rpc-port {{ revive_rpc_port }} \
 	--prometheus-external \
+{% if default_network == "asset-hub-paseo" %}
+  --allow-unprotected-txs \
+{% endif %}
 	--prometheus-port {{ revive_rpc_prometheus_port }}
 
 Restart=always

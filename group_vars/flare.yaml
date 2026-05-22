@@ -1,0 +1,37 @@
+---
+# go-flare (Flare validator / RPC node) — built from source per
+# https://dev.flare.network/run-node/from-source
+flare_version: "1.13.0"
+flare_git_repo: "https://github.com/flare-foundation/go-flare.git"
+
+flare_bootstrap_url: "https://flare-bootstrap.flare.network"
+flare_user: "{{ service_users['flare'] }}"
+flare_base: "/opt/flare"
+flare_src_path: "{{ flare_base }}/src"
+flare_storage_path: "{{ flare_base }}/storage"
+flare_config_path: "{{ flare_base }}/config"
+flare_chain_config_path: "{{ flare_config_path }}/chains"
+flare_service_path: "{{ flare_base }}/service"
+# Symlink {{ flare_base }}/avalanchego -> the built binary in the cloned src tree.
+# systemd's ExecStart points at this stable path so version bumps just retarget the symlink.
+flare_binary_link: "{{ flare_base }}/avalanchego"
+# Persistent staking keys (staker.key, staker.crt, signer.key)
+flare_staking_path: "{{ flare_base }}/staking"
+
+flare_log_level: "info"
+# Network IDs: flare (mainnet), costwo (testnet), songbird (canary), coston (canary testnet)
+flare_network: "flare"
+# default_node_type drives which C-chain config preset is rendered:
+#   "node"      -> full eth-apis (sync / RPC use)
+#   "validator" -> minimal eth-apis (registered validator)
+# Override per host in host_vars/<host>.yaml. Same go-flare binary either way;
+# the validator distinction is whether you've submitted the self-bond P-Chain tx.
+default_node_type: "validator"
+# Pruned validator is fine for liquid-staking; flip to false only for archive nodes.
+flare_pruning_enabled: False
+
+flare_http_port: "9650"
+flare_staking_port: "9651"
+# avalanchego refuses to start when its requested fd-limit exceeds the
+# kernel's hard limit. Unprivileged Proxmox LXC defaults cap around 16368.
+flare_fd_limit: 16000

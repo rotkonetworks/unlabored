@@ -1,0 +1,9 @@
+[PARSER]
+    Name        substrate_detailed
+    Format      regex
+    Regex       ^(?<date>\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{3})\s+(?<level>\w+)\s+(?<thread>\S+)\s+(?<target>[^:]+):\s*(?:\[(?<component>[^\]]+)\]\s*)?(?<message>.+)$
+
+[PARSER]
+    Name        substrate_default
+    Format      regex
+    Regex       ^(?<date>\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})\s+(?:\[(?<component>[^\]]+)\]\s*)?(?<message>.+)$

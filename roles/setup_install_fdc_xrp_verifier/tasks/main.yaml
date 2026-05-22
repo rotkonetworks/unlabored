@@ -1,0 +1,77 @@
+# Standards: 0.2
+---
+- name: Ensure FDC base directory exists
+  ansible.builtin.file:
+    path: "{{ fdc_base }}"
+    state: directory
+    owner: "{{ docker_user }}"
+    group: "{{ docker_user }}"
+    mode: "0755"
+
+- name: Ensure FDC XRP verifier directory exists
+  ansible.builtin.file:
+    path: "{{ fdc_xrp_base }}"
+    state: directory
+    owner: "{{ docker_user }}"
+    group: "{{ docker_user }}"
+    mode: "0750"
+
+- name: Render docker-compose.yaml
+  ansible.builtin.template:
+    src: docker-compose.yaml.j2
+    dest: "{{ fdc_xrp_base }}/docker-compose.yaml"
+    owner: "{{ docker_user }}"
+    group: "{{ docker_user }}"
+    mode: "0640"
+  notify:
+    - Restart FDC XRP verifier
+
+- name: Render config.toml (rust indexer config)
+  ansible.builtin.template:
+    src: config.toml.j2
+    dest: "{{ fdc_xrp_base }}/config.toml"
+    owner: "{{ docker_user }}"
+    group: "{{ docker_user }}"
+    mode: "0600"
+  notify:
+    - Restart FDC XRP verifier
+
+- name: Render verifier.env
+  ansible.builtin.template:
+    src: verifier.env.j2
+    dest: "{{ fdc_xrp_base }}/verifier.env"
+    owner: "{{ docker_user }}"
+    group: "{{ docker_user }}"
+    mode: "0600"
+  notify:
+    - Restart FDC XRP verifier
+
+- name: Render database.env
+  ansible.builtin.template:
+    src: database.env.j2
+    dest: "{{ fdc_xrp_base }}/database.env"
+    owner: "{{ docker_user }}"
+    group: "{{ docker_user }}"
+    mode: "0600"
+  notify:
+    - Restart FDC XRP verifier
+
+- name: Render systemd unit for FDC XRP verifier
+  ansible.builtin.template:
+    src: fdc-xrp-verifier.service.j2
+    dest: "{{ fdc_xrp_systemd_unit }}"
+    owner: root
+    group: root
+    mode: "0644"
+  notify:
+    - Reload systemd
+    - Restart FDC XRP verifier
+
+- name: Flush handlers
+  ansible.builtin.meta: flush_handlers
+
+- name: Ensure FDC XRP verifier service is enabled and running
+  ansible.builtin.systemd:
+    name: fdc-xrp-verifier
+    enabled: True
+    state: started

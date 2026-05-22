@@ -1,0 +1,57 @@
+# Standards: 0.2
+---
+- name: Ensure FDC base directory exists
+  ansible.builtin.file:
+    path: "{{ fdc_base }}"
+    state: directory
+    owner: "{{ docker_user }}"
+    group: "{{ docker_user }}"
+    mode: "0755"
+
+- name: Ensure FDC EVM verifier directory exists
+  ansible.builtin.file:
+    path: "{{ fdc_evm_base }}"
+    state: directory
+    owner: "{{ docker_user }}"
+    group: "{{ docker_user }}"
+    mode: "0750"
+
+- name: Render docker-compose.yaml
+  ansible.builtin.template:
+    src: docker-compose.yaml.j2
+    dest: "{{ fdc_evm_base }}/docker-compose.yaml"
+    owner: "{{ docker_user }}"
+    group: "{{ docker_user }}"
+    mode: "0640"
+  notify:
+    - Restart FDC EVM verifier
+
+- name: Render verifier.env
+  ansible.builtin.template:
+    src: verifier.env.j2
+    dest: "{{ fdc_evm_base }}/verifier.env"
+    owner: "{{ docker_user }}"
+    group: "{{ docker_user }}"
+    mode: "0600"
+  notify:
+    - Restart FDC EVM verifier
+
+- name: Render systemd unit for FDC EVM verifier
+  ansible.builtin.template:
+    src: fdc-evm-verifier.service.j2
+    dest: "{{ fdc_evm_systemd_unit }}"
+    owner: root
+    group: root
+    mode: "0644"
+  notify:
+    - Reload systemd
+    - Restart FDC EVM verifier
+
+- name: Flush handlers
+  ansible.builtin.meta: flush_handlers
+
+- name: Ensure FDC EVM verifier service is enabled and running
+  ansible.builtin.systemd:
+    name: fdc-evm-verifier
+    enabled: True
+    state: started

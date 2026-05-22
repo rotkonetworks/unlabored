@@ -1,0 +1,37 @@
+# Standards: 0.2
+---
+# FDC XRP verifier — handles XRP Ledger attestations.
+# Source: https://github.com/flare-foundation/fdc-suite-deployment/tree/main/verifiers/xrp
+#
+# XRP differs from BTC/DOGE: uses a Rust indexer (no Django), TOML config (not env),
+# and queries rippled's JSON-RPC instead of Bitcoin Core RPC.
+
+fdc_base: "/opt/fdc"
+fdc_xrp_base: "{{ fdc_base }}/xrp-verifier"
+
+# Pinned image versions (match FDC reference repo).
+fdc_xrp_indexer_image: "ghcr.io/flare-foundation/verifier-xrp-indexer:v2.0.0@sha256:81ca618a1c1fcb556fbdaa7df5eefb22ad8cc47030c9a7a219c8a8a9d66901e0"
+fdc_xrp_verifier_image: "ghcr.io/flare-foundation/verifier-indexer-api:v1.5.0@sha256:f11bd83d8c9b6d58034273cf5fc8fd92f0daaae981cca811883fd6595e0f7827"
+fdc_xrp_postgres_image: "postgres:18@sha256:52e6ffd11fddd081ae63880b635b2a61c14008c17fc98cdc7ce5472265516dd0"
+
+fdc_xrp_verifier_api_port: 9503
+fdc_xrp_postgres_port: 25433
+
+# Underlying chain RPC — points at rippled's public RPC port on this host.
+# rippled defaults to port 51234 for public JSON-RPC.
+fdc_xrp_node_url: "http://{{ container_ip }}:{{ rippled_port_rpc_public | default(51234) }}"
+
+# DB password from vault
+fdc_xrp_db_password: "{{ vault_fdc_xrp_db_password | default('changeme-set-vault') }}"
+
+# Initial ledger to start indexing from. For FDC purposes, ~14 days back from
+# rippled's current complete_ledgers lower bound. Set in host_vars/xrp-fdc-01.yaml.
+fdc_xrp_start_ledger: "{{ fdc_start_block | default(0) }}"
+
+# API keys (shared across all FDC verifiers, vault-backed).
+fdc_xrp_api_keys: "{{ vault_fdc_verifier_api_keys | default('changeme-set-vault') }}"
+
+# Testnet flag.
+fdc_xrp_testnet: "false"
+
+fdc_xrp_systemd_unit: "/etc/systemd/system/fdc-xrp-verifier.service"

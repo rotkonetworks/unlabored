@@ -1,0 +1,87 @@
+#-------------------------------------------------------------------------------
+# rippled.cfg — managed by ansible (roles/setup_install_rippled)
+# Mirrors FDC reference: nodes-mainnet/xrp/rippled.conf, with our security hardening.
+#-------------------------------------------------------------------------------
+
+[server]
+port_rpc_admin_local
+port_ws_admin_local
+port_peer
+port_rpc_public
+port_ws_public
+port_grpc
+
+[port_rpc_admin_local]
+port = {{ rippled_port_rpc_admin }}
+ip = 127.0.0.1
+admin = 127.0.0.1
+protocol = http
+
+[port_ws_admin_local]
+port = {{ rippled_port_ws_admin }}
+ip = 127.0.0.1
+admin = 127.0.0.1
+protocol = ws
+send_queue_limit = 500
+
+[port_peer]
+port = {{ rippled_port_peer }}
+ip = 0.0.0.0
+protocol = peer
+
+# Public RPC + WS bound to mgmt IP only (FDC binds 0.0.0.0; we tighten because real LXC, not docker)
+[port_rpc_public]
+port = {{ rippled_port_rpc_public }}
+ip = {{ container_ip }}
+protocol = http
+
+[port_ws_public]
+port = {{ rippled_port_ws_public }}
+ip = {{ container_ip }}
+protocol = ws
+
+[port_grpc]
+port = {{ rippled_port_grpc }}
+ip = 127.0.0.1
+secure_gateway = 127.0.0.1
+
+[node_db]
+type=NuDB
+path={{ rippled_db_path }}/nudb
+online_delete={{ rippled_online_delete }}
+advisory_delete=0
+fetch_depth={{ rippled_fetch_depth }}
+
+[database_path]
+{{ rippled_db_path }}
+
+[peers_max]
+{{ rippled_peers_max }}
+
+[node_size]
+{{ rippled_node_size }}
+
+[ledger_history]
+{{ rippled_ledger_history }}
+
+# Ledger replay: download ledger headers + transactions and reapply locally
+# (faster than pulling whole ledgers, helps fresh nodes acquire state).
+[ledger_replay]
+{{ rippled_ledger_replay }}
+
+# No [debug_logfile] — rippled writes to stderr, systemd captures to journal.
+# Use `journalctl -u rippled` to view logs. journald rotates automatically.
+
+[sntp_servers]
+pool.ntp.org
+time.windows.com
+time.apple.com
+
+[validators_file]
+validators.txt
+
+[rpc_startup]
+{ "command": "log_level", "severity": "warning" }
+
+[ssl_verify]
+1

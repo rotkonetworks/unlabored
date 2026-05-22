@@ -13,20 +13,24 @@
   delegate_to: "{{ routeros_delegate_host }}"
   when: _existing_firewall_rules_raw is defined
 
+- name: Combine all port forwards from LXC nodes and VMs
+  ansible.builtin.set_fact:
+    all_port_forwards: "{{ (lxc_nodes | default([]) | map(attribute='port_forwards') | flatten(levels=1)) + (proxmox_vms | default([]) | map(attribute='port_forwards') | flatten(levels=1)) }}"
+
 - name: Construct RouterOS NAT commands
   ansible.builtin.set_fact:
-    routeros_nat_commands: "{{ lxc_nodes | map(attribute='port_forwards') | flatten | map('generate_rule', 'nat', ansible_host) | list }}"
+    routeros_nat_commands: "{{ all_port_forwards | map('generate_rule', 'nat', ansible_host) | list }}"
   when: existing_firewall_rules is defined
 
 - name: Construct RouterOS filter commands
   ansible.builtin.set_fact:
-    routeros_filter_commands: "{{ lxc_nodes | map(attribute='port_forwards') | flatten | map('generate_rule', 'filter') | list }}"
+    routeros_filter_commands: "{{ all_port_forwards | map('generate_rule', 'filter') | list }}"
   when: existing_firewall_rules is defined
 
 - name: Check if port forwarding rule already exists for each port forward
   ansible.builtin.set_fact:
     port_forward_exists: "{{ existing_firewall_rules | port_forward_exists(port_forward) }}"
-  loop: "{{ lxc_nodes | map(attribute='port_forwards') | flatten(levels=1) }}"
+  loop: "{{ all_port_forwards }}"
   loop_control:
     loop_var: port_forward
   register: port_forwards_exist_check
@@ -34,7 +38,7 @@
 - name: Check if firewall filter rule already exists for each port forward
   ansible.builtin.set_fact:
     filter_exists: "{{ existing_firewall_rules | firewall_filter_exists(port_forward) }}"
-  loop: "{{ lxc_nodes | map(attribute='port_forwards') | flatten(levels=1) }}"
+  loop: "{{ all_port_forwards }}"
   loop_control:
     loop_var: port_forward
   register: filter_exist_check

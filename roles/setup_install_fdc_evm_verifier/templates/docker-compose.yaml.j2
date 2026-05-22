@@ -1,0 +1,9 @@
+services:
+  evm-verifier:
+    image: {{ fdc_evm_image }}
+    container_name: {{ fdc_evm_container_name }}
+    restart: unless-stopped
+    ports:
+      - {{ container_ip }}:{{ fdc_evm_port }}:9800
+    env_file:
+      - verifier.env

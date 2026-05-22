@@ -1,4 +1,52 @@
 ---
+- name: Point bootnode domain at container public IP
+  when:
+    - container_public_ip is defined
+    - default_bootnode_domain is defined
+  delegate_to: localhost
+  become: False
+  block:
+    - name: Cloudflare A record for {{ default_bootnode_domain }}
+      community.general.cloudflare_dns:
+        api_token: "{{ cloudflare_api_token }}"
+        zone: "{{ default_bootnode_domain.split('.')[-2:] | join('.') }}"
+        record: "{{ default_bootnode_domain }}"
+        type: A
+        value: "{{ container_public_ip }}"
+        solo: True
+        proxied: False
+        ttl: 300
+        state: present
+
+    - name: Cloudflare AAAA record for {{ default_bootnode_domain }}
+      community.general.cloudflare_dns:
+        api_token: "{{ cloudflare_api_token }}"
+        zone: "{{ default_bootnode_domain.split('.')[-2:] | join('.') }}"
+        record: "{{ default_bootnode_domain }}"
+        type: AAAA
+        value: "{{ container_public_ip6 }}"
+        solo: True
+        proxied: False
+        ttl: 300
+        state: present
+      when: container_public_ip6 is defined
+  rescue:
+    - name: Cloudflare DNS task failed — manual cleanup required
+      ansible.builtin.fail:
+        msg: |-
+          Cloudflare DNS upsert failed for {{ default_bootnode_domain }}.
+
+          This is usually the community.general.cloudflare_dns bug where
+          'solo: True' chokes while trying to delete a pre-existing record
+          with unusual metadata (KeyError: 'zone_id').
+
+          Workaround: open Cloudflare web UI, find records for
+          {{ default_bootnode_domain }}, delete any A/AAAA/CNAME/TXT
+          pointing there, then re-run this playbook.
+
+          Direct link:
+          https://dash.cloudflare.com/?search={{ default_bootnode_domain }}
+
 - name: Ensure required packages are installed
   ansible.builtin.apt:
     name:

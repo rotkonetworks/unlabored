@@ -1,0 +1,8 @@
+# Standards: 0.2
+---
+- name: Restart Bitcoind
+  ansible.builtin.systemd:
+    name: bitcoind
+    daemon_reload: True
+    state: restarted
+    enabled: True

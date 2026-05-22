@@ -1,0 +1,31 @@
+#!/bin/bash
+# /etc/network/if-up.d/p2p-routing
+# Policy routing for eth1 (internal P2P) and eth2 (public) return traffic.
+# Managed by ansible: roles/setup_networking_p2p
+
+set -e
+
+case "$IFACE" in
+  eth1)
+    ip route replace default via {{ eth1_gateway }} dev eth1 table eth1_table
+    ip rule add from {{ container_internal_ip }} table eth1_table priority 100 2>/dev/null || true
+    ip rule add fwmark 1 table eth1_table priority 101 2>/dev/null || true
+    ;;
+{% if container_public_ip is defined %}
+  eth2)
+    # On-link route to the off-link /32 gateway, then default in eth2_table only.
+    ip route replace {{ eth2_gateway }} dev eth2
+    ip route replace default via {{ eth2_gateway }} dev eth2 table eth2_table
+    ip rule add from {{ container_public_ip }} table eth2_table priority 200 2>/dev/null || true
+    ip rule add fwmark 2 table eth2_table priority 201 2>/dev/null || true
+{% if container_public_ip6 is defined %}
+    ip -6 route replace {{ eth2_gateway6 }} dev eth2
+    ip -6 route replace default via {{ eth2_gateway6 }} dev eth2 table eth2_table
+    ip -6 rule add from {{ container_public_ip6 }} table eth2_table priority 200 2>/dev/null || true
+    ip -6 rule add fwmark 2 table eth2_table priority 201 2>/dev/null || true
+{% endif %}
+    ;;
+{% endif %}
+esac
+
+exit 0

@@ -4,7 +4,14 @@ container_ip: "192.168.111.12"
 ansible_port: 2641
 host_name: "rpc-bridge-hub-polkadot-01.ct.rotko.net"
 host_timezone: "Asia/Bangkok"
-netif: '{"net0":"name=eth0,gw={{ default_nat_network_forward_cidr.split("/")[0] }},ip={{ default_mgmt_host_ip }}/16,bridge={{ default_nat_device }}"}'
+# netif: '{"net0":"name=eth0,gw={{ default_nat_network_forward_cidr.split("/")[0] }},ip={{ default_mgmt_host_ip }}/16,bridge={{ default_nat_device }}"}'
+netif:
+  net0: "name=eth0,gw={{ default_nat_network_forward_cidr.split('/')[0] }},ip={{ default_mgmt_host_ip }}/16,bridge={{ default_nat_device }}"
+  net1: "name=eth1,ip=10.6.111.12/16,bridge={{ default_host_internal_bridge }}"
+  net2: "name=eth2,ip={{ hostvars['rpc-bridge-hub-polkadot-01']['container_public_ip'] }}/32,ip6={{ hostvars['rpc-bridge-hub-polkadot-01']['container_public_ip6'] }}/128,bridge={{ default_host_public_bridge }}"
+container_internal_ip: "10.6.111.12"
+container_public_ip: "160.22.181.112"
+container_public_ip6: "2401:a860:1112::11"
 role: "cumulus"
 pinned_service: True
 
