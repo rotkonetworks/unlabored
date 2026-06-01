@@ -1,17 +1,18 @@
 default_base_path: /opt/bulletin
-default_chain_spec_dl_url: https://raw.githubusercontent.com/paritytech/polkadot-bulletin-chain/main/chainspecs/{{
+default_chain_spec_dl_url:
+  https://raw.githubusercontent.com/paritytech/polkadot-bulletin-chain/main/chainspecs/{{
   default_network | replace('bulletin-', '') }}-chainspec.json
 default_chains_name: bulletin-polkadot
-default_client_version: polkadot-stable2603-2
+default_client_version: polkadot-stable2603-3
 default_database: paritydb
-default_database_path: '{{ default_base_path }}/chains'
+default_database_path: "{{ default_base_path }}/chains"
 default_download_base_url: https://github.com/paritytech/polkadot-sdk/releases/download/
-default_download_url: '{{ default_download_base_url }}{{ default_client_version }}/polkadot-omni-node'
+default_download_url: "{{ default_download_base_url }}{{ default_client_version }}/polkadot-omni-node"
 default_omni_node_binaries:
   - polkadot-omni-node
   - polkadot-prepare-worker
   - polkadot-execute-worker
-default_group: '{{ service_users[''bulletin''] }}'
+default_group: "{{ service_users['bulletin'] }}"
 default_in_peers: 32
 default_log_level: info
 default_network: bulletin-polkadot
@@ -24,7 +25,7 @@ default_prom_port: 7400
 default_rpc_port: 9400
 default_secure_rpc_port: 42400
 default_service: bulletin
-default_storage: '{{ default_base_path }}/chains'
+default_storage: "{{ default_base_path }}/chains"
 default_telemetry_url: wss://telemetry-backend.w3f.community/submit/ 1
-default_user: '{{ service_users[''bulletin''] }}'
+default_user: "{{ service_users['bulletin'] }}"
 zabbix_ext_port: 10500
