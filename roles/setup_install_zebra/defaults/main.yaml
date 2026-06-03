@@ -1,0 +1,40 @@
+---
+# Service identity
+default_user: "zebra"
+default_group: "zebra"
+
+# Filesystem layout
+default_base_path: "/opt/zebra"
+default_database_path: "/opt/zebra/state"
+
+# Software version (https://github.com/ZcashFoundation/zebra/releases)
+default_client_version: "5.0.0"
+
+# Network: "Mainnet" or "Testnet"
+default_network: "Mainnet"
+
+# Ports
+default_p2p_port: 8233           # Zcash mainnet default p2p (testnet: 18233)
+default_rpc_port: 8232           # zebrad JSON-RPC
+default_prom_port: 9999          # Prometheus metrics endpoint
+
+# Peer limits
+default_in_peers: 50
+default_out_peers: 50
+
+# Optional: transparent shielded address to receive mining funds; empty disables mining
+default_miner_address: ""
+
+# systemd LimitNOFILE — zebrad's RocksDB benefits from a high fd limit
+default_max_open_files_in_service: 16368
+
+# Re-build/re-install the binary even if the version already matches
+force_update: false
+
+# Host metadata used in the systemd unit Description
+host_name: "{{ inventory_hostname }}"
+
+# noderole integration (rotko-internal: tracks installed version in an ansible_local fact).
+# Safe to leave as-is when used standalone — the noderole handlers no-op if noderole_file is unset.
+role: "zebra"
+pinned_service: false
