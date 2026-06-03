@@ -6,6 +6,7 @@
     option: version
     value: "{{ default_client_version }}"
     mode: "0644"
+  when: noderole_file is defined
 
 - name: Add type of service fact
   community.general.ini_file:
@@ -14,6 +15,7 @@
     option: role
     value: "{{ role }}"
     mode: "0644"
+  when: noderole_file is defined
 
 - name: Add Service Pinned Status
   community.general.ini_file:
@@ -22,6 +24,7 @@
     option: pinned
     value: "{{ pinned_service }}"
     mode: "0644"
+  when: noderole_file is defined
 
 - name: Symlink Zebra service to systemd
   ansible.builtin.file:
