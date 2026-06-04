@@ -1,3 +1,4 @@
+{% from "_listen_macros.j2" import listen_addrs %}
 [Unit]
 Description="{{ host_name.split('.')[0] }} bootnode - Hydration service"
 After=network-online.target
@@ -15,9 +16,7 @@ ExecStart={{ default_base_path }}/hydration \
   --log sync=warn,afg=warn,babe=warn \
   --telemetry-url 'wss://telemetry-backend.w3f.community/submit 1' \
   --telemetry-url 'wss://telemetry.polkadot.io/submit/ 1' \
-  --listen-addr /ip4/0.0.0.0/tcp/{{ default_p2p_port }} \
-  --listen-addr /ip4/0.0.0.0/tcp/{{ default_p2p_port_ws }}/ws \
-  --public-addr /ip4/{{ ansible_host }}/tcp/{{ default_p2p_port }} \
+{{ listen_addrs(default_p2p_port, default_p2p_port_ws) }}  --public-addr /ip4/{{ ansible_host }}/tcp/{{ default_p2p_port }} \
   --public-addr /ip4/{{ ansible_host }}/tcp/{{ default_p2p_port_ws }}/ws \
   --public-addr /dns/{{ default_domain }}/tcp/{{ default_p2p_port }} \
   --public-addr /dns/{{ default_domain }}/tcp/{{ default_p2p_port_ws }}/ws \

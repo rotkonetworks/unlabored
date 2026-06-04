@@ -1,3 +1,4 @@
+{% from "_listen_macros.j2" import listen_addrs %}
 [Unit]
 Description="{{ host_name.split('.')[0] }} endpoint - Polkadot service"
 After=network-online.target
@@ -15,20 +16,11 @@ ExecStart={{ default_base_path }}/polkadot \
   --state-pruning archive \
   --blocks-pruning=archive \
   --sync full \
-  --listen-addr /ip4/0.0.0.0/tcp/{{ default_p2p_port }} \
-  --listen-addr /ip4/0.0.0.0/tcp/{{ default_p2p_port_ws }}/ws \
-  {% if container_public_ip6 is defined %}
-  --listen-addr /ip6/::/tcp/{{ default_p2p_port }} \
-  --listen-addr /ip6/::/tcp/{{ default_p2p_port_ws }}/ws \
-  {% endif %}{% if transition_bootnode_domain is defined %}--listen-addr /ip4/0.0.0.0/tcp/{{ transition_bootnode_p2p_port }} \
-  --listen-addr /ip4/0.0.0.0/tcp/{{ transition_bootnode_p2p_port_ws }}/ws \
-  {% endif %}--public-addr /dns/{{ default_domain }}/tcp/{{ default_p2p_port }} \
+{{ listen_addrs(default_p2p_port, default_p2p_port_ws) }}{% if transition_bootnode_domain is defined %}{{ listen_addrs(transition_bootnode_p2p_port, transition_bootnode_p2p_port_ws) }}{% endif %}  --public-addr /dns/{{ default_domain }}/tcp/{{ default_p2p_port }} \
   --public-addr /dns/{{ default_domain }}/tcp/{{ default_p2p_port_wss }}/wss \
   {% if default_bootnode_domain is defined %}--public-addr /dns/{{ default_bootnode_domain }}/tcp/{{ default_bootnode_p2p_port }} \
   --public-addr /dns/{{ default_bootnode_domain }}/tcp/{{ default_bootnode_p2p_port_wss }}/wss \
-  --listen-addr /ip4/0.0.0.0/tcp/{{ default_bootnode_p2p_port }} \
-  --listen-addr /ip4/0.0.0.0/tcp/{{ default_bootnode_p2p_port_ws }}/ws \
-  {% endif %}{% if transition_bootnode_domain is defined %}--public-addr /dns/{{ transition_bootnode_domain }}/tcp/{{ transition_bootnode_p2p_port }} \
+{{ listen_addrs(default_bootnode_p2p_port, default_bootnode_p2p_port_ws) }}  {% endif %}{% if transition_bootnode_domain is defined %}--public-addr /dns/{{ transition_bootnode_domain }}/tcp/{{ transition_bootnode_p2p_port }} \
   --public-addr /dns/{{ transition_bootnode_domain }}/tcp/{{ transition_bootnode_p2p_port_ws }}/ws \
   --public-addr /dns/{{ transition_bootnode_domain }}/tcp/{{ transition_bootnode_p2p_port_wss }}/wss \
   {% endif %}--rpc-port {{ default_rpc_port }} \

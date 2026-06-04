@@ -1,0 +1,26 @@
+{#-
+  Shared Jinja macros for substrate listen-addr blocks.
+
+  Both v4 (0.0.0.0) and v6 (::) bound on the same TCP/WS port.
+  Use --public-addr /dns/... in the caller; AAAA records announce v6.
+
+  Imported with:
+    {% from "_listen_macros.j2" import listen_addrs %}
+-#}
+
+{#- listen_addrs(port, ws_port=None, indent='  ')
+
+    Emits parallel /ip4/0.0.0.0 and /ip6/:: listen-addr lines for the given
+    TCP port. If ws_port is set, also emits a v4+v6 pair on /ws.
+
+    Trailing-slash continuation is included so the caller can drop the
+    block in the middle of a multi-line ExecStart= without extra plumbing.
+-#}
+{% macro listen_addrs(port, ws_port=None, indent='  ') -%}
+{{ indent }}--listen-addr /ip4/0.0.0.0/tcp/{{ port }} \
+{{ indent }}--listen-addr /ip6/::/tcp/{{ port }} \
+{% if ws_port -%}
+{{ indent }}--listen-addr /ip4/0.0.0.0/tcp/{{ ws_port }}/ws \
+{{ indent }}--listen-addr /ip6/::/tcp/{{ ws_port }}/ws \
+{% endif -%}
+{%- endmacro %}
