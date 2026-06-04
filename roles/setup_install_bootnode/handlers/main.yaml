@@ -1,0 +1,20 @@
+---
+- name: Symlink bootnode service to systemd
+  ansible.builtin.file:
+    src: "{{ default_base_path }}/{{ default_service }}.service"
+    dest: "/etc/systemd/system/{{ default_service }}.service"
+    state: link
+    force: true
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Reload systemd
+  ansible.builtin.systemd:
+    daemon_reload: true
+
+- name: Restart bootnode
+  ansible.builtin.systemd:
+    name: "{{ default_service }}"
+    state: restarted
+    enabled: true
