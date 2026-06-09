@@ -1,0 +1,23 @@
+---
+# Chain-agnostic bootnode role.
+#
+# Renders the shared bootnode.service.j2 against the host's vars and
+# manages the systemd service. Binary installation is the
+# responsibility of the chain-specific role (setup_install_polkadot,
+# setup_install_hydration, etc.) that runs alongside this one.
+
+- name: Gather facts
+  ansible.builtin.setup:
+
+- name: Render bootnode systemd unit
+  ansible.builtin.template:
+    src: bootnode.service.j2
+    dest: "{{ default_base_path }}/{{ default_service }}.service"
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+    mode: "0640"
+  when: default_node_type | default('bootnode') == "bootnode"
+  notify:
+    - Symlink bootnode service to systemd
+    - Reload systemd
+    - Restart bootnode

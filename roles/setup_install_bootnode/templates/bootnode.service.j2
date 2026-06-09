@@ -1,19 +1,22 @@
 {% from "_listen_macros.j2" import listen_addrs %}
 [Unit]
-Description="{{ host_name.split('.')[0] }} bootnode - Hydration service"
+Description="{{ host_name.split('.')[0] }} bootnode - {{ default_service }} service"
 After=network-online.target
 Wants=network-online.target
 
 [Service]
 User={{ default_user }}
 Group={{ default_group }}
-ExecStart={{ default_base_path }}/hydration \
+ExecStart={{ default_base_path }}/{{ default_service }} \
   --name "{{ default_telemetry_name }}" \
   --chain {{ default_network }} \
   --base-path {{ default_base_path }} \
-  --database {{ default_database }} \
-  --state-pruning 256 \
-  --log sync=warn,afg=warn,babe=warn \
+  --database {{ default_database | default('paritydb') }} \
+  --state-pruning {{ default_state_pruning | default('256') }} \
+{% if default_blocks_pruning is defined %}
+  --blocks-pruning {{ default_blocks_pruning }} \
+{% endif %}
+  --log {{ default_log_filters | default('sync=warn,afg=warn,babe=warn') }} \
   --telemetry-url 'wss://telemetry-backend.w3f.community/submit 1' \
   --telemetry-url 'wss://telemetry.polkadot.io/submit/ 1' \
 {{ listen_addrs(default_p2p_port, default_p2p_port_ws) }}  --public-addr /ip4/{{ ansible_host }}/tcp/{{ default_p2p_port }} \
@@ -21,15 +24,19 @@ ExecStart={{ default_base_path }}/hydration \
   --public-addr /dns/{{ default_domain }}/tcp/{{ default_p2p_port }} \
   --public-addr /dns/{{ default_domain }}/tcp/{{ default_p2p_port_ws }}/ws \
   --public-addr /dns/{{ default_domain }}/tcp/{{ default_p2p_port_wss }}/wss \
+{% if default_relay_rpc is defined %}
+  --relay-chain-rpc-urls {{ default_relay_rpc }}{% if default_relay_rpc_fallback is defined %} {{ default_relay_rpc_fallback }}{% endif %} \
+{% endif %}
   --rpc-port {{ default_rpc_port }} \
   --prometheus-port {{ default_prom_port }} \
-  --prometheus-external \
-  --relay-chain-rpc-urls {{ default_relay_rpc }} {{ default_relay_rpc_fallback }} \
-  --wasm-execution Compiled \
   --sync {{ default_syncmode | default('fast-unsafe') }} \
   --no-hardware-benchmarks \
+{% for flag in default_bootnode_extra_flags | default([]) %}
+  {{ flag }} \
+{% endfor %}
   --rpc-external \
   --rpc-methods safe \
+  --prometheus-external \
   --rpc-cors all \
   --allow-private-ipv4
 

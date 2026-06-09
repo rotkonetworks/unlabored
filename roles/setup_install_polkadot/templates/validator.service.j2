@@ -1,3 +1,4 @@
+{% from "_listen_macros.j2" import listen_addrs %}
 [Unit]
 Description="{{ host_name.split('.')[0] }} validator - Polkadot service"
 After=network.target
@@ -22,7 +23,6 @@ ExecStart={{ default_base_path }}/polkadot \
      --base-path {{ default_base_path }} \
 {% if default_network == 'paseo' %}
      --chain {{ default_chain_spec }} \
-     --detailed-log-output \
 {% else %}
      --chain {{ default_network }} \
 {% endif %}
@@ -31,12 +31,8 @@ ExecStart={{ default_base_path }}/polkadot \
      --telemetry-url 'wss://telemetry-backend.w3f.community/submit 1' \
      --telemetry-url "wss://telemetry.rotko.net/submit/ 1" \
      --rpc-port {{ default_rpc_port }} \
-{% if container_ip6 is defined %}
-     --listen-addr /ip6/::/tcp/{{ default_p2p_port }} \
-     --public-addr /ip6/{{ container_ip6 }}/tcp/{{ default_p2p_port }} \
-{% endif %}
-     --listen-addr /ip4/0.0.0.0/tcp/{{ default_p2p_port }} \
-#     --listen-addr /ip4/0.0.0.0/tcp/{{ default_p2p_port_ws }}/ws \
+{{ listen_addrs(default_p2p_port, indent='     ') }}#     --listen-addr /ip4/0.0.0.0/tcp/{{ default_p2p_port_ws }}/ws \
+#     --listen-addr /ip6/::/tcp/{{ default_p2p_port_ws }}/ws \
      --public-addr /ip4/{{ ansible_host }}/tcp/{{ default_p2p_port }} \
 #     --public-addr /ip4/{{ ansible_host }}/tcp/{{ default_p2p_port_ws }}/ws \
      --prometheus-port {{ default_prom_port }} \
