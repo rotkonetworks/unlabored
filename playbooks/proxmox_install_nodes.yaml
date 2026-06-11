@@ -7,13 +7,6 @@
     - role: setup_networking_iptables
       when: default_need_iptables_port_forwarding
 
-- name: RouterOS setup
-  hosts: proxmox_hosts
-  gather_facts: True
-  roles:
-    - role: setup_networking_routeros
-      when: default_need_routeros_port_forwarding
-
 # WARN: vm workflow need to be improved
 # - name: Proxmox install VM templates
 #   hosts: proxmox_hosts

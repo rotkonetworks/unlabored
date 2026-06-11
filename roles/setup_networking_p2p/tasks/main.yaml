@@ -9,20 +9,43 @@
         name: nftables
         state: present
 
+    # Interfaces are matched by address, not by name: legacy containers carry
+    # eth0=mgmt/eth1=internal/eth2=public, migrated ones eth0=internal/eth1=public.
+    - name: Identify management (NAT) interface by address
+      ansible.builtin.set_fact:
+        mgmt_iface: "{{ item }}"
+      loop: "{{ ansible_facts.interfaces | select('match', '^eth') | list }}"
+      when: (ansible_facts[item].ipv4.address | default('')).startswith('192.168.')
+
+    - name: Identify internal interface by address
+      ansible.builtin.set_fact:
+        internal_iface: "{{ item }}"
+      loop: "{{ ansible_facts.interfaces | select('match', '^eth') | list }}"
+      when: ansible_facts[item].ipv4.address | default('') == container_internal_ip
+
+    - name: Identify public interface by address
+      ansible.builtin.set_fact:
+        public_iface: "{{ item }}"
+      loop: "{{ ansible_facts.interfaces | select('match', '^eth') | list }}"
+      when:
+        - container_public_ip is defined
+        - ansible_facts[item].ipv4.address | default('') == container_public_ip
+
     - name: Add eth1_table to routing tables
       ansible.builtin.lineinfile:
         path: /etc/iproute2/rt_tables
         line: "100 eth1_table"
         state: present
         backup: True
+      when: mgmt_iface is defined
 
-    - name: Derive eth1 gateway from facts
+    - name: Derive internal gateway from facts
       ansible.builtin.set_fact:
-        eth1_gateway: "{{ ansible_eth1.ipv4.network | regex_replace('\\.\\d+$', '.1') }}"
-      when: ansible_eth1 is defined
+        internal_gateway: "{{ ansible_facts[internal_iface].ipv4.network | regex_replace('\\.\\d+$', '.1') }}"
+      when: internal_iface is defined
 
-    - name: Setup eth2 prerequisites
-      when: container_public_ip is defined
+    - name: Setup public interface prerequisites
+      when: public_iface is defined
       block:
         - name: Add eth2_table to routing tables
           ansible.builtin.lineinfile:
@@ -39,10 +62,10 @@
             - hostvars[item]['lxc_nodes'] is defined
             - (hostvars[item]['lxc_nodes'] | selectattr('host', 'equalto', inventory_hostname) | list | length) > 0
 
-        - name: Derive eth2 gateways from proxmox host
+        - name: Derive public gateways from proxmox host
           ansible.builtin.set_fact:
-            eth2_gateway: "{{ hostvars[host_proxmox]['default_host_public_gw'] }}"
-            eth2_gateway6: "{{ hostvars[host_proxmox]['default_host_public_gw6'] }}"
+            public_gateway: "{{ hostvars[host_proxmox]['default_host_public_gw'] }}"
+            public_gateway6: "{{ hostvars[host_proxmox]['default_host_public_gw6'] }}"
           when: host_proxmox is defined
 
     - name: Deploy P2P if-up.d script
@@ -52,6 +75,7 @@
         mode: "0755"
         owner: root
         group: root
+      when: internal_iface is defined
 
     - name: Configure nftables rules
       ansible.builtin.template:
@@ -69,20 +93,21 @@
         state: started
         daemon_reload: True
 
-    - name: Apply P2P routing immediately (eth1)
+    - name: Apply P2P routing immediately (internal)
       ansible.builtin.command:
         cmd: /etc/network/if-up.d/p2p-routing
       environment:
-        IFACE: eth1
+        IFACE: "{{ internal_iface }}"
       changed_when: False
+      when: internal_iface is defined
 
-    - name: Apply P2P routing immediately (eth2)
+    - name: Apply P2P routing immediately (public)
       ansible.builtin.command:
         cmd: /etc/network/if-up.d/p2p-routing
       environment:
-        IFACE: eth2
+        IFACE: "{{ public_iface }}"
       changed_when: False
-      when: container_public_ip is defined
+      when: public_iface is defined
 
     - name: Apply nftables ruleset
       ansible.builtin.command:

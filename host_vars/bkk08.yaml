@@ -1,8 +1,7 @@
 ---
 host_name: "bkk08.rotko.net"
 host_timezone: "Asia/Bangkok"
-ansible_host: "160.22.181.181"
-ansible_port: 22788
+ansible_host: "160.22.181.8"
 default_host_internal_ip: "10.8.0.1"
 default_host_public_gw: "10.155.100.8"
 default_host_public_gw6: "fd00:155:100::8"
@@ -14,8 +13,7 @@ kernel_modules:
 
 default_kvm_host: "192.168.69.220"
 default_kvm_port: "22798"
-default_need_routeros_port_forwarding: True
-routeros_delegate_host: "bkk50"
+default_need_routeros_port_forwarding: False
 default_need_iptables_port_forwarding: False
 default_gw_device: "vmbr0"
 default_storage: "bkk08pool"
@@ -24,10 +22,7 @@ zfs_storage: "bkk08pool"
 # default_resource_pool: "bkk07_resource_pool"
 # default_max_cores: 192
 
-port_forwards:
-  - from_port: "{{ ansible_port }}"
-    to_host: "{{ container_ip }}:22"
-    protocol: "tcp"
+port_forwards: []
 # - from_port: "20817" #  Proxmox UI
 #   to_host: "{{ container_ip }}:8006"
 #   protocol: "tcp"
@@ -325,7 +320,7 @@ lxc_nodes:
       vmid: "3313"
       hostname: "{{ hostvars['rpc-polkadot-03']['host_name'] }}"
       # ostemplate: "local:vztmpl/{{ default_container_template }}"
-      update: False
+      update: True
       netif: "{{ hostvars['rpc-polkadot-03']['netif'] }}"
       cores: 4
       memory: 16384
@@ -337,7 +332,7 @@ lxc_nodes:
         - id: mp0
           mountpoint: "{{ hostvars['rpc-polkadot-03']['default_database_path'] }}"
           storage: "{{ zfs_storage }}"
-          size: 3500
+          size: 5500
       onboot: True
       unprivileged: True
       validate_certs: False
@@ -345,13 +340,8 @@ lxc_nodes:
       state: present
       features:
         - nesting=1
-    port_forwards:
-      - from_port: "{{ hostvars['rpc-polkadot-03']['ansible_port'] }}"
-        to_host: "{{ hostvars['rpc-polkadot-03']['container_ip'] }}:{{ ssh_port }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-polkadot-03']['default_p2p_port'] }}"
-        to_host: "{{ hostvars['rpc-polkadot-03']['container_ip'] }}:{{ hostvars['rpc-polkadot-03']['default_p2p_port'] }}"
-        protocol: "tcp"
+    # No bkk50 DNAT: SSH via ProxyJump through bkk08, egress via eth1/host SNAT.
+    port_forwards: []
   - host: "dockers-08"
     proxmox_config:
       vmid: "982"

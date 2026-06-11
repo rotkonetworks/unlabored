@@ -33,8 +33,8 @@ ExecStart={{ default_base_path }}/polkadot \
      --rpc-port {{ default_rpc_port }} \
 {{ listen_addrs(default_p2p_port, indent='     ') }}#     --listen-addr /ip4/0.0.0.0/tcp/{{ default_p2p_port_ws }}/ws \
 #     --listen-addr /ip6/::/tcp/{{ default_p2p_port_ws }}/ws \
-     --public-addr /ip4/{{ ansible_host }}/tcp/{{ default_p2p_port }} \
-#     --public-addr /ip4/{{ ansible_host }}/tcp/{{ default_p2p_port_ws }}/ws \
+     --public-addr /ip4/{{ default_public_endpoint_ip }}/tcp/{{ default_p2p_port }} \
+#     --public-addr /ip4/{{ default_public_endpoint_ip }}/tcp/{{ default_p2p_port_ws }}/ws \
      --prometheus-port {{ default_prom_port }} \
      --prometheus-external \
      --wasm-execution compiled \
