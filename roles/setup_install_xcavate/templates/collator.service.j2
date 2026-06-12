@@ -24,8 +24,8 @@ ExecStart={{ default_base_path }}/xcavate \
      --rpc-port {{ default_rpc_port }} \
      --prometheus-port {{ default_prom_port }} \
      --prometheus-external \
-     --public-addr /ip4/{{ ansible_host }}/tcp/{{ default_p2p_port }} \
-     --public-addr /ip4/{{ ansible_host }}/tcp/{{ default_p2p_port_ws }}/ws \
+     --public-addr /ip4/{{ default_public_endpoint_ip }}/tcp/{{ default_p2p_port }} \
+     --public-addr /ip4/{{ default_public_endpoint_ip }}/tcp/{{ default_p2p_port_ws }}/ws \
      --relay-chain-rpc-urls {{ default_relay_rpc }} {{ default_relay_rpc_fallback }} \
      --wasm-execution compiled \
      --pruning 1000 \

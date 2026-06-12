@@ -3,7 +3,7 @@
   "log-display-highlight": "plain",
   "log-display-level": "{{ flare_log_level }}",
   "network-id": "{{ flare_network }}",
-  "public-ip": "{{ container_public_ip | default(ansible_host) }}",
+  "public-ip": "{{ default_public_endpoint_ip }}",
   "db-dir": "{{ flare_storage_path }}/db",
   "log-dir": "{{ flare_storage_path }}/logs",
   "chain-config-dir": "{{ flare_chain_config_path }}",
