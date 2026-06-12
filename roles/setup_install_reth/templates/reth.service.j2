@@ -28,7 +28,7 @@ ExecStart={{ ethereum_base }}/reth node \
     --authrpc.addr 127.0.0.1 \
     --authrpc.port {{ ethereum_lighthouse_port }} \
     --authrpc.jwtsecret {{ ethereum_jwtsecret_file }} \
-    --metrics 127.0.0.1:{{ reth_metrics_port }} \
+    --metrics {{ container_ip }}:{{ reth_metrics_port }} \
 {% if default_node_type == "full" %}
     --full \
 {% elif default_node_type == "minimal" %}
