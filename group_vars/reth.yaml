@@ -5,9 +5,9 @@ default_block_output_to_private_ip: True
 ethereum_lighthouse_version: "8.1.3"
 ethereum_lighthouse_download_url: "https://github.com/sigp/lighthouse/releases/download/v{{ ethereum_lighthouse_version }}/lighthouse-v{{ ethereum_lighthouse_version }}-x86_64-unknown-linux-gnu.tar.gz"
 ethereum_lighthouse_nodetype: "beacon_node"
-ethereum_lighthouse_port: 8551          # auth-RPC port reth listens on, lighthouse connects here
-ethereum_lighthouse_http_port: 5052     # beacon HTTP API (localhost only)
-ethereum_lighthouse_beacon_port: 9000   # consensus P2P (must be reachable for healthy peer set)
+ethereum_lighthouse_port: 8551 # auth-RPC port reth listens on, lighthouse connects here
+ethereum_lighthouse_http_port: 5052 # beacon HTTP API (localhost only)
+ethereum_lighthouse_beacon_port: 9000 # consensus P2P (must be reachable for healthy peer set)
 # Public checkpoint sync provider. Alternatives if this 404s:
 #   https://sync.invis.tools
 #   https://mainnet-checkpoint-sync.attestant.io
@@ -16,7 +16,7 @@ ethereum_lighthouse_checkpoint_url: "https://beaconstate.info"
 
 # Reth (execution client) — built from source because release binaries dynamic-link
 # against newer glibc (2.39) than Debian 12 LXC base ships (2.36).
-reth_version: "2.2.0"
+reth_version: "2.3.0"
 reth_git_repo: "https://github.com/paradigmxyz/reth.git"
 reth_service: "reth"
 

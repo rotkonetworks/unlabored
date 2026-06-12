@@ -10,8 +10,8 @@ fdc_base: "/opt/fdc"
 fdc_xrp_base: "{{ fdc_base }}/xrp-verifier"
 
 # Pinned image versions (match FDC reference repo).
-fdc_xrp_indexer_image: "ghcr.io/flare-foundation/verifier-xrp-indexer:v2.0.0@sha256:81ca618a1c1fcb556fbdaa7df5eefb22ad8cc47030c9a7a219c8a8a9d66901e0"
-fdc_xrp_verifier_image: "ghcr.io/flare-foundation/verifier-indexer-api:v1.5.0@sha256:f11bd83d8c9b6d58034273cf5fc8fd92f0daaae981cca811883fd6595e0f7827"
+fdc_xrp_indexer_image: "ghcr.io/flare-foundation/verifier-xrp-indexer:v2.1.0@sha256:1261e2ec192f029b96c9885d15e560829ec1bfdbee689eb70df2d5ee01d04286"
+fdc_xrp_verifier_image: "ghcr.io/flare-foundation/verifier-indexer-api:v1.6.1@sha256:5bd9717dad96aca2f119eb95304857f8a0bfa1b4d196ef1aaa0889cc490dcc50"
 fdc_xrp_postgres_image: "postgres:18@sha256:52e6ffd11fddd081ae63880b635b2a61c14008c17fc98cdc7ce5472265516dd0"
 
 fdc_xrp_verifier_api_port: 9503
