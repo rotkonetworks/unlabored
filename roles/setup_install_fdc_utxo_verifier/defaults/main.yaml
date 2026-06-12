@@ -19,8 +19,8 @@ fdc_utxo_chain: >-
 fdc_utxo_base: "{{ fdc_base }}/{{ fdc_utxo_chain }}-verifier"
 
 # Pinned image versions (match FDC reference repo).
-fdc_utxo_indexer_image: "ghcr.io/flare-foundation/verifier-utxo-indexer:v1.0.2@sha256:42b2f5b1af89cf28e437a04f7d7bbbd8dd8afc708c29f56102551eb9c717b909"
-fdc_utxo_verifier_image: "ghcr.io/flare-foundation/verifier-indexer-api:v1.2.2@sha256:e8a94dd88276c0c06f44af561d9e3f06a42c405409c1002811015993cde377ca"
+fdc_utxo_indexer_image: "ghcr.io/flare-foundation/verifier-utxo-indexer:v1.1.1@sha256:466c6936aadf6538d6d1f676b909e2bc979d17f49bce52cbadd37f0d9526712a"
+fdc_utxo_verifier_image: "ghcr.io/flare-foundation/verifier-indexer-api:v1.6.1@sha256:5bd9717dad96aca2f119eb95304857f8a0bfa1b4d196ef1aaa0889cc490dcc50"
 fdc_utxo_postgres_image: "postgres:18@sha256:52e6ffd11fddd081ae63880b635b2a61c14008c17fc98cdc7ce5472265516dd0"
 
 # Per-chain port assignments. Verifier API listens on container_ip; postgres
@@ -63,6 +63,12 @@ fdc_utxo_node_password: >-
 fdc_utxo_db_password: >-
   {%- if fdc_utxo_chain == 'btc' -%}{{ vault_fdc_btc_db_password | default('changeme-set-vault') }}
   {%- elif fdc_utxo_chain == 'doge' -%}{{ vault_fdc_doge_db_password | default('changeme-set-vault') }}
+  {%- endif -%}
+
+# Confirmations before a block is considered final. BTC=6, DOGE=1.
+fdc_utxo_confirmations: >-
+  {%- if fdc_utxo_chain == 'btc' -%}6
+  {%- elif fdc_utxo_chain == 'doge' -%}1
   {%- endif -%}
 
 # Initial block height — set per host in host_vars/<host>.yaml.

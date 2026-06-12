@@ -6,5 +6,12 @@
 
 - name: Restart FDC XRP verifier
   ansible.builtin.systemd:
+    name: docker
+    state: restarted
+  listen: Restart FDC XRP verifier
+
+- name: Restart FDC XRP verifier service
+  ansible.builtin.systemd:
     name: fdc-xrp-verifier
     state: restarted
+  listen: Restart FDC XRP verifier

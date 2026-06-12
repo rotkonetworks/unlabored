@@ -8,6 +8,7 @@ container_public_ip6: "2401:a860:1110::13"
 ansible_port: 32803
 host_name: "btc-fdc-01.rotko.net"
 host_timezone: "Asia/Bangkok"
+rpcauth_line: "{{ btc_rpcauth }}"
 netif:
   net0: "name=eth0,gw={{ default_nat_network_forward_cidr.split('/')[0] }},ip={{ default_mgmt_host_ip }}/16,bridge={{ default_nat_device }}"
   net1: "name=eth1,ip={{ container_internal_ip }}/16,bridge={{ default_host_internal_bridge }}"

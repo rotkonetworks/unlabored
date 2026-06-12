@@ -17,6 +17,7 @@ x-django: &django
 
 x-django-management: &django-management
   <<: *django
+  stop_signal: SIGINT
   depends_on:
     database:
       condition: service_healthy
@@ -56,9 +57,9 @@ services:
     <<: *django
     container_name: verifier-{{ fdc_utxo_chain }}-server
     ports:
-      - 127.0.0.1:{{ fdc_utxo_indexer_metrics_port }}:8400
+      - 127.0.0.1:{{ fdc_utxo_indexer_metrics_port }}:8000
     healthcheck:
-      test: ["CMD", "curl", "-s", "--fail", "-o", "/dev/null", "http://127.0.0.1:8400/metrics"]
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://127.0.0.1:8000/metrics', timeout=5).raise_for_status()"]
       interval: 60s
       start_period: 60s
       start_interval: 2s
