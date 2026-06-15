@@ -1,8 +1,7 @@
 ---
 host_name: "bkk06.rotko.net"
 host_timezone: "Asia/Bangkok"
-ansible_host: "160.22.181.181"
-ansible_port: 22786
+ansible_host: "160.22.181.6"
 default_host_internal_ip: "10.6.0.1"
 default_host_public_gw: "10.155.100.6"
 default_host_public_gw6: "fd00:155:100::6"
@@ -14,8 +13,7 @@ kernel_modules:
 
 default_kvm_host: "192.168.69.206"
 default_kvm_port: "22796"
-default_need_routeros_port_forwarding: True
-routeros_delegate_host: "bkk50"
+default_need_routeros_port_forwarding: False
 default_need_iptables_port_forwarding: False
 default_gw_device: "eno1"
 default_storage: "bkk06pool" # zfspool
@@ -24,10 +22,7 @@ lvm_storage: "tank06lvm" # old
 default_resource_pool: "bkk06_resource_pool"
 default_max_cores: 128
 
-port_forwards:
-  - from_port: "{{ ansible_port }}"
-    to_host: "{{ container_ip }}:22"
-    protocol: "tcp"
+port_forwards: []
 
 lxc_nodes:
   - host: "rpc-people-polkadot-01"
@@ -50,13 +45,7 @@ lxc_nodes:
       state: present
       features:
         - nesting=1
-    port_forwards:
-      - from_port: "{{ hostvars['rpc-people-polkadot-01']['ansible_port'] }}"
-        to_host: "{{ hostvars['rpc-people-polkadot-01']['container_ip'] }}:22"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-people-polkadot-01']['zabbix_ext_port'] }}"
-        to_host: "{{ hostvars['monitor']['container_ip'] }}:10050"
-        protocol: "tcp"
+    port_forwards: []
   - host: "rpc-bridge-hub-paseo-01"
     proxmox_config:
       vmid: "340201"
@@ -77,19 +66,7 @@ lxc_nodes:
       state: present
       features:
         - nesting=1
-    port_forwards:
-      - from_port: "{{ hostvars['rpc-bridge-hub-paseo-01']['ansible_port'] }}"
-        to_host: "{{ hostvars['rpc-bridge-hub-paseo-01']['container_ip'] }}:22"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-bridge-hub-paseo-01']['zabbix_ext_port'] }}"
-        to_host: "{{ hostvars['monitor']['container_ip'] }}:10050"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-bridge-hub-paseo-01']['default_p2p_port'] }}"
-        to_host: "{{ hostvars['rpc-bridge-hub-paseo-01']['container_ip'] }}:{{ hostvars['rpc-bridge-hub-paseo-01']['default_p2p_port'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-bridge-hub-paseo-01']['default_p2p_port_wss'] }}"
-        to_host: "{{ hostvars['rpc-bridge-hub-paseo-01']['container_ip'] }}:{{ hostvars['rpc-bridge-hub-paseo-01']['default_p2p_port_wss'] }}"
-        protocol: "tcp"
+    port_forwards: []
   - host: "rpc-coretime-paseo-01"
     proxmox_config:
       vmid: "340301"
@@ -110,13 +87,7 @@ lxc_nodes:
       state: present
       features:
         - nesting=1
-    port_forwards:
-      - from_port: "{{ hostvars['rpc-coretime-paseo-01']['ansible_port'] }}"
-        to_host: "{{ hostvars['rpc-coretime-paseo-01']['container_ip'] }}:22"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-coretime-paseo-01']['zabbix_ext_port'] }}"
-        to_host: "{{ hostvars['monitor']['container_ip'] }}:10050"
-        protocol: "tcp"
+    port_forwards: []
   - host: "rpc-people-paseo-01"
     proxmox_config:
       vmid: "340401"
@@ -137,13 +108,7 @@ lxc_nodes:
       state: present
       features:
         - nesting=1
-    port_forwards:
-      - from_port: "{{ hostvars['rpc-people-paseo-01']['ansible_port'] }}"
-        to_host: "{{ hostvars['rpc-people-paseo-01']['container_ip'] }}:22"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-people-paseo-01']['zabbix_ext_port'] }}"
-        to_host: "{{ hostvars['monitor']['container_ip'] }}:10050"
-        protocol: "tcp"
+    port_forwards: []
   - host: "rpc-asset-hub-polkadot-01"
     proxmox_config:
       vmid: "31011"
@@ -164,16 +129,7 @@ lxc_nodes:
       state: present
       features:
         - nesting=1
-    port_forwards:
-      - from_port: "{{ hostvars['rpc-asset-hub-polkadot-01']['ansible_port'] }}"
-        to_host: "{{ hostvars['rpc-asset-hub-polkadot-01']['container_ip'] }}:{{ ssh_port }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-asset-hub-polkadot-01']['zabbix_ext_port'] }}"
-        to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-asset-hub-polkadot-01']['default_p2p_port'] }}"
-        to_host: "{{ hostvars['rpc-asset-hub-polkadot-01']['container_ip'] }}:{{ hostvars['rpc-asset-hub-polkadot-01']['default_p2p_port'] }}"
-        protocol: "tcp"
+    port_forwards: []
   # - host: "rpc-asset-hub-westend-01"
   #   proxmox_config:
   #     vmid: "33011"
@@ -223,16 +179,7 @@ lxc_nodes:
       state: present
       features:
         - nesting=1
-    port_forwards:
-      - from_port: "{{ hostvars['rpc-bridge-hub-polkadot-01']['ansible_port'] }}"
-        to_host: "{{ hostvars['rpc-bridge-hub-polkadot-01']['container_ip'] }}:{{ ssh_port }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-bridge-hub-polkadot-01']['zabbix_ext_port'] }}"
-        to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-bridge-hub-polkadot-01']['default_p2p_port'] }}"
-        to_host: "{{ hostvars['rpc-bridge-hub-polkadot-01']['container_ip'] }}:{{ hostvars['rpc-bridge-hub-polkadot-01']['default_p2p_port'] }}"
-        protocol: "tcp"
+    port_forwards: []
   # - host: "rpc-bridge-hub-westend-01"
   #   proxmox_config:
   #     vmid: "33021"
@@ -282,16 +229,7 @@ lxc_nodes:
       state: present
       features:
         - nesting=1
-    port_forwards:
-      - from_port: "{{ hostvars['rpc-collectives-polkadot-01']['ansible_port'] }}"
-        to_host: "{{ hostvars['rpc-collectives-polkadot-01']['container_ip'] }}:{{ ssh_port }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-collectives-polkadot-01']['zabbix_ext_port'] }}"
-        to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-collectives-polkadot-01']['default_p2p_port'] }}"
-        to_host: "{{ hostvars['rpc-collectives-polkadot-01']['container_ip'] }}:{{ hostvars['rpc-collectives-polkadot-01']['default_p2p_port'] }}"
-        protocol: "tcp"
+    port_forwards: []
   # - host: "rpc-collectives-westend-01"
   #   proxmox_config:
   #     vmid: "33031"
@@ -343,16 +281,7 @@ lxc_nodes:
       state: present
       features:
         - nesting=1
-    port_forwards:
-      - from_port: "{{ hostvars['rpc-polkadot-01']['ansible_port'] }}"
-        to_host: "{{ hostvars['rpc-polkadot-01']['container_ip'] }}:{{ ssh_port }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-polkadot-01']['zabbix_ext_port'] }}"
-        to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-polkadot-01']['default_p2p_port'] }}"
-        to_host: "{{ hostvars['rpc-polkadot-01']['container_ip'] }}:{{ hostvars['rpc-polkadot-01']['default_p2p_port'] }}"
-        protocol: "tcp"
+    port_forwards: []
   # - host: "rpc-westend-01"
   #   proxmox_config:
   #     vmid: "33001"
@@ -400,13 +329,7 @@ lxc_nodes:
       state: present
       features:
         - nesting=1
-    port_forwards:
-      - from_port: "{{ hostvars['haproxy-bkk06']['ansible_port'] }}"
-        to_host: "{{ hostvars['haproxy-bkk06']['container_ip'] }}:{{ ssh_port }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['haproxy-bkk06']['zabbix_ext_port'] }}"
-        to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
-        protocol: "tcp"
+    port_forwards: []
   - host: "rpc-coretime-polkadot-01"
     proxmox_config:
       vmid: "310401"
@@ -427,16 +350,7 @@ lxc_nodes:
       state: present
       features:
         - nesting=1
-    port_forwards:
-      - from_port: "{{ hostvars['rpc-coretime-polkadot-01']['ansible_port'] }}"
-        to_host: "{{ hostvars['rpc-coretime-polkadot-01']['container_ip'] }}:{{ ssh_port }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-coretime-polkadot-01']['zabbix_ext_port'] }}"
-        to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-coretime-polkadot-01']['default_p2p_port'] }}"
-        to_host: "{{ hostvars['rpc-coretime-polkadot-01']['container_ip'] }}:{{ hostvars['rpc-coretime-polkadot-01']['default_p2p_port'] }}"
-        protocol: "tcp"
+    port_forwards: []
   - host: "rpc-coretime-kusama-01"
     proxmox_config:
       vmid: "32051"
@@ -457,25 +371,7 @@ lxc_nodes:
       state: present
       features:
         - nesting=1
-    port_forwards:
-      - from_port: "{{ hostvars['rpc-coretime-kusama-01']['ansible_port'] }}"
-        to_host: "{{ hostvars['rpc-coretime-kusama-01']['container_ip'] }}:{{ ssh_port }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-coretime-kusama-01']['zabbix_ext_port'] }}"
-        to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-coretime-kusama-01']['default_p2p_port'] }}"
-        to_host: "{{ hostvars['rpc-coretime-kusama-01']['container_ip'] }}:{{ hostvars['rpc-coretime-kusama-01']['default_p2p_port'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-coretime-kusama-01']['transition_bootnode_p2p_port'] }}"
-        to_host: "{{ hostvars['rpc-coretime-kusama-01']['container_ip'] }}:{{ hostvars['rpc-coretime-kusama-01']['transition_bootnode_p2p_port'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-coretime-kusama-01']['transition_bootnode_p2p_port_ws'] }}"
-        to_host: "{{ hostvars['rpc-coretime-kusama-01']['container_ip'] }}:{{ hostvars['rpc-coretime-kusama-01']['transition_bootnode_p2p_port_ws'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-coretime-kusama-01']['transition_bootnode_p2p_port_wss'] }}"
-        to_host: "{{ hostvars['rpc-coretime-kusama-01']['container_ip'] }}:{{ hostvars['rpc-coretime-kusama-01']['transition_bootnode_p2p_port_wss'] }}"
-        protocol: "tcp"
+    port_forwards: []
   # - host: "rpc-coretime-westend-01"
   #   proxmox_config:
   #     vmid: "33051"
@@ -534,25 +430,7 @@ lxc_nodes:
       state: present
       features:
         - nesting=1
-    port_forwards:
-      - from_port: "{{ hostvars['rpc-people-kusama-01']['ansible_port'] }}"
-        to_host: "{{ hostvars['rpc-people-kusama-01']['container_ip'] }}:{{ ssh_port }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-people-kusama-01']['zabbix_ext_port'] }}"
-        to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-people-kusama-01']['default_p2p_port'] }}"
-        to_host: "{{ hostvars['rpc-people-kusama-01']['container_ip'] }}:{{ hostvars['rpc-people-kusama-01']['default_p2p_port'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-people-kusama-01']['transition_bootnode_p2p_port'] }}"
-        to_host: "{{ hostvars['rpc-people-kusama-01']['container_ip'] }}:{{ hostvars['rpc-people-kusama-01']['transition_bootnode_p2p_port'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-people-kusama-01']['transition_bootnode_p2p_port_ws'] }}"
-        to_host: "{{ hostvars['rpc-people-kusama-01']['container_ip'] }}:{{ hostvars['rpc-people-kusama-01']['transition_bootnode_p2p_port_ws'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-people-kusama-01']['transition_bootnode_p2p_port_wss'] }}"
-        to_host: "{{ hostvars['rpc-people-kusama-01']['container_ip'] }}:{{ hostvars['rpc-people-kusama-01']['transition_bootnode_p2p_port_wss'] }}"
-        protocol: "tcp"
+    port_forwards: []
   # - host: "rpc-people-westend-01"
   #   proxmox_config:
   #     vmid: "33041"
@@ -611,25 +489,7 @@ lxc_nodes:
       state: present
       features:
         - nesting=1
-    port_forwards:
-      - from_port: "{{ hostvars['rpc-paseo-01']['ansible_port'] }}"
-        to_host: "{{ hostvars['rpc-paseo-01']['container_ip'] }}:{{ ssh_port }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-paseo-01']['zabbix_ext_port'] }}"
-        to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-paseo-01']['default_p2p_port'] }}"
-        to_host: "{{ hostvars['rpc-paseo-01']['container_ip'] }}:{{ hostvars['rpc-paseo-01']['default_p2p_port'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-paseo-01']['transition_bootnode_p2p_port'] }}"
-        to_host: "{{ hostvars['rpc-paseo-01']['container_ip'] }}:{{ hostvars['rpc-paseo-01']['transition_bootnode_p2p_port'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-paseo-01']['transition_bootnode_p2p_port_ws'] }}"
-        to_host: "{{ hostvars['rpc-paseo-01']['container_ip'] }}:{{ hostvars['rpc-paseo-01']['transition_bootnode_p2p_port_ws'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-paseo-01']['transition_bootnode_p2p_port_wss'] }}"
-        to_host: "{{ hostvars['rpc-paseo-01']['container_ip'] }}:{{ hostvars['rpc-paseo-01']['transition_bootnode_p2p_port_wss'] }}"
-        protocol: "tcp"
+    port_forwards: []
   - host: "rpc-kusama-01"
     proxmox_config:
       vmid: "32001"
@@ -650,25 +510,7 @@ lxc_nodes:
       state: present
       features:
         - nesting=1
-    port_forwards:
-      - from_port: "{{ hostvars['rpc-kusama-01']['ansible_port'] }}"
-        to_host: "{{ hostvars['rpc-kusama-01']['container_ip'] }}:{{ ssh_port }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-kusama-01']['zabbix_ext_port'] }}"
-        to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-kusama-01']['default_p2p_port'] }}"
-        to_host: "{{ hostvars['rpc-kusama-01']['container_ip'] }}:{{ hostvars['rpc-kusama-01']['default_p2p_port'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-kusama-01']['transition_bootnode_p2p_port'] }}"
-        to_host: "{{ hostvars['rpc-kusama-01']['container_ip'] }}:{{ hostvars['rpc-kusama-01']['transition_bootnode_p2p_port'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-kusama-01']['transition_bootnode_p2p_port_ws'] }}"
-        to_host: "{{ hostvars['rpc-kusama-01']['container_ip'] }}:{{ hostvars['rpc-kusama-01']['transition_bootnode_p2p_port_ws'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-kusama-01']['transition_bootnode_p2p_port_wss'] }}"
-        to_host: "{{ hostvars['rpc-kusama-01']['container_ip'] }}:{{ hostvars['rpc-kusama-01']['transition_bootnode_p2p_port_wss'] }}"
-        protocol: "tcp"
+    port_forwards: []
   - host: "rpc-asset-hub-kusama-01"
     proxmox_config:
       vmid: "32011"
@@ -689,25 +531,7 @@ lxc_nodes:
       state: present
       features:
         - nesting=1
-    port_forwards:
-      - from_port: "{{ hostvars['rpc-asset-hub-kusama-01']['ansible_port'] }}"
-        to_host: "{{ hostvars['rpc-asset-hub-kusama-01']['container_ip'] }}:{{ ssh_port }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-asset-hub-kusama-01']['zabbix_ext_port'] }}"
-        to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-asset-hub-kusama-01']['default_p2p_port'] }}"
-        to_host: "{{ hostvars['rpc-asset-hub-kusama-01']['container_ip'] }}:{{ hostvars['rpc-asset-hub-kusama-01']['default_p2p_port'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-asset-hub-kusama-01']['transition_bootnode_p2p_port'] }}"
-        to_host: "{{ hostvars['rpc-asset-hub-kusama-01']['container_ip'] }}:{{ hostvars['rpc-asset-hub-kusama-01']['transition_bootnode_p2p_port'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-asset-hub-kusama-01']['transition_bootnode_p2p_port_ws'] }}"
-        to_host: "{{ hostvars['rpc-asset-hub-kusama-01']['container_ip'] }}:{{ hostvars['rpc-asset-hub-kusama-01']['transition_bootnode_p2p_port_ws'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-asset-hub-kusama-01']['transition_bootnode_p2p_port_wss'] }}"
-        to_host: "{{ hostvars['rpc-asset-hub-kusama-01']['container_ip'] }}:{{ hostvars['rpc-asset-hub-kusama-01']['transition_bootnode_p2p_port_wss'] }}"
-        protocol: "tcp"
+    port_forwards: []
   - host: "rpc-bridge-hub-kusama-01"
     proxmox_config:
       vmid: "32021"
@@ -728,25 +552,7 @@ lxc_nodes:
       state: present
       features:
         - nesting=1
-    port_forwards:
-      - from_port: "{{ hostvars['rpc-bridge-hub-kusama-01']['ansible_port'] }}"
-        to_host: "{{ hostvars['rpc-bridge-hub-kusama-01']['container_ip'] }}:{{ ssh_port }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-bridge-hub-kusama-01']['zabbix_ext_port'] }}"
-        to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-bridge-hub-kusama-01']['default_p2p_port'] }}"
-        to_host: "{{ hostvars['rpc-bridge-hub-kusama-01']['container_ip'] }}:{{ hostvars['rpc-bridge-hub-kusama-01']['default_p2p_port'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-bridge-hub-kusama-01']['transition_bootnode_p2p_port'] }}"
-        to_host: "{{ hostvars['rpc-bridge-hub-kusama-01']['container_ip'] }}:{{ hostvars['rpc-bridge-hub-kusama-01']['transition_bootnode_p2p_port'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-bridge-hub-kusama-01']['transition_bootnode_p2p_port_ws'] }}"
-        to_host: "{{ hostvars['rpc-bridge-hub-kusama-01']['container_ip'] }}:{{ hostvars['rpc-bridge-hub-kusama-01']['transition_bootnode_p2p_port_ws'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-bridge-hub-kusama-01']['transition_bootnode_p2p_port_wss'] }}"
-        to_host: "{{ hostvars['rpc-bridge-hub-kusama-01']['container_ip'] }}:{{ hostvars['rpc-bridge-hub-kusama-01']['transition_bootnode_p2p_port_wss'] }}"
-        protocol: "tcp"
+    port_forwards: []
   - host: "rpc-encointer-kusama-01"
     proxmox_config:
       vmid: "32061"
@@ -767,25 +573,7 @@ lxc_nodes:
       state: present
       features:
         - nesting=1
-    port_forwards:
-      - from_port: "{{ hostvars['rpc-encointer-kusama-01']['ansible_port'] }}"
-        to_host: "{{ hostvars['rpc-encointer-kusama-01']['container_ip'] }}:{{ ssh_port }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-encointer-kusama-01']['zabbix_ext_port'] }}"
-        to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-encointer-kusama-01']['default_p2p_port'] }}"
-        to_host: "{{ hostvars['rpc-encointer-kusama-01']['container_ip'] }}:{{ hostvars['rpc-encointer-kusama-01']['default_p2p_port'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-encointer-kusama-01']['transition_bootnode_p2p_port'] }}"
-        to_host: "{{ hostvars['rpc-encointer-kusama-01']['container_ip'] }}:{{ hostvars['rpc-encointer-kusama-01']['transition_bootnode_p2p_port'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-encointer-kusama-01']['transition_bootnode_p2p_port_ws'] }}"
-        to_host: "{{ hostvars['rpc-encointer-kusama-01']['container_ip'] }}:{{ hostvars['rpc-encointer-kusama-01']['transition_bootnode_p2p_port_ws'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-encointer-kusama-01']['transition_bootnode_p2p_port_wss'] }}"
-        to_host: "{{ hostvars['rpc-encointer-kusama-01']['container_ip'] }}:{{ hostvars['rpc-encointer-kusama-01']['transition_bootnode_p2p_port_wss'] }}"
-        protocol: "tcp"
+    port_forwards: []
   - host: "rpc-asset-hub-paseo-01"
     proxmox_config:
       vmid: "34011"
@@ -806,25 +594,7 @@ lxc_nodes:
       state: present
       features:
         - nesting=1
-    port_forwards:
-      - from_port: "{{ hostvars['rpc-asset-hub-paseo-01']['ansible_port'] }}"
-        to_host: "{{ hostvars['rpc-asset-hub-paseo-01']['container_ip'] }}:{{ ssh_port }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-asset-hub-paseo-01']['zabbix_ext_port'] }}"
-        to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-asset-hub-paseo-01']['default_p2p_port'] }}"
-        to_host: "{{ hostvars['rpc-asset-hub-paseo-01']['container_ip'] }}:{{ hostvars['rpc-asset-hub-paseo-01']['default_p2p_port'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-asset-hub-paseo-01']['transition_bootnode_p2p_port'] }}"
-        to_host: "{{ hostvars['rpc-asset-hub-paseo-01']['container_ip'] }}:{{ hostvars['rpc-asset-hub-paseo-01']['transition_bootnode_p2p_port'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-asset-hub-paseo-01']['transition_bootnode_p2p_port_ws'] }}"
-        to_host: "{{ hostvars['rpc-asset-hub-paseo-01']['container_ip'] }}:{{ hostvars['rpc-asset-hub-paseo-01']['transition_bootnode_p2p_port_ws'] }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-asset-hub-paseo-01']['transition_bootnode_p2p_port_wss'] }}"
-        to_host: "{{ hostvars['rpc-asset-hub-paseo-01']['container_ip'] }}:{{ hostvars['rpc-asset-hub-paseo-01']['transition_bootnode_p2p_port_wss'] }}"
-        protocol: "tcp"
+    port_forwards: []
   - host: "penumbra-01"
     proxmox_config:
       vmid: "1101"
@@ -844,10 +614,4 @@ lxc_nodes:
       state: present
       features:
         - nesting=1
-    port_forwards:
-      - from_port: "{{ hostvars['penumbra-01']['ansible_port'] }}"
-        to_host: "{{ hostvars['penumbra-01']['container_ip'] }}:{{ ssh_port }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['penumbra-01']['default_cometbft_p2p_port'] }}"
-        to_host: "{{ hostvars['penumbra-01']['container_ip'] }}:{{ hostvars['penumbra-01']['default_cometbft_p2p_port'] }}"
-        protocol: "tcp"
+    port_forwards: []

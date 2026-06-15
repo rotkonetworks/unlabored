@@ -50,10 +50,7 @@ proxmox_vms:
       onboot: True
       state: present
       description: "Geo DNS: {{ hostvars['ibp-geodns-01']['host_name'] }}"
-    port_forwards:
-      - from_port: "{{ hostvars['ibp-geodns-01']['ansible_port'] }}"
-        to_host: "{{ hostvars['ibp-geodns-01']['container_ip'] }}:22"
-        protocol: "tcp"
+    port_forwards: []
 
 lxc_nodes:
   - host: "val-flare-01"
@@ -75,13 +72,7 @@ lxc_nodes:
       state: present
       features:
         - nesting=1
-    port_forwards:
-      - from_port: "{{ hostvars['val-flare-01']['ansible_port'] }}"
-        to_host: "{{ hostvars['val-flare-01']['container_ip'] }}:{{ ssh_port }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['val-flare-01']['zabbix_ext_port'] }}"
-        to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
-        protocol: "tcp"
+    port_forwards: []
   - host: "eth-fdc-01"
     proxmox_config:
       vmid: "60802"
@@ -103,13 +94,7 @@ lxc_nodes:
         - nesting=1
         - keyctl=1
         - fuse=1
-    port_forwards:
-      - from_port: "{{ hostvars['eth-fdc-01']['ansible_port'] }}"
-        to_host: "{{ hostvars['eth-fdc-01']['container_ip'] }}:{{ ssh_port }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['eth-fdc-01']['zabbix_ext_port'] }}"
-        to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
-        protocol: "tcp"
+    port_forwards: []
   - host: "btc-fdc-01"
     proxmox_config:
       vmid: "60803"
@@ -131,13 +116,7 @@ lxc_nodes:
         - nesting=1
         - keyctl=1
         - fuse=1
-    port_forwards:
-      - from_port: "{{ hostvars['btc-fdc-01']['ansible_port'] }}"
-        to_host: "{{ hostvars['btc-fdc-01']['container_ip'] }}:{{ ssh_port }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['btc-fdc-01']['zabbix_ext_port'] }}"
-        to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
-        protocol: "tcp"
+    port_forwards: []
   - host: "doge-fdc-01"
     proxmox_config:
       vmid: "60804"
@@ -159,13 +138,7 @@ lxc_nodes:
         - nesting=1
         - keyctl=1
         - fuse=1
-    port_forwards:
-      - from_port: "{{ hostvars['doge-fdc-01']['ansible_port'] }}"
-        to_host: "{{ hostvars['doge-fdc-01']['container_ip'] }}:{{ ssh_port }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['doge-fdc-01']['zabbix_ext_port'] }}"
-        to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
-        protocol: "tcp"
+    port_forwards: []
   - host: "xrp-fdc-01"
     proxmox_config:
       vmid: "60805"
@@ -187,13 +160,7 @@ lxc_nodes:
         - nesting=1
         - keyctl=1
         - fuse=1
-    port_forwards:
-      - from_port: "{{ hostvars['xrp-fdc-01']['ansible_port'] }}"
-        to_host: "{{ hostvars['xrp-fdc-01']['container_ip'] }}:{{ ssh_port }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['xrp-fdc-01']['zabbix_ext_port'] }}"
-        to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
-        protocol: "tcp"
+    port_forwards: []
   - host: "build-node-08"
     proxmox_config:
       vmid: "978"
@@ -213,13 +180,7 @@ lxc_nodes:
       update: False
       features:
         - nesting=1
-    port_forwards:
-      - from_port: "{{ hostvars['build-node-08']['ansible_port'] }}"
-        to_host: "{{ hostvars['build-node-08']['container_ip'] }}:{{ ssh_port }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['build-node-08']['zabbix_ext_port'] }}"
-        to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
-        protocol: "tcp"
+    port_forwards: []
   - host: "val-paseo-02"
     proxmox_config:
       vmid: "34005"
@@ -253,16 +214,7 @@ lxc_nodes:
       state: present
       features:
         - nesting=1
-    port_forwards:
-      - from_port: "{{ hostvars['val-paseo-02']['ansible_port'] }}"
-        to_host: "{{ hostvars['val-paseo-02']['container_ip'] }}:{{ ssh_port }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['val-paseo-02']['zabbix_ext_port'] }}"
-        to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['val-paseo-02']['default_p2p_port'] }}"
-        to_host: "{{ hostvars['val-paseo-02']['container_ip'] }}:{{ hostvars['val-paseo-02']['default_p2p_port'] }}"
-        protocol: "tcp"
+    port_forwards: []
   - host: "penumbra-03"
     proxmox_config:
       vmid: "1103"
@@ -282,13 +234,7 @@ lxc_nodes:
       state: present
       features:
         - nesting=1
-    port_forwards:
-      - from_port: "{{ hostvars['penumbra-03']['ansible_port'] }}"
-        to_host: "{{ hostvars['penumbra-03']['container_ip'] }}:{{ ssh_port }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['penumbra-03']['default_cometbft_p2p_port'] }}"
-        to_host: "{{ hostvars['penumbra-03']['container_ip'] }}:{{ hostvars['penumbra-03']['default_cometbft_p2p_port'] }}"
-        protocol: "tcp"
+    port_forwards: []
   # - host: "penumbra-web"
   #   proxmox_config:
   #     vmid: "1104"
@@ -360,13 +306,7 @@ lxc_nodes:
       state: present
       features:
         - nesting=1
-    port_forwards:
-      - from_port: "{{ hostvars['dockers-08']['ansible_port'] }}"
-        to_host: "{{ hostvars['dockers-08']['container_ip'] }}:{{ ssh_port }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['dockers-08']['zabbix_ext_port'] }}"
-        to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
-        protocol: "tcp"
+    port_forwards: []
   - host: "ibp-bkk08"
     proxmox_config:
       vmid: "988"
@@ -385,13 +325,7 @@ lxc_nodes:
       state: present
       features:
         - nesting=1
-    port_forwards:
-      - from_port: "{{ hostvars['ibp-bkk08']['ansible_port'] }}"
-        to_host: "{{ hostvars['ibp-bkk08']['container_ip'] }}:{{ ssh_port }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['ibp-bkk08']['zabbix_ext_port'] }}"
-        to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
-        protocol: "tcp"
+    port_forwards: []
   - host: "haproxy-bkk08"
     proxmox_config:
       vmid: "989"
@@ -410,13 +344,7 @@ lxc_nodes:
       state: present
       features:
         - nesting=1
-    port_forwards:
-      - from_port: "{{ hostvars['haproxy-bkk08']['ansible_port'] }}"
-        to_host: "{{ hostvars['haproxy-bkk08']['container_ip'] }}:{{ ssh_port }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['haproxy-bkk08']['zabbix_ext_port'] }}"
-        to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
-        protocol: "tcp"
+    port_forwards: []
   - host: "log-ct-08"
     proxmox_config:
       vmid: "985"
@@ -435,13 +363,7 @@ lxc_nodes:
       state: present
       features:
         - nesting=1
-    port_forwards:
-      - from_port: "{{ hostvars['log-ct-08']['ansible_port'] }}"
-        to_host: "{{ hostvars['log-ct-08']['container_ip'] }}:{{ ssh_port }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['log-ct-08']['zabbix_ext_port'] }}"
-        to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
-        protocol: "tcp"
+    port_forwards: []
   - host: "rpc-hydration-polkadot-02"
     proxmox_config:
       vmid: "31252"
@@ -462,16 +384,7 @@ lxc_nodes:
       state: present
       features:
         - nesting=1
-    port_forwards:
-      - from_port: "{{ hostvars['rpc-hydration-polkadot-02']['ansible_port'] }}"
-        to_host: "{{ hostvars['rpc-hydration-polkadot-02']['container_ip'] }}:{{ ssh_port }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-hydration-polkadot-02']['zabbix_ext_port'] }}"
-        to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-hydration-polkadot-02']['default_p2p_port'] }}"
-        to_host: "{{ hostvars['rpc-hydration-polkadot-02']['container_ip'] }}:{{ hostvars['rpc-hydration-polkadot-02']['default_p2p_port'] }}"
-        protocol: "tcp"
+    port_forwards: []
   # - host: "rpc-moonbeam-polkadot-02"
   #   proxmox_config:
   #     vmid: "31202"
@@ -548,13 +461,4 @@ lxc_nodes:
       state: present
       features:
         - nesting=1
-    port_forwards:
-      - from_port: "{{ hostvars['rpc-collectives-paseo-02']['ansible_port'] }}"
-        to_host: "{{ hostvars['rpc-collectives-paseo-02']['container_ip'] }}:{{ ssh_port }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-collectives-paseo-02']['zabbix_ext_port'] }}"
-        to_host: "{{ hostvars['monitor']['container_ip'] }}:{{ zabbix_port }}"
-        protocol: "tcp"
-      - from_port: "{{ hostvars['rpc-collectives-paseo-02']['default_p2p_port'] }}"
-        to_host: "{{ hostvars['rpc-collectives-paseo-02']['container_ip'] }}:{{ hostvars['rpc-collectives-paseo-02']['default_p2p_port'] }}"
-        protocol: "tcp"
+    port_forwards: []
