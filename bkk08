@@ -19,6 +19,7 @@ reth
 bitcoind
 dogecoind
 rippled
+misc-container
 
 [flare]
 val-flare-01

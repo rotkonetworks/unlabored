@@ -7,5 +7,6 @@ host_timezone: "Asia/Bangkok"
 netif:
   net0: "name=eth0,gw=10.8.0.1,ip={{ container_internal_ip }}/16,bridge={{ default_host_internal_bridge }}"
 
+role: "misc"
 pinned_service: False
 zabbix_ext_port: 10178
