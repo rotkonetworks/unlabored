@@ -1,14 +1,11 @@
 ---
-ansible_host: "{{ container_ip }}"
+ansible_host: "{{ container_internal_ip }}"
 ansible_ssh_common_args: "-o ProxyJump=root@160.22.181.8"
-container_ip: "192.168.78.178"
+container_internal_ip: "10.8.78.178"
 host_name: "build-node-08"
 host_timezone: "Asia/Bangkok"
-# netif: '{"net0":"name=eth0,gw={{ default_nat_network_forward_cidr.split("/")[0] }},ip={{ default_mgmt_host_ip }}/16,bridge={{ default_nat_device }}"}'
 netif:
-  net0: "name=eth0,gw={{ default_nat_network_forward_cidr.split('/')[0] }},ip={{ default_mgmt_host_ip }}/16,bridge={{ default_nat_device }}"
-  #define local ip in here
-  net1: "name=eth1,gw={{ default_host_internal_ip }},ip=10.8.78.178/16,bridge={{ default_host_internal_bridge }}"
+  net0: "name=eth0,gw=10.8.0.1,ip={{ container_internal_ip }}/16,bridge={{ default_host_internal_bridge }}"
 
 pinned_service: False
 zabbix_ext_port: 10178
