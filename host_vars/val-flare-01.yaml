@@ -4,7 +4,7 @@ ansible_ssh_common_args: "-o ProxyJump=root@160.22.181.8" # bkk08 NAT
 container_ip: "192.168.78.201"
 container_internal_ip: "10.8.0.201"
 container_public_ip: "160.22.181.201"
-container_public_ip6: "2401:a860:1110::11"
+container_public_ip6: "2401:a860:1110::18"
 host_name: "val-flare-01.rotko.net"
 host_timezone: "Asia/Bangkok"
 netif:
