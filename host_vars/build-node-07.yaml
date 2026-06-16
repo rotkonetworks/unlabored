@@ -8,4 +8,5 @@ netif:
   net0: "name=eth0,gw=10.7.0.1,ip={{ container_internal_ip }}/16,bridge={{ default_host_internal_bridge }}"
 pinned_service: False
 
+role: "misc"
 zabbix_ext_port: 10177
