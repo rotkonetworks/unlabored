@@ -68,15 +68,15 @@
     - inventory_hostname in ['bkk06', 'bkk07', 'bkk08']
     - lxc_nodes is defined
     - item.proxmox_config.netif is defined
-    - item.proxmox_config.update | default(False) | bool
+    - item.proxmox_config['update'] | default(False) | bool
     - prune_container_nics | default(True)
   register: _nic_prune
   changed_when: "'pruning' in _nic_prune.stdout"
-
-- name: Start predefined nodes
-  community.general.proxmox: "{{ proxmox_defaults | combine({'vmid': item.proxmox_config['vmid'], 'state': 'started'}) }}"
-  loop: "{{ lxc_nodes }}"
-  when:
-    - lxc_nodes is defined
-    - item.proxmox_config['state'] == 'present'
-  register: container_start_result
+#
+# - name: Start predefined nodes
+#   community.general.proxmox: "{{ proxmox_defaults | combine({'vmid': item.proxmox_config['vmid'], 'state': 'started'}) }}"
+#   loop: "{{ lxc_nodes }}"
+#   when:
+#     - lxc_nodes is defined
+#     - item.proxmox_config['state'] == 'present'
+#   register: container_start_result
