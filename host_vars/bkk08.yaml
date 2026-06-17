@@ -185,10 +185,11 @@ lxc_nodes:
     proxmox_config:
       vmid: "34005"
       hostname: "{{ hostvars['val-paseo-02']['host_name'] }}"
-      ostemplate: "local:vztmpl/{{ default_container_template }}"
+      # ostemplate: "local:vztmpl/{{ default_container_template }}"
       netif: "{{ hostvars['val-paseo-02']['netif'] }}"
-      cores: 8
-      memory: 32768
+      update: False
+      cores: 4
+      memory: 16384
       swap: 8192
       password: "{{ default_password }}"
       disk: "{{ zfs_storage }}:20"

@@ -4,11 +4,16 @@ ansible_ssh_common_args: "-o ProxyJump=root@160.22.181.7"
 container_internal_ip: "10.7.241.10"
 # Public v6 anchored to bkk07's prefix (2401:a860:1007::/48), gw = host vmbr1.
 # Globally reachable via the 2401:a860::/32 aggregate; replaces bkk50-based v6.
-container_ip6: "2401:a860:1007:76::3404"
+# container_ip6: "2401:a860:1007:76::3404"
+container_public_ip: "160.22.181.41"
+container_public_ip6: "2401:a860:1007:76::3404"
 host_name: "val-paseo-01.ct.rotko.net"
 host_timezone: "Asia/Bangkok"
+# netif:
+#   net0: "name=eth0,gw=10.7.0.1,ip={{ container_internal_ip }}/16,ip6={{ container_ip6 }}/48,gw6=2401:a860:1007::1,bridge={{ default_host_internal_bridge }}"
 netif:
-  net0: "name=eth0,gw=10.7.0.1,ip={{ container_internal_ip }}/16,ip6={{ container_ip6 }}/48,gw6=2401:a860:1007::1,bridge={{ default_host_internal_bridge }}"
+  net0: "name=eth0,gw=10.7.0.1,ip={{ container_internal_ip }}/16,bridge={{ default_host_internal_bridge }}"
+  net1: "name=eth1,ip={{ hostvars['val-paseo-01']['container_public_ip'] }}/32,ip6={{ hostvars['val-paseo-01']['container_public_ip6'] }}/128,bridge={{ default_host_public_bridge }}"
 role: "polkadot"
 pinned_service: True
 
