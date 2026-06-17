@@ -1,0 +1,7 @@
+# roles/setup_networking_p2p/defaults/main.yaml
+# Standards: 0.2
+---
+# Extra TCP ports to accept on the public interface, on top of the p2p ports
+# derived from default_p2p_port / default_cometbft_p2p_port / bootnode ports.
+# Override per host, e.g. allowed_additional_public_ports: [443] for nginx RPC.
+allowed_additional_public_ports: []

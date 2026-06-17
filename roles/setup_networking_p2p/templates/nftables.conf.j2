@@ -28,11 +28,14 @@ table inet mangle {
     }
 }
 {% if public_iface is defined %}
-{% set allowed_ports = [
+{% set _base_ports = [
     default_p2p_port | default(''),
+    default_cometbft_p2p_port | default(''),
     default_bootnode_p2p_port | default(''),
     default_bootnode_p2p_port_wss | default('')
-] | reject('equalto', '') | unique | list %}
+] | reject('equalto', '') | list %}
+{# allowed_additional_public_ports: per-host extra public ports (e.g. [443] for nginx RPC) #}
+{% set allowed_ports = (_base_ports + (allowed_additional_public_ports | default([]))) | unique | list %}
 
 # Firewall: restrict inbound on {{ public_iface }} (public) to specific P2P
 # ports. The management/NAT and internal interfaces remain unrestricted.

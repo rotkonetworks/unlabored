@@ -3,7 +3,7 @@ host_name: "ibp-geodns-01.rotko.net"
 ansible_host: "{{ container_ip }}"
 ansible_ssh_common_args: "-o ProxyJump=root@160.22.181.8"
 container_ip: "100.64.1.2"
-public_ip: "160.22.181.253"
+public_ip: "160.22.181.250"
 
 # VM Resources
 vm_cores: 4

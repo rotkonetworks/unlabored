@@ -2,15 +2,16 @@
 ansible_host: "{{ container_internal_ip }}"
 ansible_ssh_common_args: "-o ProxyJump=root@160.22.181.7"
 container_internal_ip: "10.7.77.82"
-public_ip: "160.22.181.252"
-public_ip6: "2401:a860:1252::"
-public_mac: "bc:24:11:8d:f1:fe"
+container_public_ip: "160.22.181.252"
+container_public_ip6: "2401:a860:1252::"
+allowed_additional_public_ports: [443]
 host_name: "penumbra-02.ct.rotko.net"
 host_timezone: "Asia/Bangkok"
 netif:
   net0: "name=eth0,ip={{ container_internal_ip }}/16,bridge={{ default_host_internal_bridge }}"
-  net1: "name=eth1,gw=10.155.100.7,hwaddr={{ public_mac }},ip={{ public_ip }}/32,ip6={{ public_ip6 }}/128,bridge=vmbr2"
-hookscript: "local:snippets/lxc-1102-hook.sh"
+  # net1: "name=eth1,gw=10.155.100.7,hwaddr={{ public_mac }},ip={{ public_ip }}/32,ip6={{ public_ip6 }}/128,bridge=vmbr2"
+  net1: "name=eth1,ip={{ hostvars['penumbra-02']['container_public_ip'] }}/32,ip6={{ hostvars['penumbra-02']['container_public_ip6'] }}/128,bridge={{ default_host_public_bridge }}"
+# hookscript: "local:snippets/lxc-1102-hook.sh"
 role: "penumbra"
 pinned_service: True
 
