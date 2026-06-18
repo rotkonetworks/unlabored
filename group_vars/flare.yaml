@@ -1,7 +1,7 @@
 ---
 # go-flare (Flare validator / RPC node) — built from source per
 # https://dev.flare.network/run-node/from-source
-flare_version: "1.13.0"
+flare_version: "1.14.0"
 flare_git_repo: "https://github.com/flare-foundation/go-flare.git"
 
 flare_bootstrap_url: "https://flare-bootstrap.flare.network"

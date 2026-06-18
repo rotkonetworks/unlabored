@@ -12,12 +12,26 @@ netif:
   net1: "name=eth1,ip={{ container_public_ip }}/32,ip6={{ container_public_ip6 }}/128,bridge={{ default_host_public_bridge }}"
 
 role: "flare"
-pinned_service: True
+# pinned_service: True
 ansible_python_interpreter: /usr/bin/python3
 
 default_node_type: "validator"
 default_network: "flare"
 default_database_path: "/opt/flare/storage"
 default_p2p_port: 9651
+
+# C-chain config overrides (match live prod) — consumed by validator.config.json.j2
+flare_eth_apis:
+  - eth
+  - eth-filter
+  - net
+  - web3
+  - internal-eth
+  - internal-blockchain
+  - internal-transaction
+  - internal-tx-pool
+flare_rpc_tx_fee_cap: 1000
+flare_local_txs_enabled: true
+flare_allow_unfinalized_queries: false
 
 zabbix_ext_port: 10807

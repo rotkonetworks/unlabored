@@ -20,4 +20,18 @@ default_network: "flare"
 default_database_path: "/opt/flare/storage"
 default_p2p_port: 9651
 
+# C-chain config overrides (match live prod) — consumed by validator.config.json.j2
+flare_eth_apis:
+  - eth
+  - eth-filter
+  - net
+  - web3
+  - internal-eth
+  - internal-blockchain
+  - internal-transaction
+  - mev-filter
+flare_rpc_tx_fee_cap: 1000
+flare_local_txs_enabled: true
+flare_allow_unfinalized_queries: true
+
 zabbix_ext_port: 10801
