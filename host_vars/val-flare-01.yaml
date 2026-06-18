@@ -29,7 +29,8 @@ flare_eth_apis:
   - internal-eth
   - internal-blockchain
   - internal-transaction
-  - mev-filter
+  # mev-filter removed: not a valid eth-api in go-flare 1.14.0. Its presence makes
+  # C-chain handler creation fail and takes /ext/bc/C/rpc down entirely (404).
 flare_rpc_tx_fee_cap: 1000
 flare_local_txs_enabled: true
 flare_allow_unfinalized_queries: true
