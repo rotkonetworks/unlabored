@@ -2,7 +2,7 @@
 # Bitcoin Core (bitcoind) — full node, config matches FDC's nodes-mainnet/btc/bitcoin.conf.
 # FDC's verifier-utxo-indexer maintains its own postgres index, so txindex is NOT required.
 # FDC docker pins to v30.x; we use the latest 30.x patch release for RPC compat.
-bitcoind_version: "30.2"
+bitcoind_version: "31.0"
 bitcoind_arch: "x86_64-linux-gnu"
 bitcoind_download_url: "https://bitcoincore.org/bin/bitcoin-core-{{ bitcoind_version }}/bitcoin-{{ bitcoind_version }}-{{ bitcoind_arch }}.tar.gz"
 

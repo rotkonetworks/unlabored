@@ -8,6 +8,7 @@ container_public_ip: "160.22.181.204"
 container_public_ip6: "2401:a860:1110::14"
 host_name: "doge-fdc-01.rotko.net"
 host_timezone: "Asia/Bangkok"
+rpcauth_line: "{{ doge_rpcauth }}"
 netif:
   net0: "name=eth0,gw=10.8.0.1,ip={{ container_internal_ip }}/16,bridge={{ default_host_internal_bridge }}"
   net1: "name=eth1,ip={{ container_public_ip }}/32,ip6={{ container_public_ip6 }}/128,bridge={{ default_host_public_bridge }}"

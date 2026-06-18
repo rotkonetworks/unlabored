@@ -6,5 +6,12 @@
 
 - name: Restart FDC UTXO verifier
   ansible.builtin.systemd:
+    name: docker
+    state: restarted
+  listen: Restart FDC UTXO verifier
+
+- name: Restart FDC UTXO verifier service
+  ansible.builtin.systemd:
     name: "fdc-{{ fdc_utxo_chain }}-verifier"
     state: restarted
+  listen: Restart FDC UTXO verifier

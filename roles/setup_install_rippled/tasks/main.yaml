@@ -78,7 +78,7 @@
 
 - name: Ensure rippled user owns storage paths
   ansible.builtin.file:
-    path: "{{ rippled_storage_path }}"
+    path: "{{ rippled_db_path }}"
     owner: "{{ rippled_user }}"
     group: "{{ rippled_user }}"
     recurse: True
