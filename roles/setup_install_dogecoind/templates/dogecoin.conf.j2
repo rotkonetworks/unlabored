@@ -17,8 +17,8 @@ listen=1
 bind=0.0.0.0:{{ dogecoind_p2p_port }}
 port={{ dogecoind_p2p_port }}
 
-# RPC — mgmt + internal mesh + localhost only (NOT public)
-rpcbind={{ container_ip }}
+# RPC — internal mesh + localhost only (NOT public)
+rpcbind={{ container_internal_ip }}
 rpcbind=127.0.0.1
 rpcport={{ dogecoind_rpc_port }}
 rpctimeout={{ dogecoind_rpc_timeout }}

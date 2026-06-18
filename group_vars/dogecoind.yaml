@@ -16,7 +16,7 @@ dogecoind_network: "main"
 
 # Ports (Dogecoin mainnet defaults — different from Bitcoin)
 dogecoind_p2p_port: 22556          # public, on eth2
-dogecoind_rpc_port: 22555          # mgmt-only, bound to container_ip
+dogecoind_rpc_port: 22555          # internal-only, bound to container_internal_ip
 dogecoind_rpc_timeout: 30          # seconds — indexer-friendly long requests
 dogecoind_zmq_block_port: 28332    # localhost — push notifications for indexer
 dogecoind_zmq_tx_port: 28333
