@@ -25,7 +25,7 @@
 
 - name: Install rippled v{{ rippled_version }}
   ansible.builtin.apt:
-    name: "rippled={{ rippled_version }}-1"
+    name: "{{ rippled_apt_package }}={{ rippled_version }}-1"
     state: present
     update_cache: True
   when:

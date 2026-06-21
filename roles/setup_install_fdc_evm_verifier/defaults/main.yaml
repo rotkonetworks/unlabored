@@ -10,14 +10,17 @@ fdc_evm_base: "{{ fdc_base }}/evm-verifier"
 fdc_evm_image: "ghcr.io/flare-foundation/evm-verifier:v1.0.3@sha256:f3669154865f54daf41329f3774024c26a088a90658ee8e42ee91ed5c307691e"
 fdc_evm_container_name: "fdc-evm-verifier"
 
-# Port — bound to container_ip (mgmt) so FDC client across LXCs can reach it.
+# Port — bound to container_internal_ip so FDC client across LXCs can reach it.
 fdc_evm_port: 9800
 
 # RPC endpoints. ETH = local reth on this host; FLR = val-flare-01 across LXCs.
-# SGB intentionally blank — we don't run a Songbird node yet, so SGB attestations
-# will return errors. Add SGB endpoint if/when we deploy songbird-fdc-01.
-fdc_evm_eth_rpc: "http://127.0.0.1:8545"
-fdc_evm_flr_rpc: "http://192.168.78.201:9650/ext/bc/C/rpc"
+# ETH uses container_internal_ip (not 127.0.0.1): the verifier runs in a
+# bridge-networked docker container, so it must reach reth via the LXC's own
+# internal IP, not the container's loopback. (btc/doge/xrp do the same.)
+# SGB left blank here on purpose — SGB attestations are served by sgb-fdc-01's
+# own verifier (see fdc-client config.toml), not by this eth-verifier.
+fdc_evm_eth_rpc: "http://{{ container_internal_ip }}:8545"
+fdc_evm_flr_rpc: "http://{{ hostvars['val-flare-01']['container_internal_ip'] }}:9650/ext/bc/C/rpc"
 fdc_evm_sgb_rpc: ""
 fdc_evm_testnet: "false"
 

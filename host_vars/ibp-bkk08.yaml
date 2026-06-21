@@ -1,10 +1,11 @@
 ---
-ansible_host: "160.22.181.181"
-container_ip: "192.168.78.97"
-ansible_port: 3197
+ansible_host: "{{ container_internal_ip }}"
+ansible_ssh_common_args: "-o ProxyJump=root@160.22.181.8"
+container_internal_ip: "10.8.78.97"
 host_name: "ibp.rotko.net"
 host_timezone: "Asia/Bangkok"
-netif: '{"net0":"name=eth0,gw={{ default_nat_network_forward_cidr.split("/")[0] }},ip={{ default_mgmt_host_ip }}/16,bridge={{ default_nat_device }}"}'
+netif:
+  net0: "name=eth0,gw=10.8.0.1,ip={{ container_internal_ip }}/16,bridge={{ default_host_internal_bridge }}"
 role: "ibp"
 pinned_service: False
 default_node_type: prometheus

@@ -1,8 +1,13 @@
 ---
 # rippled — XRP Ledger node, installed from XRPLF's official apt repo.
 # Apt repo: https://repos.ripple.com/repos/rippled-deb {{ release }} stable
-# Pinning to 3.1.2 to match FDC's reference (ghcr.io/flare-foundation/connected-chains-docker/rippled:3.1.2)
-rippled_version: "3.1.2"
+# Bumped to 3.2.0 (latest stable, 2026-06-16); FDC reference image was rippled:3.1.2.
+# Note: 3.2.0 ships a rotated apt signing key (2026-02-18) — the role re-fetches the key at install.
+# As of 3.2.0 the XRPLF apt package was renamed rippled -> xrpld (binary at /usr/bin/xrpld);
+# the old `rippled` package tops out at 3.1.3-1. We keep all our naming "rippled"
+# (role / service / config), and only the installed apt package + ExecStart binary point at xrpld.
+rippled_version: "3.2.0"
+rippled_apt_package: "xrpld"
 rippled_apt_repo_key: "https://repos.ripple.com/repos/api/gpg/key/public"
 rippled_apt_repo_url: "https://repos.ripple.com/repos/rippled-deb"
 

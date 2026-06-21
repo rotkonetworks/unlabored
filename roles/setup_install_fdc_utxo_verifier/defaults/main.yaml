@@ -23,7 +23,7 @@ fdc_utxo_indexer_image: "ghcr.io/flare-foundation/verifier-utxo-indexer:v1.1.1@s
 fdc_utxo_verifier_image: "ghcr.io/flare-foundation/verifier-indexer-api:v1.6.1@sha256:5bd9717dad96aca2f119eb95304857f8a0bfa1b4d196ef1aaa0889cc490dcc50"
 fdc_utxo_postgres_image: "postgres:18@sha256:52e6ffd11fddd081ae63880b635b2a61c14008c17fc98cdc7ce5472265516dd0"
 
-# Per-chain port assignments. Verifier API listens on container_ip; postgres
+# Per-chain port assignments. Verifier API listens on container_internal_ip; postgres
 # stays on localhost (no remote DB access). Match upstream port mappings.
 fdc_utxo_ports:
   btc:
@@ -43,8 +43,8 @@ fdc_utxo_indexer_metrics_port: "{{ fdc_utxo_ports[fdc_utxo_chain].indexer_metric
 # Underlying chain RPC — points at the bitcoind/dogecoind on this host.
 # Bitcoin = port 8332, Dogecoin = port 22555 (per chain group_vars).
 fdc_utxo_node_url: >-
-  {%- if fdc_utxo_chain == 'btc' -%}http://{{ container_ip }}:{{ bitcoind_rpc_port }}
-  {%- elif fdc_utxo_chain == 'doge' -%}http://{{ container_ip }}:{{ dogecoind_rpc_port }}
+  {%- if fdc_utxo_chain == 'btc' -%}http://{{ container_internal_ip }}:{{ bitcoind_rpc_port }}
+  {%- elif fdc_utxo_chain == 'doge' -%}http://{{ container_internal_ip }}:{{ dogecoind_rpc_port }}
   {%- endif -%}
 
 fdc_utxo_node_user: >-

@@ -1,24 +1,37 @@
 ---
-ansible_host: "160.22.181.181"
+ansible_host: "{{ container_internal_ip }}"
+ansible_ssh_common_args: "-o ProxyJump=root@160.22.181.7"
 container_ip: "192.168.77.207"
 container_internal_ip: "10.7.0.207"
 container_public_ip: "160.22.181.207"
 container_public_ip6: "2401:a860:1110::17"
-ansible_port: 32807
 host_name: "val-flare-02.rotko.net"
 host_timezone: "Asia/Bangkok"
 netif:
-  net0: "name=eth0,gw={{ default_nat_network_forward_cidr.split('/')[0] }},ip={{ default_mgmt_host_ip }}/16,bridge={{ default_nat_device }}"
-  net1: "name=eth1,ip={{ container_internal_ip }}/16,bridge={{ default_host_internal_bridge }}"
-  net2: "name=eth2,ip={{ container_public_ip }}/32,ip6={{ container_public_ip6 }}/128,bridge={{ default_host_public_bridge }}"
+  net0: "name=eth0,gw=10.7.0.1,ip={{ container_internal_ip }}/16,bridge={{ default_host_internal_bridge }}"
+  net1: "name=eth1,ip={{ container_public_ip }}/32,ip6={{ container_public_ip6 }}/128,bridge={{ default_host_public_bridge }}"
 
 role: "flare"
-pinned_service: True
+# pinned_service: True
 ansible_python_interpreter: /usr/bin/python3
 
 default_node_type: "validator"
 default_network: "flare"
 default_database_path: "/opt/flare/storage"
 default_p2p_port: 9651
+
+# C-chain config overrides (match live prod) — consumed by validator.config.json.j2
+flare_eth_apis:
+  - eth
+  - eth-filter
+  - net
+  - web3
+  - internal-eth
+  - internal-blockchain
+  - internal-transaction
+  - internal-tx-pool
+flare_rpc_tx_fee_cap: 1000
+flare_local_txs_enabled: true
+flare_allow_unfinalized_queries: false
 
 zabbix_ext_port: 10807

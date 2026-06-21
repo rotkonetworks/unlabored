@@ -1,7 +1,7 @@
 ---
 host_name: "ibp-th-collective-runner-01.rotko.net"
-ansible_host: "160.22.181.181"
-ansible_port: 25001
+ansible_host: "{{ container_ip }}"
+ansible_ssh_common_args: "-o ProxyJump=root@160.22.181.7"
 container_ip: "10.7.0.100"
 role: "github_runner"
 

@@ -6,7 +6,7 @@ ExecStart={{ default_home_path }}/cometbft start \
           --moniker "{{ default_domain | default(host_name) }}" \
           --home {{ default_database_path }}/node0/cometbft \
           --p2p.laddr "tcp://0.0.0.0:{{ default_cometbft_p2p_port }}" \
-          --p2p.external-address "{{ ansible_host }}:{{ default_cometbft_p2p_port }}" \
+          --p2p.external-address "{{ default_public_endpoint_ip }}:{{ default_cometbft_p2p_port }}" \
           --rpc.laddr "tcp://127.0.0.1:{{ default_cometbft_rpc_port }}" \
           --proxy_app tcp://127.0.0.1:{{ default_acbi_port }} \
           --db_backend {{ default_cometbft_database }}

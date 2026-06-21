@@ -1,17 +1,15 @@
 ---
-ansible_host: "160.22.181.181"
+ansible_host: "{{ container_internal_ip }}"
+ansible_ssh_common_args: "-o ProxyJump=root@160.22.181.6"
 container_ip: "192.168.111.11"
 container_internal_ip: "10.6.111.11"
 container_public_ip: "160.22.181.111"
 container_public_ip6: "2401:a860:1111::11"
-ansible_port: 2611
 host_name: "rpc-asset-hub-polkadot-01.ct.rotko.net"
 host_timezone: "Asia/Bangkok"
-# netif: '{"net0":"name=eth0,gw={{ default_nat_network_forward_cidr.split("/")[0] }},ip={{ default_mgmt_host_ip }}/16,bridge={{ default_nat_device }}"}'
 netif:
-  net0: "name=eth0,gw={{ default_nat_network_forward_cidr.split('/')[0] }},ip={{ default_mgmt_host_ip }}/16,bridge={{ default_nat_device }}"
-  net1: "name=eth1,ip=10.6.111.11/16,bridge={{ default_host_internal_bridge }}"
-  net2: "name=eth2,ip={{ hostvars['rpc-asset-hub-polkadot-01']['container_public_ip'] }}/32,ip6={{ hostvars['rpc-asset-hub-polkadot-01']['container_public_ip6'] }}/128,bridge={{ default_host_public_bridge }}"
+  net0: "name=eth0,gw=10.6.0.1,ip=10.6.111.11/16,bridge={{ default_host_internal_bridge }}"
+  net1: "name=eth1,ip={{ hostvars['rpc-asset-hub-polkadot-01']['container_public_ip'] }}/32,ip6={{ hostvars['rpc-asset-hub-polkadot-01']['container_public_ip6'] }}/128,bridge={{ default_host_public_bridge }}"
 role: "cumulus"
 pinned_service: True
 need_revive_rpc: True
@@ -19,8 +17,8 @@ need_revive_rpc: True
 default_telemetry_name: "Rotko Networks - {{ host_name.split('.')[0] }}"
 default_domain: "{{ host_name }}"
 default_network: asset-hub-polkadot
-default_relay_rpc: "ws://{{ hostvars['rpc-polkadot-01']['container_ip'] }}:{{ hostvars['rpc-polkadot-01']['default_rpc_port'] }}"
-default_relay_rpc_fallback: "ws://{{ hostvars['rpc-polkadot-02']['container_ip'] }}:{{ hostvars['rpc-polkadot-02']['default_rpc_port'] }}"
+default_relay_rpc: "ws://{{ hostvars['rpc-polkadot-01']['container_internal_ip'] }}:{{ hostvars['rpc-polkadot-01']['default_rpc_port'] }}"
+default_relay_rpc_fallback: "ws://{{ hostvars['rpc-polkadot-02']['container_internal_ip'] }}:{{ hostvars['rpc-polkadot-02']['default_rpc_port'] }}"
 default_database: rocksdb
 default_node_type: "endpoint"
 zabbix_ext_port: 10611

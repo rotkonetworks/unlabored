@@ -1,13 +1,11 @@
 ---
-ansible_host: "160.22.181.181"
+ansible_host: "{{ container_internal_ip }}"
+ansible_ssh_common_args: "-o ProxyJump=root@160.22.181.7"
 container_ip: "192.168.77.16"
-ansible_port: 2845
 host_name: "rpc-coretime-polkadot-02.rotko.net"
 host_timezone: "Asia/Bangkok"
-# netif: '{"net0":"name=eth0,gw={{ default_nat_network_forward_cidr.split("/")[0] }},ip={{ default_mgmt_host_ip }}/16,bridge={{ default_nat_device }}"}'
 netif:
-  net0: "name=eth0,gw={{ default_nat_network_forward_cidr.split('/')[0] }},ip={{ default_mgmt_host_ip }}/16,bridge={{ default_nat_device }}"
-  net1: "name=eth1,gw={{ default_host_internal_ip }},ip=10.7.112.15/16,bridge={{ default_host_internal_bridge }}"
+  net0: "name=eth0,gw=10.7.0.1,ip=10.7.112.15/16,bridge={{ default_host_internal_bridge }}"
 container_internal_ip: "10.7.112.15"
 role: "cumulus"
 pinned_service: True
@@ -17,8 +15,8 @@ default_domain: "{{ host_name }}"
 default_network: "coretime-polkadot"
 default_chain_spec: "{{ default_base_path }}/coretime-polkadot.json"
 default_chain_spec_dl_url: "https://raw.githubusercontent.com/paritytech/polkadot-sdk/master/cumulus/parachains/chain-specs/coretime-polkadot.json"
-default_relay_rpc: "ws://{{ hostvars['rpc-polkadot-01']['container_ip'] }}:{{ hostvars['rpc-polkadot-01']['default_rpc_port'] }}"
-default_relay_rpc_fallback: "ws://{{ hostvars['rpc-polkadot-02']['container_ip'] }}:{{ hostvars['rpc-polkadot-02']['default_rpc_port'] }}"
+default_relay_rpc: "ws://{{ hostvars['rpc-polkadot-01']['container_internal_ip'] }}:{{ hostvars['rpc-polkadot-01']['default_rpc_port'] }}"
+default_relay_rpc_fallback: "ws://{{ hostvars['rpc-polkadot-02']['container_internal_ip'] }}:{{ hostvars['rpc-polkadot-02']['default_rpc_port'] }}"
 default_database: "rocksdb"
 default_node_type: "endpoint"
 zabbix_ext_port: 10845

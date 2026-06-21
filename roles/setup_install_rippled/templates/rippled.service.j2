@@ -11,7 +11,8 @@ LimitNOFILE={{ default_max_open_files_in_service }}
 WorkingDirectory={{ rippled_base }}
 # --net = connect to the public network (default, explicit)
 # No --silent so stderr is captured by systemd journal
-ExecStart=/opt/ripple/bin/rippled --net --conf {{ rippled_config_path }}/rippled.cfg
+# Binary is xrpld as of 3.2.0 (package renamed rippled -> xrpld); CLI/flags unchanged.
+ExecStart=/usr/bin/xrpld --net --conf {{ rippled_config_path }}/rippled.cfg
 
 ExecStop=/bin/kill -s SIGTERM $MAINPID
 KillMode=process
