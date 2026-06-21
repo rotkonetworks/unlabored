@@ -16,10 +16,10 @@ bitcoind_rpcauth_file: "{{ bitcoind_config_path }}/rpcauth"
 bitcoind_network: "main"
 
 # Ports (mainnet defaults)
-bitcoind_p2p_port: 8333 # public, on eth2
-bitcoind_rpc_port: 8332 # mgmt-only, bound to container_ip
-bitcoind_rpc_timeout: 30 # seconds — indexer-friendly long requests
-bitcoind_zmq_block_port: 28332 # localhost — push notifications for indexer
+bitcoind_p2p_port: 8333          # public, on eth2
+bitcoind_rpc_port: 8332           # internal-only, bound to container_internal_ip
+bitcoind_rpc_timeout: 30          # seconds — indexer-friendly long requests
+bitcoind_zmq_block_port: 28332    # localhost — push notifications for indexer
 bitcoind_zmq_tx_port: 28333
 
 # RPC auth — generated on first deploy, stored at {{ bitcoind_rpcauth_file }}.

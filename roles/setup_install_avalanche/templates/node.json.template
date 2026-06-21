@@ -3,7 +3,7 @@
   "log-display-highlight": "plain",
   "log-display-level": "off",
   "network-id": "{{ avalanche_network }}",
-  "public-ip": "{{ ansible_host }}",
+  "public-ip": "{{ default_public_endpoint_ip }}",
   "pruning-enabled": "{{ avalanche_pruning_enabled }}",
   "db-dir": "{{ avalanche_storage_path }}/db",
   "log-dir": "{{ avalanche_storage_path }}/logs",
@@ -11,7 +11,7 @@
   "profile-dir": "{{ avalanche_storage_path }}/profiles",
   {% if container_ip is defined %}
   "http-host": "{{ container_ip }}",
-  "public_ip": "{{ ansible_host }}",
+  "public_ip": "{{ default_public_endpoint_ip }}",
   {% else %}
   "http-host": "{{ ansible_host }}",
   {% endif%}

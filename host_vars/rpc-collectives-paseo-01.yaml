@@ -1,16 +1,14 @@
 ---
-ansible_host: "160.22.181.181"
+ansible_host: "{{ container_internal_ip }}"
+ansible_ssh_common_args: "-o ProxyJump=root@160.22.181.7"
 container_ip: "192.168.141.13"
 container_public_ip: "160.22.181.143"
 container_public_ip6: "2401:a860:1143::11"
-ansible_port: 3513
 host_name: "rpc-collectives-paseo-01.ct.rotko.net"
 host_timezone: "Asia/Bangkok"
-# netif: '{"net0":"name=eth0,gw={{ default_nat_network_forward_cidr.split("/")[0] }},ip={{ default_mgmt_host_ip }}/16,bridge={{ default_nat_device }}"}'
 netif:
-  net0: "name=eth0,gw={{ default_nat_network_forward_cidr.split('/')[0] }},ip={{ default_mgmt_host_ip }}/16,bridge={{ default_nat_device }}"
-  net1: "name=eth1,ip=10.7.141.13/16,bridge={{ default_host_internal_bridge }}"
-  net2: "name=eth2,ip={{ hostvars['rpc-collectives-paseo-01']['container_public_ip'] }}/32,ip6={{ hostvars['rpc-collectives-paseo-01']['container_public_ip6'] }}/128,bridge={{ default_host_public_bridge }}"
+  net0: "name=eth0,gw=10.7.0.1,ip=10.7.141.13/16,bridge={{ default_host_internal_bridge }}"
+  net1: "name=eth1,ip={{ hostvars['rpc-collectives-paseo-01']['container_public_ip'] }}/32,ip6={{ hostvars['rpc-collectives-paseo-01']['container_public_ip6'] }}/128,bridge={{ default_host_public_bridge }}"
 container_internal_ip: "10.7.141.13"
 role: "cumulus"
 pinned_service: True
@@ -21,8 +19,8 @@ default_network: "collectives-paseo"
 default_network_pathname: "paseo-collectives"
 default_chain_spec: "{{ default_base_path }}/collectives-paseo.raw.json"
 default_chain_spec_dl_url: "https://paseo-r2.zondax.ch/chain-specs/paseo-collectives.raw.json"
-default_relay_rpc: "ws://{{ hostvars['rpc-paseo-01']['container_ip'] }}:{{ hostvars['rpc-paseo-01']['default_rpc_port'] }}"
-default_relay_rpc_fallback: "ws://{{ hostvars['rpc-paseo-02']['container_ip'] }}:{{ hostvars['rpc-paseo-02']['default_rpc_port'] }}"
+default_relay_rpc: "ws://{{ hostvars['rpc-paseo-01']['container_internal_ip'] }}:{{ hostvars['rpc-paseo-01']['default_rpc_port'] }}"
+default_relay_rpc_fallback: "ws://{{ hostvars['rpc-paseo-02']['container_internal_ip'] }}:{{ hostvars['rpc-paseo-02']['default_rpc_port'] }}"
 default_database: "paritydb"
 default_node_type: "endpoint"
 zabbix_ext_port: 13513

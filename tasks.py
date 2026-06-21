@@ -19,7 +19,7 @@ def playbook(ctx, arg="--syntax-check"):
 @task
 def sshconfig(ctx):
     if SSH_CONFIG_IDENTITY.exists():
-        ctx.run(f"AISTool -o {SSH_CONFIG_TARGET} --backup -u {SSH_CONFIG_USER} -i {SSH_CONFIG_IDENTITY} --forwardagent ./inventory")
+        ctx.run(f"python scripts/sshconfig.py -o {SSH_CONFIG_TARGET} --backup -u {SSH_CONFIG_USER} -i {SSH_CONFIG_IDENTITY} --forwardagent ./inventory")
     else:
         print(f"File not found: {SSH_CONFIG_IDENTITY}")
 

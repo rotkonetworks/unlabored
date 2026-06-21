@@ -45,6 +45,34 @@
   when: lxc_nodes is defined
   register: container_creation_result
 
+# The proxmox module only creates/updates NICs listed in netif and never
+# deletes the ones that were removed from the spec (e.g. the legacy eth0
+# management leg), so prune them explicitly.
+# Scoped tightly so it can't touch unmigrated infra: only runs on the
+# migrated hosts (bkk06/07/08) and only for nodes explicitly flagged
+# update: True. A global prune_container_nics=False is an extra kill switch.
+- name: Prune container NICs absent from netif spec
+  ansible.builtin.shell: |
+    set -e
+    desired="{{ (item.proxmox_config.netif if item.proxmox_config.netif is mapping else item.proxmox_config.netif | from_json).keys() | join(' ') }}"
+    for nic in $(pct config {{ item.proxmox_config.vmid }} | grep -oE '^net[0-9]+'); do
+      if ! echo " $desired " | grep -q " $nic "; then
+        echo "pruning $nic"
+        pct set {{ item.proxmox_config.vmid }} -delete "$nic"
+      fi
+    done
+  loop: "{{ lxc_nodes }}"
+  loop_control:
+    label: "{{ item.host }} ({{ item.proxmox_config.vmid }})"
+  when:
+    - inventory_hostname in ['bkk06', 'bkk07', 'bkk08']
+    - lxc_nodes is defined
+    - item.proxmox_config.netif is defined
+    - item.proxmox_config['update'] | default(False) | bool
+    - prune_container_nics | default(True)
+  register: _nic_prune
+  changed_when: "'pruning' in _nic_prune.stdout"
+
 - name: Start predefined nodes
   community.general.proxmox: "{{ proxmox_defaults | combine({'vmid': item.proxmox_config['vmid'], 'state': 'started'}) }}"
   loop: "{{ lxc_nodes }}"

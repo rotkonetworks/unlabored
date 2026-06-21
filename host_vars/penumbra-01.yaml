@@ -1,10 +1,14 @@
 ---
-ansible_host: "160.22.181.181"
-container_ip: "192.168.77.81"
-ansible_port: 2481
+ansible_host: "{{ container_internal_ip }}"
+ansible_ssh_common_args: "-o ProxyJump=root@160.22.181.6"
+container_internal_ip: "10.6.77.81"
+container_public_ip: "160.22.181.251"
+container_public_ip6: "2401:a860:1251::"
 host_name: "penumbra-01.ct.rotko.net"
 host_timezone: "Asia/Bangkok"
-netif: '{"net0":"name=eth0,gw={{ default_nat_network_forward_cidr.split("/")[0] }},ip={{ default_mgmt_host_ip }}/8,bridge={{ default_nat_device }}"}'
+netif:
+  net0: "name=eth0,gw=10.6.0.1,ip={{ container_internal_ip }}/16,bridge={{ default_host_internal_bridge }}"
+  net1: "name=eth1,ip={{ hostvars['penumbra-01']['container_public_ip'] }}/32,ip6={{ hostvars['penumbra-01']['container_public_ip6'] }}/128,bridge={{ default_host_public_bridge }}"
 role: "penumbra"
 pinned_service: True
 

@@ -19,6 +19,7 @@ reth
 bitcoind
 dogecoind
 rippled
+misc-container
 
 [flare]
 val-flare-01
@@ -34,6 +35,9 @@ doge-fdc-01
 
 [rippled]
 xrp-fdc-01
+
+[sgb_fdc]
+sgb-fdc-01
 
 [fdc_verifier]
 eth-fdc-01

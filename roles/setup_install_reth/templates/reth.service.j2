@@ -16,19 +16,19 @@ ExecStart={{ ethereum_base }}/reth node \
     --port {{ default_p2p_port | default(reth_eth_p2p_port) }} \
     --discovery.port {{ default_p2p_port | default(reth_eth_p2p_port) }} \
     --http \
-    --http.addr {{ container_ip }} \
+    --http.addr {{ container_internal_ip }} \
     --http.port {{ reth_eth_http_port }} \
     --http.api {{ reth_eth_http_api }} \
     --http.corsdomain "*" \
     --ws \
-    --ws.addr {{ container_ip }} \
+    --ws.addr {{ container_internal_ip }} \
     --ws.port {{ reth_eth_ws_port }} \
     --ws.api {{ reth_eth_http_api }} \
     --ws.origins "*" \
     --authrpc.addr 127.0.0.1 \
     --authrpc.port {{ ethereum_lighthouse_port }} \
     --authrpc.jwtsecret {{ ethereum_jwtsecret_file }} \
-    --metrics {{ container_ip }}:{{ reth_metrics_port }} \
+    --metrics {{ container_internal_ip }}:{{ reth_metrics_port }} \
 {% if default_node_type == "full" %}
     --full \
 {% elif default_node_type == "minimal" %}

@@ -51,7 +51,7 @@ services:
         condition: service_healthy
     restart: unless-stopped
     ports:
-      - {{ container_ip }}:{{ fdc_utxo_verifier_api_port }}:3100
+      - {{ container_internal_ip }}:{{ fdc_utxo_verifier_api_port }}:3100
 
   indexer-server:
     <<: *django

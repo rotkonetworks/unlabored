@@ -1,13 +1,11 @@
 ---
-ansible_host: "160.22.181.181"
+ansible_host: "{{ container_internal_ip }}"
+ansible_ssh_common_args: "-o ProxyJump=root@160.22.181.7"
 container_ip: "192.168.122.14"
-ansible_port: 2830
 host_name: "rpc-people-kusama-02.ct.rotko.net"
 host_timezone: "Asia/Bangkok"
-# netif: '{"net0":"name=eth0,gw={{ default_nat_network_forward_cidr.split("/")[0] }},ip={{ default_mgmt_host_ip }}/16,bridge={{ default_nat_device }}"}'
 netif:
-  net0: "name=eth0,gw={{ default_nat_network_forward_cidr.split('/')[0] }},ip={{ default_mgmt_host_ip }}/16,bridge={{ default_nat_device }}"
-  net1: "name=eth1,gw={{ default_host_internal_ip }},ip=10.7.122.14/16,bridge={{ default_host_internal_bridge }}"
+  net0: "name=eth0,gw=10.7.0.1,ip=10.7.122.14/16,bridge={{ default_host_internal_bridge }}"
 container_internal_ip: "10.7.122.14"
 role: "cumulus"
 pinned_service: True
@@ -17,8 +15,8 @@ default_domain: "{{ host_name }}"
 default_network: "people-kusama"
 default_chain_spec: "{{ default_base_path }}/people-kusama.json"
 default_chain_spec_dl_url: "https://raw.githubusercontent.com/paritytech/polkadot-sdk/master/cumulus/parachains/chain-specs/people-kusama.json"
-default_relay_rpc: "ws://{{ hostvars['rpc-kusama-01']['container_ip'] }}:{{ hostvars['rpc-kusama-01']['default_rpc_port'] }}"
-default_relay_rpc_fallback: "ws://{{ hostvars['rpc-kusama-02']['container_ip'] }}:{{ hostvars['rpc-kusama-02']['default_rpc_port'] }}"
+default_relay_rpc: "ws://{{ hostvars['rpc-kusama-01']['container_internal_ip'] }}:{{ hostvars['rpc-kusama-01']['default_rpc_port'] }}"
+default_relay_rpc_fallback: "ws://{{ hostvars['rpc-kusama-02']['container_internal_ip'] }}:{{ hostvars['rpc-kusama-02']['default_rpc_port'] }}"
 default_database: rocksdb
 default_node_type: "endpoint"
 

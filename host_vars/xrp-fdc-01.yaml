@@ -1,18 +1,17 @@
 ---
 # xrp-fdc-01 — rippled XRP Ledger node for Flare FDC verifier-xrp-indexer
-ansible_host: "160.22.181.181" # bkk08 NAT
+ansible_host: "{{ container_internal_ip }}"
+ansible_ssh_common_args: "-o ProxyJump=root@160.22.181.8" # bkk08 NAT
 container_ip: "192.168.78.205"
 container_internal_ip: "10.8.0.205"
 container_public_ip: "160.22.181.205"
 container_public_ip6: "2401:a860:1110::15"
-ansible_port: 32805
 host_name: "xrp-fdc-01.rotko.net"
 host_timezone: "Asia/Bangkok"
 netif:
-  net0: "name=eth0,gw={{ default_nat_network_forward_cidr.split('/')[0] }},ip={{ default_mgmt_host_ip }}/16,bridge={{ default_nat_device }}"
-  net1: "name=eth1,ip={{ container_internal_ip }}/16,bridge={{ default_host_internal_bridge }}"
+  net0: "name=eth0,gw=10.8.0.1,ip={{ container_internal_ip }}/16,bridge={{ default_host_internal_bridge }}"
   # mtu=1400 — eth2 upstream tunnel encapsulates traffic; default 1500 causes
-  net2: "name=eth2,ip={{ container_public_ip }}/32,ip6={{ container_public_ip6 }}/128,bridge={{ default_host_public_bridge }},mtu=1400"
+  net1: "name=eth1,ip={{ container_public_ip }}/32,ip6={{ container_public_ip6 }}/128,bridge={{ default_host_public_bridge }},mtu=1400"
 
 role: "rippled"
 ansible_python_interpreter: /usr/bin/python3

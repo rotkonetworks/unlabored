@@ -21,8 +21,8 @@ listen=1
 bind=0.0.0.0:{{ bitcoind_p2p_port }}
 port={{ bitcoind_p2p_port }}
 
-# RPC — mgmt + internal mesh + localhost only (NOT public)
-rpcbind={{ container_ip }}
+# RPC — internal mesh + localhost only (NOT public)
+rpcbind={{ container_internal_ip }}
 rpcbind=127.0.0.1
 rpcport={{ bitcoind_rpc_port }}
 rpctimeout={{ bitcoind_rpc_timeout }}

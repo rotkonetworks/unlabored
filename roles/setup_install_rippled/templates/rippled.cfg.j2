@@ -29,15 +29,15 @@ port = {{ rippled_port_peer }}
 ip = 0.0.0.0
 protocol = peer
 
-# Public RPC + WS bound to mgmt IP only (FDC binds 0.0.0.0; we tighten because real LXC, not docker)
+# Public RPC + WS bound to internal IP only (FDC binds 0.0.0.0; we tighten because real LXC, not docker)
 [port_rpc_public]
 port = {{ rippled_port_rpc_public }}
-ip = {{ container_ip }}
+ip = {{ container_internal_ip }}
 protocol = http
 
 [port_ws_public]
 port = {{ rippled_port_ws_public }}
-ip = {{ container_ip }}
+ip = {{ container_internal_ip }}
 protocol = ws
 
 [port_grpc]

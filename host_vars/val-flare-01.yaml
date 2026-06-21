@@ -1,16 +1,15 @@
 ---
-ansible_host: "160.22.181.181" # bkk08 NAT
+ansible_host: "{{ container_internal_ip }}"
+ansible_ssh_common_args: "-o ProxyJump=root@160.22.181.8" # bkk08 NAT
 container_ip: "192.168.78.201"
 container_internal_ip: "10.8.0.201"
 container_public_ip: "160.22.181.201"
-container_public_ip6: "2401:a860:1110::18"
-ansible_port: 32801
+container_public_ip6: "2401:a860:1110::19"
 host_name: "val-flare-01.rotko.net"
 host_timezone: "Asia/Bangkok"
 netif:
-  net0: "name=eth0,gw={{ default_nat_network_forward_cidr.split('/')[0] }},ip={{ default_mgmt_host_ip }}/16,bridge={{ default_nat_device }}"
-  net1: "name=eth1,ip={{ container_internal_ip }}/16,bridge={{ default_host_internal_bridge }}"
-  net2: "name=eth2,ip={{ container_public_ip }}/32,ip6={{ container_public_ip6 }}/128,bridge={{ default_host_public_bridge }}"
+  net0: "name=eth0,gw=10.8.0.1,ip={{ container_internal_ip }}/16,bridge={{ default_host_internal_bridge }}"
+  net1: "name=eth1,ip={{ container_public_ip }}/32,ip6={{ container_public_ip6 }}/128,bridge={{ default_host_public_bridge }}"
 
 role: "flare"
 # pinned_service: True   # flip to True after first successful install completes
@@ -20,5 +19,20 @@ default_node_type: "validator"
 default_network: "flare"
 default_database_path: "/opt/flare/storage"
 default_p2p_port: 9651
+
+# C-chain config overrides (match live prod) — consumed by validator.config.json.j2
+flare_eth_apis:
+  - eth
+  - eth-filter
+  - net
+  - web3
+  - internal-eth
+  - internal-blockchain
+  - internal-transaction
+  # mev-filter removed: not a valid eth-api in go-flare 1.14.0. Its presence makes
+  # C-chain handler creation fail and takes /ext/bc/C/rpc down entirely (404).
+flare_rpc_tx_fee_cap: 1000
+flare_local_txs_enabled: true
+flare_allow_unfinalized_queries: true
 
 zabbix_ext_port: 10801

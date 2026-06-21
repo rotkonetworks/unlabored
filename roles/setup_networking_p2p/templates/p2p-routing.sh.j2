@@ -1,26 +1,33 @@
 #!/bin/bash
 # /etc/network/if-up.d/p2p-routing
-# Policy routing for eth1 (internal P2P) and eth2 (public) return traffic.
-# Managed by ansible: roles/setup_networking_p2p
+# Policy routing for the internal ({{ internal_iface }}) and public
+# ({{ public_iface | default('n/a') }}) interfaces. Managed by ansible:
+# roles/setup_networking_p2p
 
 set -e
 
 case "$IFACE" in
-  eth1)
-    ip route replace default via {{ eth1_gateway }} dev eth1 table eth1_table
+  {{ internal_iface }})
+{% if mgmt_iface is defined %}
+    ip route replace default via {{ internal_gateway }} dev {{ internal_iface }} table eth1_table
     ip rule add from {{ container_internal_ip }} table eth1_table priority 100 2>/dev/null || true
     ip rule add fwmark 1 table eth1_table priority 101 2>/dev/null || true
+{% else %}
+    # No management/NAT interface: the internal interface is primary and
+    # carries the main default route via the proxmox host.
+    ip route replace default via {{ internal_gateway }} dev {{ internal_iface }}
+{% endif %}
     ;;
-{% if container_public_ip is defined %}
-  eth2)
+{% if public_iface is defined %}
+  {{ public_iface }})
     # On-link route to the off-link /32 gateway, then default in eth2_table only.
-    ip route replace {{ eth2_gateway }} dev eth2
-    ip route replace default via {{ eth2_gateway }} dev eth2 table eth2_table
+    ip route replace {{ public_gateway }} dev {{ public_iface }}
+    ip route replace default via {{ public_gateway }} dev {{ public_iface }} table eth2_table
     ip rule add from {{ container_public_ip }} table eth2_table priority 200 2>/dev/null || true
     ip rule add fwmark 2 table eth2_table priority 201 2>/dev/null || true
 {% if container_public_ip6 is defined %}
-    ip -6 route replace {{ eth2_gateway6 }} dev eth2
-    ip -6 route replace default via {{ eth2_gateway6 }} dev eth2 table eth2_table
+    ip -6 route replace {{ public_gateway6 }} dev {{ public_iface }}
+    ip -6 route replace default via {{ public_gateway6 }} dev {{ public_iface }} table eth2_table
     ip -6 rule add from {{ container_public_ip6 }} table eth2_table priority 200 2>/dev/null || true
     ip -6 rule add fwmark 2 table eth2_table priority 201 2>/dev/null || true
 {% endif %}

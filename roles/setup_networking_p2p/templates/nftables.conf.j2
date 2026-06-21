@@ -9,29 +9,36 @@ flush ruleset
 table inet mangle {
     chain prerouting {
         type filter hook prerouting priority mangle; policy accept;
-        iifname "eth1" ct mark set 0x1
-{% if container_public_ip is defined %}
-        iifname "eth2" ct mark set 0x2
+{% if mgmt_iface is defined and internal_iface is defined %}
+        iifname "{{ internal_iface }}" ct mark set 0x1
+{% endif %}
+{% if public_iface is defined %}
+        iifname "{{ public_iface }}" ct mark set 0x2
 {% endif %}
     }
 
     chain output {
         type filter hook output priority mangle; policy accept;
+{% if mgmt_iface is defined and internal_iface is defined %}
         ct mark 0x1 meta mark set 0x1
-{% if container_public_ip is defined %}
+{% endif %}
+{% if public_iface is defined %}
         ct mark 0x2 meta mark set 0x2
 {% endif %}
     }
 }
-{% if container_public_ip is defined %}
-{% set allowed_ports = [
+{% if public_iface is defined %}
+{% set _base_ports = [
     default_p2p_port | default(''),
+    default_cometbft_p2p_port | default(''),
     default_bootnode_p2p_port | default(''),
     default_bootnode_p2p_port_wss | default('')
-] | reject('equalto', '') | unique | list %}
+] | reject('equalto', '') | list %}
+{# allowed_additional_public_ports: per-host extra public ports (e.g. [443] for nginx RPC) #}
+{% set allowed_ports = (_base_ports + (allowed_additional_public_ports | default([]))) | unique | list %}
 
-# Firewall: restrict inbound on eth2 (public) to specific P2P ports.
-# eth0 (NAT) and eth1 (internal) remain unrestricted.
+# Firewall: restrict inbound on {{ public_iface }} (public) to specific P2P
+# ports. The management/NAT and internal interfaces remain unrestricted.
 table inet filter {
     chain input {
         type filter hook input priority filter; policy accept;
@@ -41,15 +48,15 @@ table inet filter {
         iifname "lo" accept
 
         # ICMP/ICMPv6 needed for ping and IPv6 NDP
-        iifname "eth2" meta l4proto { icmp, ipv6-icmp } accept
+        iifname "{{ public_iface }}" meta l4proto { icmp, ipv6-icmp } accept
 
 {% if allowed_ports %}
         # Allowed public P2P ports
-        iifname "eth2" tcp dport { {{ allowed_ports | join(', ') }} } accept
+        iifname "{{ public_iface }}" tcp dport { {{ allowed_ports | join(', ') }} } accept
 {% endif %}
 
-        # Drop everything else arriving on eth2
-        iifname "eth2" drop
+        # Drop everything else arriving on {{ public_iface }}
+        iifname "{{ public_iface }}" drop
     }
 }
 {% endif %}

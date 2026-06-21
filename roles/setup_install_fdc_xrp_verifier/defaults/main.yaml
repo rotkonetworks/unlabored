@@ -19,7 +19,7 @@ fdc_xrp_postgres_port: 25433
 
 # Underlying chain RPC — points at rippled's public RPC port on this host.
 # rippled defaults to port 51234 for public JSON-RPC.
-fdc_xrp_node_url: "http://{{ container_ip }}:{{ rippled_port_rpc_public | default(51234) }}"
+fdc_xrp_node_url: "http://{{ container_internal_ip }}:{{ rippled_port_rpc_public | default(51234) }}"
 
 # DB password from vault
 fdc_xrp_db_password: "{{ vault_fdc_xrp_db_password | default('changeme-set-vault') }}"

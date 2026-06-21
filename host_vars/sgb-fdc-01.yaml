@@ -1,0 +1,30 @@
+# Standards: 0.2
+---
+# Networking-only host_vars for sgb-fdc-01 (hand-built Songbird FDC node).
+# Purpose: let `setup_networking_p2p` wire the public-side policy routing
+# (eth2_table / connmark + nft firewall) for the Songbird node's P2P on
+# 160.22.181.208:9651 — the same setup val-flare-01 got.
+#
+# ⚠️ The APP on this node (songbird avalanchego + sgb evm-verifier) is NOT
+# ansible-managed. Only ever run `playbooks/setup_networking_p2p.yaml` against
+# it (it's in its own `[sgb_fdc]` group for exactly this reason). Do NOT run
+# app-install roles here — they would clobber the hand-built deployment.
+ansible_host: "{{ container_internal_ip }}"
+ansible_ssh_common_args: "-o ProxyJump=root@160.22.181.8"
+
+container_internal_ip: "10.8.0.208"
+container_public_ip: "160.22.181.208"
+container_public_ip6: "2401:a860:1110::18"
+host_name: "sgb-fdc-01.rotko.net"
+role: "sgb"
+
+# Songbird (avalanchego) staking/P2P port — opened on the public interface
+# (eth1). Feeds the nftables allowlist in setup_networking_p2p.
+default_p2p_port: 9651
+
+# Public gateways (off-link, reached via eth1/vmbr2). The role normally derives
+# these from the proxmox host via its `lxc_nodes` list, but sgb-fdc-01 is
+# hand-built and intentionally NOT in bkk08's lxc_nodes, so point at bkk08's
+# values directly.
+public_gateway: "{{ hostvars['bkk08']['default_host_public_gw'] }}"
+public_gateway6: "{{ hostvars['bkk08']['default_host_public_gw6'] }}"
