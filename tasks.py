@@ -57,8 +57,9 @@ def flake8(ctx):
 
 @task
 def unpin(ctx, target):
-    ctx.run(f"ssh {target} 'sudo sed -i 's/pinned=True/pinned=False/g' /etc/ansible/facts.d/noderole.fact'")
-    result = ctx.run(f"ssh {target} 'grep \"pinned=False\" /etc/ansible/facts.d/noderole.fact'", warn=True)
+    ssh = f"ssh -F {SSH_CONFIG_TARGET} -o StrictHostKeyChecking=accept-new"
+    ctx.run(f"{ssh} {target} 'sudo sed -i 's/pinned=True/pinned=False/g' /etc/ansible/facts.d/noderole.fact'")
+    result = ctx.run(f"{ssh} {target} 'grep \"pinned=False\" /etc/ansible/facts.d/noderole.fact'", warn=True)
     if result.ok:
         print(f"Unpin operation completed on {target}")
     else:
@@ -67,8 +68,9 @@ def unpin(ctx, target):
 
 @task
 def pin(ctx, target):
-    ctx.run(f"ssh {target} 'sudo sed -i 's/pinned=False/pinned=True/g' /etc/ansible/facts.d/noderole.fact'")
-    result = ctx.run(f"ssh {target} 'grep \"pinned=True\" /etc/ansible/facts.d/noderole.fact'", warn=True)
+    ssh = f"ssh -F {SSH_CONFIG_TARGET} -o StrictHostKeyChecking=accept-new"
+    ctx.run(f"{ssh} {target} 'sudo sed -i 's/pinned=False/pinned=True/g' /etc/ansible/facts.d/noderole.fact'")
+    result = ctx.run(f"{ssh} {target} 'grep \"pinned=True\" /etc/ansible/facts.d/noderole.fact'", warn=True)
     if result.ok:
         print(f"Pin operation completed on {target}")
     else:
