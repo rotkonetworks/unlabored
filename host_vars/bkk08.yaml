@@ -263,33 +263,6 @@ lxc_nodes:
   #     - from_port: "{{ hostvars['penumbra-web']['default_cometbft_p2p_port'] }}"
   #       to_host: "{{ hostvars['penumbra-web']['container_ip'] }}:{{ hostvars['penumbra-web']['default_cometbft_p2p_port'] }}"
   #       protocol: "tcp"
-  - host: "rpc-polkadot-03"
-    proxmox_config:
-      vmid: "3313"
-      hostname: "{{ hostvars['rpc-polkadot-03']['host_name'] }}"
-      # ostemplate: "local:vztmpl/{{ default_container_template }}"
-      update: False
-      netif: "{{ hostvars['rpc-polkadot-03']['netif'] }}"
-      cores: 4
-      memory: 16384
-      swap: 8192
-      password: "{{ default_password }}"
-      disk: "{{ zfs_storage }}:20"
-      # mounts: '{"mp0":"{{ zfs_storage }}:3500,mp={{ hostvars["rpc-polkadot-03"]["default_database_path"] }}"}'
-      mount_volumes:
-        - id: mp0
-          mountpoint: "{{ hostvars['rpc-polkadot-03']['default_database_path'] }}"
-          storage: "{{ zfs_storage }}"
-          size: 5500
-      onboot: True
-      unprivileged: True
-      validate_certs: False
-      description: "{{ hostvars['rpc-polkadot-03']['default_network'] }} {{ hostvars['rpc-polkadot-03']['default_node_type'] }}: {{ hostvars['rpc-polkadot-03']['host_name'] }}"
-      state: present
-      features:
-        - nesting=1
-    # No bkk50 DNAT: SSH via ProxyJump through bkk08, egress via eth1/host SNAT.
-    port_forwards: []
   - host: "dockers-08"
     proxmox_config:
       vmid: "982"

@@ -55,7 +55,6 @@ haproxy-bkk08
 hydration
 
 [polkadot]
-rpc-polkadot-03
 val-paseo-02
 
 [cumulus]
