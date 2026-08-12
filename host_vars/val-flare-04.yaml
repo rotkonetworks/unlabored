@@ -1,0 +1,37 @@
+---
+# Imported from running container (was drift, unmanaged). VMID 60810.
+ansible_host: "{{ container_internal_ip }}"
+ansible_ssh_common_args: "-o ProxyJump=root@160.22.181.8" # NAT
+container_internal_ip: "10.8.0.210"
+container_public_ip: "160.22.181.209"
+container_public_ip6: "2401:a860:1110::21"
+host_name: "val-flare-04.rotko.net"
+host_timezone: "Asia/Bangkok"
+netif:
+  net0: "name=eth0,gw=10.8.0.1,ip={{ container_internal_ip }}/16,bridge={{ default_host_internal_bridge }}"
+  net1: "name=eth1,ip={{ container_public_ip }}/32,ip6={{ container_public_ip6 }}/128,bridge={{ default_host_public_bridge }}"
+
+role: "flare"
+pinned_service: True   # running & synced; keep pinned so a run never rebuilds/clobbers (esp. MEV binary)
+ansible_python_interpreter: /usr/bin/python3
+
+default_node_type: "validator"
+default_network: "flare"
+default_database_path: "/opt/flare/storage"
+default_p2p_port: 9651
+
+flare_eth_apis:
+  - eth
+  - eth-filter
+  - net
+  - web3
+  - internal-eth
+  - internal-blockchain
+  - internal-transaction
+flare_rpc_tx_fee_cap: 1000
+flare_local_txs_enabled: true
+flare_allow_unfinalized_queries: true
+
+# NOTE: runs the MEV binary (avalanchego-mev*), NOT vanilla. pinned_service:True
+# above protects it. Do not un-pin until the MEV build is reproducible from a fork.
+zabbix_ext_port: 10817

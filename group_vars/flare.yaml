@@ -35,3 +35,6 @@ flare_staking_port: "9651"
 # avalanchego refuses to start when its requested fd-limit exceeds the
 # kernel's hard limit. Unprivileged Proxmox LXC defaults cap around 16368.
 flare_fd_limit: 16000
+
+# Grant Tuomas admin/SSH access on the Flare validator/RPC nodes.
+users_with_access: "{{ default_users + ['tuomas'] }}"
