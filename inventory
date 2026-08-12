@@ -50,6 +50,12 @@ ibp-geodns-01
 [flare]
 val-flare-01
 val-flare-02
+val-flare-03
+val-flare-04
+val-flare-05
+val-flare-06
+val-flare-07
+val-flare-08
 
 [reth]
 eth-fdc-01
