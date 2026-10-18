@@ -1,0 +1,95 @@
+---
+name: Check Flare client update
+
+# Watches upstream go-flare stable releases and opens a PR bumping
+# group_vars/flare.yaml `flare_version` when a newer STABLE release exists.
+# Prereleases (e.g. -rc) are ignored: the GitHub /releases/latest endpoint
+# only returns full releases. The PR body carries an LLM-written upgrade
+# summary (breaking changes / config / resync) so review is a quick read.
+#
+# Requires repo secret OPENROUTER_API_KEY (see age-manifest: openrouter-flare-arb-bot.age).
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 1 * * *'   # daily 01:00 UTC
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  flare-update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Determine current pin vs latest stable release
+        id: ver
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          CURRENT=$(grep -E '^flare_version:' group_vars/flare.yaml | sed -E 's/.*"([^"]+)".*/\1/')
+          # /releases/latest excludes prereleases and drafts -> never picks -rc builds.
+          LATEST_TAG=$(curl -fsSL -H "Authorization: Bearer $GITHUB_TOKEN" \
+            https://api.github.com/repos/flare-foundation/go-flare/releases/latest | jq -r .tag_name)
+          LATEST=${LATEST_TAG#v}
+          echo "current=$CURRENT"       >> "$GITHUB_OUTPUT"
+          echo "latest=$LATEST"         >> "$GITHUB_OUTPUT"
+          echo "latest_tag=$LATEST_TAG" >> "$GITHUB_OUTPUT"
+          echo "Current pin: $CURRENT | latest stable: $LATEST ($LATEST_TAG)"
+
+      - name: Build upgrade summary (OpenRouter)
+        id: summary
+        if: steps.ver.outputs.current != steps.ver.outputs.latest
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          OPENROUTER_MODEL: ${{ vars.OPENROUTER_MODEL || 'anthropic/claude-sonnet-4.5' }}
+        run: |
+          set -euo pipefail
+          NOTES=$(curl -fsSL -H "Authorization: Bearer $GITHUB_TOKEN" \
+            "https://api.github.com/repos/flare-foundation/go-flare/releases/tags/${{ steps.ver.outputs.latest_tag }}" \
+            | jq -r '.body // ""' | head -c 8000)
+          {
+            echo "## go-flare validator client: ${{ steps.ver.outputs.current }} -> ${{ steps.ver.outputs.latest }}"
+            echo
+            echo "Release: https://github.com/flare-foundation/go-flare/releases/tag/${{ steps.ver.outputs.latest_tag }}"
+            echo
+          } > summary.md
+          if [ -n "${OPENROUTER_API_KEY:-}" ]; then
+            PROMPT=$(printf 'You are preparing a Flare validator upgrade PR. In concise bullet points, summarize go-flare release %s for an operator upgrading from %s. Call out: breaking changes, required CLI flag or C-chain eth-apis config changes, consensus/runtime impact, and whether a database resync is required. If none, say so plainly. Release notes:\n\n%s' \
+              "${{ steps.ver.outputs.latest_tag }}" "${{ steps.ver.outputs.current }}" "$NOTES")
+            REQ=$(jq -n --arg model "$OPENROUTER_MODEL" --arg m "$PROMPT" \
+              '{model:$model, messages:[{role:"user",content:$m}]}')
+            RESP=$(curl -fsSL https://openrouter.ai/api/v1/chat/completions \
+              -H "Authorization: Bearer $OPENROUTER_API_KEY" \
+              -H "Content-Type: application/json" -d "$REQ" || echo '')
+            echo "$RESP" | jq -r '.choices[0].message.content // empty' >> summary.md || true
+          fi
+          if ! grep -q '[^[:space:]]' <(tail -n +4 summary.md); then
+            echo "_Automated summary unavailable; review upstream release notes._" >> summary.md
+          fi
+
+      - name: Bump version and open/update PR
+        if: steps.ver.outputs.current != steps.ver.outputs.latest
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          BRANCH="flare-bump-${{ steps.ver.outputs.latest }}"
+          git config user.name  'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          git checkout -B "$BRANCH"
+          # comment-preserving line replace (do NOT yaml.dump this file)
+          sed -i -E 's/^(flare_version:[[:space:]]*").*(".*)$/\1${{ steps.ver.outputs.latest }}\2/' group_vars/flare.yaml
+          git add group_vars/flare.yaml
+          git commit -m "flare: bump go-flare ${{ steps.ver.outputs.current }} -> ${{ steps.ver.outputs.latest }}"
+          git push -f origin "$BRANCH"
+          if ! gh pr create --base master --head "$BRANCH" \
+                --title "flare: bump go-flare to ${{ steps.ver.outputs.latest }}" \
+                --body-file summary.md --label automated-pr 2>/dev/null; then
+            gh pr edit "$BRANCH" --title "flare: bump go-flare to ${{ steps.ver.outputs.latest }}" --body-file summary.md
+          fi

@@ -28,3 +28,6 @@ default_p2p_port: 9651
 # values directly.
 public_gateway: "{{ hostvars['bkk08']['default_host_public_gw'] }}"
 public_gateway6: "{{ hostvars['bkk08']['default_host_public_gw6'] }}"
+
+# sgb-fdc-01 is not in the fdc_verifier inventory group; grant Tuomas here too.
+users_with_access: "{{ default_users + ['tuomas'] }}"
